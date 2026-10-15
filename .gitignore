@@ -7,3 +7,4 @@ playwright-report/
 .DS_Store
 Thumbs.db
 dist/
+assets/
