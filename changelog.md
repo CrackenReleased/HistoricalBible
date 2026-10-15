@@ -7,6 +7,17 @@ All notable changes to this project will be documented in this file.
 - Added native Obsidian Bible notes: complete KJV, names co-occurrence network, book indexes, and all 344,799 OpenBible cross-reference records with full target ranges and votes.
 - Added dependency-free export/validation tools under E:\AI_Hub\Tools\bible-network, source attribution, regeneration rules, and five unit tests.
 - Preserved the app's independent version and existing data; Obsidian export has its own v0.01.00 sequence.
+## [1.3.0] - 2026-10-14
+
+### Added
+- **Full HistoricalBible.com Multi-Page Suite**: Built out Home (`index.html`), Contact Us (`contact.html`), and Bible Download (`bible.html`) pages recreating the complete GoDaddy archive website with elegant Cinzel/Lora typography and local-first architecture.
+- **Stand-alone 2D Tapestry Engine**: Preserved at `tapestry.html` alongside the unified `interact.html` engine.
+- **Self-Hosted Bible PDF**: Copied Joel's hand-typed `Bible.pdf` directly into `public/Bible.pdf` and `public/downloads/Bible.pdf` (~9.5 MB) for direct, serverless downloads independent of third-party CDNs.
+- **Brand Assets**: Migrated `logo.jpg`, PayPal, and accepted card badges into `public/images/`.
+- **GitHub Pages & Custom Domain Preparation**: Configured `CNAME` for `historicalbible.com`, `.nojekyll`, and automated `.github/workflows/deploy.yml` deployment workflow.
+- **Clean URL Directory Aliases**: Generated `contact/index.html`, `bible/index.html`, and `interact/index.html` ensuring resilient routing across clean paths and file extensions.
+- **Expanded Automated Regression Suite**: Added `tests/site_pages.spec.ts` (`REG-09`, `REG-10`, `REG-11`). All 12 Playwright tests passing in 8.4s.
+
 ## [1.2.0] - 2026-10-14
 
 ### Added

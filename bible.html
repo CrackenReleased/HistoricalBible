@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download the Bible — Historical Bible</title>
+  <meta name="description" content="Download the clean, unabridged King James Bible (PDF). No frills, no fillers. Just the clean and simple Word of God with translator additions and covenant names preserved.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-panel: #0d121d;
+      --bg-card: #131b2a;
+      --border: #233147;
+      --border-gold: rgba(212, 175, 55, 0.35);
+      --gold: #d4af37;
+      --gold-light: #fef08a;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --cyan: #06b6d4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navigation Header */
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(13, 18, 29, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      height: 42px;
+      width: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    nav.main-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    nav.main-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+      position: relative;
+    }
+
+    nav.main-nav a:hover, nav.main-nav a.active { color: var(--gold); }
+    nav.main-nav a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 1px;
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, #d4af37 0%, #b89324 100%);
+      color: #0b0f19 !important;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-weight: 600 !important;
+      transition: all 0.2s ease !important;
+    }
+
+    main {
+      flex: 1;
+      padding: 60px 24px 80px;
+    }
+
+    .page-container {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .page-badge {
+      display: inline-block;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--border-gold);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+
+    .page-header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 2.85rem;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .page-header p {
+      font-family: 'Lora', serif;
+      font-size: 1.25rem;
+      color: #cbd5e1;
+      font-style: italic;
+    }
+
+    /* Main Download Card */
+    .download-card {
+      background: linear-gradient(135deg, rgba(19, 27, 42, 0.95) 0%, rgba(13, 18, 29, 0.98) 100%);
+      border: 1px solid var(--border-gold);
+      border-radius: 16px;
+      padding: 44px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .doc-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .download-card h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.85rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .doc-meta {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .doc-meta span {
+      margin: 0 8px;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #d4af37 0%, #b89324 100%);
+      color: #0b0f19;
+      text-decoration: none;
+      padding: 16px 36px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      box-shadow: 0 6px 24px rgba(212, 175, 55, 0.35);
+      transition: all 0.2s ease;
+      margin-bottom: 32px;
+    }
+
+    .btn-download:hover {
+      background: linear-gradient(135deg, #fef08a 0%, #d4af37 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(212, 175, 55, 0.5);
+    }
+
+    /* Feature Grid inside Card */
+    .features-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      text-align: left;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .feature-check {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .feature-text h4 {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .feature-text p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Interactive Exploration Callout */
+    .interact-callout {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .callout-text h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.35rem;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .callout-text p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      color: var(--gold);
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(212, 175, 55, 0.15);
+      transform: translateY(-1px);
+    }
+
+    /* Site Footer */
+    footer.site-footer {
+      background: #05070a;
+      border-top: 1px solid var(--border);
+      padding: 44px 24px 32px;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 18px;
+    }
+
+    .footer-nav {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-nav a:hover { color: var(--gold); }
+
+    .scripture-anchor {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      color: #94a3b8;
+      font-style: italic;
+      max-width: 680px;
+      line-height: 1.6;
+    }
+
+    .copyright { font-size: 0.8rem; color: var(--text-dim); }
+
+    @media (max-width: 768px) {
+      .features-list { grid-template-columns: 1fr; }
+      .interact-callout { flex-direction: column; text-align: center; }
+      .page-header h1 { font-size: 2.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="/" class="brand-wrap">
+        <img src="/images/logo.jpg" alt="Historical Bible Logo" class="brand-logo" onerror="this.style.display='none'">
+        <span class="brand-text">Historical Bible</span>
+      </a>
+      <nav class="main-nav">
+        <a href="/">Home</a>
+        <a href="/interact.html">3D Tapestry</a>
+        <a href="/bible.html" class="active">Bible (PDF)</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/interact.html" class="nav-cta">Launch Interactive</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="page-container">
+      <div class="page-header">
+        <span class="page-badge">Authoritative Scripture Corpus</span>
+        <h1>Download the Bible</h1>
+        <p>No frills, no fillers. Just the clean and simple Word of God.</p>
+      </div>
+
+      <div class="download-card">
+        <div class="doc-icon">📖</div>
+        <h2>The Holy Bible — King James Version</h2>
+        <div class="doc-meta">
+          <span>Portable Document Format (PDF)</span> · 
+          <span>1,162 Pages</span> · 
+          <span>9.5 MB</span> · 
+          <span>Complete Old & New Testaments</span>
+        </div>
+
+        <a href="/Bible.pdf" download="HistoricalBible-KJV.pdf" class="btn-download">
+          <span>⬇️ Download Bible (PDF)</span>
+        </a>
+
+        <div class="features-list">
+          <div class="feature-item">
+            <span class="feature-check">✓</span>
+            <div class="feature-text">
+              <h4>Translator Additions Preserved [...]</h4>
+              <p>Retains all 14,134 bracketed instances of italicized words supplied by the 1611 translators for English syntax.</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <span class="feature-check">✓</span>
+            <div class="feature-text">
+              <h4>Covenant Divine Name (LORD)</h4>
+              <p>Strictly preserves the holy Tetragrammaton יהוה (YHWH / Jehovah) in all capitals, distinct from Lord (Adonai).</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <span class="feature-check">✓</span>
+            <div class="feature-text">
+              <h4>Unbreakable Verse Delimiters {c:v}</h4>
+              <p>Uses {chapter:verse} braces to protect the 247 verses containing internal scripture parentheses (...) from collision.</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <span class="feature-check">✓</span>
+            <div class="feature-text">
+              <h4>Clean, High-Readability Typography</h4>
+              <p>Curated and typed keystroke-by-keystroke across 12 comparative editions for absolute fidelity and scholarly study.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prefer to Explore Interactively Callout -->
+      <div class="interact-callout">
+        <div class="callout-text">
+          <h3>Prefer to Explore Interactively?</h3>
+          <p>Navigate all 344,799 scriptural cross-references in real-time 3D WebGL on your browser.</p>
+        </div>
+        <a href="/interact.html" class="btn-secondary">
+          Launch 3D Tapestry →
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-nav">
+        <a href="/">Home</a>
+        <a href="/interact.html">3D Tapestry</a>
+        <a href="/tapestry.html">2D Visualizer</a>
+        <a href="/bible.html">Download Bible</a>
+        <a href="/contact.html">Contact Us</a>
+        <a href="https://github.com/CrackenReleased/HistoricalBible" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+      </div>
+      <div class="scripture-anchor">
+        "And this is life eternal, that they might know thee the only true God, and Jesus Christ, whom thou hast sent." — <strong>John 17:3</strong>
+      </div>
+      <div class="copyright">
+        Historical Bible · Est. 2019 — All Rights Reserved. Copyright © 2019–2026
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

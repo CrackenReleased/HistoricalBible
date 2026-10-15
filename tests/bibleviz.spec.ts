@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('HistoricalBible Cross-References Interactive Engine', () => {
   test.beforeEach(async ({ page }) => {
-    // Open the local standalone index.html
-    await page.goto('/');
+    // Open the local standalone 2D canvas visualizer
+    await page.goto('/tapestry.html');
     // Wait for canvas to be mounted
     await page.waitForSelector('#arcs-canvas');
   });

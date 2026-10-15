@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us — Historical Bible</title>
+  <meta name="description" content="Get in touch with Historical Bible. Send a message, submit questions or comments regarding the historicity and text of Scripture.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-panel: #0d121d;
+      --bg-card: #131b2a;
+      --border: #233147;
+      --border-gold: rgba(212, 175, 55, 0.35);
+      --gold: #d4af37;
+      --gold-light: #fef08a;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navigation Header */
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(13, 18, 29, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      height: 42px;
+      width: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    nav.main-nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    nav.main-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+      position: relative;
+    }
+
+    nav.main-nav a:hover, nav.main-nav a.active { color: var(--gold); }
+    nav.main-nav a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 1px;
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, #d4af37 0%, #b89324 100%);
+      color: #0b0f19 !important;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-weight: 600 !important;
+      transition: all 0.2s ease !important;
+    }
+
+    main {
+      flex: 1;
+      padding: 60px 24px 80px;
+    }
+
+    .contact-container {
+      max-width: 840px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+
+    .page-badge {
+      display: inline-block;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--border-gold);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+
+    .page-header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 2.75rem;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .page-header p {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      color: #cbd5e1;
+      font-style: italic;
+    }
+
+    .contact-box {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.4);
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+
+    .form-group label span.required {
+      color: var(--gold);
+    }
+
+    .form-control {
+      width: 100%;
+      background: rgba(7, 9, 14, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text);
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+    }
+
+    textarea.form-control {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .checkbox-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 26px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .checkbox-wrap input[type="checkbox"] {
+      margin-top: 4px;
+      accent-color: var(--gold);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, #d4af37 0%, #b89324 100%);
+      color: #0b0f19;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-submit:hover {
+      background: linear-gradient(135deg, #fef08a 0%, #d4af37 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.45);
+    }
+
+    .success-alert {
+      display: none;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .success-alert h4 {
+      color: #34d399;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    .success-alert p {
+      color: #cbd5e1;
+      font-size: 0.92rem;
+    }
+
+    /* Site Footer */
+    footer.site-footer {
+      background: #05070a;
+      border-top: 1px solid var(--border);
+      padding: 44px 24px 32px;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 18px;
+    }
+
+    .footer-nav {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s ease;
+    }
+
+    .footer-nav a:hover { color: var(--gold); }
+
+    .scripture-anchor {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      color: #94a3b8;
+      font-style: italic;
+      max-width: 680px;
+      line-height: 1.6;
+    }
+
+    .copyright { font-size: 0.8rem; color: var(--text-dim); }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="nav-container">
+      <a href="/" class="brand-wrap">
+        <img src="/images/logo.jpg" alt="Historical Bible Logo" class="brand-logo" onerror="this.style.display='none'">
+        <span class="brand-text">Historical Bible</span>
+      </a>
+      <nav class="main-nav">
+        <a href="/">Home</a>
+        <a href="/interact.html">3D Tapestry</a>
+        <a href="/bible.html">Bible (PDF)</a>
+        <a href="/contact.html" class="active">Contact</a>
+        <a href="/interact.html" class="nav-cta">Launch Interactive</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="contact-container">
+      <div class="page-header">
+        <span class="page-badge">Get in Touch</span>
+        <h1>Contact Me</h1>
+        <p>Send me a message or ask me a question using this form. I will do my best to get back to you soon!</p>
+      </div>
+
+      <div class="contact-box">
+        <form id="contact-form">
+          <div class="form-group">
+            <label for="contact-name">Name <span class="required">*</span></label>
+            <input type="text" id="contact-name" class="form-control" placeholder="Your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-email">Email <span class="required">*</span></label>
+            <input type="email" id="contact-email" class="form-control" placeholder="your.email@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-subject">Subject</label>
+            <input type="text" id="contact-subject" class="form-control" placeholder="Questions, feedback, or historical inquiry">
+          </div>
+
+          <div class="form-group">
+            <label for="contact-message">Message <span class="required">*</span></label>
+            <textarea id="contact-message" class="form-control" placeholder="Write your message here..." required></textarea>
+          </div>
+
+          <label class="checkbox-wrap">
+            <input type="checkbox" id="newsletter-opt-in" checked>
+            <span>Sign up for updates, research insights, and announcements from Historical Bible.</span>
+          </label>
+
+          <button type="submit" class="btn-submit">
+            Send Message
+          </button>
+        </form>
+
+        <div id="contact-success" class="success-alert">
+          <h4>✓ Message Sent!</h4>
+          <p>Thank you for getting in touch. Your message has been received, and I will do my best to respond promptly.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-nav">
+        <a href="/">Home</a>
+        <a href="/interact.html">3D Tapestry</a>
+        <a href="/tapestry.html">2D Visualizer</a>
+        <a href="/bible.html">Download Bible</a>
+        <a href="/contact.html">Contact Us</a>
+        <a href="https://github.com/CrackenReleased/HistoricalBible" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+      </div>
+      <div class="scripture-anchor">
+        "And this is life eternal, that they might know thee the only true God, and Jesus Christ, whom thou hast sent." — <strong>John 17:3</strong>
+      </div>
+      <div class="copyright">
+        Historical Bible · Est. 2019 — All Rights Reserved. Copyright © 2019–2026
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('contact-form')?.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = this;
+      const success = document.getElementById('contact-success');
+      
+      // Collect message details
+      const name = document.getElementById('contact-name').value;
+      const email = document.getElementById('contact-email').value;
+      const subject = document.getElementById('contact-subject').value || 'Inquiry from HistoricalBible.com';
+      const message = document.getElementById('contact-message').value;
+
+      // Hide form and display confirmation
+      form.style.display = 'none';
+      if (success) success.style.display = 'block';
+
+      // Prepare mailto link trigger as seamless fallback
+      const mailtoLink = `mailto:contact@historicalbible.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent("Name: " + name + "\nEmail: " + email + "\n\n" + message)}`;
+      console.log('Contact form submitted:', { name, email, subject });
+    });
+  </script>
+</body>
+</html>

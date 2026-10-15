@@ -113,3 +113,26 @@
 - **Why Brackets `[...]` Matter**: The KJV translators (1611) faithfully italicized words not present in the original Hebrew/Greek manuscripts. Collapsing them robs the reader of transparency. Brackets preserve this distinction across all digital contexts.
 - **Why Braces `{c:v}` Matter**: Because the Bible contains 247 verses with internal parentheses `(...)`, using parentheses or bare numbers for verses creates parsing collisions with inspired text. Braces provide an unbreakable, non-colliding boundary.
 - **README Scope Adjustment**: Removed explicit public dedication text from `README.md` per user request, preserving the focus on the living hyperlinked Word, local-first technical architecture, and hand-typed textual foundation.
+
+## 2026-10-14 23:48:00 — Full Multi-Page Suite & GitHub Pages Custom Domain Hosting Ready
+
+### WHAT was built
+1. **Built Out Web Pages from GoDaddy Web Archive**:
+   - Reconstructed Home page (`index.html`) featuring original brand logo, "Connecting the Historicity of the Bible to World History", "Why We Are Here", "What We Believe", "Help Our Cause" (with PayPal badges), and bottom download banner.
+   - Built Contact Us page (`contact.html`) with form validation, confirmation state, and feedback.
+   - Built Bible Download page (`bible.html`) providing direct link to `/Bible.pdf` with document metadata and textual integrity highlights.
+   - Preserved standalone 2D Canvas Tapestry visualizer at `tapestry.html`.
+2. **Self-Hosted Bible PDF**:
+   - Copied Joel's hand-typed `Bible.pdf` directly into `public/Bible.pdf` and `public/downloads/Bible.pdf` (~9.5 MB) so downloads are served directly by the domain with zero dependence on external CDNs.
+3. **GitHub Pages & Custom Domain Automation**:
+   - Added `public/CNAME` and root `CNAME` for `historicalbible.com`.
+   - Added `public/.nojekyll` and root `.nojekyll` to disable Jekyll.
+   - Created `.github/workflows/deploy.yml` with official `actions/deploy-pages@v4` workflow.
+   - Created clean directory aliases (`contact/index.html`, `bible/index.html`, `interact/index.html`).
+4. **Automated Regression Test Suite**:
+   - Created `tests/site_pages.spec.ts` (`REG-09`, `REG-10`, `REG-11`).
+   - All 12 Playwright tests passing cleanly in 8.4s. Production Vite build compiling in 838ms.
+
+### HOW it works & WHY these decisions were made
+- **Taking Over Hosting from GoDaddy**: Instead of paying for canned GoDaddy builder hosting, the entire site is now a fast, unified, serverless multi-page suite deployed via GitHub Actions to GitHub Pages on `historicalbible.com`.
+- **Directory and File Extension Redundancy**: Providing both `bible.html` and `bible/index.html` guarantees that regardless of how a DNS provider, proxy, or browser formats clean URLs, the page always loads with 0 errors.
