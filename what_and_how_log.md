@@ -1,6 +1,5 @@
 # What and How Log — HistoricalBible.com
-
-## [2026-10-14 20:44:00] Legal Clearance, Procedural Architecture & Complete KJV Data Ingestion
+## 2026-10-14 20:44:00 — Legal Clearance, Procedural Architecture & Complete KJV Data Ingestion
 
 ### WHAT was built
 1. **Legal & Licensing Boundary Audit**:
