@@ -15,7 +15,7 @@
 ### Status Overview
 - **Public GitHub Repository**: **[https://github.com/CrackenReleased/HistoricalBible](https://github.com/CrackenReleased/HistoricalBible)**
 - **Landing Page & Gateway**: `https://historicalbible.com/interact` (`interact.html`)
-- **Master README**: Verbose, reverent master README dedicated to the suffering and triumph of Christ and global believers under persecution.
+- **Master README**: Authoritative technical and historical documentation covering the local-first architecture and hand-typed textual foundation.
 - **Three.js 3D Spatial Loom**: GPU-accelerated WebGL arc engine plotting 1,189 chapters in 3D orbit with additive-blended Bézier splines and 60 FPS orbital camera controls.
 - **Local-First Architecture**: Powered by browser `CacheStorage` & `IndexedDB`, downloading all scripture, names, and cross-references once to user's device for 0ms offline capability.
 - **Harmonic Acoustic Synthesis**: Web Audio engine rooted in Boarderless harmonic series ($G_3 = 196\text{ Hz}$) with canonical division overtones and stereo positioning.
