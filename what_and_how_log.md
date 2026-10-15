@@ -74,3 +74,19 @@
 - **Local-First Architecture**: Offloads all heavy graph computation to the client device. The server only delivers static files; the user's browser executes all spatial maths and searches locally.
 - **Three.js WebGL BufferGeometry**: Employs packed `Float32BufferAttribute` arrays for positions and vertex colors, rendering thousands of 3D arcs with a single draw call via `THREE.LineSegments`.
 - **Preserved ChatGPT Research**: Ingested all audit findings directly into the web application rather than leaving them dormant in tool scripts.
+
+## 2026-10-14 23:08:00 — Public GitHub Repository Release & Master Dedication README at CrackenReleased/HistoricalBible
+
+### WHAT was built
+1. **Public GitHub Repository Created**:
+   - Initialized and published **[`https://github.com/CrackenReleased/HistoricalBible`](https://github.com/CrackenReleased/HistoricalBible)** as a public open-source repository.
+   - Configured homepage URL to `https://historicalbible.com/interact`.
+   - Tagged discovery topics: `bible`, `christianity`, `cross-references`, `data-visualization`, `gospel`, `king-james-version`, `kjv`, `local-first`, `scripture`, `threejs`, `webgl`.
+2. **Master Dedication README (`README.md`)**:
+   - Wrote an exhaustive, reverent, and technically authoritative master README.
+   - Dedicated explicitly to the glory of God, the historical suffering, sacrifice, and physical resurrection of Jesus Christ, and the global church (specifically honoring the 200+ annual downloads from closed nations where owning a Bible is illegal).
+   - Documented the entire technical stack: Three.js 3D WebGL spatial loom, 2D Canvas tapestry (Psalm 119 anchor), Local-First client storage engine, Hitchcock 2,619 names dictionary, and audited theological relation engine with `Bible.pdf` page citations.
+   - Included 10-division color topology table with exact acoustic frequencies rooted in the Boarderless harmonic series ($G_3 = 196.00\text{ Hz}$).
+3. **Legal Hygiene & Asset Untracking**:
+   - Verified 17 U.S.C. § 102(b) procedural clearance.
+   - Ensured all local raster print assets (`BibleVizArc7WiderOTNTMedQuality.jpg`, `BibleNetwork.jpg`) remain strictly on the host machine and are untracked via `.gitignore` to protect personal-use licensing.
