@@ -1,676 +1,174 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Historical Bible — Connecting the Historicity of the Bible to World History</title>
-  <meta name="description" content="Connecting the historicity of the Bible to world history. Faith, religion, and the living Word of God unified with interactive 3D cross-reference visualization and hand-typed textual integrity.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-dark: #07090e;
-      --bg-panel: #0d121d;
-      --bg-card: #131b2a;
-      --bg-card-hover: #1a253a;
-      --border: #233147;
-      --border-gold: rgba(212, 175, 55, 0.35);
-      --gold: #d4af37;
-      --gold-light: #fef08a;
-      --gold-hover: #f59e0b;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --cyan: #06b6d4;
-      --sapphire: #2563eb;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
-
-    /* Ambient background gradient glow */
-    body::before {
-      content: '';
-      position: fixed;
-      top: -200px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 1000px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(37, 99, 235, 0.04) 50%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* Navigation Header */
-    header.site-header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(13, 18, 29, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 24px;
-    }
-
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .brand-wrap {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      text-decoration: none;
-    }
-
-    .brand-logo {
-      height: 42px;
-      width: auto;
-      border-radius: 4px;
-      object-fit: contain;
-    }
-
-    .brand-text {
-      font-family: 'Cinzel', serif;
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: var(--gold);
-      text-transform: uppercase;
-    }
-
-    nav.main-nav {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    nav.main-nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.92rem;
-      font-weight: 500;
-      transition: color 0.2s ease;
-      position: relative;
-    }
-
-    nav.main-nav a:hover,
-    nav.main-nav a.active {
-      color: var(--gold);
-    }
-
-    nav.main-nav a.active::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: var(--gold);
-      border-radius: 1px;
-    }
-
-    .nav-cta {
-      background: linear-gradient(135deg, #d4af37 0%, #b89324 100%);
-      color: #0b0f19 !important;
-      padding: 8px 18px;
-      border-radius: 6px;
-      font-weight: 600 !important;
-      transition: all 0.2s ease !important;
-      box-shadow: 0 2px 10px rgba(212, 175, 55, 0.25);
-    }
-
-    .nav-cta:hover {
-      background: linear-gradient(135deg, #fef08a 0%, #d4af37 100%);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
-    }
-
-    /* Main Container */
-    main {
-      flex: 1;
-      position: relative;
-      z-index: 1;
-    }
-
-    .content-wrap {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* Hero Section */
-    section.hero {
-      padding: 72px 0 64px;
-      text-align: center;
-      position: relative;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(212, 175, 55, 0.1);
-      border: 1px solid var(--border-gold);
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 24px;
-    }
-
-    .hero h1 {
-      font-family: 'Cinzel', serif;
-      font-size: 3rem;
-      font-weight: 800;
-      line-height: 1.2;
-      color: var(--text);
-      max-width: 960px;
-      margin: 0 auto 20px;
-      letter-spacing: 0.02em;
-    }
-
-    .hero h1 span.gold {
-      color: var(--gold);
-      text-shadow: 0 0 30px rgba(212, 175, 55, 0.35);
-    }
-
-    .hero p.tagline {
-      font-family: 'Lora', serif;
-      font-size: 1.25rem;
-      line-height: 1.6;
-      color: #cbd5e1;
-      max-width: 780px;
-      margin: 0 auto 36px;
-      font-style: italic;
-    }
-
-    .hero-actions {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 28px;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #d4af37 0%, #a8831a 100%);
-      color: #080c14;
-      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
-    }
-
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #fef08a 0%, #d4af37 100%);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(212, 175, 55, 0.45);
-    }
-
-    .btn-secondary {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--gold);
-      background: var(--bg-card-hover);
-      transform: translateY(-2px);
-    }
-
-    /* Core Pillars / Mission Grid */
-    section.pillars {
-      padding: 48px 0 64px;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
-      margin-bottom: 32px;
-    }
-
-    .card {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 36px 32px;
-      transition: all 0.25s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--gold);
-      opacity: 0.7;
-    }
-
-    .card:hover {
-      border-color: var(--border-gold);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    }
-
-    .card-icon {
-      font-size: 1.8rem;
-      margin-bottom: 16px;
-      color: var(--gold);
-    }
-
-    .card h2 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.5rem;
-      color: var(--gold);
-      margin-bottom: 14px;
-      letter-spacing: 0.04em;
-    }
-
-    .card p {
-      color: #cbd5e1;
-      font-size: 1rem;
-      line-height: 1.7;
-    }
-
-    /* Technology Showcase Banner */
-    section.showcase {
-      padding: 40px 0 64px;
-    }
-
-    .showcase-box {
-      background: linear-gradient(135deg, rgba(19, 27, 42, 0.9) 0%, rgba(13, 18, 29, 0.95) 100%);
-      border: 1px solid var(--border-gold);
-      border-radius: 16px;
-      padding: 48px 40px;
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 40px;
-      align-items: center;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    .showcase-content h3 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.85rem;
-      color: var(--text);
-      margin-bottom: 16px;
-      line-height: 1.3;
-    }
-
-    .showcase-content h3 span.gold {
-      color: var(--gold);
-    }
-
-    .showcase-content p {
-      color: #94a3b8;
-      font-size: 1rem;
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-
-    .showcase-stats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-
-    .stat-card {
-      background: rgba(7, 9, 14, 0.6);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      text-align: center;
-    }
-
-    .stat-number {
-      font-family: 'Cinzel', serif;
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--gold);
-      margin-bottom: 4px;
-    }
-
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    /* Support / Help Our Cause Section */
-    section.support {
-      padding: 48px 0 64px;
-      text-align: center;
-    }
-
-    .support-box {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 44px 32px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .support-box h2 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.75rem;
-      color: var(--gold);
-      margin-bottom: 12px;
-    }
-
-    .support-box p {
-      color: #cbd5e1;
-      font-size: 1rem;
-      max-width: 620px;
-      margin: 0 auto 24px;
-      line-height: 1.6;
-    }
-
-    .donate-badges {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    .donate-badges img {
-      height: 36px;
-      width: auto;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
-    }
-
-    /* Bottom Download Banner */
-    section.download-banner {
-      padding: 40px 0 72px;
-    }
-
-    .banner-card {
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(212, 175, 55, 0.12) 100%);
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      border-radius: 12px;
-      padding: 36px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
-    .banner-text h3 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.5rem;
-      color: var(--gold);
-      margin-bottom: 6px;
-    }
-
-    .banner-text p {
-      color: #cbd5e1;
-      font-size: 0.95rem;
-    }
-
-    /* Footer */
-    footer.site-footer {
-      background: #05070a;
-      border-top: 1px solid var(--border);
-      padding: 48px 24px 36px;
-      margin-top: auto;
-    }
-
-    .footer-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 20px;
-    }
-
-    .footer-nav {
-      display: flex;
-      gap: 24px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .footer-nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.88rem;
-      transition: color 0.2s ease;
-    }
-
-    .footer-nav a:hover {
-      color: var(--gold);
-    }
-
-    .scripture-anchor {
-      font-family: 'Lora', serif;
-      font-size: 0.95rem;
-      color: #94a3b8;
-      font-style: italic;
-      max-width: 680px;
-      line-height: 1.6;
-    }
-
-    .copyright {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-    }
-
-    @media (max-width: 768px) {
-      .hero h1 { font-size: 2.1rem; }
-      .grid-2 { grid-template-columns: 1fr; }
-      .showcase-box { grid-template-columns: 1fr; padding: 32px 24px; }
-      .banner-card { flex-direction: column; text-align: center; }
-      nav.main-nav { gap: 14px; }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Site Navigation Header -->
-  <header class="site-header">
-    <div class="nav-container">
-      <a href="/" class="brand-wrap">
-        <img src="/images/logo.jpg" alt="Historical Bible Logo" class="brand-logo" onerror="this.style.display='none'">
-        <span class="brand-text">Historical Bible</span>
-      </a>
-      <nav class="main-nav">
-        <a href="/" class="active">Home</a>
-        <a href="/interact.html">3D Tapestry</a>
-        <a href="/bible.html">Bible (PDF)</a>
-        <a href="/contact.html">Contact</a>
-        <a href="/interact.html" class="nav-cta">Launch Interactive</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Main Content Body -->
-  <main>
-    <div class="content-wrap">
-      
-      <!-- Hero Section -->
-      <section class="hero">
-        <div class="hero-badge">
-          <span>Faith</span> · <span>Historicity</span> · <span>Scripture</span>
-        </div>
-        <h1>Connecting the Historicity of the Bible to <span class="gold">World History</span></h1>
-        <p class="tagline">Historical Bible — Connect on a deeper level!</p>
-        
-        <div class="hero-actions">
-          <a href="/interact.html" class="btn btn-primary">
-            <span>✨ Launch 3D Interactive Tapestry</span>
-          </a>
-          <a href="/bible.html" class="btn btn-secondary">
-            <span>📖 Download Clean KJV (PDF)</span>
-          </a>
-          <a href="/contact.html" class="btn btn-secondary">
-            <span>✉️ Ask Me / Contact</span>
-          </a>
-        </div>
-      </section>
-
-      <!-- Why We Are Here & What We Believe -->
-      <section class="pillars">
-        <div class="grid-2">
-          
-          <!-- Card 1: Why We Are Here -->
-          <div class="card">
-            <div class="card-icon">🏛️</div>
-            <h2>Why We Are Here</h2>
-            <p>
-              Are you struggling to correlate the people's and timelines of the Bible to your known world history? Do you feel like the historical events recorded in the Bible are separate from world history? At Historical Bible we endeavor to connect those dots and unblur those lines. This is where history, faith and religion come together.
-            </p>
-          </div>
-
-          <!-- Card 2: What We Believe -->
-          <div class="card">
-            <div class="card-icon">📜</div>
-            <h2>What We Believe</h2>
-            <p>
-              We at Historical Bible believe that the Bible is the inerrant word of God. We believe the Bible literally, and that it is not only historically accurate, but that it is also eschatologically accurate.
-            </p>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- Technological & Textual Innovation Showcase -->
-      <section class="showcase">
-        <div class="showcase-box">
-          <div class="showcase-content">
-            <div class="hero-badge" style="margin-bottom: 12px;">Local-First Architecture</div>
-            <h3>Explore Scripture Across <span class="gold">344,799 Hyperlinked Arcs</span></h3>
-            <p>
-              Navigate the world’s first and greatest hyperlinked text directly on your device. Powered by client GPU acceleration and browser cache storage for instantaneous, zero-latency exploration with full offline capability.
-            </p>
-            <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-              <a href="/interact.html" class="btn btn-primary" style="padding: 10px 22px; font-size: 0.88rem;">
-                Open 3D WebGL Loom
-              </a>
-              <a href="/tapestry.html" class="btn btn-secondary" style="padding: 10px 22px; font-size: 0.88rem;">
-                Open 2D Canvas Tapestry
-              </a>
-            </div>
-          </div>
-
-          <div class="showcase-stats">
-            <div class="stat-card">
-              <div class="stat-number">344,799</div>
-              <div class="stat-label">Cross-References</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">31,102</div>
-              <div class="stat-label">Verses (100% Local)</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">14,134</div>
-              <div class="stat-label">Italic Additions [...]</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-number">2,619</div>
-              <div class="stat-label">Biblical Names & Places</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Support & Donations -->
-      <section class="support">
-        <div class="support-box">
-          <h2>Help Our Cause</h2>
-          <p>
-            Your support and contributions will enable us to meet our goals and improve. Your generous donation will fund our mission.
-          </p>
-          <div class="donate-badges">
-            <img src="/images/pp258.png" alt="PayPal" onerror="this.style.display='none'">
-            <img src="/images/cc-badges-ppmcvdam.png" alt="Accepted Payment Methods" onerror="this.style.display='none'">
-          </div>
-          <a href="https://www.paypal.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-            <span>❤️ Donate Now via PayPal</span>
-          </a>
-        </div>
-      </section>
-
-      <!-- Bottom Download Callout -->
-      <section class="download-banner">
-        <div class="banner-card">
-          <div class="banner-text">
-            <h3>Download the Bible</h3>
-            <p>Nothing extra, no frills. Just the clean and simple Word of God.</p>
-          </div>
-          <a href="/bible.html" class="btn btn-primary">
-            <span>Take Me There →</span>
-          </a>
-        </div>
-      </section>
-
-    </div>
-  </main>
-
-  <!-- Site Footer -->
-  <footer class="site-footer">
-    <div class="footer-container">
-      <div class="footer-nav">
-        <a href="/">Home</a>
-        <a href="/interact.html">3D Tapestry</a>
-        <a href="/tapestry.html">2D Visualizer</a>
-        <a href="/bible.html">Download Bible</a>
-        <a href="/contact.html">Contact Us</a>
-        <a href="https://github.com/CrackenReleased/HistoricalBible" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
-      </div>
-      <div class="scripture-anchor">
-        "And this is life eternal, that they might know thee the only true God, and Jesus Christ, whom thou hast sent." — <strong>John 17:3</strong>
-      </div>
-      <div class="copyright">
-        Historical Bible · Est. 2019 — All Rights Reserved. Copyright © 2019–2026
-      </div>
-    </div>
-  </footer>
-
-</body>
-</html>
+<!-- saved from url=(0028)/ -->
+<html lang="en-US"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link rel="icon" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:16,h:16,m" sizes="16x16"><link rel="icon" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:24,h:24,m" sizes="24x24"><link rel="icon" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:32,h:32,m" sizes="32x32"><link rel="icon" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:48,h:48,m" sizes="48x48"><link rel="icon" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:64,h:64,m" sizes="64x64"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Historical Bible - Faith and Religion, The Bible</title><meta name="description" content="Connecting the historicity of the Bible to secular world history"><meta name="author" content="Historical Bible"><meta name="generator" content="Starfield Technologies; Go Daddy Website Builder 8.0.0000"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" sizes="57x57" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:57,h:57,m"><link rel="apple-touch-icon" sizes="60x60" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:60,h:60,m"><link rel="apple-touch-icon" sizes="72x72" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:72,h:72,m"><link rel="apple-touch-icon" sizes="114x114" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:114,h:114,m"><link rel="apple-touch-icon" sizes="120x120" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:120,h:120,m"><link rel="apple-touch-icon" sizes="144x144" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:144,h:144,m"><link rel="apple-touch-icon" sizes="152x152" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:152,h:152,m"><link rel="apple-touch-icon" sizes="180x180" href="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/favicon/e2e92503-a372-494c-a008-46f295d3585f.jpg/:/rs=w:180,h:180,m"><meta property="og:url" content="/">
+<meta property="og:site_name" content="Historical Bible">
+<meta property="og:title" content="Historical Bible">
+<meta property="og:description" content="Connect on a deeper level!">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@BibleHistorical">
+<meta name="twitter:title" content="Historical Bible">
+<meta name="twitter:description" content="Connecting the historicity of the Bible to world history: Historical Bible">
+<meta name="twitter:image" content="https://img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg">
+<meta name="twitter:image:alt" content="Historical Bible">
+<meta name="theme-color" content="#3C3C3C"><style data-inline-fonts="">/* latin-ext */
+@font-face {
+  font-family: 'Righteous';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://img1.wsimg.com/gfonts/s/righteous/v18/1cXxaUPXBpj2rGoU7C9WhnGFucE.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Righteous';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://img1.wsimg.com/gfonts/s/righteous/v18/1cXxaUPXBpj2rGoU7C9WiHGF.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* vietnamese */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://img1.wsimg.com/gfonts/s/josefinsans/v34/Qw3aZQNVED7rKGKxtqIqX5EUAnx4RHw.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://img1.wsimg.com/gfonts/s/josefinsans/v34/Qw3aZQNVED7rKGKxtqIqX5EUA3x4RHw.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://img1.wsimg.com/gfonts/s/josefinsans/v34/Qw3aZQNVED7rKGKxtqIqX5EUDXx4.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://img1.wsimg.com/gfonts/s/josefinsans/v34/Qw3aZQNVED7rKGKxtqIqX5EUAnx4RHw.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://img1.wsimg.com/gfonts/s/josefinsans/v34/Qw3aZQNVED7rKGKxtqIqX5EUA3x4RHw.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://img1.wsimg.com/gfonts/s/josefinsans/v34/Qw3aZQNVED7rKGKxtqIqX5EUDXx4.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://img1.wsimg.com/gfonts/s/josefinsans/v34/Qw3aZQNVED7rKGKxtqIqX5EUAnx4RHw.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://img1.wsimg.com/gfonts/s/josefinsans/v34/Qw3aZQNVED7rKGKxtqIqX5EUA3x4RHw.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://img1.wsimg.com/gfonts/s/josefinsans/v34/Qw3aZQNVED7rKGKxtqIqX5EUDXx4.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style><style>.x{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0);margin:0;box-sizing:border-box}.x *,.x :after,.x :before{box-sizing:inherit}.x-el a[href^="mailto:"]:not(.x-el),.x-el a[href^="tel:"]:not(.x-el){color:inherit;font-size:inherit;text-decoration:inherit}.x-el-article,.x-el-aside,.x-el-details,.x-el-figcaption,.x-el-figure,.x-el-footer,.x-el-header,.x-el-hgroup,.x-el-main,.x-el-menu,.x-el-nav,.x-el-section,.x-el-summary{display:block}.x-el-audio,.x-el-canvas,.x-el-progress,.x-el-video{display:inline-block;vertical-align:baseline}.x-el-audio:not([controls]){display:none;height:0}.x-el-template{display:none}.x-el-a{background-color:transparent;color:inherit}.x-el-a:active,.x-el-a:hover{outline:0}.x-el-abbr[title]{border-bottom:1px dotted}.x-el-b,.x-el-strong{font-weight:700}.x-el-dfn{font-style:italic}.x-el-mark{background:#ff0;color:#000}.x-el-small{font-size:80%}.x-el-sub,.x-el-sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}.x-el-sup{top:-.5em}.x-el-sub{bottom:-.25em}.x-el-img{vertical-align:middle;border:0}.x-el-svg:not(:root){overflow:hidden}.x-el-figure{margin:0}.x-el-hr{box-sizing:content-box;height:0}.x-el-pre{overflow:auto}.x-el-code,.x-el-kbd,.x-el-pre,.x-el-samp{font-family:monospace,monospace;font-size:1em}.x-el-button,.x-el-input,.x-el-optgroup,.x-el-select,.x-el-textarea{color:inherit;font:inherit;margin:0}.x-el-button{overflow:visible}.x-el-button,.x-el-select{text-transform:none}.x-el-button,.x-el-input[type=button],.x-el-input[type=reset],.x-el-input[type=submit]{-webkit-appearance:button;cursor:pointer}.x-el-button[disabled],.x-el-input[disabled]{cursor:default}.x-el-button::-moz-focus-inner,.x-el-input::-moz-focus-inner{border:0;padding:0}.x-el-input{line-height:normal}.x-el-input[type=checkbox],.x-el-input[type=radio]{box-sizing:border-box;padding:0}.x-el-input[type=number]::-webkit-inner-spin-button,.x-el-input[type=number]::-webkit-outer-spin-button{height:auto}.x-el-input[type=search]{-webkit-appearance:textfield;box-sizing:content-box}.x-el-input[type=search]::-webkit-search-cancel-button,.x-el-input[type=search]::-webkit-search-decoration{-webkit-appearance:none}.x-el-textarea{border:0}.x-el-fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}.x-el-legend{border:0;padding:0}.x-el-textarea{overflow:auto}.x-el-optgroup{font-weight:700}.x-el-table{border-collapse:collapse;border-spacing:0}.x-el-td,.x-el-th{padding:0}.x{-webkit-font-smoothing:antialiased}.x-el-hr{border:0}.x-el-fieldset,.x-el-input,.x-el-select,.x-el-textarea{margin-top:0;margin-bottom:0}.x-el-fieldset,.x-el-input[type=email],.x-el-input[type=text],.x-el-textarea{width:100%}.x-el-label{vertical-align:middle}.x-el-input{border-style:none;padding:.5em;vertical-align:middle}.x-el-select:not([multiple]){vertical-align:middle}.x-el-textarea{line-height:1.75;padding:.5em}.x-el.d-none{display:none!important}.sideline-footer{margin-top:auto}.disable-scroll{touch-action:none;overflow:hidden;position:fixed;max-width:100vw}@-webkit-keyframes loaderscale{0%{transform:scale(1);opacity:1}45%{transform:scale(.1);opacity:.7}80%{transform:scale(1);opacity:1}}@keyframes loaderscale{0%{transform:scale(1);opacity:1}45%{transform:scale(.1);opacity:.7}80%{transform:scale(1);opacity:1}}.x-loader svg{display:inline-block}.x-loader svg:first-child{-webkit-animation:loaderscale .75s cubic-bezier(.2,.68,.18,1.08) -.24s infinite;animation:loaderscale .75s cubic-bezier(.2,.68,.18,1.08) -.24s infinite}.x-loader svg:nth-child(2){-webkit-animation:loaderscale .75s cubic-bezier(.2,.68,.18,1.08) -.12s infinite;animation:loaderscale .75s cubic-bezier(.2,.68,.18,1.08) -.12s infinite}.x-loader svg:nth-child(3){-webkit-animation:loaderscale .75s cubic-bezier(.2,.68,.18,1.08) 0s infinite;animation:loaderscale .75s cubic-bezier(.2,.68,.18,1.08) 0s infinite}.x-icon>svg{transition:transform .33s ease-in-out}.x-icon>svg.rotate-90{transform:rotate(-90deg)}.x-icon>svg.rotate90{transform:rotate(90deg)}.x-icon>svg.rotate-180{transform:rotate(-180deg)}.x-icon>svg.rotate180{transform:rotate(180deg)}.x-rt ol,.x-rt ul{text-align:left}.x-rt p{margin:0}.mte-inline-block{display:inline-block}@media only screen and (min-device-width:1025px){:root select,_::-webkit-full-page-media,_:future{font-family:sans-serif!important}}
+
+</style>
+<style>/*
+Copyright (c) 2011 by Brian J. Bonislawsky DBA Astigmatic (AOETI) (astigma@astigmatic.com), with Reserved Font Name "Righteous"
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at: http://scripts.sil.org/OFL
+
+—————————————————————————————-
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+—————————————————————————————-
+*/
+
+/*
+Copyright 2010 The Josefin Sans Project Authors (https://github.com/ThomasJockin/JosefinSansFont-master), with Reserved Font Name "Josefin Sans".
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at: http://scripts.sil.org/OFL
+
+—————————————————————————————-
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+—————————————————————————————-
+*/
+</style>
+<style data-glamor="cxs-default-sheet">.x .c1-1{letter-spacing:normal}.x .c1-2{text-transform:none}.x .c1-3{background-color:rgb(255, 255, 255)}.x .c1-4{width:100%}.x .c1-5 > div{position:relative}.x .c1-6 > div{overflow:hidden}.x .c1-7 > div{margin-top:auto}.x .c1-8 > div{margin-right:auto}.x .c1-9 > div{margin-bottom:auto}.x .c1-a > div{margin-left:auto}.x .c1-b{font-family:'Josefin Sans', Arial, sans-serif}.x .c1-c{font-size:16px}.x .c1-h{background-color:rgb(60, 60, 60)}.x .c1-i{padding-top:100px}.x .c1-j{padding-bottom:100px}.x .c1-k{overflow:hidden}.x .c1-l{padding:0px !important}.x .c1-o{display:none}.x .c1-q{position:relative}.x .c1-r{flex-grow:1}.x .c1-s{z-index:1}.x .c1-t{display:flex}.x .c1-u{flex-direction:column}.x .c1-v{min-height:600px}.x .c1-w{justify-content:flex-start}.x .c1-x{background-position:center}.x .c1-y{background-size:auto, cover}.x .c1-z{background-blend-mode:normal}.x .c1-10{background-repeat:no-repeat}.x .c1-11{text-shadow:none}.x .c1-1o{position:static}.x .c1-1q{padding-top:16px}.x .c1-1r{padding-bottom:16px}.x .c1-1s{padding-left:24px}.x .c1-1t{padding-right:24px}.x .c1-1u{background-color:transparent}.x .c1-1v{z-index:auto}.x .c1-20{align-items:center}.x .c1-21{flex-wrap:nowrap}.x .c1-22{margin-top:0px}.x .c1-23{margin-right:0px}.x .c1-24{margin-bottom:0px}.x .c1-25{margin-left:0px}.x .c1-26{[object -object]:0px}.x .c1-28{width:15%}.x .c1-29{padding-right:0px}.x .c1-2a{padding-left:0px}.x .c1-2b{letter-spacing:inherit}.x .c1-2c{text-transform:inherit}.x .c1-2d{text-decoration:none}.x .c1-2e{word-wrap:break-word}.x .c1-2f{overflow-wrap:break-word}.x .c1-2g{cursor:pointer}.x .c1-2h{border-top:0px}.x .c1-2i{border-right:0px}.x .c1-2j{border-bottom:0px}.x .c1-2k{border-left:0px}.x .c1-2l{color:rgb(255, 255, 255)}.x .c1-2m{font-weight:inherit}.x .c1-2n:hover{color:rgb(255, 255, 255)}.x .c1-2o:active{color:rgb(255, 255, 255)}.x .c1-2p{display:inline-block}.x .c1-2q{vertical-align:top}.x .c1-2r{padding-top:6px}.x .c1-2s{padding-right:6px}.x .c1-2t{padding-bottom:6px}.x .c1-2u{padding-left:6px}.x .c1-2v:hover{opacity:0.5}.x .c1-2w{width:70%}.x .c1-2x{text-align:center}.x .c1-2y{justify-content:center}.x .c1-2z{padding-left:8px}.x .c1-30{padding-right:8px}.x .c1-31{letter-spacing:4px}.x .c1-32{text-transform:uppercase}.x .c1-33{font-family:'Righteous', serif, system-ui}.x .c1-34{max-width:100%}.x .c1-35{font-size:14px}.x .c1-3d{display:inline}.x .c1-3e:hover{color:rgb(198, 198, 198)}.x .c1-3f{line-height:1.2}.x .c1-3g{font-size:28px}.x .c1-3h{font-weight:400}.x .c1-3q{word-wrap:normal !important}.x .c1-3r{overflow-wrap:normal !important}.x .c1-3s{visibility:hidden}.x .c1-3t{position:absolute}.x .c1-3u{width:auto}.x .c1-3v{overflow:visible}.x .c1-3w{left:0px}.x .c1-3x{font-size:25px}.x .c1-42{font-size:19px}.x .c1-47{justify-content:flex-end}.x .c1-48{margin-left:auto}.x .c1-49{margin-right:auto}.x .c1-4a{box-sizing:border-box}.x .c1-4b{flex-direction:row}.x .c1-4c{padding-top:0px}.x .c1-4d{padding-bottom:0px}.x .c1-4f{flex-shrink:1}.x .c1-4g{flex-basis:0%}.x .c1-4h .nav-item.visible{padding-right:40px}.x .c1-4i .nav-item.visible{padding-left:0px}.x .c1-4j .last-visible-nav-item{padding-right:0 !important}.x .c1-4m{line-height:24px}.x .c1-4n{padding-left:32px}.x .c1-4o{white-space:nowrap}.x .c1-4p:first-child{padding-left:0}.x .c1-4q{display:block}.x .c1-4r:before{content:""}.x .c1-4s:before{margin-right:0.5em}.x .c1-4t:before{display:inline-block}.x .c1-4u:before{height:2px}.x .c1-4v:before{width:0.5em}.x .c1-4w:before{background-color:rgb(255, 255, 255)}.x .c1-4x:before{transition:inherit}.x .c1-4y:before{vertical-align:middle}.x .c1-4z:before{opacity:1}.x .c1-50:before{transform:translateY(-50%)}.x .c1-51{margin-left:-6px}.x .c1-52{margin-right:-6px}.x .c1-53{margin-top:-6px}.x .c1-54{margin-bottom:-6px}.x .c1-55:before{height:1px}.x .c1-56:before{opacity:0}.x .c1-5a{color:inherit}.x .c1-5b{transition:transform .33s ease-in-out}.x .c1-5c{transform:rotate(0deg)}.x .c1-5d{vertical-align:middle}.x .c1-5e{border-radius:4px}.x .c1-5f{box-shadow:0 3px 6px 3px rgba(0,0,0,0.24)}.x .c1-5g{padding-left:16px}.x .c1-5h{padding-right:16px}.x .c1-5i{right:0px}.x .c1-5j{top:32px}.x .c1-5k{max-height:45vh}.x .c1-5l{overflow-y:auto}.x .c1-5m{z-index:1003}.x .c1-62{color:rgb(213, 213, 213)}.x .c1-63{text-align:left}.x .c1-64:last-child{margin-bottom:0}.x .c1-65{font-weight:700}.x .c1-66{margin-top:8px}.x .c1-67{margin-bottom:8px}.x .c1-68{line-height:1.5}.x .c1-69{position:fixed}.x .c1-6a{top:0px}.x .c1-6b{height:100%}.x .c1-6c{z-index:10002}.x .c1-6d{padding-top:72px}.x .c1-6e{-webkit-overflow-scrolling:touch}.x .c1-6f{transform:translateX(-249vw)}.x .c1-6g{overscroll-behavior:contain}.x .c1-6h{box-shadow:0 2px 6px 0px rgba(0,0,0,0.2)}.x .c1-6i{transition:transform .3s ease-in-out}.x .c1-6j{color:#737373}.x .c1-6k{line-height:1.3em}.x .c1-6l{font-style:normal}.x .c1-6m{top:15px}.x .c1-6n{right:10px}.x .c1-6o:hover{color:#abb2b2}.x .c1-6t{overflow-x:hidden}.x .c1-6u{overscroll-behavior:none}.x .c1-6z{-webkit-margin-before:0}.x .c1-70{-webkit-margin-after:0}.x .c1-71{-webkit-padding-start:0}.x .c1-72{color:rgb(94, 94, 94)}.x .c1-73{border-color:rgba(185, 185, 185, 0.5)}.x .c1-74{border-bottom-width:0px}.x .c1-75{border-bottom-style:solid}.x .c1-76:last-child{border-bottom:0}.x .c1-77{padding-top:25px}.x .c1-78{padding-bottom:25px}.x .c1-79{min-width:200px}.x .c1-7a{color:black}.x .c1-7b:active{color:rgb(60, 60, 60)}.x .c1-7d:before{background-color:rgb(119, 119, 119)}.x .c1-7e:before{position:absolute}.x .c1-7f:before{right:100%}.x .c1-7g:before{top:50%}.x .c1-7h{align-items:flex-start}.x .c1-7i{padding-top:56px}.x .c1-7j{padding-right:32px}.x .c1-7q{padding-top:40px}.x .c1-7r{padding-bottom:40px}.x .c1-7z{width:inherit}.x .c1-80{white-space:pre-line}.x .c1-81{font-size:35px}.x .c1-87{letter-spacing:2px}.x .c1-88{margin-bottom:16px}.x .c1-89 > p{margin-top:0}.x .c1-8a > p{margin-right:0}.x .c1-8b > p{margin-bottom:0}.x .c1-8c > p{margin-left:0}.x .c1-8d{font-size:22px}.x .c1-8i{font-size:inherit !important}.x .c1-8j{font-weight:600}.x .c1-8k{line-height:inherit}.x .c1-8l{font-style:italic}.x .c1-8m{text-decoration:line-through}.x .c1-8n{text-decoration:underline}.x .c1-8o{letter-spacing:unset}.x .c1-8p{text-transform:unset}.x .c1-8q{flex-wrap:wrap}.x .c1-8r{column-gap:24px}.x .c1-8s{row-gap:24px}.x .c1-8t{justify-content:left}.x .c1-8v{transition-property:background-color}.x .c1-8w{transition-duration:.3s}.x .c1-8x{transition-timing-function:ease-in-out}.x .c1-8y{border-style:solid}.x .c1-8z{display:inline-flex}.x .c1-90{padding-left:40px}.x .c1-91{padding-right:40px}.x .c1-92{padding-top:8px}.x .c1-93{padding-bottom:8px}.x .c1-94{min-height:56px}.x .c1-95{border-radius:48px}.x .c1-96{border-color:currentColor}.x .c1-97{border-top-width:2px}.x .c1-98{border-right-width:2px}.x .c1-99{border-bottom-width:2px}.x .c1-9a{border-left-width:2px}.x .c1-9b:hover{color:rgb(0, 0, 0)}.x .c1-9c:hover{background-color:rgb(255, 255, 255)}.x .c1-9d:hover{border-color:rgb(255, 255, 255)}.x .c1-9g{text-shadow:0px 2px 30px rgba(0, 0, 0, 0.12)}.x .c1-9h{bottom:0}.x .c1-9i{right:0}.x .c1-9l{margin-right:-12px}.x .c1-9m{margin-left:-12px}.x .c1-9r{padding-right:12px}.x .c1-9s{padding-left:12px}.x .c1-a3{line-height:1.25}.x .c1-a4{margin-bottom:32px}.x .c1-a5{margin-top:32px}.x .c1-a6{font-size:18px}.x .c1-ab{padding-top:4px}.x .c1-ac{border-style:none}.x .c1-ad{color:rgb(0, 0, 0)}.x .c1-ae{margin-left:-8px}.x .c1-af{width:24px}.x .c1-ag{height:24px}.x .c1-ah{top:50%}.x .c1-ai{right:auto}.x .c1-aj{line-height:0}.x .c1-ak{transform:translateY(-50%)}.x .c1-al > img{display:block}.x .c1-am{aspect-ratio:auto}.x .c1-an{border-radius:0px}.x .c1-ao{margin-left:calc(24px + 8px)}.x .c1-ap{width:150px}.x .c1-aq{height:auto}.x .c1-ar{margin-bottom:-24px}.x .c1-at{flex-basis:100%}.x .c1-ay > *{max-width:100%}.x .c1-az > :nth-child(n){margin-bottom:24px}.x .c1-b0  > :last-child{margin-bottom:0 !important}.x .c1-b3{color:rgb(27, 27, 27)}.x .c1-b4 > p > ol{text-align:left}.x .c1-b5 > p > ol{display:block}.x .c1-b6 > p > ol{padding-left:1.3em}.x .c1-b7 > p > ol{margin-left:16px}.x .c1-b8 > p > ol{margin-right:16px}.x .c1-b9 > p > ol{margin-top:auto}.x .c1-ba > p > ol{margin-bottom:auto}.x .c1-bb > p > ul{text-align:left}.x .c1-bc > p > ul{display:block}.x .c1-bd > p > ul{padding-left:1.3em}.x .c1-be > p > ul{margin-left:16px}.x .c1-bf > p > ul{margin-right:16px}.x .c1-bg > p > ul{margin-top:auto}.x .c1-bh > p > ul{margin-bottom:auto}.x .c1-bi > ul{text-align:left}.x .c1-bj > ul{display:block}.x .c1-bk > ul{padding-left:1.3em}.x .c1-bl > ul{margin-left:16px}.x .c1-bm > ul{margin-right:16px}.x .c1-bn > ul{margin-top:auto}.x .c1-bo > ul{margin-bottom:auto}.x .c1-bp > ol{text-align:left}.x .c1-bq > ol{display:block}.x .c1-br > ol{padding-left:1.3em}.x .c1-bs > ol{margin-left:16px}.x .c1-bt > ol{margin-right:16px}.x .c1-bu > ol{margin-top:auto}.x .c1-bv > ol{margin-bottom:auto}.x .c1-bw > p{line-height:1.8}.x .c1-bx{background-color:rgb(22, 22, 22)}.x .c1-by{padding-bottom:56px}.x .c1-c0{padding-left:none}.x .c1-c1{padding-right:none}.x .c1-c2{padding-top:none}.x .c1-c3{row-gap:0px}.x .c1-c4{column-gap:0px}.x .c1-c5 [data-typography]{color:inherit}.x .c1-c6{color:rgb(127, 128, 128)}.x .c1-c7:hover{color:rgb(191, 191, 191)}.x .c1-c8:active{color:rgb(219, 219, 219)}.x .c1-c9{color:rgb(247, 247, 247)}.x .c1-ca{margin-bottom:24px}.x .c1-cb{border-color:rgb(42, 42, 42)}.x .c1-cc{border-bottom-width:1px}.x .c1-cd{width:50px}.x .c1-ce{z-index:10000}.x .c1-cf{transition:all 1s ease-in}.x .c1-cg{box-shadow:0 2px 6px 0px rgba(0,0,0,0.3)}.x .c1-ch{contain:content}.x .c1-ci{bottom:-500px}.x .c1-cj{padding-top:24px}.x .c1-ck{padding-bottom:24px}.x .c1-cs{max-height:300px}.x .c1-cu{justify-content:space-between}.x .c1-cv{min-height:40px}.x .c1-cw{margin-top:24px}.x .c1-cx{margin-bottom:4px}.x .c1-cy{word-break:break-word}.x .c1-cz{flex-basis:50%}.x .c1-d0{padding-bottom:4px}.x .c1-d1{font-size:12px}.x .c1-d2:nth-child(2){margin-left:24px}.x .c1-d7{z-index:10003}.x .c1-d8{background-color:rgba(0, 0, 0, 0.6)}.x .c1-dl{box-shadow:0 4px 12px 0 rgba(117,117,117,0.4)}.x .c1-dm{max-height:90vh}.x .c1-dn{height:max-content}.x .c1-do{border-radius:12px}.x .c1-dp{max-width:515px}.x .c1-e5{padding-right:4px}.x .c1-e6{padding-left:4px}.x .c1-e7{border-radius:50%}.x .c1-e8{height:22px}.x .c1-e9{width:22px}.x .c1-ea{align-self:center}.x .c1-eb > *:not(:last-child){margin-bottom:0px}.x .c1-ef{border-width:0 !important}.x .c1-eg{aspect-ratio:2.200854700854701 / 1}.x .c1-eh > *:not(:last-child){margin-bottom:16px}.x .c1-ei{padding-top:32px}.x .c1-ej{padding-bottom:32px}.x .c1-ek:hover{background-color:rgb(0, 0, 0)}.x .c1-el:hover{border-color:rgb(0, 0, 0)}</style>
+<style data-glamor="cxs-media-sheet">@media (max-width: 450px){.x .c1-12{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:450,m")}}@media (max-width: 450px) and (-webkit-min-device-pixel-ratio: 2), (max-width: 450px) and (min-resolution: 192dpi){.x .c1-13{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:900,m")}}@media (max-width: 450px) and (-webkit-min-device-pixel-ratio: 3), (max-width: 450px) and (min-resolution: 288dpi){.x .c1-14{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:1350,m")}}@media (min-width: 451px) and (max-width: 767px){.x .c1-15{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:767,m")}}@media (min-width: 451px) and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 451px) and (max-width: 767px) and (min-resolution: 192dpi){.x .c1-16{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:1534,m")}}@media (min-width: 451px) and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 3), (min-width: 451px) and (max-width: 767px) and (min-resolution: 288dpi){.x .c1-17{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:2301,m")}}@media (min-width: 768px) and (max-width: 1023px){.x .c1-18{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:1023,m")}}@media (min-width: 768px) and (max-width: 1023px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 768px) and (max-width: 1023px) and (min-resolution: 192dpi){.x .c1-19{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:2046,m")}}@media (min-width: 768px) and (max-width: 1023px) and (-webkit-min-device-pixel-ratio: 3), (min-width: 768px) and (max-width: 1023px) and (min-resolution: 288dpi){.x .c1-1a{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:3069,m")}}@media (min-width: 1024px) and (max-width: 1279px){.x .c1-1b{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:1279,m")}}@media (min-width: 1024px) and (max-width: 1279px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (max-width: 1279px) and (min-resolution: 192dpi){.x .c1-1c{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:2558,m")}}@media (min-width: 1024px) and (max-width: 1279px) and (-webkit-min-device-pixel-ratio: 3), (min-width: 1024px) and (max-width: 1279px) and (min-resolution: 288dpi){.x .c1-1d{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:3837,m")}}@media (min-width: 1280px) and (max-width: 1535px){.x .c1-1e{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:1535,m")}}@media (min-width: 1280px) and (max-width: 1535px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1280px) and (max-width: 1535px) and (min-resolution: 192dpi){.x .c1-1f{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:3070,m")}}@media (min-width: 1280px) and (max-width: 1535px) and (-webkit-min-device-pixel-ratio: 3), (min-width: 1280px) and (max-width: 1535px) and (min-resolution: 288dpi){.x .c1-1g{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:4605,m")}}@media (min-width: 1536px) and (max-width: 1920px){.x .c1-1h{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:1920,m")}}@media (min-width: 1536px) and (max-width: 1920px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1536px) and (max-width: 1920px) and (min-resolution: 192dpi){.x .c1-1i{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:3840,m")}}@media (min-width: 1536px) and (max-width: 1920px) and (-webkit-min-device-pixel-ratio: 3), (min-width: 1536px) and (max-width: 1920px) and (min-resolution: 288dpi){.x .c1-1j{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:5760,m")}}@media (min-width: 1921px){.x .c1-1k{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:100%25")}}@media (min-width: 1921px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1921px) and (min-resolution: 192dpi){.x .c1-1l{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:100%25")}}@media (min-width: 1921px) and (-webkit-min-device-pixel-ratio: 3), (min-width: 1921px) and (min-resolution: 288dpi){.x .c1-1m{background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.25) 100%), url("//img1.wsimg.com/isteam/ip/060fa488-4bff-4271-ae7e-4c93a781bf7f/20190908_192538.jpg/:/rs=w:100%25")}}</style>
+<style data-glamor="cxs-xs-sheet">@media (max-width: 767px){.x .c1-m{padding-top:40px}}@media (max-width: 767px){.x .c1-n{padding-bottom:40px}}@media (max-width: 767px){.x .c1-36{justify-content:center}}@media (max-width: 767px){.x .c1-37{max-width:100%}}@media (max-width: 767px){.x .c1-57{width:100%}}@media (max-width: 767px){.x .c1-58{display:flex}}@media (max-width: 767px){.x .c1-82{letter-spacing:2px}}@media (max-width: 767px){.x .c1-8u{flex-direction:column}}@media (max-width: 767px){.x .c1-9e{width:auto}}@media (max-width: 767px){.x .c1-b1 > :nth-child(n){margin-bottom:16px}}@media (max-width: 767px){.x .c1-b2  > :last-child{margin-bottom:0 !important}}@media (max-width: 767px){.x .c1-dq{position:relative}}@media (max-width: 767px){.x .c1-dr{background-color:rgb(255, 255, 255)}}@media (max-width: 767px){.x .c1-ds{box-shadow:0 4px 12px 0 rgba(117,117,117,0.4)}}@media (max-width: 767px){.x .c1-dt{padding-bottom:16px}}@media (max-width: 767px){.x .c1-du{max-height:90vh}}@media (max-width: 767px){.x .c1-dv{border-radius:12px}}@media (max-width: 767px){.x .c1-dw{margin-top:16px}}@media (max-width: 767px){.x .c1-dx{margin-right:16px}}@media (max-width: 767px){.x .c1-dy{margin-bottom:16px}}@media (max-width: 767px){.x .c1-dz{margin-left:16px}}@media (max-width: 767px){.x .c1-e0{max-width:90vw}}</style>
+<style data-glamor="cxs-sm-sheet">@media (min-width: 768px){.x .c1-d{font-size:16px}}@media (min-width: 768px) and (max-width: 1023px){.x .c1-38{width:auto}}@media (min-width: 768px){.x .c1-39{font-size:14px}}@media (min-width: 768px){.x .c1-3i{font-size:33px}}@media (min-width: 768px){.x .c1-3y{font-size:26px}}@media (min-width: 768px){.x .c1-43{font-size:19px}}@media (min-width: 768px) and (max-width: 1023px){.x .c1-59{width:100%}}@media (min-width: 768px) and (max-width: 1023px){.x .c1-5o{right:0px}}@media (min-width: 768px){.x .c1-6p{font-size:30px}}@media (min-width: 768px){.x .c1-6v{width:100%}}@media (min-width: 768px){.x .c1-83{font-size:42px}}@media (min-width: 768px){.x .c1-8e{font-size:22px}}@media (min-width: 768px){.x .c1-9f{width:auto}}@media (min-width: 768px){.x .c1-9n{margin-top:0}}@media (min-width: 768px){.x .c1-9o{margin-right:-24px}}@media (min-width: 768px){.x .c1-9p{margin-bottom:0}}@media (min-width: 768px){.x .c1-9q{margin-left:-24px}}@media (min-width: 768px){.x .c1-9t{margin-left:8.333333333333332%}}@media (min-width: 768px){.x .c1-9u{flex-basis:83.33333333333334%}}@media (min-width: 768px){.x .c1-9v{max-width:83.33333333333334%}}@media (min-width: 768px){.x .c1-9w{padding-top:0}}@media (min-width: 768px){.x .c1-9x{padding-right:24px}}@media (min-width: 768px){.x .c1-9y{padding-bottom:0}}@media (min-width: 768px){.x .c1-9z{padding-left:24px}}@media (min-width: 768px){.x .c1-a7{font-size:18px}}@media (min-width: 768px){.x .c1-as{margin-bottom:-48px}}@media (min-width: 768px){.x .c1-au{flex-basis:50%}}@media (min-width: 768px){.x .c1-av{max-width:50%}}@media (min-width: 768px){.x .c1-aw{padding-bottom:48px}}@media (min-width: 768px){.x .c1-cl{width:400px}}@media (min-width: 768px){.x .c1-cm{max-height:500px}}@media (min-width: 768px){.x .c1-cn{border-radius:7px}}@media (min-width: 768px){.x .c1-co{margin-top:24px}}@media (min-width: 768px){.x .c1-cp{margin-right:24px}}@media (min-width: 768px){.x .c1-cq{margin-bottom:24px}}@media (min-width: 768px){.x .c1-cr{margin-left:24px}}@media (min-width: 768px){.x .c1-ct{max-height:200px}}@media (min-width: 768px){.x .c1-d3{font-size:12px}}@media (min-width: 768px){.x .c1-d9{position:absolute}}@media (min-width: 768px){.x .c1-da{transform:none}}@media (min-width: 768px){.x .c1-db{max-width:600px}}@media (min-width: 768px){.x .c1-dc{margin-left:auto}}@media (min-width: 768px){.x .c1-dd{margin-right:auto}}@media (min-width: 768px){.x .c1-de{display:flex}}@media (min-width: 768px){.x .c1-df{align-items:center}}@media (min-width: 768px){.x .c1-dg{pointer-events:none}}@media (min-width: 768px){.x .c1-dh{justify-content:center}}@media (min-width: 768px){.x .c1-di:before{display:block}}@media (min-width: 768px){.x .c1-dj:before{height:90vh}}@media (min-width: 768px){.x .c1-dk:before{content:""}}@media (min-width: 768px){.x .c1-e1{pointer-events:auto}}@media (min-width: 768px){.x .c1-e2{border-radius:12px}}@media (min-width: 768px){.x .c1-e3{max-width:515px}}@media (min-width: 768px){.x .c1-ec{padding-left:0px}}@media (min-width: 768px){.x .c1-ed{padding-right:0px}}</style>
+<style data-glamor="cxs-md-sheet">@media (min-width: 1024px){.x .c1-e{font-size:16px}}@media (min-width: 1024px){.x .c1-p{display:block}}@media (min-width: 1024px){.x .c1-1n{min-height:85vh}}@media (min-width: 1024px){.x .c1-1p{position:static}}@media (min-width: 1024px){.x .c1-1w{padding-top:16px}}@media (min-width: 1024px){.x .c1-1x{padding-bottom:16px}}@media (min-width: 1024px){.x .c1-1y{padding-left:120px}}@media (min-width: 1024px){.x .c1-1z{padding-right:120px}}@media (min-width: 1024px){.x .c1-27{display:none}}@media (min-width: 1024px){.x .c1-3a{font-size:14px}}@media (min-width: 1024px){.x .c1-3j{margin-top:0px}}@media (min-width: 1024px){.x .c1-3k{margin-right:0px}}@media (min-width: 1024px){.x .c1-3l{margin-bottom:0px}}@media (min-width: 1024px){.x .c1-3m{margin-left:0px}}@media (min-width: 1024px){.x .c1-3n{font-size:33px}}@media (min-width: 1024px){.x .c1-3z{font-size:26px}}@media (min-width: 1024px){.x .c1-44{font-size:19px}}@media (min-width: 1024px){.x .c1-4e{display:flex}}@media (min-width: 1024px){.x .c1-4k{flex-basis:33.33333333333333%}}@media (min-width: 1024px){.x .c1-4l{max-width:33.33333333333333%}}@media (min-width: 1024px) and (max-width: 1279px){.x .c1-5n{right:0px}}@media (min-width: 1024px){.x .c1-5p{border-color:rgb(83, 83, 83)}}@media (min-width: 1024px){.x .c1-5q{border-style:solid}}@media (min-width: 1024px){.x .c1-5r{border-radius:0}}@media (min-width: 1024px){.x .c1-5s{box-shadow:none}}@media (min-width: 1024px){.x .c1-5t{line-height:1.65}}@media (min-width: 1024px){.x .c1-5u{padding-top:32px}}@media (min-width: 1024px){.x .c1-5v{padding-right:32px}}@media (min-width: 1024px){.x .c1-5w{padding-bottom:32px}}@media (min-width: 1024px){.x .c1-5x{padding-left:32px}}@media (min-width: 1024px){.x .c1-5y{border-top-width:1px}}@media (min-width: 1024px){.x .c1-5z{border-right-width:1px}}@media (min-width: 1024px){.x .c1-60{border-bottom-width:1px}}@media (min-width: 1024px){.x .c1-61{border-left-width:1px}}@media (min-width: 1024px){.x .c1-6q{font-size:30px}}@media (min-width: 1024px){.x .c1-6w{width:984px}}@media (min-width: 1024px){.x .c1-7c{min-width:300px}}@media (min-width: 1024px){.x .c1-7k{justify-content:flex-start}}@media (min-width: 1024px){.x .c1-7l{margin-left:auto}}@media (min-width: 1024px){.x .c1-7m{margin-right:auto}}@media (min-width: 1024px){.x .c1-7n{max-width:85%}}@media (min-width: 1024px){.x .c1-7o{padding-left:24px}}@media (min-width: 1024px){.x .c1-7p{padding-right:24px}}@media (min-width: 1024px){.x .c1-7s{align-items:flex-start}}@media (min-width: 1024px){.x .c1-7t{width:85%}}@media (min-width: 1024px){.x .c1-7u{padding-bottom:72px}}@media (min-width: 1024px){.x .c1-7v{padding-top:72px}}@media (min-width: 1024px){.x .c1-7w{max-width:100%}}@media (min-width: 1024px){.x .c1-7x > :nth-child(n){margin-bottom:16px}}@media (min-width: 1024px){.x .c1-7y  > :last-child{margin-bottom:0 !important}}@media (min-width: 1024px){.x .c1-84{font-size:42px}}@media (min-width: 1024px){.x .c1-8f{font-size:22px}}@media (min-width: 1024px){.x .c1-9j{padding-left:56px}}@media (min-width: 1024px){.x .c1-9k{padding-right:56px}}@media (min-width: 1024px){.x .c1-a0{margin-left:16.666666666666664%}}@media (min-width: 1024px){.x .c1-a1{flex-basis:66.66666666666666%}}@media (min-width: 1024px){.x .c1-a2{max-width:66.66666666666666%}}@media (min-width: 1024px){.x .c1-a8{font-size:18px}}@media (min-width: 1024px){.x .c1-ax:first-of-type{padding-bottom:72px}}@media (min-width: 1024px){.x .c1-bz{min-width:100%}}@media (min-width: 1024px){.x .c1-d4{font-size:12px}}@media (min-width: 1024px){.x .c1-e4{max-width:515px}}@media (min-width: 1024px){.x .c1-ee{height:234px}}</style>
+<style data-glamor="cxs-lg-sheet">@media (min-width: 1280px){.x .c1-f{font-size:16px}}@media (min-width: 1280px){.x .c1-3b{font-size:14px}}@media (min-width: 1280px){.x .c1-3o{font-size:39px}}@media (min-width: 1280px){.x .c1-40{font-size:28px}}@media (min-width: 1280px){.x .c1-45{font-size:19px}}@media (min-width: 1280px){.x .c1-6r{font-size:32px}}@media (min-width: 1280px){.x .c1-6x{width:1160px}}@media (min-width: 1280px){.x .c1-85{font-size:54px}}@media (min-width: 1280px){.x .c1-8g{font-size:22px}}@media (min-width: 1280px){.x .c1-a9{font-size:18px}}@media (min-width: 1280px){.x .c1-d5{font-size:12px}}</style>
+<style data-glamor="cxs-xl-sheet">@media (min-width: 1536px){.x .c1-g{font-size:18px}}@media (min-width: 1536px){.x .c1-3c{font-size:16px}}@media (min-width: 1536px){.x .c1-3p{font-size:42px}}@media (min-width: 1536px){.x .c1-41{font-size:32px}}@media (min-width: 1536px){.x .c1-46{font-size:21px}}@media (min-width: 1536px){.x .c1-6s{font-size:36px}}@media (min-width: 1536px){.x .c1-6y{width:1280px}}@media (min-width: 1536px){.x .c1-86{font-size:56px}}@media (min-width: 1536px){.x .c1-8h{font-size:24px}}@media (min-width: 1536px){.x .c1-aa{font-size:20px}}@media (min-width: 1536px){.x .c1-d6{font-size:14px}}</style>
+<style>@keyframes opacity-bounce { 
+      0% {opacity: 0;transform: translateY(100%); } 
+      60% { transform: translateY(-20%); } 
+      100% { opacity: 1; transform: translateY(0); }
+    }</style>
+<style>.gd-ad-flex-parent {
+          animation-name: opacity-bounce; 
+          animation-duration: 800ms; 
+          animation-delay: 400ms; 
+          animation-fill-mode: forwards; 
+          animation-timing-function: ease; 
+          opacity: 0;</style>
+<style>.page-inner { background-color: rgb(22, 22, 22); min-height: 100vh; }</style>
+<script>"use strict";
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}</script><style id="dynamic-tagline-6682-style">#dynamic-tagline-6682 { font-size: 56px !important; }</style><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-layout28-Theme-publish-Theme-24cd15e9.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-_rollupPluginBabelHelpers-a2e90765.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-defaultSocialIconPack-91835b99.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-index-4e26cd6b.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-index2-87bd33e6.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-index3-c8de852e.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-linkIndicator-c1af92dd.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-loaders-fffeeba5.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-modernThinRound-ced97fbd.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-overlayTypes-e1dbe765.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/Carousel-3d82957b.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/ColorSwatch-4196a0a9.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-dataAids-6a839d53.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-navigationDrawer-27f5f1f5.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-searchFormLocations-c86f2a99.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/_commonjsHelpers-67085353.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/_react_commonjs-external-a1351e34.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/_rollupPluginBabelHelpers-8ce54c82.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/interopRequireDefault-c83974f7.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-LinkAwareComponent-ed6872ee.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-FlyoutMenu-Component-bd43c5d0.js.download"></script><script crossorigin="Anonymous" src="/Historical Bible - Faith and Religion, The Bible_files/bs-Toggle-37f740c7.js.download"></script></head>
+<body class="x  x-fonts-righteous"><div id="layout-060-fa-488-4-bff-4271-ae-7-e-4-c-93-a-781-bf-7-f" class="layout layout-layout layout-layout-layout-28 locale-en-US lang-en"><div data-ux="Page" id="page-6648" class="x-el x-el-div x-el c1-1 c1-2 c1-3 c1-4 c1-5 c1-6 c1-7 c1-8 c1-9 c1-a c1-b c1-c c1-d c1-e c1-f c1-g c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div page-inner c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><div id="dbe43833-d2b0-4397-94f1-99b9acaca707" class="widget widget-header widget-header-header-9"><div data-ux="Header" role="main" data-aid="HEADER_WIDGET" id="n-6649" class="x-el x-el-div x-el x-el c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g c1-1 c1-2 c1-h c1-b c1-c c1-d c1-e c1-f c1-g c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><div> <div id="freemium-ad-6651"></div><section data-ux="Section" data-aid="HEADER_SECTION" class="x-el x-el-section c1-1 c1-2 c1-h c1-i c1-j c1-k c1-l c1-b c1-c c1-m c1-n c1-d c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-o c1-b c1-c c1-d c1-p c1-e c1-f c1-g"></div><div data-ux="HeaderMedia" class="x-el x-el-div c1-1 c1-2 c1-q c1-r c1-b c1-c c1-d c1-e c1-f c1-g"><div role="img" data-aid="BACKGROUND_IMAGE_RENDERED" aria-label="" data-ux="Background" data-ht="Fill" class="x-el x-el-div c1-1 c1-2 c1-s c1-t c1-u c1-v c1-w c1-x c1-y c1-z c1-10 c1-11 c1-b c1-c c1-12 c1-13 c1-14 c1-15 c1-16 c1-17 c1-18 c1-19 c1-1a c1-1b c1-1c c1-1d c1-1e c1-1f c1-1g c1-1h c1-1i c1-1j c1-1k c1-1l c1-1m c1-d c1-1n c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-1o c1-4 c1-b c1-c c1-d c1-1p c1-e c1-f c1-g"><nav data-ux="Block" class="x-el x-el-nav c1-1 c1-2 c1-q c1-1q c1-1r c1-1s c1-1t c1-1u c1-1v c1-b c1-c c1-d c1-1w c1-1x c1-1y c1-1z c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-20 c1-21 c1-4 c1-t c1-22 c1-23 c1-24 c1-25 c1-26 c1-b c1-c c1-d c1-27 c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-28 c1-29 c1-2a c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="Element" id="bs-1" class="x-el x-el-div c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><a rel="" role="button" aria-haspopup="menu" data-ux="LinkDropdown" data-toggle-ignore="true" id="6652" aria-expanded="false" toggleid="n-6649-navId-mobile" icon="hamburger" data-edit-interactive="true" data-aid="HAMBURGER_MENU_LINK" aria-label="Hamburger Site Navigation Icon" href="#" data-typography="LinkAlpha" class="x-el x-el-a c1-2b c1-2c c1-2d c1-2e c1-2f c1-t c1-2g c1-20 c1-w c1-2h c1-2i c1-2j c1-2k c1-2l c1-b c1-c c1-2m c1-2n c1-2o c1-d c1-27 c1-e c1-f c1-g" data-tccl="ux2.HEADER.header9.HeaderMedia.Fill.Link.Dropdown.6653.click,click"><svg viewBox="0 0 24 24" fill="currentColor" width="40px" height="40px" data-ux="IconHamburger" class="x-el x-el-svg c1-1 c1-2 c1-2l c1-2p c1-2q c1-2r c1-2s c1-2t c1-2u c1-b c1-c c1-2n c1-2v c1-d c1-e c1-f c1-g"><path fill-rule="evenodd" d="M19.248 7.5H4.752A.751.751 0 0 1 4 6.75c0-.414.337-.75.752-.75h14.496a.75.75 0 1 1 0 1.5m0 5.423H4.752a.75.75 0 0 1 0-1.5h14.496a.75.75 0 1 1 0 1.5m0 5.423H4.752a.75.75 0 1 1 0-1.5h14.496a.75.75 0 1 1 0 1.5"></path></svg></a></div></div><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-t c1-2w c1-2x c1-2y c1-2f c1-2z c1-30 c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="Block" data-aid="HEADER_LOGO_RENDERED" class="x-el x-el-div c1-31 c1-32 c1-2p c1-33 c1-34 c1-35 c1-36 c1-37 c1-38 c1-39 c1-3a c1-3b c1-3c"><a rel="" role="link" aria-haspopup="menu" data-ux="Link" data-page="28e6dc92-3bec-438c-8d0d-75c251def48c" title="Historical Bible" href="/" data-typography="LinkAlpha" class="x-el x-el-a c1-2b c1-2c c1-2d c1-2e c1-2f c1-3d c1-2g c1-2h c1-2i c1-2j c1-2k c1-34 c1-4 c1-b c1-2l c1-c c1-2m c1-3e c1-2o c1-d c1-e c1-f c1-g" data-tccl="ux2.HEADER.header9.Logo.Fill.Link.Default.6654.click,click"><div data-ux="Block" id="logo-container-6655" class="x-el x-el-div c1-1 c1-2 c1-2p c1-4 c1-q c1-b c1-c c1-d c1-e c1-f c1-g"><h3 role="heading" aria-level="3" data-ux="LogoHeading" id="logo-text-6656" data-aid="HEADER_LOGO_TEXT_RENDERED" data-typography="LogoAlpha" class="x-el x-el-h3 c1-31 c1-32 c1-2e c1-2f c1-3f c1-25 c1-23 c1-22 c1-24 c1-34 c1-2p c1-33 c1-2l c1-3g c1-3h c1-3i c1-3j c1-3k c1-3l c1-3m c1-3n c1-3o c1-3p">Historical Bible</h3><span role="heading" aria-level="NaN" data-ux="scaler" data-size="xxlarge" data-scaler-id="scaler-logo-container-6655" aria-hidden="true" data-typography="LogoAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-25 c1-23 c1-22 c1-24 c1-34 c1-o c1-3s c1-3t c1-3u c1-3v c1-3w c1-3g c1-33 c1-2l c1-3h c1-3i c1-3j c1-3k c1-3l c1-3m c1-3n c1-3o c1-3p">Historical Bible</span><span role="heading" aria-level="NaN" data-ux="scaler" data-size="xlarge" data-scaler-id="scaler-logo-container-6655" aria-hidden="true" data-typography="LogoAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-25 c1-23 c1-22 c1-24 c1-34 c1-o c1-3s c1-3t c1-3u c1-3v c1-3w c1-3x c1-33 c1-2l c1-3h c1-3y c1-3j c1-3k c1-3l c1-3m c1-3z c1-40 c1-41">Historical Bible</span><span role="heading" aria-level="NaN" data-ux="scaler" data-size="large" data-scaler-id="scaler-logo-container-6655" aria-hidden="true" data-typography="LogoAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-25 c1-23 c1-22 c1-24 c1-34 c1-o c1-3s c1-3t c1-3u c1-3v c1-3w c1-42 c1-33 c1-2l c1-3h c1-43 c1-3j c1-3k c1-3l c1-3m c1-44 c1-45 c1-46">Historical Bible</span></div></a></div></div><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-28 c1-29 c1-2a c1-t c1-47 c1-b c1-c c1-d c1-e c1-f c1-g"></div></div><div data-ux="Container" class="x-el x-el-div c1-1 c1-2 c1-48 c1-49 c1-1s c1-1t c1-34 c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="Grid" id="navContainer-6661" class="x-el x-el-div c1-1 c1-2 c1-o c1-4a c1-4b c1-21 c1-22 c1-23 c1-24 c1-25 c1-4 c1-4c c1-4d c1-b c1-c c1-d c1-4e c1-e c1-f c1-g"><div data-ux="GridCell" class="x-el x-el-div c1-1 c1-2 c1-4a c1-r c1-4f c1-4g c1-34 c1-4c c1-29 c1-4d c1-2a c1-4h c1-4i c1-4j c1-w c1-t c1-20 c1-b c1-c c1-d c1-4k c1-4l c1-e c1-f c1-g"><nav data-ux="Nav" data-aid="HEADER_NAV_RENDERED" role="navigation" class="x-el x-el-nav c1-1 c1-2 c1-34 c1-4m c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="Block" id="n-66496659-navId-1" class="x-el x-el-div c1-1 c1-2 c1-q c1-t c1-20 c1-4c c1-29 c1-4d c1-2a c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div nav-item c1-1 c1-2 c1-2q c1-25 c1-4n c1-4o c1-q c1-3s c1-2p c1-b c1-c c1-4p c1-d c1-e c1-f c1-g visible" style="visibility: visible;"><a rel="" role="link" aria-haspopup="menu" data-ux="NavLinkActive" target="" data-page="28e6dc92-3bec-438c-8d0d-75c251def48c" data-edit-interactive="true" href="/" data-typography="NavAlpha" class="x-el x-el-a c1-31 c1-32 c1-2d c1-2e c1-2f c1-4q c1-2g c1-33 c1-2l c1-35 c1-3h c1-4r c1-4s c1-4t c1-4u c1-4v c1-4w c1-4x c1-4y c1-4z c1-50 c1-2n c1-2v c1-2o c1-39 c1-3a c1-3b c1-3c" data-tccl="ux2.HEADER.header9.Nav.Default.Link.Active.6663.click,click">Home</a></div><div data-ux="Block" class="x-el x-el-div nav-item c1-1 c1-2 c1-2q c1-25 c1-4n c1-4o c1-q c1-3s c1-2p c1-b c1-c c1-4p c1-d c1-e c1-f c1-g visible" style="visibility: visible;"><a rel="" role="link" aria-haspopup="false" data-ux="NavLink" target="" data-page="5ba36822-fb5d-438d-9ae5-134c58a00aac" data-edit-interactive="true" href="/contact" data-typography="NavAlpha" class="x-el x-el-a c1-31 c1-32 c1-2d c1-2e c1-2f c1-t c1-2g c1-20 c1-q c1-51 c1-52 c1-53 c1-54 c1-2u c1-2s c1-2r c1-2t c1-33 c1-2l c1-35 c1-3h c1-4r c1-4s c1-4t c1-55 c1-4v c1-4w c1-4x c1-4y c1-56 c1-2n c1-2v c1-2o c1-39 c1-3a c1-3b c1-3c" data-tccl="ux2.HEADER.header9.Nav.Default.Link.Default.6664.click,click">Contact </a></div><div data-ux="Block" class="x-el x-el-div nav-item c1-1 c1-2 c1-2q c1-25 c1-4n c1-4o c1-q c1-3s c1-2p c1-b c1-c c1-4p c1-d c1-e c1-f c1-g" style="display: none;"><a rel="" role="link" aria-haspopup="false" data-ux="NavLink" target="" data-page="5e4a0d43-b465-4f12-8bb5-51782ee4478c" data-edit-interactive="true" href="/bible" data-typography="NavAlpha" class="x-el x-el-a c1-31 c1-32 c1-2d c1-2e c1-2f c1-t c1-2g c1-20 c1-q c1-51 c1-52 c1-53 c1-54 c1-2u c1-2s c1-2r c1-2t c1-33 c1-2l c1-35 c1-3h c1-4r c1-4s c1-4t c1-55 c1-4v c1-4w c1-4x c1-4y c1-56 c1-2n c1-2v c1-2o c1-39 c1-3a c1-3b c1-3c" data-tccl="ux2.HEADER.header9.Nav.Default.Link.Default.6665.click,click">Bible</a></div></div></nav></div><div data-ux="GridCell" class="x-el x-el-div c1-1 c1-2 c1-4a c1-r c1-4f c1-4g c1-34 c1-4c c1-29 c1-4d c1-2a c1-4h c1-4i c1-4j c1-2y c1-2x c1-25 c1-23 c1-s c1-t c1-20 c1-b c1-c c1-d c1-4k c1-4l c1-e c1-f c1-g"><div data-ux="Block" data-aid="HEADER_LOGO_RENDERED" class="x-el x-el-div c1-31 c1-32 c1-2p c1-33 c1-34 c1-2x c1-r c1-35 c1-57 c1-58 c1-36 c1-59 c1-39 c1-3a c1-3b c1-3c"><a rel="" role="link" aria-haspopup="menu" data-ux="Link" data-page="28e6dc92-3bec-438c-8d0d-75c251def48c" title="Historical Bible" href="/" data-typography="LinkAlpha" class="x-el x-el-a c1-2b c1-2c c1-2d c1-2e c1-2f c1-3d c1-2g c1-2h c1-2i c1-2j c1-2k c1-34 c1-4 c1-b c1-2l c1-c c1-2m c1-3e c1-2o c1-d c1-e c1-f c1-g" data-tccl="ux2.HEADER.header9.Logo.Fill.Link.Default.6666.click,click"><div data-ux="Block" id="logo-container-6667" class="x-el x-el-div c1-1 c1-2 c1-2p c1-4 c1-q c1-b c1-c c1-d c1-e c1-f c1-g" style=""><h3 role="heading" aria-level="3" data-ux="LogoHeading" id="logo-text-6668" data-aid="HEADER_LOGO_TEXT_RENDERED" data-typography="LogoAlpha" class="x-el x-el-h3 c1-31 c1-32 c1-2e c1-2f c1-3f c1-25 c1-23 c1-22 c1-24 c1-34 c1-2p c1-33 c1-2l c1-3g c1-3h c1-3i c1-3j c1-3k c1-3l c1-3m c1-3n c1-3o c1-3p">Historical Bible</h3><span role="heading" aria-level="NaN" data-ux="scaler" data-size="xxlarge" data-scaler-id="scaler-logo-container-6667" aria-hidden="true" data-typography="LogoAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-25 c1-23 c1-22 c1-24 c1-34 c1-o c1-3s c1-3t c1-3u c1-3v c1-3w c1-3g c1-33 c1-2l c1-3h c1-3i c1-3j c1-3k c1-3l c1-3m c1-3n c1-3o c1-3p" style="display: none;">Historical Bible</span><span role="heading" aria-level="NaN" data-ux="scaler" data-size="xlarge" data-scaler-id="scaler-logo-container-6667" aria-hidden="true" data-typography="LogoAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-25 c1-23 c1-22 c1-24 c1-34 c1-o c1-3s c1-3t c1-3u c1-3v c1-3w c1-3x c1-33 c1-2l c1-3h c1-3y c1-3j c1-3k c1-3l c1-3m c1-3z c1-40 c1-41" style="display: none;">Historical Bible</span><span role="heading" aria-level="NaN" data-ux="scaler" data-size="large" data-scaler-id="scaler-logo-container-6667" aria-hidden="true" data-typography="LogoAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-25 c1-23 c1-22 c1-24 c1-34 c1-o c1-3s c1-3t c1-3u c1-3v c1-3w c1-42 c1-33 c1-2l c1-3h c1-43 c1-3j c1-3k c1-3l c1-3m c1-44 c1-45 c1-46" style="display: none;">Historical Bible</span></div></a></div></div><div data-ux="GridCell" class="x-el x-el-div c1-1 c1-2 c1-4a c1-r c1-4f c1-4g c1-34 c1-4c c1-29 c1-4d c1-2a c1-4h c1-4i c1-4j c1-47 c1-t c1-20 c1-b c1-c c1-d c1-4k c1-4l c1-e c1-f c1-g"><nav data-ux="Nav" data-aid="HEADER_NAV_RENDERED" role="navigation" class="x-el x-el-nav c1-1 c1-2 c1-34 c1-4m c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="Block" id="n-66496660-navId-2" class="x-el x-el-div c1-1 c1-2 c1-q c1-t c1-20 c1-4c c1-29 c1-4d c1-2a c1-b c1-c c1-d c1-e c1-f c1-g" style="white-space: nowrap;"><div data-ux="Block" class="x-el x-el-div nav-item c1-1 c1-2 c1-2q c1-25 c1-4n c1-4o c1-q c1-3s c1-2p c1-b c1-c c1-4p c1-d c1-e c1-f c1-g" style="visibility: hidden; display: none;"><a rel="" role="link" aria-haspopup="menu" data-ux="NavLinkActive" target="" data-page="28e6dc92-3bec-438c-8d0d-75c251def48c" data-edit-interactive="true" href="/" data-typography="NavAlpha" class="x-el x-el-a c1-31 c1-32 c1-2d c1-2e c1-2f c1-4q c1-2g c1-33 c1-2l c1-35 c1-3h c1-4r c1-4s c1-4t c1-4u c1-4v c1-4w c1-4x c1-4y c1-4z c1-50 c1-2n c1-2v c1-2o c1-39 c1-3a c1-3b c1-3c" data-tccl="ux2.HEADER.header9.Nav.Default.Link.Active.6670.click,click">Home</a></div><div data-ux="Block" class="x-el x-el-div nav-item c1-1 c1-2 c1-2q c1-25 c1-4n c1-4o c1-q c1-3s c1-2p c1-b c1-c c1-4p c1-d c1-e c1-f c1-g" style="visibility: hidden; display: none;"><a rel="" role="link" aria-haspopup="false" data-ux="NavLink" target="" data-page="5ba36822-fb5d-438d-9ae5-134c58a00aac" data-edit-interactive="true" href="/contact" data-typography="NavAlpha" class="x-el x-el-a c1-31 c1-32 c1-2d c1-2e c1-2f c1-t c1-2g c1-20 c1-q c1-51 c1-52 c1-53 c1-54 c1-2u c1-2s c1-2r c1-2t c1-33 c1-2l c1-35 c1-3h c1-4r c1-4s c1-4t c1-55 c1-4v c1-4w c1-4x c1-4y c1-56 c1-2n c1-2v c1-2o c1-39 c1-3a c1-3b c1-3c" data-tccl="ux2.HEADER.header9.Nav.Default.Link.Default.6671.click,click">Contact </a></div><div data-ux="Block" class="x-el x-el-div nav-item c1-1 c1-2 c1-2q c1-25 c1-4n c1-4o c1-q c1-3s c1-2p c1-b c1-c c1-4p c1-d c1-e c1-f c1-g visible last-visible-nav-item" style="visibility: visible;"><a rel="" role="link" aria-haspopup="false" data-ux="NavLink" target="" data-page="5e4a0d43-b465-4f12-8bb5-51782ee4478c" data-edit-interactive="true" href="/bible" data-typography="NavAlpha" class="x-el x-el-a c1-31 c1-32 c1-2d c1-2e c1-2f c1-t c1-2g c1-20 c1-q c1-51 c1-52 c1-53 c1-54 c1-2u c1-2s c1-2r c1-2t c1-33 c1-2l c1-35 c1-3h c1-4r c1-4s c1-4t c1-55 c1-4v c1-4w c1-4x c1-4y c1-56 c1-2n c1-2v c1-2o c1-39 c1-3a c1-3b c1-3c" data-tccl="ux2.HEADER.header9.Nav.Default.Link.Default.6672.click,click">Bible</a></div><div data-ux="Block" class="x-el x-el-div nav-item c1-1 c1-2 c1-2q c1-25 c1-4n c1-4o c1-q c1-3s c1-2p c1-b c1-c c1-4p c1-d c1-e c1-f c1-g" style="visibility: hidden; display: none;"><div data-ux="Element" id="bs-2" class="x-el x-el-div c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><span data-ux="Element" class="x-el x-el-span c2-1 c2-2 c2-3 c2-4 c2-5 c2-6 c2-7 c2-8"><a rel="" role="button" aria-haspopup="menu" data-ux="NavLinkDropdown" data-toggle-ignore="true" id="1" aria-expanded="false" data-aid="NAV_MORE" data-edit-interactive="true" href="#" data-typography="NavAlpha" class="x-el x-el-a c2-9 c2-a c2-b c2-c c2-d c2-e c2-f c2-g c2-h c2-i c2-j c2-k c2-l c2-m c2-n c2-o c2-p c2-q c2-r c2-s c2-t c2-u c2-v c2-w c2-x c2-y c2-z c2-10 c2-11"><div data-aid="NAV_MORE" style="pointer-events: none; display: flex; align-items: center;"><span style="margin-right: 4px;">More</span><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" data-ux="Icon" class="x-el x-el-svg c2-9 c2-a c2-12 c2-13 c2-14 c2-15 c2-16 c2-h c2-f c2-i c2-k c2-v c2-w c2-y c2-z c2-10 c2-11"><path fill-rule="evenodd" d="M19.544 7.236a.773.773 0 0 1-.031 1.06l-7.883 7.743-7.42-7.742a.773.773 0 0 1 0-1.061.699.699 0 0 1 1.017 0l6.433 6.713 6.868-6.745a.698.698 0 0 1 1.016.032"></path></svg></div></a></span></div><ul data-ux="NavDropdown" role="menu" id="more-6669" class="x-el x-el-ul c1-1 c1-2 c1-5e c1-5f c1-h c1-1q c1-1r c1-5g c1-5h c1-3t c1-5i c1-5j c1-4o c1-5k c1-5l c1-o c1-5m c1-b c1-c c1-5n c1-5o c1-d c1-5p c1-5q c1-5r c1-5s c1-5t c1-5u c1-5v c1-5w c1-5x c1-5y c1-5z c1-60 c1-61 c1-e c1-f c1-g"><li data-ux="ListItem" role="menuitem" class="x-el x-el-li c1-1 c1-2 c1-62 c1-24 c1-4q c1-63 c1-b c1-c c1-64 c1-d c1-e c1-f c1-g" style="display: none;"><a rel="" role="link" aria-haspopup="menu" data-ux="NavMoreMenuLinkActive" target="" data-page="28e6dc92-3bec-438c-8d0d-75c251def48c" data-edit-interactive="true" aria-labelledby="more-6669" href="/" data-typography="NavAlpha" class="x-el x-el-a c1-31 c1-32 c1-2d c1-2e c1-2f c1-t c1-2g c1-20 c1-q c1-33 c1-2l c1-35 c1-65 c1-4r c1-4s c1-4t c1-55 c1-4v c1-4w c1-4x c1-4y c1-56 c1-3e c1-2v c1-2o c1-39 c1-3a c1-3b c1-3c" data-tccl="ux2.HEADER.header9.Nav.MoreMenu.Link.Active.6675.click,click">Home</a></li><li data-ux="ListItem" role="menuitem" class="x-el x-el-li c1-1 c1-2 c1-62 c1-24 c1-4q c1-63 c1-b c1-c c1-64 c1-d c1-e c1-f c1-g" style="display: none;"><a rel="" role="link" aria-haspopup="false" data-ux="NavMoreMenuLink" target="" data-page="5ba36822-fb5d-438d-9ae5-134c58a00aac" data-edit-interactive="true" aria-labelledby="more-6669" href="/contact" data-typography="NavAlpha" class="x-el x-el-a c1-31 c1-32 c1-2d c1-2e c1-2f c1-2p c1-2g c1-20 c1-q c1-66 c1-67 c1-68 c1-33 c1-2l c1-35 c1-3h c1-4r c1-4s c1-4t c1-55 c1-4v c1-4w c1-4x c1-4y c1-56 c1-2n c1-2v c1-2o c1-39 c1-3a c1-3b c1-3c" data-tccl="ux2.HEADER.header9.Nav.MoreMenu.Link.Default.6676.click,click">Contact </a></li><li data-ux="ListItem" role="menuitem" class="x-el x-el-li c1-1 c1-2 c1-62 c1-24 c1-4q c1-63 c1-b c1-c c1-64 c1-d c1-e c1-f c1-g" style="display: none;"><a rel="" role="link" aria-haspopup="false" data-ux="NavMoreMenuLink" target="" data-page="5e4a0d43-b465-4f12-8bb5-51782ee4478c" data-edit-interactive="true" aria-labelledby="more-6669" href="/bible" data-typography="NavAlpha" class="x-el x-el-a c1-31 c1-32 c1-2d c1-2e c1-2f c1-2p c1-2g c1-20 c1-q c1-66 c1-67 c1-68 c1-33 c1-2l c1-35 c1-3h c1-4r c1-4s c1-4t c1-55 c1-4v c1-4w c1-4x c1-4y c1-56 c1-2n c1-2v c1-2o c1-39 c1-3a c1-3b c1-3c" data-tccl="ux2.HEADER.header9.Nav.MoreMenu.Link.Default.6677.click,click">Bible</a></li></ul></div></div></nav></div></div></div></nav><div role="navigation" data-ux="NavigationDrawer" id="n-6649-navId-mobile" class="x-el x-el-div c1-1 c1-2 c1-3 c1-69 c1-6a c1-4 c1-6b c1-5l c1-6c c1-6d c1-6e c1-6f c1-6g c1-6h c1-6i c1-k c1-t c1-u c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-1s c1-1t c1-b c1-c c1-d c1-e c1-f c1-g"><svg viewBox="0 0 24 24" fill="currentColor" width="40px" height="40px" data-ux="NavigationDrawerCloseIcon" data-edit-interactive="true" data-close="true" class="x-el x-el-svg c1-1 c1-2 c1-6j c1-2p c1-5d c1-2r c1-2s c1-2t c1-2u c1-2g c1-6k c1-6l c1-3t c1-6m c1-6n c1-3g c1-b c1-6o c1-6p c1-6q c1-6r c1-6s"><path fill-rule="evenodd" d="M19.219 5.22a.75.75 0 0 0-1.061 0l-5.939 5.939-5.939-5.94a.75.75 0 1 0-1.061 1.062l5.939 5.939-5.939 5.939a.752.752 0 0 0 0 1.06.752.752 0 0 0 1.061 0l5.939-5.938 5.939 5.939a.75.75 0 1 0 1.061-1.061l-5.939-5.94 5.939-5.938a.75.75 0 0 0 0-1.061"></path></svg></div><div data-ux="Container" id="n-6649-navContainerId-mobile" class="x-el x-el-div c1-1 c1-2 c1-48 c1-49 c1-1s c1-1t c1-34 c1-5l c1-6t c1-4 c1-6u c1-b c1-c c1-6v c1-d c1-6w c1-e c1-6x c1-f c1-6y c1-g"><div data-ux="Block" id="n-6649-navLinksContentId-mobile" class="x-el x-el-div c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><ul role="menu" data-ux="NavigationDrawerList" id="n-6649-navListId-mobile" class="x-el x-el-ul c1-1 c1-2 c1-22 c1-24 c1-25 c1-23 c1-6z c1-70 c1-71 c1-63 c1-4c c1-4d c1-2a c1-29 c1-2e c1-2f c1-b c1-c c1-d c1-e c1-f c1-g"><li role="menuitem" data-ux="NavigationDrawerListItem" class="x-el x-el-li c1-1 c1-2 c1-72 c1-24 c1-4q c1-73 c1-74 c1-75 c1-b c1-c c1-64 c1-76 c1-d c1-e c1-f c1-g"><a rel="" role="link" aria-haspopup="menu" data-ux="NavigationDrawerLinkActive" target="" data-page="28e6dc92-3bec-438c-8d0d-75c251def48c" data-edit-interactive="true" data-close="true" href="/" data-typography="NavBeta" class="x-el x-el-a c1-31 c1-32 c1-2d c1-2e c1-2f c1-t c1-2g c1-77 c1-78 c1-1s c1-1t c1-20 c1-79 c1-2y c1-33 c1-7a c1-c c1-65 c1-6o c1-2v c1-7b c1-d c1-7c c1-e c1-f c1-g" data-tccl="ux2.HEADER.header9.NavigationDrawer.Default.Link.Active.6678.click,click"><div data-ux="Block" class="x-el x-el-div c1-31 c1-32 c1-q c1-33 c1-c c1-4r c1-4s c1-4t c1-4u c1-4v c1-7d c1-4x c1-4y c1-4z c1-7e c1-7f c1-7g c1-d c1-e c1-f c1-g"><span>Home</span></div></a></li><li role="menuitem" data-ux="NavigationDrawerListItem" class="x-el x-el-li c1-1 c1-2 c1-72 c1-24 c1-4q c1-73 c1-74 c1-75 c1-b c1-c c1-64 c1-76 c1-d c1-e c1-f c1-g"><a rel="" role="link" aria-haspopup="false" data-ux="NavigationDrawerLink" target="" data-page="5ba36822-fb5d-438d-9ae5-134c58a00aac" data-edit-interactive="true" data-close="true" href="/contact" data-typography="NavBeta" class="x-el x-el-a c1-31 c1-32 c1-2d c1-2e c1-2f c1-t c1-2g c1-77 c1-78 c1-1s c1-1t c1-20 c1-79 c1-2y c1-33 c1-6j c1-c c1-3h c1-6o c1-2v c1-7b c1-d c1-7c c1-e c1-f c1-g" data-tccl="ux2.HEADER.header9.NavigationDrawer.Default.Link.Default.6679.click,click"><span>Contact </span></a></li><li role="menuitem" data-ux="NavigationDrawerListItem" class="x-el x-el-li c1-1 c1-2 c1-72 c1-24 c1-4q c1-73 c1-74 c1-75 c1-b c1-c c1-64 c1-76 c1-d c1-e c1-f c1-g"><a rel="" role="link" aria-haspopup="false" data-ux="NavigationDrawerLink" target="" data-page="5e4a0d43-b465-4f12-8bb5-51782ee4478c" data-edit-interactive="true" data-close="true" href="/bible" data-typography="NavBeta" class="x-el x-el-a c1-31 c1-32 c1-2d c1-2e c1-2f c1-t c1-2g c1-77 c1-78 c1-1s c1-1t c1-20 c1-79 c1-2y c1-33 c1-6j c1-c c1-3h c1-6o c1-2v c1-7b c1-d c1-7c c1-e c1-f c1-g" data-tccl="ux2.HEADER.header9.NavigationDrawer.Default.Link.Default.6680.click,click"><span>Bible</span></a></li></ul><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-b c1-c c1-4q c1-d c1-27 c1-e c1-f c1-g"></div></div></div></div></div><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-4 c1-r c1-o c1-7h c1-u c1-47 c1-22 c1-24 c1-7i c1-b c1-c c1-d c1-3j c1-3l c1-4e c1-e c1-f c1-g"><div data-ux="Container" class="x-el x-el-div c1-1 c1-2 c1-25 c1-23 c1-4n c1-7j c1-34 c1-t c1-b c1-c c1-6v c1-d c1-6w c1-7k c1-7l c1-7m c1-7n c1-7o c1-7p c1-e c1-6x c1-f c1-6y c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-t c1-u c1-47 c1-4 c1-q c1-63 c1-7q c1-7r c1-b c1-c c1-d c1-7s c1-7t c1-7u c1-7v c1-e c1-f c1-g"><div data-ux="Hero" class="x-el x-el-div c1-1 c1-2 c1-63 c1-b c1-c c1-d c1-7w c1-7x c1-7y c1-e c1-f c1-g"><div data-ux="Container" class="x-el x-el-div c1-1 c1-2 c1-25 c1-23 c1-2a c1-29 c1-34 c1-7z c1-4c c1-4d c1-22 c1-24 c1-26 c1-b c1-c c1-6v c1-d c1-6w c1-e c1-6x c1-f c1-6y c1-g"><div data-ux="Element" id="tagline-container-6681" class="x-el x-el-div c1-1 c1-2 c1-2e c1-2f c1-3f c1-4q c1-q c1-34 c1-b c1-c c1-d c1-e c1-f c1-g" style=""><h1 role="heading" aria-level="1" data-ux="Tagline" data-aid="HEADER_TAGLINE_RENDERED" id="dynamic-tagline-6682" data-typography="HeadingAlpha" class="x-el x-el-h1 c1-31 c1-32 c1-2e c1-2f c1-3f c1-48 c1-49 c1-22 c1-24 c1-80 c1-q c1-2p c1-34 c1-33 c1-2l c1-81 c1-3h c1-82 c1-83 c1-84 c1-85 c1-86" data-last-size="56px">Connecting the historicity of the Bible to world history: Historical Bible</h1><span role="heading" aria-level="NaN" data-ux="scaler" data-size="xxxlarge" data-scaler-id="scaler-tagline-container-6681" aria-hidden="true" data-typography="HeadingAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-48 c1-49 c1-22 c1-24 c1-80 c1-3t c1-o c1-34 c1-3s c1-3u c1-3v c1-3w c1-81 c1-33 c1-2l c1-3h c1-82 c1-83 c1-84 c1-85 c1-86" style="display: none;">Connecting the historicity of the Bible to world history: Historical Bible</span><span role="heading" aria-level="NaN" data-ux="scaler" data-size="xxlarge" data-scaler-id="scaler-tagline-container-6681" aria-hidden="true" data-typography="HeadingAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-48 c1-49 c1-22 c1-24 c1-80 c1-3t c1-o c1-34 c1-3s c1-3u c1-3v c1-3w c1-3g c1-33 c1-2l c1-3h c1-82 c1-3i c1-3n c1-3o c1-3p" style="display: none;">Connecting the historicity of the Bible to world history: Historical Bible</span><span role="heading" aria-level="NaN" data-ux="scaler" data-size="xlarge" data-scaler-id="scaler-tagline-container-6681" aria-hidden="true" data-typography="HeadingAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-48 c1-49 c1-22 c1-24 c1-80 c1-3t c1-o c1-34 c1-3s c1-3u c1-3v c1-3w c1-3x c1-33 c1-2l c1-3h c1-82 c1-3y c1-3z c1-40 c1-41" style="display: none;">Connecting the historicity of the Bible to world history: Historical Bible</span><span role="heading" aria-level="NaN" data-ux="scaler" data-size="large" data-scaler-id="scaler-tagline-container-6681" aria-hidden="true" data-typography="HeadingAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-48 c1-49 c1-22 c1-24 c1-80 c1-3t c1-o c1-34 c1-3s c1-3u c1-3v c1-3w c1-42 c1-33 c1-2l c1-3h c1-82 c1-43 c1-44 c1-45 c1-46" style="display: none;">Connecting the historicity of the Bible to world history: Historical Bible</span></div></div><div data-ux="HeroText" data-aid="HEADER_TAGLINE2_RENDERED" data-typography="HeadingDelta" class="x-el c1-87 c1-2 c1-2e c1-2f c1-68 c1-22 c1-88 c1-2p c1-34 c1-89 c1-8a c1-8b c1-8c c1-b c1-2l c1-8d c1-3h c1-8e c1-8f c1-8g c1-8h x-rt"><p style="margin:0"><span class="x-el x-el-span c1-8o c1-8p c1-b c1-8d c1-8e c1-8f c1-8g c1-8h">Connect on a deeper level!</span></p></div><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-66 c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-4 c1-t c1-8q c1-8r c1-8s c1-8t c1-b c1-c c1-8u c1-d c1-e c1-f c1-g"><div style="max-width:100%"><a data-ux-btn="primary" customborderwidth="small" data-ux="ButtonPrimary" data-aid="HEADER_CTA_BTN" href="/contact" target="" data-tccl="ux2.header.cta_button.click,click" data-page="5ba36822-fb5d-438d-9ae5-134c58a00aac" data-typography="ButtonAlpha" class="x-el x-el-a c1-31 c1-32 c1-8v c1-8w c1-8x c1-2g c1-8y c1-8z c1-20 c1-2y c1-2x c1-2d c1-2f c1-2e c1-q c1-34 c1-4 c1-90 c1-91 c1-92 c1-93 c1-94 c1-95 c1-1u c1-2l c1-96 c1-97 c1-98 c1-99 c1-9a c1-33 c1-3h c1-11 c1-35 c1-9b c1-9c c1-9d c1-9e c1-9f c1-39 c1-3a c1-3b c1-3c">Ask Me</a></div></div></div></div></div></div></div><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-4 c1-r c1-t c1-7h c1-u c1-47 c1-22 c1-24 c1-7i c1-b c1-c c1-d c1-3j c1-3l c1-27 c1-e c1-f c1-g"><div data-ux="Container" class="x-el x-el-div c1-1 c1-2 c1-25 c1-23 c1-4n c1-7j c1-34 c1-t c1-b c1-c c1-6v c1-d c1-6w c1-7k c1-7l c1-7m c1-7n c1-7o c1-7p c1-e c1-6x c1-f c1-6y c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-t c1-u c1-47 c1-4 c1-q c1-63 c1-7q c1-7r c1-b c1-c c1-d c1-7s c1-7t c1-7u c1-7v c1-e c1-f c1-g"><div data-ux="Hero" class="x-el x-el-div c1-1 c1-2 c1-63 c1-b c1-c c1-d c1-7w c1-7x c1-7y c1-e c1-f c1-g"><div data-ux="Container" class="x-el x-el-div c1-1 c1-2 c1-25 c1-23 c1-2a c1-29 c1-34 c1-7z c1-4c c1-4d c1-22 c1-24 c1-26 c1-b c1-c c1-6v c1-d c1-6w c1-e c1-6x c1-f c1-6y c1-g"><div data-ux="Element" id="tagline-container-6683" class="x-el x-el-div c1-1 c1-2 c1-2e c1-2f c1-3f c1-4q c1-q c1-34 c1-b c1-c c1-d c1-e c1-f c1-g"><h1 role="heading" aria-level="1" data-ux="Tagline" data-aid="HEADER_TAGLINE_RENDERED" id="dynamic-tagline-6684" data-typography="HeadingAlpha" class="x-el x-el-h1 c1-31 c1-32 c1-2e c1-2f c1-3f c1-48 c1-49 c1-22 c1-24 c1-80 c1-q c1-2p c1-34 c1-33 c1-2l c1-81 c1-3h c1-82 c1-83 c1-84 c1-85 c1-86">Connecting the historicity of the Bible to world history: Historical Bible</h1><span role="heading" aria-level="NaN" data-ux="scaler" data-size="xxxlarge" data-scaler-id="scaler-tagline-container-6683" aria-hidden="true" data-typography="HeadingAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-48 c1-49 c1-22 c1-24 c1-80 c1-3t c1-o c1-34 c1-3s c1-3u c1-3v c1-3w c1-81 c1-33 c1-2l c1-3h c1-82 c1-83 c1-84 c1-85 c1-86">Connecting the historicity of the Bible to world history: Historical Bible</span><span role="heading" aria-level="NaN" data-ux="scaler" data-size="xxlarge" data-scaler-id="scaler-tagline-container-6683" aria-hidden="true" data-typography="HeadingAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-48 c1-49 c1-22 c1-24 c1-80 c1-3t c1-o c1-34 c1-3s c1-3u c1-3v c1-3w c1-3g c1-33 c1-2l c1-3h c1-82 c1-3i c1-3n c1-3o c1-3p">Connecting the historicity of the Bible to world history: Historical Bible</span><span role="heading" aria-level="NaN" data-ux="scaler" data-size="xlarge" data-scaler-id="scaler-tagline-container-6683" aria-hidden="true" data-typography="HeadingAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-48 c1-49 c1-22 c1-24 c1-80 c1-3t c1-o c1-34 c1-3s c1-3u c1-3v c1-3w c1-3x c1-33 c1-2l c1-3h c1-82 c1-3y c1-3z c1-40 c1-41">Connecting the historicity of the Bible to world history: Historical Bible</span><span role="heading" aria-level="NaN" data-ux="scaler" data-size="large" data-scaler-id="scaler-tagline-container-6683" aria-hidden="true" data-typography="HeadingAlpha" class="x-el x-el-span c1-31 c1-32 c1-3q c1-3r c1-3f c1-48 c1-49 c1-22 c1-24 c1-80 c1-3t c1-o c1-34 c1-3s c1-3u c1-3v c1-3w c1-42 c1-33 c1-2l c1-3h c1-82 c1-43 c1-44 c1-45 c1-46">Connecting the historicity of the Bible to world history: Historical Bible</span></div></div><div data-ux="HeroText" data-aid="HEADER_TAGLINE2_RENDERED" data-typography="HeadingDelta" class="x-el c1-87 c1-2 c1-2e c1-2f c1-68 c1-22 c1-88 c1-2p c1-34 c1-89 c1-8a c1-8b c1-8c c1-b c1-2l c1-8d c1-3h c1-8e c1-8f c1-8g c1-8h x-rt"><p style="margin:0"><span class="x-el x-el-span c1-8o c1-8p c1-b c1-8d c1-8e c1-8f c1-8g c1-8h">Connect on a deeper level!</span></p></div><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-66 c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-4 c1-t c1-8q c1-8r c1-8s c1-8t c1-b c1-c c1-8u c1-d c1-e c1-f c1-g"><div style="max-width:100%"><a data-ux-btn="primary" customborderwidth="small" data-ux="ButtonPrimary" data-aid="HEADER_CTA_BTN" href="/contact" target="" data-tccl="ux2.header.cta_button.click,click" data-page="5ba36822-fb5d-438d-9ae5-134c58a00aac" data-typography="ButtonAlpha" class="x-el x-el-a c1-31 c1-32 c1-8v c1-8w c1-8x c1-2g c1-8y c1-8z c1-20 c1-2y c1-2x c1-2d c1-2f c1-2e c1-q c1-34 c1-4 c1-90 c1-91 c1-92 c1-93 c1-94 c1-95 c1-1u c1-2l c1-96 c1-97 c1-98 c1-99 c1-9a c1-33 c1-3h c1-11 c1-35 c1-9b c1-9c c1-9d c1-9e c1-9f c1-39 c1-3a c1-3b c1-3c">Ask Me</a></div></div></div></div></div></div></div></div></div></section>  </div></div></div><div id="920605d4-c92c-42bd-af8e-e6355b74f737" class="widget widget-payment widget-payment-payment-2"><div data-ux="WidgetBanner" role="region" id="920605d4-c92c-42bd-af8e-e6355b74f737" class="x-el x-el-div x-el c1-1 c1-2 c1-h c1-b c1-c c1-d c1-e c1-f c1-g c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><div> <section data-ux="SectionBanner" class="x-el x-el-section c1-1 c1-2 c1-1u c1-i c1-j c1-q c1-b c1-c c1-m c1-n c1-d c1-e c1-f c1-g"><div data-ux="Background" data-aid="PAYMENT_IMAGE_RENDERED" class="x-el x-el-div c1-1 c1-2 c1-9g c1-6a c1-9h c1-3w c1-9i c1-3t c1-b c1-c c1-d c1-e c1-f c1-g"></div><div data-ux="SectionContainer" class="x-el x-el-div c1-1 c1-2 c1-48 c1-49 c1-1s c1-1t c1-34 c1-q c1-s c1-2x c1-11 c1-b c1-c c1-6v c1-d c1-6w c1-9j c1-9k c1-e c1-6x c1-f c1-6y c1-g"><div data-ux="Grid" class="x-el x-el-div c1-1 c1-2 c1-t c1-4a c1-4b c1-8q c1-22 c1-9l c1-24 c1-9m c1-b c1-c c1-9n c1-9o c1-9p c1-9q c1-d c1-e c1-f c1-g"><div data-ux="GridCell" class="x-el x-el-div c1-1 c1-2 c1-4a c1-r c1-4f c1-4g c1-34 c1-4c c1-9r c1-4d c1-9s c1-b c1-c c1-9t c1-9u c1-9v c1-9w c1-9x c1-9y c1-9z c1-d c1-a0 c1-a1 c1-a2 c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-2x c1-b c1-c c1-d c1-e c1-f c1-g"><h2 role="heading" aria-level="2" data-ux="SectionBannerHeading" data-aid="PAYMENT_HEADLINE_RENDERED" data-typography="HeadingEpsilon" class="x-el x-el-h2 c1-31 c1-32 c1-2e c1-2f c1-a3 c1-25 c1-23 c1-22 c1-a4 c1-2x c1-33 c1-2l c1-3g c1-3h c1-3i c1-3n c1-3o c1-3p">Help Our Cause</h2><div data-ux="TextMajor" data-aid="PAYMENT_DESCRIPTION_RENDERED" data-typography="BodyBeta" class="x-el c1-1 c1-2 c1-2e c1-2f c1-a3 c1-a5 c1-a4 c1-11 c1-b c1-2l c1-a6 c1-3h c1-a7 c1-a8 c1-a9 c1-aa x-rt"><p style="margin:0"><span>Your support and contributions will enable us to meet our goals and improve. Your generous donation will fund our mission.</span></p></div><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-a5 c1-ab c1-11 c1-b c1-c c1-d c1-e c1-f c1-g"><form aria-live="polite" data-ux="Form" action="https://www.paypal.com/cgi-bin/webscr" method="post" class="x-el x-el-form c1-1 c1-2 c1-24 c1-b c1-c c1-d c1-e c1-f c1-g"><input type="hidden" name="edit_selector" data-aid="EDIT_PANEL_EDIT_PAYMENT_ICON"><input type="hidden" name="business" value="BibleHistorical@gmail.com"><input type="hidden" name="cmd" value="_donations"><input type="hidden" name="item_name" value="Historical Bible"><input type="hidden" name="item_number"><input type="hidden" name="amount" value="0.00" data-aid="PAYMENT_HIDDEN_AMOUNT"><input type="hidden" name="shipping" value="0.00"><input type="hidden" name="currency_code" value="USD" data-aid="PAYMENT_HIDDEN_CURRENCY"><input type="hidden" name="rm" value="0"><input type="hidden" name="return" value="http://historicalbible.com/"><input type="hidden" name="cancel_return" value="http://historicalbible.com/"><input type="hidden" name="cbt" value="Return to Historical Bible"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-2p c1-b c1-c c1-d c1-e c1-f c1-g"><button data-ux-btn="spotlight" customborderwidth="small" data-ux="ButtonSpotlight" name="submit" data-aid="PAYMENT_PAYPALBUTTON_RENDERED" data-typography="ButtonAlpha" class="x-el x-el-button c1-31 c1-32 c1-8v c1-8w c1-8x c1-2g c1-ac c1-8z c1-20 c1-2y c1-2x c1-2d c1-2f c1-2e c1-q c1-34 c1-4 c1-90 c1-91 c1-92 c1-93 c1-94 c1-95 c1-ad c1-3 c1-33 c1-3h c1-11 c1-35 c1-9c c1-9e c1-9f c1-39 c1-3a c1-3b c1-3c" data-tccl="ux2.PAYMENT.payment2.Form.Default.Button.Spotlight.6685.click,click"><span data-ux="Element" class="x-el x-el-span c1-31 c1-32 c1-35 c1-33 c1-q c1-ae c1-23 c1-39 c1-3a c1-3b c1-3c"><span data-ux="Element" class="x-el x-el-span c1-31 c1-32 c1-af c1-ag c1-3t c1-ah c1-3w c1-ai c1-aj c1-ak c1-al c1-33 c1-35 c1-39 c1-3a c1-3b c1-3c"><img src="/Historical Bible - Faith and Religion, The Bible_files/pp258.png" alt="https://www.paypalobjects.com/webstatic/icon/pp258.png" data-ux="Image" data-aid="PAYMENT_PAYPALBUTTON_IMAGE_RENDERED" class="x-el x-el-img c1-31 c1-32 c1-3u c1-34 c1-48 c1-49 c1-22 c1-24 c1-5d c1-am c1-4q c1-an c1-33 c1-35 c1-39 c1-3a c1-3b c1-3c"></span><span data-ux="Element" class="x-el x-el-span iconText c1-31 c1-32 c1-35 c1-33 c1-4q c1-2x c1-ao c1-23 c1-39 c1-3a c1-3b c1-3c">Donate Now</span></span></button></div></form><img src="/Historical Bible - Faith and Religion, The Bible_files/cc-badges-ppmcvdam.png" alt="Pay with PayPal or a debit/credit card" data-ux="Image" data-aid="PAYMENT_CREDIT_CARD_BADGES_RENDERED" class="x-el x-el-img c1-1 c1-2 c1-ap c1-34 c1-48 c1-49 c1-66 c1-24 c1-5d c1-am c1-aq c1-an c1-b c1-c c1-d c1-e c1-f c1-g"></div></div></div></div></div></section>  </div></div></div><div id="d4daed88-de1c-4d40-aee2-90fbfdaa778f" class="widget widget-about widget-about-about-3"><div data-ux="Widget" role="region" id="d4daed88-de1c-4d40-aee2-90fbfdaa778f" class="x-el x-el-div x-el c1-1 c1-2 c1-3 c1-b c1-c c1-d c1-e c1-f c1-g c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><div> <section data-ux="Section" class="x-el x-el-section c1-1 c1-2 c1-3 c1-i c1-j c1-b c1-c c1-m c1-n c1-d c1-e c1-f c1-g"><div data-ux="SectionContainer" class="x-el x-el-div c1-1 c1-2 c1-48 c1-49 c1-1s c1-1t c1-34 c1-b c1-c c1-6v c1-d c1-6w c1-9j c1-9k c1-e c1-6x c1-f c1-6y c1-g"><div data-ux="Grid" class="x-el x-el-div c1-1 c1-2 c1-t c1-4a c1-4b c1-8q c1-22 c1-9l c1-ar c1-9m c1-2y c1-b c1-c c1-9n c1-9o c1-as c1-9q c1-d c1-e c1-f c1-g"><div data-ux="GridCell" class="x-el x-el-div c1-1 c1-2 c1-4a c1-r c1-4f c1-at c1-34 c1-4c c1-9r c1-1r c1-9s c1-b c1-c c1-au c1-av c1-9w c1-9x c1-aw c1-9z c1-d c1-e c1-ax c1-f c1-g"><div data-ux="ContentCard" index="0" id="c6556617-f7e4-4cab-a4ba-a79544cae32a" class="x-el x-el-div x-el c1-1 c1-2 c1-q c1-t c1-u c1-20 c1-2x c1-w c1-4 c1-ay c1-az c1-b0 c1-b c1-c c1-b1 c1-b2 c1-d c1-e c1-f c1-g c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><h4 role="heading" aria-level="4" data-ux="ContentCardHeading" data-aid="ABOUT_HEADLINE_RENDERED0" data-typography="HeadingDelta" class="x-el x-el-h4 c1-87 c1-2 c1-2e c1-2f c1-a3 c1-25 c1-23 c1-22 c1-24 c1-b c1-b3 c1-8d c1-3h c1-8e c1-8f c1-8g c1-8h">Why we are here</h4><div data-ux="ContentCardText" data-aid="ABOUT_DESCRIPTION_RENDERED0" data-typography="BodyAlpha" class="x-el c1-1 c1-2 c1-2e c1-2f c1-68 c1-22 c1-24 c1-b4 c1-b5 c1-b6 c1-b7 c1-b8 c1-b9 c1-ba c1-bb c1-bc c1-bd c1-be c1-bf c1-bg c1-bh c1-bi c1-bj c1-bk c1-bl c1-bm c1-bn c1-bo c1-bp c1-bq c1-br c1-bs c1-bt c1-bu c1-bv c1-bw c1-4 c1-r c1-b c1-b3 c1-c c1-3h c1-d c1-e c1-f c1-g x-rt"><p style="margin:0"><span class="x-el x-el-span c1-8o c1-8p c1-b c1-c c1-d c1-e c1-f c1-g">Are you struggling to correlate the people's and timelines of the Bible to your known world history? Do you feel like the historical events recorded in the Bible are separate from world history? At Historical Bible we endeavor to connect those dots and unblur those lines. This is where history, faith and religion come together.</span></p></div></div></div><div data-ux="GridCell" class="x-el x-el-div c1-1 c1-2 c1-4a c1-r c1-4f c1-at c1-34 c1-4c c1-9r c1-1r c1-9s c1-b c1-c c1-au c1-av c1-9w c1-9x c1-aw c1-9z c1-d c1-e c1-ax c1-f c1-g"><div data-ux="ContentCard" index="1" id="0fe6d5f2-ccbd-4fc6-84db-ac39c56aed6c" class="x-el x-el-div x-el c1-1 c1-2 c1-q c1-t c1-u c1-20 c1-2x c1-w c1-4 c1-ay c1-az c1-b0 c1-b c1-c c1-b1 c1-b2 c1-d c1-e c1-f c1-g c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><h4 role="heading" aria-level="4" data-ux="ContentCardHeading" data-aid="ABOUT_HEADLINE_RENDERED1" data-typography="HeadingDelta" class="x-el x-el-h4 c1-87 c1-2 c1-2e c1-2f c1-a3 c1-25 c1-23 c1-22 c1-24 c1-b c1-b3 c1-8d c1-3h c1-8e c1-8f c1-8g c1-8h">What we believe</h4><div data-ux="ContentCardText" data-aid="ABOUT_DESCRIPTION_RENDERED1" data-typography="BodyAlpha" class="x-el c1-1 c1-2 c1-2e c1-2f c1-68 c1-22 c1-24 c1-b4 c1-b5 c1-b6 c1-b7 c1-b8 c1-b9 c1-ba c1-bb c1-bc c1-bd c1-be c1-bf c1-bg c1-bh c1-bi c1-bj c1-bk c1-bl c1-bm c1-bn c1-bo c1-bp c1-bq c1-br c1-bs c1-bt c1-bu c1-bv c1-bw c1-4 c1-r c1-b c1-b3 c1-c c1-3h c1-d c1-e c1-f c1-g x-rt"><p style="margin:0"><span>We at Historical Bible believe that the Bible is the inerrant word of God. We believe the Bible literally, and that it is not only historically accurate, but that it is also eschatologically accurate.&nbsp;</span></p></div></div></div></div></div></section>  </div></div></div><div id="016690fd-5171-4e8f-8d7f-45dabd108353" class="widget widget-footer widget-footer-footer-1"><div data-ux="Widget" role="contentinfo" id="016690fd-5171-4e8f-8d7f-45dabd108353" class="x-el x-el-div x-el c1-1 c1-2 c1-bx c1-b c1-c c1-d c1-e c1-f c1-g c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><div> <section data-ux="Section" class="x-el x-el-section c1-1 c1-2 c1-bx c1-7i c1-by c1-b c1-c c1-m c1-n c1-d c1-e c1-f c1-g"><div data-ux="SectionContainer" class="x-el x-el-div c1-1 c1-2 c1-48 c1-49 c1-1s c1-1t c1-34 c1-b c1-c c1-6v c1-d c1-6w c1-9j c1-9k c1-bz c1-e c1-6x c1-f c1-6y c1-g"><div data-ux="Layout" class="x-el x-el-div c1-1 c1-2 c1-2x c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="Block" data-aid="FOOTER_SOCIAL_LINKS" class="x-el x-el-div c1-1 c1-2 c1-t c1-2y c1-c0 c1-c1 c1-c2 c1-1r c1-8q c1-c3 c1-c4 c1-67 c1-b c1-c c1-d c1-e c1-f c1-g"><a rel="noopener" role="link" aria-haspopup="true" data-ux="Link" target="_blank" data-aid="FOOTER_FACEBOOK_LINK" aria-label="Facebook Social Link" href="https://www.facebook.com/112026860184162" data-typography="LinkAlpha" class="x-el x-el-a c1-2b c1-2c c1-2d c1-2e c1-2f c1-3d c1-2g c1-c5 c1-b c1-c6 c1-c c1-2m c1-c7 c1-c8 c1-d c1-e c1-f c1-g" data-tccl="ux2.FOOTER.footer1.Layout.Default.Link.Default.6686.click,click"><svg viewBox="0 0 24 24" fill="currentColor" width="40px" height="40px" data-ux="IconSocial" class="x-el x-el-svg c1-1 c1-2 c1-c9 c1-2p c1-5d c1-2r c1-2s c1-2t c1-2u c1-b c1-c c1-d c1-e c1-f c1-g"><path fill-rule="evenodd" d="M22 12.061C22 6.505 17.523 2 12 2S2 6.505 2 12.061c0 5.022 3.657 9.184 8.438 9.939v-7.03h-2.54v-2.91h2.54V9.845c0-2.522 1.492-3.915 3.777-3.915 1.094 0 2.238.197 2.238.197v2.476h-1.26c-1.243 0-1.63.775-1.63 1.57v1.888h2.773l-.443 2.908h-2.33V22c4.78-.755 8.437-4.917 8.437-9.939z"></path></svg></a><a rel="noopener" role="link" aria-haspopup="true" data-ux="Link" target="_blank" data-aid="FOOTER_INSTAGRAM_LINK" aria-label="Instagram Social Link" href="https://www.instagram.com/historicalbible/" data-typography="LinkAlpha" class="x-el x-el-a c1-2b c1-2c c1-2d c1-2e c1-2f c1-3d c1-2g c1-c5 c1-b c1-c6 c1-c c1-2m c1-c7 c1-c8 c1-d c1-e c1-f c1-g" data-tccl="ux2.FOOTER.footer1.Layout.Default.Link.Default.6687.click,click"><svg viewBox="0 0 24 24" fill="currentColor" width="40px" height="40px" data-ux="IconSocial" class="x-el x-el-svg c1-1 c1-2 c1-c9 c1-2p c1-5d c1-2r c1-2s c1-2t c1-2u c1-b c1-c c1-d c1-e c1-f c1-g"><path d="M16.604 8.516c.13.35.198.719.203 1.091.033.622.033.811.033 2.386 0 1.574-.004 1.763-.033 2.385a3.273 3.273 0 0 1-.203 1.091 1.956 1.956 0 0 1-1.12 1.12c-.35.13-.719.198-1.091.204-.622.032-.811.032-2.386.032-1.574 0-1.763-.003-2.385-.032a3.273 3.273 0 0 1-1.091-.204 1.956 1.956 0 0 1-1.12-1.12 3.273 3.273 0 0 1-.204-1.09c-.032-.623-.032-.812-.032-2.386 0-1.575.003-1.764.032-2.386.006-.372.074-.741.204-1.09a1.956 1.956 0 0 1 1.12-1.12c.35-.13.718-.199 1.09-.204.623-.033.812-.033 2.386-.033 1.575 0 1.764.004 2.386.033.372.005.741.074 1.09.203.515.2.922.606 1.12 1.12zM12 15.033a3.033 3.033 0 1 0 0-6.066 3.033 3.033 0 0 0 0 6.066zm3.153-5.477a.71.71 0 1 0 0-1.418.71.71 0 0 0 0 1.418zM12 13.967a1.967 1.967 0 1 1 0-3.934 1.967 1.967 0 0 1 0 3.934zM12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10A10 10 0 0 0 12 2zm5.87 12.433c-.01.49-.102.974-.274 1.432a3.018 3.018 0 0 1-1.727 1.728 4.335 4.335 0 0 1-1.433.272c-.629.03-.829.037-2.432.037-1.604 0-1.819 0-2.433-.037a4.335 4.335 0 0 1-1.433-.272 3.018 3.018 0 0 1-1.727-1.728 4.335 4.335 0 0 1-.273-1.432c-.029-.63-.036-.83-.036-2.433 0-1.604 0-1.818.036-2.433.01-.49.102-.974.273-1.432a3.018 3.018 0 0 1 1.727-1.728 4.335 4.335 0 0 1 1.433-.272c.629-.03.829-.037 2.433-.037 1.603 0 1.818 0 2.432.037.49.009.974.101 1.433.272.794.307 1.42.934 1.727 1.728.172.458.264.943.273 1.432.03.63.036.83.036 2.433 0 1.604-.007 1.804-.036 2.433z"></path></svg></a><a rel="noopener" role="link" aria-haspopup="true" data-ux="Link" target="_blank" data-aid="FOOTER_TWITTER_LINK" aria-label="Twitter Social Link" href="https://www.twitter.com/BibleHistorical" data-typography="LinkAlpha" class="x-el x-el-a c1-2b c1-2c c1-2d c1-2e c1-2f c1-3d c1-2g c1-c5 c1-b c1-c6 c1-c c1-2m c1-c7 c1-c8 c1-d c1-e c1-f c1-g" data-tccl="ux2.FOOTER.footer1.Layout.Default.Link.Default.6688.click,click"><svg viewBox="0 0 24 24" fill="currentColor" width="40px" height="40px" data-ux="IconSocial" class="x-el x-el-svg c1-1 c1-2 c1-c9 c1-2p c1-5d c1-2r c1-2s c1-2t c1-2u c1-b c1-c c1-d c1-e c1-f c1-g"><path d="M22 12c0-5.524-4.477-10-10-10C6.478 2 2 6.478 2 12c0 5.523 4.478 10 10 10 5.523 0 10-4.477 10-10zm-3.795-3.516c-.33.492-.749.926-1.23 1.271l.008.319c0 3.255-2.477 7.005-7.006 7.005a6.968 6.968 0 01-3.773-1.107 4.94 4.94 0 003.645-1.019 2.466 2.466 0 01-2.3-1.71 2.464 2.464 0 001.112-.042 2.465 2.465 0 01-1.975-2.413v-.032c.333.185.711.295 1.115.309a2.461 2.461 0 01-.762-3.286 6.987 6.987 0 005.075 2.572 2.462 2.462 0 014.196-2.245 4.986 4.986 0 001.564-.597A2.469 2.469 0 0116.79 8.87a4.936 4.936 0 001.414-.387z"></path></svg></a><a rel="noopener" role="link" aria-haspopup="true" data-ux="Link" target="_blank" data-aid="FOOTER_YOUTUBE_LINK" aria-label="YouTube Social Link" href="https://www.youtube.com/channel/UCSg028pVUaylW9HDmVHlfmQ" data-typography="LinkAlpha" class="x-el x-el-a c1-2b c1-2c c1-2d c1-2e c1-2f c1-3d c1-2g c1-c5 c1-b c1-c6 c1-c c1-2m c1-c7 c1-c8 c1-d c1-e c1-f c1-g" data-tccl="ux2.FOOTER.footer1.Layout.Default.Link.Default.6689.click,click"><svg viewBox="0 0 24 24" fill="currentColor" width="40px" height="40px" data-ux="IconSocial" class="x-el x-el-svg c1-1 c1-2 c1-c9 c1-2p c1-5d c1-2r c1-2s c1-2t c1-2u c1-b c1-c c1-d c1-e c1-f c1-g"><g transform="translate(2 2)"><polygon points="8.811 11.495 11.927 9.88 8.807 8.255"></polygon><path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10A10 10 0 0 0 10 0zm5.673 10.436c0 .935-.066 1.866-.066 1.866-.027.415-.17.814-.41 1.153-.306.308-.72.483-1.153.487-1.615.116-4.033.12-4.033.12s-2.99-.03-3.913-.117a1.91 1.91 0 0 1-1.25-.49 2.273 2.273 0 0 1-.419-1.146s-.033-.934-.033-1.865V9.56c0-.935.033-1.876.033-1.876s.03-.804.364-1.153c.305-.312.72-.493 1.156-.506 1.615-.116 4.036-.149 4.036-.149s2.411.033 4.026.15c.44.016.855.203 1.16.52.244.336.394.731.436 1.145 0 0 .07.934.07 1.865l-.004.88z"></path></g></svg></a></div><div data-ux="FooterDetails" data-aid="FOOTER_COPYRIGHT_RENDERED" data-typography="DetailsAlpha" class="x-el c1-1 c1-2 c1-2e c1-2f c1-68 c1-22 c1-ca c1-b c1-c9 c1-35 c1-3h c1-39 c1-3a c1-3b c1-3c x-rt"><p style="margin:0"><span class="x-el x-el-span c1-8o c1-8p c1-b c1-35 c1-39 c1-3a c1-3b c1-3c">Historical Bible Est. 2019- All Rights Reserved. Copyright © 2019-2020&nbsp;</span></p></div><hr aria-hidden="true" role="separator" data-ux="HR" class="x-el x-el-hr c1-1 c1-2 c1-cb c1-cc c1-8y c1-22 c1-ca c1-cd c1-48 c1-49 c1-b c1-c c1-d c1-e c1-f c1-g"><p data-ux="FooterDetails" data-aid="FOOTER_POWERED_BY_RENDERED" data-typography="DetailsAlpha" class="x-el x-el-p c1-1 c1-2 c1-2e c1-2f c1-68 c1-22 c1-24 c1-b c1-c9 c1-35 c1-3h c1-39 c1-3a c1-3b c1-3c"><span>John 17:3</span></p></div></div></section>  </div></div></div><div id="cb451be8-795d-463c-85c1-45153e2fa3f8" class="widget widget-cookie-banner widget-cookie-banner-cookie-1"><div data-ux="Group" data-aid="FOOTER_COOKIE_BANNER_RENDERED" id="cb451be8-795d-463c-85c1-45153e2fa3f8-banner" class="x-el x-el-div c1-1 c1-2 c1-69 c1-9i c1-ce c1-4 c1-aq c1-63 c1-h c1-an c1-5l c1-cf c1-cg c1-ch c1-ci c1-cj c1-1t c1-ck c1-1s c1-22 c1-23 c1-24 c1-25 c1-26 c1-b c1-c c1-cl c1-cm c1-cn c1-co c1-cp c1-cq c1-cr c1-d c1-e c1-f c1-g"><h4 role="heading" aria-level="4" data-ux="Heading" data-aid="FOOTER_COOKIE_TITLE_RENDERED" data-typography="HeadingDelta" class="x-el x-el-h4 c1-87 c1-2 c1-2e c1-2f c1-a3 c1-25 c1-23 c1-22 c1-24 c1-93 c1-b c1-2l c1-8d c1-3h c1-8e c1-8f c1-8g c1-8h">This website uses cookies.</h4><div data-ux="Text" data-aid="FOOTER_COOKIE_MESSAGE_RENDERED" data-typography="BodyAlpha" class="x-el c1-1 c1-2 c1-2e c1-2f c1-68 c1-22 c1-24 c1-cs c1-5l c1-b c1-2l c1-c c1-3h c1-ct c1-d c1-e c1-f c1-g x-rt"><p style="margin:0"><span>We use cookies to analyze website traffic and optimize your website experience. By accepting our use of cookies, your data will be aggregated with all other user data.</span></p></div><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-t c1-cu c1-b c1-c c1-d c1-e c1-f c1-g"><a data-ux-btn="primary" customborderwidth="small" data-ux="ButtonPrimary" href="/" data-aid="FOOTER_COOKIE_CLOSE_RENDERED" id="cb451be8-795d-463c-85c1-45153e2fa3f8-accept" data-typography="ButtonAlpha" class="x-el x-el-a c1-31 c1-32 c1-cv c1-8v c1-8w c1-8x c1-t c1-u c1-2y c1-2g c1-cw c1-cx c1-cy c1-cz c1-r c1-8y c1-20 c1-2x c1-2d c1-2f c1-2e c1-q c1-34 c1-4 c1-1s c1-1t c1-ab c1-d0 c1-95 c1-1u c1-2l c1-96 c1-97 c1-98 c1-99 c1-9a c1-33 c1-3h c1-11 c1-d1 c1-d2 c1-9b c1-9c c1-9d c1-9e c1-9f c1-d3 c1-d4 c1-d5 c1-d6" data-tccl="ux2.COOKIE_BANNER.cookie1.Group.Default.Button.Primary.6690.click,click">Accept</a></div></div></div><div id="e1bf79f8-9fe7-4493-b890-ccb78c77ed70" class="widget widget-popup widget-popup-popup-1"><div data-ux="ModalPopup" id="popup-widget6691" data-edit-interactive="true" data-aid="POPUP_MODAL" class="x-el x-el-div x-el c1-1 c1-2 c1-69 c1-o c1-2y c1-6a c1-3w c1-9h c1-9i c1-2h c1-2i c1-2j c1-2k c1-d7 c1-5l c1-d8 c1-b c1-c c1-d c1-e c1-f c1-g c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="ModalBody" role="dialog" class="x-el x-el-div x-el c1-1 c1-2 c1-b c1-c c1-d9 c1-6v c1-da c1-db c1-co c1-cq c1-dc c1-dd c1-de c1-df c1-dg c1-dh c1-di c1-dj c1-dk c1-d9 c1-6v c1-da c1-db c1-co c1-cq c1-dc c1-dd c1-de c1-df c1-dg c1-dh c1-d c1-di c1-dj c1-dk c1-e c1-f c1-g c1-1 c1-2 c1-b c1-c c1-d c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-69 c1-t c1-u c1-3 c1-dl c1-4d c1-dm c1-dn c1-do c1-dp c1-4c c1-29 c1-2a c1-26 c1-b c1-c c1-dq c1-58 c1-8u c1-dr c1-ds c1-dt c1-du c1-9e c1-dv c1-dw c1-dx c1-dy c1-dz c1-e0 c1-6v c1-e1 c1-e2 c1-e3 c1-6v c1-e1 c1-e2 c1-e3 c1-d c1-e4 c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-t c1-47 c1-5g c1-5h c1-1q c1-93 c1-3t c1-9i c1-s c1-b c1-c c1-d c1-e c1-f c1-g"><svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28" data-ux="Icon" id="popup-widget6691-close-icon" class="x-el x-el-svg c1-1 c1-2 c1-b3 c1-2p c1-5d c1-ab c1-e5 c1-d0 c1-e6 c1-2g c1-e7 c1-3 c1-e8 c1-e9 c1-b c1-c c1-d c1-e c1-f c1-g"><path fill-rule="evenodd" d="M19.219 5.22a.75.75 0 0 0-1.061 0l-5.939 5.939-5.939-5.94a.75.75 0 1 0-1.061 1.062l5.939 5.939-5.939 5.939a.752.752 0 0 0 0 1.06.752.752 0 0 0 1.061 0l5.939-5.938 5.939 5.939a.75.75 0 1 0 1.061-1.061l-5.939-5.94 5.939-5.938a.75.75 0 0 0 0-1.061"></path></svg></div><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-ea c1-34 c1-aq c1-2a c1-29 c1-5l c1-4 c1-eb c1-do c1-b c1-c c1-ec c1-ed c1-e2 c1-d c1-e c1-f c1-g"><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-t c1-24 c1-b c1-c c1-d c1-ee c1-e c1-f c1-g"><picture data-lazyimg="true" class="x-el x-el-picture c1-1 c1-2 c1-4 c1-6b c1-2x c1-ef c1-26 c1-b c1-c c1-d c1-e c1-f c1-g"><source media="(max-width: 450px)" srcset="//img1.wsimg.com/isteam/stock/96718/:/rs=w:403,h:183,cg:true,m/cr=w:403,h:183, //img1.wsimg.com/isteam/stock/96718/:/rs=w:806,h:366,cg:true,m/cr=w:806,h:366 2x, //img1.wsimg.com/isteam/stock/96718/:/rs=w:1209,h:549,cg:true,m/cr=w:1209,h:549 3x"><source media="(min-width: 451px)" srcset="//img1.wsimg.com/isteam/stock/96718/:/rs=w:515,h:234,cg:true,m/cr=w:515,h:234, //img1.wsimg.com/isteam/stock/96718/:/rs=w:1030,h:468,cg:true,m/cr=w:1030,h:468 2x, //img1.wsimg.com/isteam/stock/96718/:/rs=w:1545,h:702,cg:true,m/cr=w:1545,h:702 3x"><img data-ux="Image" src="/Historical Bible - Faith and Religion, The Bible_files/cr=w_515,h_234" class="x-el x-el-img c1-1 c1-2 c1-4 c1-34 c1-48 c1-49 c1-22 c1-24 c1-5d c1-eg c1-an c1-b c1-c c1-d c1-e c1-f c1-g"></picture></div><div data-ux="Block" class="x-el x-el-div c1-1 c1-2 c1-2x c1-eh c1-ei c1-7j c1-ej c1-4n c1-b c1-c c1-d c1-e c1-f c1-g"><h3 role="heading" aria-level="3" data-ux="HeadingMiddle" data-aid="POPUP_TITLE_RENDERED" data-typography="HeadingGamma" class="x-el x-el-h3 c1-87 c1-2 c1-2e c1-2f c1-a3 c1-25 c1-23 c1-22 c1-24 c1-b c1-b3 c1-3g c1-3h c1-6p c1-6q c1-6r c1-6s">Download the Bible</h3><div data-ux="Text" data-aid="POPUP_DESCRIPTION_RENDERED" data-typography="BodyAlpha" class="x-el c1-1 c1-2 c1-2e c1-2f c1-68 c1-22 c1-24 c1-b c1-b3 c1-c c1-3h c1-d c1-e c1-f c1-g x-rt"><p style="margin:0"><span>Nothing extra, no frills. Just the KJV</span></p></div><a data-ux-btn="primary" customborderwidth="small" data-ux="ButtonPrimary" data-aid="CTA_RENDERED" href="/bible" target="" data-tccl="ux2.POPUP.popup1.Button.Primary.6692.click,click" data-page="5e4a0d43-b465-4f12-8bb5-51782ee4478c" id="popup-widget6691-cta" data-typography="ButtonAlpha" class="x-el x-el-a c1-31 c1-32 c1-8v c1-8w c1-8x c1-2g c1-8y c1-8z c1-20 c1-2y c1-2x c1-2d c1-2f c1-2e c1-q c1-34 c1-4 c1-90 c1-91 c1-92 c1-93 c1-94 c1-95 c1-1u c1-b3 c1-96 c1-97 c1-98 c1-99 c1-9a c1-33 c1-3h c1-11 c1-35 c1-2n c1-ek c1-el c1-9e c1-9f c1-39 c1-3a c1-3b c1-3c">Take me there</a></div></div></div></div></div></div></div></div></div>
+<script type="text/javascript">"IntersectionObserver"in window&&"Intl"in window&&"Locale"in window.Intl||document.write(`\x3Cscript src="https://img1.wsimg.com/poly/v3/polyfill.min.js?rum=0&unknown=polyfill&flags=gated&features=Intl.~locale.en-US">\x3C/script>`)</script>
+<script src="/Historical Bible - Faith and Religion, The Bible_files/script.js.download" crossorigin=""></script>
+<script src="/Historical Bible - Faith and Religion, The Bible_files/UX.4.33.5.js.download" crossorigin=""></script>
+<script src="/Historical Bible - Faith and Religion, The Bible_files/script(1).js.download" crossorigin=""></script><script type="text/javascript" src="/Historical Bible - Faith and Religion, The Bible_files/tccl-tti.min.js.download"></script>
+<script defer="" src="/Historical Bible - Faith and Religion, The Bible_files/tccl.min.js.download" crossorigin=""></script><div id=":r2:" data-floating-ui-portal=""></div><div id=":r5:" data-floating-ui-portal=""></div></body><div id="swooped-extension-root"><template shadowrootmode="open"><div id="swooped-extension-overlay-root"></div><div id="swooped-extension-react-root"><div class="root"><style>.root{font-family:Helvetica Neue,sans-serif;font-size:16px;color:#43484d;letter-spacing:normal;line-height:1.5;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.root-card{max-height:calc(100vh - 32px)}@media (max-width: 767px){.max-h-screen-dvh{max-height:calc(100vh - 64px)}.h-screen-dvh{height:calc(100vh - 64px)}}.max-h-screen-dvh{max-height:100dvh}.h-screen-dvh{height:100dvh}.loading-block:before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(to right,transparent 0%,rgba(255,255,255,.8) 50%,transparent 100%);animation:shimmer 1.25s infinite}@keyframes shimmer{0%{left:-100%}to{left:100%}}.lds-ring div{animation:lds-ring 1.2s cubic-bezier(.5,0,.5,1) infinite}.lds-ring div:nth-child(1){animation-delay:-.45s}.lds-ring div:nth-child(2){animation-delay:-.3s}.lds-ring div:nth-child(3){animation-delay:-.15s}@keyframes lds-ring{0%{transform:rotate(0)}to{transform:rotate(360deg)}}.tippy-popper{z-index:2147483647!important}.tippy-tooltip{font-size:12px}*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}:before,:after{--tw-content: ""}html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}ol,ul,menu{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}button,[role=button]{cursor:pointer}:disabled{cursor:default}img,svg,video,canvas,audio,iframe,embed,object{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]{display:none}[type=text],input:where(:not([type])),[type=email],[type=url],[type=password],[type=number],[type=date],[type=datetime-local],[type=month],[type=search],[type=tel],[type=time],[type=week],[multiple],textarea,select{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:#fff;border-color:#6b7280;border-width:1px;border-radius:0;padding:8px 12px;font-size:16px;line-height:24px;--tw-shadow: 0 0 #0000}[type=text]:focus,input:where(:not([type])):focus,[type=email]:focus,[type=url]:focus,[type=password]:focus,[type=number]:focus,[type=date]:focus,[type=datetime-local]:focus,[type=month]:focus,[type=search]:focus,[type=tel]:focus,[type=time]:focus,[type=week]:focus,[multiple]:focus,textarea:focus,select:focus{outline:2px solid transparent;outline-offset:2px;--tw-ring-inset: var(--tw-empty, );--tw-ring-offset-width: 0px;--tw-ring-offset-color: #fff;--tw-ring-color: #2563eb;--tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow);border-color:#2563eb}input::-moz-placeholder,textarea::-moz-placeholder{color:#6b7280;opacity:1}input::placeholder,textarea::placeholder{color:#6b7280;opacity:1}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-date-and-time-value{min-height:1.5em;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit,::-webkit-datetime-edit-year-field,::-webkit-datetime-edit-month-field,::-webkit-datetime-edit-day-field,::-webkit-datetime-edit-hour-field,::-webkit-datetime-edit-minute-field,::-webkit-datetime-edit-second-field,::-webkit-datetime-edit-millisecond-field,::-webkit-datetime-edit-meridiem-field{padding-top:0;padding-bottom:0}select{background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-position:right 8px center;background-repeat:no-repeat;background-size:1.5em 1.5em;padding-right:40px;-webkit-print-color-adjust:exact;print-color-adjust:exact}[multiple],[size]:where(select:not([size="1"])){background-image:initial;background-position:initial;background-repeat:unset;background-size:initial;padding-right:12px;-webkit-print-color-adjust:unset;print-color-adjust:unset}[type=checkbox],[type=radio]{-webkit-appearance:none;-moz-appearance:none;appearance:none;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;display:inline-block;vertical-align:middle;background-origin:border-box;-webkit-user-select:none;-moz-user-select:none;user-select:none;flex-shrink:0;height:16px;width:16px;color:#2563eb;background-color:#fff;border-color:#6b7280;border-width:1px;--tw-shadow: 0 0 #0000}[type=checkbox]{border-radius:0}[type=radio]{border-radius:100%}[type=checkbox]:focus,[type=radio]:focus{outline:2px solid transparent;outline-offset:2px;--tw-ring-inset: var(--tw-empty, );--tw-ring-offset-width: 2px;--tw-ring-offset-color: #fff;--tw-ring-color: #2563eb;--tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow)}[type=checkbox]:checked,[type=radio]:checked{border-color:transparent;background-color:currentColor;background-size:100% 100%;background-position:center;background-repeat:no-repeat}[type=checkbox]:checked{background-image:url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")}@media (forced-colors: active){[type=checkbox]:checked{-webkit-appearance:auto;-moz-appearance:auto;appearance:auto}}[type=radio]:checked{background-image:url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e")}@media (forced-colors: active){[type=radio]:checked{-webkit-appearance:auto;-moz-appearance:auto;appearance:auto}}[type=checkbox]:checked:hover,[type=checkbox]:checked:focus,[type=radio]:checked:hover,[type=radio]:checked:focus{border-color:transparent;background-color:currentColor}[type=checkbox]:indeterminate{background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 8h8'/%3e%3c/svg%3e");border-color:transparent;background-color:currentColor;background-size:100% 100%;background-position:center;background-repeat:no-repeat}@media (forced-colors: active){[type=checkbox]:indeterminate{-webkit-appearance:auto;-moz-appearance:auto;appearance:auto}}[type=checkbox]:indeterminate:hover,[type=checkbox]:indeterminate:focus{border-color:transparent;background-color:currentColor}[type=file]{background:unset;border-color:inherit;border-width:0;border-radius:0;padding:0;font-size:unset;line-height:inherit}[type=file]:focus{outline:1px solid ButtonText;outline:1px auto -webkit-focus-ring-color}*,:before,:after{--tw-border-spacing-x: 0;--tw-border-spacing-y: 0;--tw-translate-x: 0;--tw-translate-y: 0;--tw-rotate: 0;--tw-skew-x: 0;--tw-skew-y: 0;--tw-scale-x: 1;--tw-scale-y: 1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness: proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width: 0px;--tw-ring-offset-color: #fff;--tw-ring-color: rgb(59 130 246 / .5);--tw-ring-offset-shadow: 0 0 #0000;--tw-ring-shadow: 0 0 #0000;--tw-shadow: 0 0 #0000;--tw-shadow-colored: 0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }::backdrop{--tw-border-spacing-x: 0;--tw-border-spacing-y: 0;--tw-translate-x: 0;--tw-translate-y: 0;--tw-rotate: 0;--tw-skew-x: 0;--tw-skew-y: 0;--tw-scale-x: 1;--tw-scale-y: 1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness: proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width: 0px;--tw-ring-offset-color: #fff;--tw-ring-color: rgb(59 130 246 / .5);--tw-ring-offset-shadow: 0 0 #0000;--tw-ring-shadow: 0 0 #0000;--tw-shadow: 0 0 #0000;--tw-shadow-colored: 0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }.container{width:100%}@media (min-width: 450px){.container{max-width:450px}}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}.pointer-events-none{pointer-events:none}.visible{visibility:visible}.invisible{visibility:hidden}.static{position:static}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{top:0;right:0;bottom:0;left:0}.inset-y-0{top:0;bottom:0}.left-0{left:0}.right-0{right:0}.right-1{right:4px}.top-0{top:0}.top-1{top:4px}.isolate{isolation:isolate}.z-10{z-index:10}.z-\[2147483647\]{z-index:2147483647}.mx-auto{margin-left:auto;margin-right:auto}.-ml-2{margin-left:-8px}.mb-1{margin-bottom:4px}.mb-10{margin-bottom:40px}.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}.mb-6{margin-bottom:24px}.mb-8{margin-bottom:32px}.ml-1{margin-left:4px}.ml-2{margin-left:8px}.ml-3{margin-left:12px}.mr-2{margin-right:8px}.mt-1{margin-top:4px}.mt-12{margin-top:48px}.mt-2{margin-top:8px}.mt-4{margin-top:16px}.mt-5{margin-top:20px}.mt-6{margin-top:24px}.mt-7{margin-top:28px}.block{display:block}.inline-block{display:inline-block}.inline{display:inline}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-10{height:40px}.h-12{height:48px}.h-16{height:64px}.h-4{height:16px}.h-48{height:192px}.h-5{height:20px}.h-6{height:24px}.h-7{height:28px}.h-8{height:32px}.h-\[38px\]{height:38px}.h-\[75px\]{height:75px}.h-px{height:1px}.max-h-60{max-height:240px}.max-h-full{max-height:100%}.min-h-\[84px\]{min-height:84px}.w-0{width:0px}.w-10{width:40px}.w-24{width:96px}.w-4{width:16px}.w-5{width:20px}.w-6{width:24px}.w-7{width:28px}.w-8{width:32px}.w-\[58px\]{width:58px}.w-full{width:100%}.min-w-0{min-width:0px}.min-w-full{min-width:100%}.max-w-full{max-width:100%}.max-w-md{max-width:448px}.max-w-sm{max-width:384px}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.-translate-y-full{--tw-translate-y: -100%;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-x-0{--tw-translate-x: 0px;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-x-full{--tw-translate-x: 100%;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-y-0{--tw-translate-y: 0px;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.scale-100{--tw-scale-x: 1;--tw-scale-y: 1;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.scale-95{--tw-scale-x: .95;--tw-scale-y: .95;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-default{cursor:default}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;-moz-user-select:none;user-select:none}.list-inside{list-style-position:inside}.list-disc{list-style-type:disc}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.flex-col{flex-direction:column}.place-items-center{place-items:center}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:4px}.gap-12{gap:48px}.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}.gap-6{gap:24px}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse: 0;margin-top:calc(8px * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(8px * var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse: 0;margin-top:calc(12px * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(12px * var(--tw-space-y-reverse))}.self-start{align-self:flex-start}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.whitespace-nowrap{white-space:nowrap}.whitespace-pre-wrap{white-space:pre-wrap}.rounded{border-radius:4px}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:8px}.rounded-md{border-radius:6px}.rounded-l-lg{border-top-left-radius:8px;border-bottom-left-radius:8px}.rounded-r-md{border-top-right-radius:6px;border-bottom-right-radius:6px}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-b-4{border-bottom-width:4px}.border-t-0{border-top-width:0px}.border-dashed{border-style:dashed}.border-amber-200{--tw-border-opacity: 1;border-color:rgb(253 230 138 / var(--tw-border-opacity))}.border-emerald-200{--tw-border-opacity: 1;border-color:rgb(167 243 208 / var(--tw-border-opacity))}.border-error{--tw-border-opacity: 1;border-color:rgb(231 76 60 / var(--tw-border-opacity))}.border-gray-200{--tw-border-opacity: 1;border-color:rgb(229 231 235 / var(--tw-border-opacity))}.border-gray-300{--tw-border-opacity: 1;border-color:rgb(209 213 219 / var(--tw-border-opacity))}.border-info{--tw-border-opacity: 1;border-color:rgb(52 152 219 / var(--tw-border-opacity))}.border-primary{--tw-border-opacity: 1;border-color:rgb(116 94 242 / var(--tw-border-opacity))}.border-red-300{--tw-border-opacity: 1;border-color:rgb(252 165 165 / var(--tw-border-opacity))}.border-red-500{--tw-border-opacity: 1;border-color:rgb(239 68 68 / var(--tw-border-opacity))}.border-rose-200{--tw-border-opacity: 1;border-color:rgb(254 205 211 / var(--tw-border-opacity))}.border-sky-200{--tw-border-opacity: 1;border-color:rgb(186 230 253 / var(--tw-border-opacity))}.border-slate-200{--tw-border-opacity: 1;border-color:rgb(226 232 240 / var(--tw-border-opacity))}.border-slate-500{--tw-border-opacity: 1;border-color:rgb(100 116 139 / var(--tw-border-opacity))}.border-success{--tw-border-opacity: 1;border-color:rgb(7 188 12 / var(--tw-border-opacity))}.border-violet-300{--tw-border-opacity: 1;border-color:rgb(196 181 253 / var(--tw-border-opacity))}.border-warning{--tw-border-opacity: 1;border-color:rgb(241 196 15 / var(--tw-border-opacity))}.border-yellow-200{--tw-border-opacity: 1;border-color:rgb(254 240 138 / var(--tw-border-opacity))}.bg-amber-50{--tw-bg-opacity: 1;background-color:rgb(255 251 235 / var(--tw-bg-opacity))}.bg-black\/40{background-color:#0006}.bg-blue-100{--tw-bg-opacity: 1;background-color:rgb(219 234 254 / var(--tw-bg-opacity))}.bg-emerald-50{--tw-bg-opacity: 1;background-color:rgb(236 253 245 / var(--tw-bg-opacity))}.bg-error{--tw-bg-opacity: 1;background-color:rgb(231 76 60 / var(--tw-bg-opacity))}.bg-gray-100{--tw-bg-opacity: 1;background-color:rgb(243 244 246 / var(--tw-bg-opacity))}.bg-gray-200{--tw-bg-opacity: 1;background-color:rgb(229 231 235 / var(--tw-bg-opacity))}.bg-gray-50{--tw-bg-opacity: 1;background-color:rgb(249 250 251 / var(--tw-bg-opacity))}.bg-gray-800{--tw-bg-opacity: 1;background-color:rgb(31 41 55 / var(--tw-bg-opacity))}.bg-indigo-100{--tw-bg-opacity: 1;background-color:rgb(224 231 255 / var(--tw-bg-opacity))}.bg-primary{--tw-bg-opacity: 1;background-color:rgb(116 94 242 / var(--tw-bg-opacity))}.bg-primary-light{--tw-bg-opacity: 1;background-color:rgb(145 128 237 / var(--tw-bg-opacity))}.bg-red-100{--tw-bg-opacity: 1;background-color:rgb(254 226 226 / var(--tw-bg-opacity))}.bg-rose-50{--tw-bg-opacity: 1;background-color:rgb(255 241 242 / var(--tw-bg-opacity))}.bg-sky-50{--tw-bg-opacity: 1;background-color:rgb(240 249 255 / var(--tw-bg-opacity))}.bg-slate-200{--tw-bg-opacity: 1;background-color:rgb(226 232 240 / var(--tw-bg-opacity))}.bg-slate-50{--tw-bg-opacity: 1;background-color:rgb(248 250 252 / var(--tw-bg-opacity))}.bg-slate-600{--tw-bg-opacity: 1;background-color:rgb(71 85 105 / var(--tw-bg-opacity))}.bg-violet-100{--tw-bg-opacity: 1;background-color:rgb(237 233 254 / var(--tw-bg-opacity))}.bg-white{--tw-bg-opacity: 1;background-color:rgb(255 255 255 / var(--tw-bg-opacity))}.bg-white\/70{background-color:#ffffffb3}.bg-yellow-50{--tw-bg-opacity: 1;background-color:rgb(254 252 232 / var(--tw-bg-opacity))}.bg-opacity-0{--tw-bg-opacity: 0}.bg-opacity-10{--tw-bg-opacity: .1}.bg-opacity-100{--tw-bg-opacity: 1}.bg-opacity-20{--tw-bg-opacity: .2}.bg-opacity-50{--tw-bg-opacity: .5}.bg-opacity-60{--tw-bg-opacity: .6}.bg-gradient-to-br{background-image:linear-gradient(to bottom right,var(--tw-gradient-stops))}.from-primary-dark{--tw-gradient-from: #5C4CC2 var(--tw-gradient-from-position);--tw-gradient-to: rgb(92 76 194 / 0) var(--tw-gradient-to-position);--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)}.to-primary-light{--tw-gradient-to: #9180ED var(--tw-gradient-to-position)}.object-contain{-o-object-fit:contain;object-fit:contain}.p-1{padding:4px}.p-2{padding:8px}.p-3{padding:12px}.p-4{padding:16px}.p-6{padding:24px}.p-\[10px\]{padding:10px}.px-2{padding-left:8px;padding-right:8px}.px-2\.5{padding-left:10px;padding-right:10px}.px-3{padding-left:12px;padding-right:12px}.px-4{padding-left:16px;padding-right:16px}.px-5{padding-left:20px;padding-right:20px}.px-8{padding-left:32px;padding-right:32px}.py-0{padding-top:0;padding-bottom:0}.py-0\.5{padding-top:2px;padding-bottom:2px}.py-1{padding-top:4px;padding-bottom:4px}.py-16{padding-top:64px;padding-bottom:64px}.py-2{padding-top:8px;padding-bottom:8px}.py-3{padding-top:12px;padding-bottom:12px}.py-4{padding-top:16px;padding-bottom:16px}.py-6{padding-top:24px;padding-bottom:24px}.py-8{padding-top:32px;padding-bottom:32px}.pb-6{padding-bottom:24px}.pl-10{padding-left:40px}.pl-2{padding-left:8px}.pl-3{padding-left:12px}.pl-4{padding-left:16px}.pr-0{padding-right:0}.pr-10{padding-right:40px}.pr-2{padding-right:8px}.pr-3{padding-right:12px}.pr-4{padding-right:16px}.pt-4{padding-top:16px}.pt-7{padding-top:28px}.text-left{text-align:left}.text-center{text-align:center}.text-2xl{font-size:24px;line-height:32px}.text-\[11px\]{font-size:11px}.text-base{font-size:16px;line-height:24px}.text-lg{font-size:18px;line-height:28px}.text-sm{font-size:14px;line-height:20px}.text-xl{font-size:20px;line-height:28px}.text-xs{font-size:12px;line-height:12px}.text-xs-sm{font-size:13px;line-height:17px}.font-medium{font-weight:500}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-5{line-height:20px}.leading-6{line-height:24px}.leading-tight{line-height:1.25}.text-amber-700{--tw-text-opacity: 1;color:rgb(180 83 9 / var(--tw-text-opacity))}.text-amber-800{--tw-text-opacity: 1;color:rgb(146 64 14 / var(--tw-text-opacity))}.text-blue-500{--tw-text-opacity: 1;color:rgb(59 130 246 / var(--tw-text-opacity))}.text-emerald-600{--tw-text-opacity: 1;color:rgb(5 150 105 / var(--tw-text-opacity))}.text-emerald-700{--tw-text-opacity: 1;color:rgb(4 120 87 / var(--tw-text-opacity))}.text-emerald-800{--tw-text-opacity: 1;color:rgb(6 95 70 / var(--tw-text-opacity))}.text-emerald-950{--tw-text-opacity: 1;color:rgb(2 44 34 / var(--tw-text-opacity))}.text-gray-400{--tw-text-opacity: 1;color:rgb(156 163 175 / var(--tw-text-opacity))}.text-gray-500{--tw-text-opacity: 1;color:rgb(107 114 128 / var(--tw-text-opacity))}.text-gray-600{--tw-text-opacity: 1;color:rgb(75 85 99 / var(--tw-text-opacity))}.text-gray-700{--tw-text-opacity: 1;color:rgb(55 65 81 / var(--tw-text-opacity))}.text-gray-800{--tw-text-opacity: 1;color:rgb(31 41 55 / var(--tw-text-opacity))}.text-gray-900{--tw-text-opacity: 1;color:rgb(17 24 39 / var(--tw-text-opacity))}.text-indigo-600{--tw-text-opacity: 1;color:rgb(79 70 229 / var(--tw-text-opacity))}.text-indigo-800{--tw-text-opacity: 1;color:rgb(55 48 163 / var(--tw-text-opacity))}.text-primary{--tw-text-opacity: 1;color:rgb(116 94 242 / var(--tw-text-opacity))}.text-red-600{--tw-text-opacity: 1;color:rgb(220 38 38 / var(--tw-text-opacity))}.text-red-900{--tw-text-opacity: 1;color:rgb(127 29 29 / var(--tw-text-opacity))}.text-rose-700{--tw-text-opacity: 1;color:rgb(190 18 60 / var(--tw-text-opacity))}.text-rose-800{--tw-text-opacity: 1;color:rgb(159 18 57 / var(--tw-text-opacity))}.text-sky-700{--tw-text-opacity: 1;color:rgb(3 105 161 / var(--tw-text-opacity))}.text-slate-500{--tw-text-opacity: 1;color:rgb(100 116 139 / var(--tw-text-opacity))}.text-slate-600{--tw-text-opacity: 1;color:rgb(71 85 105 / var(--tw-text-opacity))}.text-slate-700{--tw-text-opacity: 1;color:rgb(51 65 85 / var(--tw-text-opacity))}.text-slate-900{--tw-text-opacity: 1;color:rgb(15 23 42 / var(--tw-text-opacity))}.text-slate-950{--tw-text-opacity: 1;color:rgb(2 6 23 / var(--tw-text-opacity))}.text-violet-600{--tw-text-opacity: 1;color:rgb(124 58 237 / var(--tw-text-opacity))}.text-violet-900{--tw-text-opacity: 1;color:rgb(76 29 149 / var(--tw-text-opacity))}.text-white{--tw-text-opacity: 1;color:rgb(255 255 255 / var(--tw-text-opacity))}.text-yellow-500{--tw-text-opacity: 1;color:rgb(234 179 8 / var(--tw-text-opacity))}.text-yellow-800{--tw-text-opacity: 1;color:rgb(133 77 14 / var(--tw-text-opacity))}.underline{text-decoration-line:underline}.placeholder-red-300::-moz-placeholder{--tw-placeholder-opacity: 1;color:rgb(252 165 165 / var(--tw-placeholder-opacity))}.placeholder-red-300::placeholder{--tw-placeholder-opacity: 1;color:rgb(252 165 165 / var(--tw-placeholder-opacity))}.opacity-0{opacity:0}.opacity-100{opacity:1}.shadow{--tw-shadow: 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);--tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow)}.shadow-\[0_12px_32px_rgba\(15\,23\,42\,0\.08\)\]{--tw-shadow: 0 12px 32px rgba(15,23,42,.08);--tw-shadow-colored: 0 12px 32px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow)}.shadow-lg{--tw-shadow: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);--tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow)}.shadow-md{--tw-shadow: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);--tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow)}.shadow-xl{--tw-shadow: 0 20px 25px -5px rgb(0 0 0 / .1), 0 8px 10px -6px rgb(0 0 0 / .1);--tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow)}.ring-1{--tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow, 0 0 #0000)}.ring-black{--tw-ring-opacity: 1;--tw-ring-color: rgb(0 0 0 / var(--tw-ring-opacity))}.ring-opacity-5{--tw-ring-opacity: .05}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-\[width\]{transition-property:width;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-colors{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.duration-100{transition-duration:.1s}.duration-200{transition-duration:.2s}.duration-300{transition-duration:.3s}.duration-75{transition-duration:75ms}.ease-in{transition-timing-function:cubic-bezier(.4,0,1,1)}.ease-in-out{transition-timing-function:cubic-bezier(.4,0,.2,1)}.ease-out{transition-timing-function:cubic-bezier(0,0,.2,1)}.last\:border-b-0:last-child{border-bottom-width:0px}.hover\:bg-amber-100:hover{--tw-bg-opacity: 1;background-color:rgb(254 243 199 / var(--tw-bg-opacity))}.hover\:bg-gray-200:hover{--tw-bg-opacity: 1;background-color:rgb(229 231 235 / var(--tw-bg-opacity))}.hover\:bg-indigo-500:hover{--tw-bg-opacity: 1;background-color:rgb(99 102 241 / var(--tw-bg-opacity))}.hover\:bg-rose-100:hover{--tw-bg-opacity: 1;background-color:rgb(255 228 230 / var(--tw-bg-opacity))}.hover\:bg-yellow-100:hover{--tw-bg-opacity: 1;background-color:rgb(254 249 195 / var(--tw-bg-opacity))}.hover\:bg-opacity-10:hover{--tw-bg-opacity: .1}.hover\:bg-opacity-100:hover{--tw-bg-opacity: 1}.hover\:bg-opacity-20:hover{--tw-bg-opacity: .2}.hover\:text-slate-800:hover{--tw-text-opacity: 1;color:rgb(30 41 59 / var(--tw-text-opacity))}.focus\:border-primary:focus{--tw-border-opacity: 1;border-color:rgb(116 94 242 / var(--tw-border-opacity))}.focus\:border-red-500:focus{--tw-border-opacity: 1;border-color:rgb(239 68 68 / var(--tw-border-opacity))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:outline-primary:focus{outline-color:#745ef2}.focus\:ring-indigo-600:focus{--tw-ring-opacity: 1;--tw-ring-color: rgb(79 70 229 / var(--tw-ring-opacity))}.focus\:ring-primary:focus{--tw-ring-opacity: 1;--tw-ring-color: rgb(116 94 242 / var(--tw-ring-opacity))}.focus\:ring-red-500:focus{--tw-ring-opacity: 1;--tw-ring-color: rgb(239 68 68 / var(--tw-ring-opacity))}.focus-visible\:border-primary:focus-visible{--tw-border-opacity: 1;border-color:rgb(116 94 242 / var(--tw-border-opacity))}.focus-visible\:outline:focus-visible{outline-style:solid}.focus-visible\:outline-2:focus-visible{outline-width:2px}.focus-visible\:outline-offset-2:focus-visible{outline-offset:2px}.focus-visible\:outline-primary:focus-visible{outline-color:#745ef2}.focus-visible\:ring-2:focus-visible{--tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow, 0 0 #0000)}.focus-visible\:ring-primary:focus-visible{--tw-ring-opacity: 1;--tw-ring-color: rgb(116 94 242 / var(--tw-ring-opacity))}.focus-visible\:ring-white:focus-visible{--tw-ring-opacity: 1;--tw-ring-color: rgb(255 255 255 / var(--tw-ring-opacity))}.focus-visible\:ring-opacity-75:focus-visible{--tw-ring-opacity: .75}.focus-visible\:ring-offset-2:focus-visible{--tw-ring-offset-width: 2px}.focus-visible\:ring-offset-primary:focus-visible{--tw-ring-offset-color: #745EF2}.group:hover .group-hover\:w-6{width:24px}@media (min-width: 640px){.sm\:flex-row{flex-direction:row}.sm\:text-sm{font-size:14px;line-height:20px}}
+</style><div class="p-4 fixed top-0 right-0 w-full max-w-md" hidden="" style="display: none;"><div class="root-card rounded-lg overflow-hidden shadow-xl bg-gray-100 flex flex-col focus:outline-none" tabindex="-1"><div class="z-10 relative"><div class="w-full absolute bg-gray-800 py-2 flex justify-between gap-2 z-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="24.25 163.33 326.51 37.84" class="pl-4" style="width: 140px;"><path d="M24.254 196.374c1.133-1.695 2.078-3.28 2.828-4.75.75-1.468 1.473-3.171 2.172-5.109 2.363 1.375 5.113 2.45 8.25 3.219 3.133.761 6.05 1.14 8.75 1.14 2.77 0 4.719-.238 5.844-.718 1.132-.489 1.703-1.016 1.703-1.578 0-2.04-3.102-3.063-9.297-3.063-6.805 0-11.742-.707-14.813-2.125-3.062-1.414-4.593-3.707-4.593-6.875 0-4.5 1.863-7.812 5.593-9.937 3.739-2.133 8.594-3.204 14.563-3.204 3.469 0 7.023.446 10.672 1.329 3.656.875 6.945 2.085 9.875 3.625-.969 2.199-1.985 4.882-3.047 8.046-.2.668-.367 1.168-.5 1.5-1.7-1.363-4.266-2.504-7.703-3.421-3.43-.915-6.461-1.375-9.094-1.375-3.168 0-5.305.21-6.406.625-1.094.417-1.64 1.023-1.64 1.812 0 .805.753 1.45 2.265 1.938 1.52.48 3.71.718 6.578.718 7.062 0 12.191.809 15.39 2.422 3.208 1.617 4.813 4.09 4.813 7.422 0 4.668-1.703 8.027-5.11 10.078-3.398 2.055-8.542 3.078-15.437 3.078-3.71 0-7.48-.406-11.312-1.218-3.836-.82-7.282-2.016-10.344-3.579ZM106.447 187.015l2.594-22.64h12.203l-6.703 36.296H99.197l-3.406-20.25-3.938 20.25H77.15l-6.703-36.297H82.65l2.547 22.344 4-22.344h13.344ZM147.488 201.171c-7.636 0-13.258-1.656-16.86-4.968-3.593-3.32-5.39-7.985-5.39-13.985 0-5.926 1.79-10.555 5.375-13.89 3.582-3.333 9.207-5 16.875-5 7.696 0 13.336 1.667 16.922 5 3.582 3.335 5.375 7.964 5.375 13.89 0 6.031-1.789 10.7-5.36 14-3.562 3.305-9.21 4.953-16.937 4.953Zm0-10.203c3.696 0 6.364-.707 8-2.125 1.633-1.414 2.453-3.625 2.453-6.625 0-2.926-.82-5.11-2.453-6.547-1.636-1.437-4.304-2.156-8-2.156-3.668 0-6.32.719-7.953 2.156-1.637 1.438-2.453 3.621-2.453 6.547 0 2.969.816 5.172 2.453 6.61 1.633 1.43 4.285 2.14 7.953 2.14ZM196.03 201.171c-7.636 0-13.257-1.656-16.859-4.968-3.593-3.32-5.39-7.985-5.39-13.985 0-5.926 1.789-10.555 5.375-13.89 3.582-3.333 9.207-5 16.875-5 7.695 0 13.336 1.667 16.922 5 3.582 3.335 5.375 7.964 5.375 13.89 0 6.031-1.79 10.7-5.36 14-3.562 3.305-9.21 4.953-16.937 4.953Zm0-10.203c3.696 0 6.364-.707 8-2.125 1.634-1.414 2.454-3.625 2.454-6.625 0-2.926-.82-5.11-2.453-6.547-1.637-1.437-4.305-2.156-8-2.156-3.668 0-6.32.719-7.953 2.156-1.637 1.438-2.453 3.621-2.453 6.547 0 2.969.816 5.172 2.453 6.61 1.632 1.43 4.285 2.14 7.953 2.14ZM245.026 164.421c6.633 0 11.25 1.18 13.844 3.532 2.602 2.343 3.906 5.652 3.906 9.921 0 2.93-.523 5.418-1.562 7.47-1.031 2.054-2.852 3.655-5.453 4.812-2.594 1.148-6.172 1.718-10.735 1.718H234.62v8.797h-12.297c.27-6.468.406-12.52.406-18.156 0-5.625-.136-11.672-.406-18.14h12.297v.046Zm-3.5 17.797c2.758 0 4.832-.101 6.22-.312 1.382-.22 2.35-.61 2.905-1.172.551-.57.828-1.41.828-2.516 0-1.094-.261-1.914-.78-2.469-.524-.55-1.477-.925-2.86-1.125-1.375-.195-3.48-.296-6.313-.296h-6.906v7.89ZM278.563 191.515c12.664-.062 21.848-.242 27.547-.547a32.186 32.186 0 0 0-.422 4.235c-.054 1.449-.078 3.273-.078 5.468h-38.844c.27-6.468.407-12.52.407-18.156 0-5.625-.137-11.672-.407-18.14h38.844v9.046h-27.047v4.797c1.602.031 3.973.047 7.11.047 5.289 0 10.77-.098 16.437-.297v8.61a450.852 450.852 0 0 0-16.437-.313 312.2 312.2 0 0 0-7.11.063ZM326.11 163.828c6.27 0 11.218.761 14.843 2.28 3.633 1.512 6.176 3.61 7.625 6.298 1.457 2.68 2.188 5.964 2.188 9.859 0 3.711-.836 6.95-2.5 9.719-1.668 2.761-4.168 4.902-7.5 6.422-3.336 1.511-7.438 2.265-12.313 2.265h-9.046c-3.063 0-6.165-.015-9.297-.047.27-6.57.406-12.691.406-18.359 0-5.727-.137-11.707-.406-17.937 3.968-.333 9.3-.5 16-.5Zm3.75 26.89c3.101 0 5.172-.75 6.203-2.25 1.031-1.5 1.547-3.566 1.547-6.203 0-2.531-.543-4.578-1.625-6.14-1.086-1.57-3.125-2.36-6.125-2.36-3.23 0-5.649.105-7.25.313v16.64Zm0 0" fill="#745ef2"></path></svg><div class="flex items-center"><div><a class="block px-2 text-white" href="https://swooped.co/app" target="_blank" rel="noreferrer"><span class="sr-only">Go to Swooped</span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="w-6 h-6 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path></svg></a></div><div><a class="block px-2 text-white" href="https://swooped.co/app?open_intercom=true&amp;intercom_text=Extension%20Bug%20Report%3A%20%3Cfill%20in%20details%20here%3E" target="_blank" rel="noreferrer"><span class="sr-only">Report Bug</span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="w-6 h-6 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M12 12.75c1.148 0 2.278.08 3.383.237 1.037.146 1.866.966 1.866 2.013 0 3.728-2.35 6.75-5.25 6.75S6.75 18.728 6.75 15c0-1.046.83-1.867 1.866-2.013A24.204 24.204 0 0 1 12 12.75Zm0 0c2.883 0 5.647.508 8.207 1.44a23.91 23.91 0 0 1-1.152 6.06M12 12.75c-2.883 0-5.647.508-8.208 1.44.125 2.104.52 4.136 1.153 6.06M12 12.75a2.25 2.25 0 0 0 2.248-2.354M12 12.75a2.25 2.25 0 0 1-2.248-2.354M12 8.25c.995 0 1.971-.08 2.922-.236.403-.066.74-.358.795-.762a3.778 3.778 0 0 0-.399-2.25M12 8.25c-.995 0-1.97-.08-2.922-.236-.402-.066-.74-.358-.795-.762a3.734 3.734 0 0 1 .4-2.253M12 8.25a2.25 2.25 0 0 0-2.248 2.146M12 8.25a2.25 2.25 0 0 1 2.248 2.146M8.683 5a6.032 6.032 0 0 1-1.155-1.002c.07-.63.27-1.222.574-1.747m.581 2.749A3.75 3.75 0 0 1 15.318 5m0 0c.427-.283.815-.62 1.155-.999a4.471 4.471 0 0 0-.575-1.752M4.921 6a24.048 24.048 0 0 0-.392 3.314c1.668.546 3.416.914 5.223 1.082M19.08 6c.205 1.08.337 2.187.392 3.314a23.882 23.882 0 0 1-5.223 1.082"></path></svg></a></div><button class="pr-4 pl-2 py-1 text-white"><span class="sr-only">Close</span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="w-6 h-6 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"></path></svg></button></div></div><div class="h-12"></div></div><div class="border border-t-0 overflow-hidden overflow-y-auto"><div class="p-4"><div><h3 class="mb-4 text-lg font-medium">Add Job to Tracker</h3><form action="#" class="w-full"><div class="mb-4"><label id="companyName-label" for="companyName" class="text-sm font-medium text-gray-700 flex">Company Name</label><div class="relative rounded-md"><input name="companyName" type="text" class="p-2 block w-full focus:outline-none text-sm rounded-md border border-gray-300 focus:ring-primary focus:border-primary" aria-invalid="false" id="companyName" value=""></div></div><div class="mb-4"><label id="jobTitle-label" for="jobTitle" class="text-sm font-medium text-gray-700 flex">Job Title</label><div class="relative rounded-md"><input name="jobTitle" type="text" class="p-2 block w-full focus:outline-none text-sm rounded-md border border-gray-300 focus:ring-primary focus:border-primary" aria-invalid="false" id="jobTitle" value=""></div></div><div class="mb-4"><label id="jobDescriptionText-label" for="jobDescriptionText" class="text-sm font-medium text-gray-700 flex">Job Description</label><div class="relative rounded-md"><textarea name="jobDescriptionText" class="p-2 block w-full focus:outline-none text-sm rounded-md border border-gray-300 focus:ring-primary focus:border-primary" aria-invalid="false" id="jobDescriptionText" placeholder="Paste the job description from the page here" rows="10"></textarea></div></div><button type="submit" class="w-full relative focus:outline-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-opacity-75 rounded-md overflow-hidden bg-primary hover:bg-opacity-100 px-4 flex justify-center items-center text-sm font-medium text-white" style="height: 38px;">Create Tracked Job</button></form></div></div></div></div></div></div></div></template></div></html>

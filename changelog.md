@@ -7,6 +7,16 @@ All notable changes to this project will be documented in this file.
 - Added native Obsidian Bible notes: complete KJV, names co-occurrence network, book indexes, and all 344,799 OpenBible cross-reference records with full target ranges and votes.
 - Added dependency-free export/validation tools under E:\AI_Hub\Tools\bible-network, source attribution, regeneration rules, and five unit tests.
 - Preserved the app's independent version and existing data; Obsidian export has its own v0.01.00 sequence.
+## [1.4.0] - 2026-10-15
+
+### Fixed & Restored
+- **Verbatim Restoration of GoDaddy Web Archive**: Restored exact archived pages from `assets/Web_Archive_20261014/` (`Historical Bible - Faith and Religion, The Bible.html` -> `index.html`, `HistoricalBible.html` -> `contact.html`, `Bible-download.html` -> `bible.html`).
+- **Complete Visual & Brand Fidelity**: Restored original GoDaddy typography (`Righteous`, `Josefin Sans`), header layout, sunset Bible banner, "Help Our Cause" section, and PayPal donation button flow (`BibleHistorical@gmail.com`).
+- **Asset Directory Mirroring**: Copied `Historical Bible - Faith and Religion, The Bible_files`, `HistoricalBible_files`, and `Bible-download_files` to root and `public/` directories for zero-404 static hosting on GitHub Pages.
+- **Direct Bible.pdf Serving**: Linked download button to Joel's hand-typed 9.5MB `Bible.pdf` hosted directly on the repository domain.
+- **Interactive Gateway**: Maintained Three.js 3D WebGL Scripture Tapestry engine at `/interact` (`interact.html`).
+- **Regression Verification**: Updated Playwright test suite (`tests/site_pages.spec.ts`) asserting exact archived content with automated screenshot proofs.
+
 ## [1.3.0] - 2026-10-14
 
 ### Added
