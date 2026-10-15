@@ -5,18 +5,6 @@
 
 ---
 
-## 🕊️ Dedication: For the Reward of His Suffering
-
-This work is dedicated solely to the Glory of Almighty God and as an offering of gratitude for the suffering, sacrifice, and physical, historical resurrection of Jesus Christ. 
-
-Christ lived a literal, historical, physical life upon this earth. In His flesh, He inarguably fulfilled over **300 specific prophecies** spoken hundreds and thousands of years prior through the prophets of the Old Testament. He endured physical torture and a roman crucifixion that birthed the very word *excruciating* (*ex cruce* — "out of the cross") to purchase the redemption of mankind.
-
-Every line of code, every mathematical coordinate, and every Bézier arc in this repository is written with absolute intentionality and diligent might. This is not a transient technical curiosity, nor a commercial venture, nor a project bounded by any local town, county, or nation.
-
-Annually, over 200 people download the authoritative text from [`HistoricalBible.com/bible`](https://historicalbible.com/bible) — many of them secretly residing in closed countries where the physical possession of a Bible carries the penalty of imprisonment or death. This project exists for them. It exists for the globe. It exists so that anyone, on any device, under any bandwidth constraint or hostile network environment, can receive, navigate, and study the living, interconnected Word of God with dignity, speed, and reverent beauty.
-
----
-
 ## 🌐 The Living Word: 344,799 Interconnected Threads
 
 The Bible is not an ordinary book; it is a divine library of **66 books**, penned across **1,500 years** by more than **40 distinct authors** across three continents, united by a single Divine Author. It is the world’s first and greatest hyperlinked text.
