@@ -7,6 +7,17 @@ All notable changes to this project will be documented in this file.
 - Added native Obsidian Bible notes: complete KJV, names co-occurrence network, book indexes, and all 344,799 OpenBible cross-reference records with full target ranges and votes.
 - Added dependency-free export/validation tools under E:\AI_Hub\Tools\bible-network, source attribution, regeneration rules, and five unit tests.
 - Preserved the app's independent version and existing data; Obsidian export has its own v0.01.00 sequence.
+## [1.2.0] - 2026-10-14
+
+### Added
+- **Hand-Typed Authoritative KJV Corpus Ingestion**: Compiled 31,098 verses directly from Joel McCracken Jr.'s hand-typed `Bible.pdf` into `public/data/kjv_verses.json`.
+- **Restored Translator-Added Italics**: 14,134 bracketed verses (`[...]`) preserving KJV italics with `.kjv-added` CSS styling and transparent scholarly tooltips.
+- **Divine Covenant Name Typography**: Preserved 5,556 verses with `LORD` (יהוה / Jehovah) in dedicated small-caps gold styling, distinguished from 1,010 verses with `Lord` (Adonai / Master).
+- **Canonical `{chapter:verse}` Delimiters**: Standardized `{c:v}` across UI inspectors and headers, preventing collision with the 247 verses containing internal scripture parentheses `(...)`.
+- **Permanent KJV Legend Bar**: Added interactive typography guide to `interact.html`.
+- **Master README Chapter**: Codified *"The Textual Foundation: Typed by Hand for the Glory of God"* into project documentation.
+- **Regression Test REG-08**: Automated Playwright test verifying KJV language integrity and typography in `tests/interact.spec.ts`.
+
 ## [1.1.0] - 2026-10-14
 
 ### Added

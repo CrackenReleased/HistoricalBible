@@ -227,11 +227,54 @@
 
     .drawer-verse-text {
       font-family: 'Lora', serif;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      color: #cbd5e1;
+      font-size: 0.98rem;
+      line-height: 1.6;
+      color: #e2e8f0;
       margin-top: 8px;
+      font-style: normal;
+    }
+
+    .kjv-added {
       font-style: italic;
+      color: #7dd3fc;
+      background: rgba(125, 211, 252, 0.08);
+      padding: 0 3px;
+      border-radius: 3px;
+      border-bottom: 1px dotted rgba(125, 211, 252, 0.4);
+      cursor: help;
+    }
+
+    .kjv-lord {
+      font-variant: small-caps;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      color: var(--gold);
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.25);
+    }
+
+    .kjv-legend-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .kjv-legend-pill {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .kjv-legend-pill strong {
+      color: #cbd5e1;
     }
 
     .drawer-content {
@@ -534,9 +577,20 @@
     <!-- Right Drawer: Scripture & Theological Audit Inspector -->
     <aside class="inspector-drawer">
       <div class="drawer-header">
-        <h2 id="drawer-verse-title">Genesis 1:1</h2>
+        <h2 id="drawer-verse-title">Genesis {1:1}</h2>
         <div class="drawer-verse-text" id="drawer-verse-text">
           "In the beginning God created the heaven and the earth."
+        </div>
+        <div class="kjv-legend-bar">
+          <span class="kjv-legend-pill" title="Braces denote exact verse boundaries to prevent confusion with internal scripture parentheses">
+            <strong>{c:v}</strong> Boundary
+          </span>
+          <span class="kjv-legend-pill" title="Brackets preserve words added by translators for English syntax (traditional italics)">
+            <strong style="color: #7dd3fc;">[...]</strong> Added Italics
+          </span>
+          <span class="kjv-legend-pill" title="All-caps LORD denotes the divine Tetragrammaton YHWH (Jehovah)">
+            <strong style="color: var(--gold);">LORD</strong> = Jehovah
+          </span>
         </div>
       </div>
 

@@ -1,5 +1,15 @@
 # HANDOFF.md — HistoricalBible.com
 
+## 2026-10-14 23:28:00 — Antigravity / HistoricalBible — Hand-Typed KJV Scripture Corpus & Linguistic Integrity Ingestion Live
+
+### Status Overview
+- **Authoritative Text**: Ingested all 31,098 verses extracted directly from Joel McCracken Jr.'s hand-typed `Bible.pdf` into `public/data/kjv_verses.json`.
+- **Translator Additions**: Restored **14,134 bracketed verses** (`[...]`) preserving the KJV italicized translator additions with dedicated `.kjv-added` styling and informative scholarly tooltips.
+- **Divine Tetragrammaton**: Preserved **5,556 verses** with `LORD` in divine small-caps covenant styling, distinguishing from **1,010 verses** with `Lord` (Adonai / Master).
+- **Verse Delimiters**: Standardized `{chapter:verse}` notation across all UI inspectors and headers, protecting all **247 verses** containing internal scripture parentheses `(...)` from parsing collisions.
+- **Master README**: Published the permanent chapter **"The Textual Foundation: Typed by Hand for the Glory of God"** to GitHub.
+- **Automated Regression Suite**: 9 Playwright tests passing cleanly in 6.5s (including new `REG-08` KJV language integrity test). Production Vite build compiling in 809ms.
+
 ## 2026-10-14 23:08:00 — Antigravity / HistoricalBible — Public GitHub Release at CrackenReleased/HistoricalBible Live
 
 ### Status Overview

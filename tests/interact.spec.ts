@@ -31,9 +31,9 @@ test.describe('HistoricalBible.com/Interact — Local-First 3D Suite', () => {
     await page.locator('.journey-card[data-target-verse="Gen.3.15"]').click();
     await expect(modal).toBeHidden();
 
-    // Drawer should update to Genesis 3:15
+    // Drawer should update to Genesis {3:15}
     const title = page.locator('#drawer-verse-title');
-    await expect(title).toHaveText('Genesis 3:15');
+    await expect(title).toHaveText('Genesis {3:15}');
   });
 
   test('REG-07: Audited Theological Relations display Bible.pdf citations', async ({ page }) => {
@@ -50,5 +50,39 @@ test.describe('HistoricalBible.com/Interact — Local-First 3D Suite', () => {
     const refCard = page.locator('.ref-card.has-audit').first();
     await expect(refCard).toBeVisible();
     await expect(refCard).toContainText('Verified against Bible.pdf');
+  });
+
+  test('REG-08: KJV Language Integrity (Italicized Brackets [...], LORD Small-Caps, and {c:v} Delimiters)', async ({ page }) => {
+    // Close welcome modal
+    await page.locator('.modal-close').click();
+
+    // Verify KJV legend bar is displayed
+    const legendBar = page.locator('.kjv-legend-bar');
+    await expect(legendBar).toBeVisible();
+    await expect(legendBar).toContainText('{c:v}');
+    await expect(legendBar).toContainText('[...]');
+    await expect(legendBar).toContainText('LORD');
+
+    // Inspect Genesis 18:2 directly via window.app or omnibox/journey
+    await page.evaluate(() => {
+      (window as any).app?.inspectVerse('Gen.18.2');
+    });
+
+    // Verify verse title has {18:2}
+    const title = page.locator('#drawer-verse-title');
+    await expect(title).toHaveText('Genesis {18:2}');
+
+    // Verify bracketed translator-added word [them,] is rendered with .kjv-added
+    const addedWord = page.locator('#drawer-verse-text .kjv-added');
+    await expect(addedWord).toBeVisible();
+    await expect(addedWord).toContainText('[them,]');
+
+    // Inspect Genesis 18:1 to verify LORD (Tetragrammaton)
+    await page.evaluate(() => {
+      (window as any).app?.inspectVerse('Gen.18.1');
+    });
+    const lordTag = page.locator('#drawer-verse-text .kjv-lord');
+    await expect(lordTag).toBeVisible();
+    await expect(lordTag).toHaveText('LORD');
   });
 });

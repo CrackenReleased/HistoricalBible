@@ -214,6 +214,27 @@ class HistoricalBibleApp {
     }
   }
 
+  /**
+   * Formats KJV scripture text to preserve:
+   * 1. Translator-added words in brackets [...] (traditional KJV italics)
+   * 2. The divine Tetragrammaton LORD (YHWH / Jehovah) in small-caps covenant styling
+   */
+  public formatScriptureHtml(raw: string): string {
+    if (!raw) return '';
+    let escaped = raw
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+    // Translator-added words (traditional KJV italics) preserved in brackets [...]
+    escaped = escaped.replace(/\[(.*?)\]/g, '<span class="kjv-added" title="Added by KJV translators for English readability (traditional italics)">[$1]</span>');
+
+    // The divine Tetragrammaton יהוה (YHWH / Jehovah)
+    escaped = escaped.replace(/\bLORD\b/g, '<span class="kjv-lord" title="The Tetragrammaton יהוה (YHWH / Jehovah)">LORD</span>');
+
+    return escaped;
+  }
+
   public inspectVerse(osisRef: string) {
     this.selectedVerse = osisRef;
     const drawerTitle = document.getElementById('drawer-verse-title');
@@ -224,12 +245,12 @@ class HistoricalBibleApp {
     const parts = osisRef.split('.');
     const bookObj = CANON_BOOKS.find(b => b.abbr === parts[0]);
     const bookName = bookObj ? bookObj.name : parts[0];
-    const formattedTitle = parts.length === 3 ? `${bookName} ${parts[1]}:${parts[2]}` : osisRef;
-    if (drawerTitle) drawerTitle.innerText = formattedTitle;
+    const formattedTitle = parts.length === 3 ? `${bookName} {${parts[1]}:${parts[2]}}` : osisRef;
+    if (drawerTitle) drawerTitle.innerHTML = formattedTitle;
     
-    // Get local scripture text
+    // Get local scripture text from Joel's curated Bible corpus
     const text = localStore.getVerseText(osisRef) || "In the beginning God created the heaven and the earth.";
-    if (drawerText) drawerText.innerText = text;
+    if (drawerText) drawerText.innerHTML = `"${this.formatScriptureHtml(text)}"`;
 
     // Acoustic feedback
     acousticEngine.playCanonicalResonance('Law', 0.2, 0.5);
@@ -249,15 +270,20 @@ class HistoricalBibleApp {
           const targetText = localStore.getVerseText(targetRef);
           const rel = localStore.getTheologicalRelation(osisRef, targetRef);
 
+          const targetParts = targetRef.split('.');
+          const targetBookObj = CANON_BOOKS.find(b => b.abbr === targetParts[0]);
+          const targetBookName = targetBookObj ? targetBookObj.name : targetParts[0];
+          const targetTitle = targetParts.length === 3 ? `${targetBookName} {${targetParts[1]}:${targetParts[2]}}` : targetRef;
+
           const card = document.createElement('div');
           card.className = `ref-card ${rel ? 'has-audit' : ''}`;
           card.innerHTML = `
             <div class="ref-header">
-              <span class="ref-osis">${targetRef.replace('.', ' ').replace('.', ':')}</span>
+              <span class="ref-osis">${targetTitle}</span>
               <span class="ref-votes">★ ${votes} votes</span>
               ${rel ? `<span class="badge badge-${rel.classification}">${rel.classification.toUpperCase()}</span>` : ''}
             </div>
-            <div class="ref-text">${targetText ? `"${targetText}"` : ''}</div>
+            <div class="ref-text">${targetText ? `"${this.formatScriptureHtml(targetText)}"` : ''}</div>
             ${rel ? `
               <div class="audit-badge-pill">
                 <strong>Theological Relation:</strong> ${rel.relation}
@@ -342,6 +368,7 @@ class HistoricalBibleApp {
 
 function boot() {
   const app = new HistoricalBibleApp();
+  (window as any).app = app;
   app.start();
 }
 

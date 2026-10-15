@@ -90,3 +90,26 @@
 3. **Legal Hygiene & Asset Untracking**:
    - Verified 17 U.S.C. § 102(b) procedural clearance.
    - Ensured all local raster print assets (`BibleVizArc7WiderOTNTMedQuality.jpg`, `BibleNetwork.jpg`) remain strictly on the host machine and are untracked via `.gitignore` to protect personal-use licensing.
+
+## 2026-10-14 23:28:00 — Hand-Typed KJV Scripture Corpus & Linguistic Integrity Ingestion
+
+### WHAT was built
+1. **Ingested Hand-Typed KJV Corpus into Production**:
+   - Built and executed `scripts/build-curated-kjv.js` to compile the 31,098 verses directly extracted from Joel's hand-typed masterwork (`Bible.pdf` via `audit-context.json`) into `public/data/kjv_verses.json`.
+   - Restored **14,134 bracketed verses** (`[...]`) that preserve the KJV translator-added italicized words (which previous public domain scrapers had silently stripped).
+   - Preserved all **5,556 verses** containing the divine Tetragrammaton `LORD` (יהוה / Jehovah) and **1,010 verses** containing `Lord` (Adonai / Master).
+   - Preserved all **247 verses** containing internal scripture parentheses `(...)`.
+2. **Interactive UI Typography & Legend**:
+   - Updated `src/main.ts` with `formatScriptureHtml` to render bracketed words with dedicated styling (`.kjv-added`) and scholarly tooltips, and divine covenant styling for `LORD` (`.kjv-lord`).
+   - Updated verse inspector header to display the canonical `{chapter:verse}` delimiter standard (e.g., `Genesis {18:2}`).
+   - Added a permanent `kjv-legend-bar` to `interact.html` explaining the `{c:v}` delimiter, `[...]` added italics, and `LORD` Tetragrammaton.
+3. **Master README Documentation**:
+   - Codified the chapter **"The Textual Foundation: Typed by Hand for the Glory of God"** into `README.md` at `E:\HistoricalBible\README.md` and published to GitHub.
+4. **Automated Regression Test Suite**:
+   - Added `REG-08` in `tests/interact.spec.ts` testing bracketed word detection (`[them,]` in Genesis 18:2), `LORD` styling in Genesis 18:1, and legend bar visibility.
+   - All 9 Playwright regression tests passing cleanly in 6.5s.
+
+### HOW it works & WHY these decisions were made
+- **The Work of Joel's Fingers**: Joel re-typed the entire Bible by hand across 12 downloadable PDF editions to achieve this pristine state. The web application now honors this exact keystroke-by-keystroke text as its canonical data source.
+- **Why Brackets `[...]` Matter**: The KJV translators (1611) faithfully italicized words not present in the original Hebrew/Greek manuscripts. Collapsing them robs the reader of transparency. Brackets preserve this distinction across all digital contexts.
+- **Why Braces `{c:v}` Matter**: Because the Bible contains 247 verses with internal parentheses `(...)`, using parentheses or bare numbers for verses creates parsing collisions with inspired text. Braces provide an unbreakable, non-colliding boundary.

@@ -38,6 +38,42 @@ Built using the proven local-first engineering philosophy developed in `boarderl
 
 ---
 
+## 📜 The Textual Foundation: Typed by Hand for the Glory of God
+
+> *"So that `Bible.pdf` version is literally the work of my fingers."* — Joel McCracken Jr.
+
+The scripture corpus serving **HistoricalBible.com** is not an unvetted web scrape, a casual OCR scan, or an automated machine dump. It is the result of years of exhaustive scholarship, prayer, and keystroke-by-keystroke labor by Joel McCracken Jr., who evaluated **12 distinct downloadable PDF editions** of the King James Bible to curate a pristine, authoritative text.
+
+To ensure absolute fidelity to the historical witness, **all 31,102 verses—over 783,000 words and 3.5 million characters—were re-typed by hand**. This immense work of devotion was undertaken to preserve three foundational linguistic and theological truths that modern digital formats routinely destroy:
+
+### 1. Preserving "What Was Added" — Translator Italics in Brackets `[...]`
+In the King James Version (1611), the translators faithfully italicized English words that had no direct verbal counterpart in the original Hebrew, Aramaic, or Greek manuscripts, but were required to complete English grammar and syntax (e.g., `[them,]`, `[is]`, `[was]`, `[are]`). 
+
+Most modern digital databases and plain-text scrapers silently strip these italics, depriving the reader of the ability to distinguish between what the ancient manuscripts directly state and what was supplied for English readability. Across **14,134 verses**, HistoricalBible preserves these additions explicitly with brackets `[...]`, allowing the application to render them in distinguished italics with transparent scholarly tooltips explaining the translator addition.
+
+### 2. The Divine Name: The Covenant Distinction Between `LORD` and `Lord`
+Throughout the Old Testament, the English text makes an essential theological distinction that collapsing or uniform casing completely erases:
+* **`LORD` (in all capitals or small caps)** translates the sacred, unpronounceable Tetragrammaton **יהוה** (*Yahweh* / *Jehovah*)—the uncreated, self-existent, covenant-keeping God of Israel (Exodus 3:14). Found in **5,556 verses** of the corpus.
+* **`Lord` (capital L, lowercase ord)** translates **אֲדֹנָי** (*Adonai*)—denoting master, ruler, or sovereign authority. Found distinctly across **1,010 verses**.
+
+HistoricalBible rigorously preserves this distinction, rendering `LORD` in distinct covenant typography so the holiness of God's personal covenant name is never obscured.
+
+### 3. Unbreakable Verse Delimiters: Braces `{chapter:verse}` vs. Scriptural Parentheses `(...)`
+The inspired text of the King James Bible contains **247 verses with internal parentheses `(...)`** (e.g., Genesis 10:14, 14:8, 19:20, 35:18, 38:16; Romans 5:13–17). Standard tools that attempt to delimit verses using parentheses `(18:2)` or bare numeric markers inevitably collide with and contaminate the inspired text.
+
+By deliberately establishing the **`{chapter:verse}`** brace standard (e.g., `{18:1}`, `{18:2}`):
+```text
+GENESIS
+{18:1} And the LORD appeared unto him in the plains of
+Mamre: and he sat in the tent door in the heat of the day;
+{18:2} And he lift up his eyes and looked, and, lo, three men
+stood by him: and when he saw [them,] he ran to meet them
+from the tent door, and bowed himself toward the ground,
+```
+The verse delimiter is mathematically and visually distinct from any internal punctuation in the Word of God, ensuring zero textual corruption and zero conflation.
+
+---
+
 ## 🏛️ Core Engines & Interfaces
 
 ### 1. Three.js 3D WebGL Spatial Loom (`/interact.html`)
