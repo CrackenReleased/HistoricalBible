@@ -1,0 +1,8 @@
+node_modules/
+.playwright/
+test-results/
+playwright-report/
+*.zip
+*.log
+.DS_Store
+Thumbs.db
