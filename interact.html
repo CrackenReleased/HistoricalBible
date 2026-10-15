@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HistoricalBible Interactive Scripture Tapestry — 344,799 Cross-References</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #08090d;
+      --bg-panel: #0f1118;
+      --bg-card: #151824;
+      --border: #232738;
+      --gold: #d4af37;
+      --gold-dim: #997b24;
+      --text: #e2e8f0;
+      --text-muted: #8e99ab;
+      --cyan: #22d3ee;
+      --accent: #38bdf8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-dark);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
+
+    .brand-badge {
+      background: rgba(212, 175, 55, 0.15);
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .mode-switch-group {
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px;
+    }
+
+    .mode-toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .mode-toggle-btn.active {
+      background: var(--gold);
+      color: #000;
+      font-weight: 700;
+    }
+
+    .omnibox {
+      display: flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+    }
+
+    .omnibox input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 0.85rem;
+      width: 170px;
+      outline: none;
+    }
+
+    .audio-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--gold);
+      font-size: 0.78rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .audio-btn.muted {
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    /* Telemetry Banner */
+    .local-telemetry-banner {
+      background: #0d131f;
+      border-bottom: 1px solid #1a273e;
+      padding: 4px 20px;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-muted);
+      z-index: 40;
+    }
+
+    .local-telemetry-banner.ready .status-dot {
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #f59e0b;
+      margin-right: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .progress-bar-wrap {
+      width: 140px;
+      height: 6px;
+      background: #1e293b;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-left: 10px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 5%;
+      background: var(--gold);
+      transition: width 0.25s ease;
+    }
+
+    /* Main Viewport Workspace */
+    .viewport-container {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #three-container, #canvas-2d-container, #names-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    #canvas-2d-container, #threads-container, #names-container {
+      display: none;
+    }
+
+    /* Scripture & Theological Inspector Drawer */
+    .inspector-drawer {
+      width: 440px;
+      background: var(--bg-panel);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 30;
+      box-shadow: -6px 0 24px rgba(0,0,0,0.5);
+    }
+
+    .drawer-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .drawer-header h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      color: var(--gold);
+    }
+
+    .drawer-verse-text {
+      font-family: 'Lora', serif;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #cbd5e1;
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    .drawer-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Audited Theological Relation Card */
+    .audit-card {
+      background: rgba(34, 211, 238, 0.08);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .audit-flag-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .audit-reviewer {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .audit-card h4 {
+      color: var(--cyan);
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    .audit-card p {
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: #94a3b8;
+    }
+
+    .ref-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .ref-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+
+    .ref-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .ref-osis {
+      font-weight: 700;
+      color: #fff;
+      font-size: 0.88rem;
+    }
+
+    .ref-votes {
+      font-size: 0.72rem;
+      color: var(--gold);
+    }
+
+    .badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-supported {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid #10b981;
+    }
+
+    .badge-ambiguous {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid #f59e0b;
+    }
+
+    .ref-text {
+      font-family: 'Lora', serif;
+      font-size: 0.82rem;
+      color: #94a3b8;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
+    .audit-badge-pill {
+      font-size: 0.75rem;
+      color: var(--cyan);
+      margin-bottom: 4px;
+    }
+
+    .audit-reason {
+      font-size: 0.74rem;
+      color: #94a3b8;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+
+    .audit-pdf-cite {
+      font-size: 0.7rem;
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.08);
+      padding: 3px 6px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    /* Names Grid */
+    .names-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      padding: 20px;
+      overflow-y: auto;
+      height: 100%;
+    }
+
+    .name-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+    }
+
+    .name-card h3 {
+      font-size: 0.95rem;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .name-card p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    /* Welcome Onboarding Modal */
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(4, 6, 10, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-box {
+      width: 720px;
+      max-width: 90vw;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+
+    .modal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .modal-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .journey-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .journey-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .journey-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.15);
+    }
+
+    .journey-card h4 {
+      color: var(--gold);
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    .journey-card p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .modal-footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation & Telemetry -->
+  <header>
+    <div class="brand">
+      <a href="https://historicalbible.com" class="brand-title">HISTORICALBIBLE</a>
+      <span class="brand-badge">Interact</span>
+    </div>
+
+    <div class="nav-controls">
+      <!-- Mode Toggle -->
+      <div class="mode-switch-group">
+        <button class="mode-toggle-btn active" data-mode="3d">3D Spatial Loom</button>
+        <button class="mode-toggle-btn" data-mode="2d">2D Macro Arcs</button>
+        <button class="mode-toggle-btn" data-mode="names">Names Network</button>
+      </div>
+
+      <!-- Omnibox Search -->
+      <div class="omnibox">
+        <input type="text" id="omnibox-input" placeholder="Search passage or name..." value="Gen 1:1">
+      </div>
+
+      <!-- Web Audio Harmonic Chime Toggle -->
+      <button class="audio-btn" id="btn-audio-toggle">🔔 196Hz Harmonic Chimes On</button>
+    </div>
+  </header>
+
+  <!-- Local-First Telemetry Bar -->
+  <div class="local-telemetry-banner" id="local-telemetry-banner">
+    <div>
+      <span class="status-dot"></span>
+      <span id="local-progress-text">Initializing Local-First Scripture Cache...</span>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="local-progress-fill"></div>
+      </div>
+    </div>
+    <div>
+      <span>Zero Backend Lag · Client GPU & RAM Acceleration · 344,799 Scripture Links</span>
+    </div>
+  </div>
+
+  <!-- Main Viewport Workspace -->
+  <div class="viewport-container">
+    <!-- View 1: Three.js 3D Spatial Loom -->
+    <div id="three-container"></div>
+
+    <!-- View 2: 2D Canvas Tapestry -->
+    <div id="canvas-2d-container"></div>
+
+    <!-- View 3: Names Social Network -->
+    <div id="names-container"></div>
+
+    <!-- Right Drawer: Scripture & Theological Audit Inspector -->
+    <aside class="inspector-drawer">
+      <div class="drawer-header">
+        <h2 id="drawer-verse-title">Genesis 1:1</h2>
+        <div class="drawer-verse-text" id="drawer-verse-text">
+          "In the beginning God created the heaven and the earth."
+        </div>
+      </div>
+
+      <div class="drawer-content">
+        <!-- Audited Relation Banner (if verified) -->
+        <div class="audit-card" id="drawer-audit-card">
+          <div class="audit-flag-header">
+            <span class="badge badge-supported">AUDITED THEOLOGICAL EVIDENCE</span>
+            <span class="audit-reviewer">Reviewer: context_genesis</span>
+          </div>
+          <h4>Creator praised as giver of blessing</h4>
+          <p>Genesis attributes heaven and earth to God; Psalm 115 explicitly describes the LORD who blesses as their maker.</p>
+        </div>
+
+        <!-- Cross-References List -->
+        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gold); margin-top: 6px;">
+          Cross-References & Parallel Evidence
+        </h3>
+        <div id="drawer-links-list" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Welcome / "Begin the Journey" Onboarding Modal -->
+  <div class="modal-overlay" id="welcome-modal">
+    <div class="modal-box">
+      <button class="modal-close" aria-label="Close modal">&times;</button>
+      <h2 class="modal-title">Enter the Scripture Tapestry</h2>
+      <p class="modal-subtitle">
+        Welcome to <strong>HistoricalBible.com/Interact</strong>.<br>
+        344,799 cross-references · 31,102 verses · 2,408 biblical people & places.<br>
+        Rendered 100% locally on your computer with zero server lag and zero tracking.
+      </p>
+
+      <div class="journey-grid">
+        <div class="journey-card" data-target-verse="Gen.1.1">
+          <h4>1. The Creation Witness</h4>
+          <p>Trace the foundational witness of God as Creator from Genesis 1:1 across John 1, Colossians 1, and Revelation 4.</p>
+        </div>
+
+        <div class="journey-card" data-target-verse="Gen.3.15">
+          <h4>2. The Messianic Promise</h4>
+          <p>Explore the seed of the woman in Genesis 3:15 through Psalm 22, Isaiah 53, and the resurrection testimony.</p>
+        </div>
+
+        <div class="journey-card" data-target-verse="John.3.16">
+          <h4>3. The Golden Thread</h4>
+          <p>Explore John 3:16 and its interconnections across the Old Testament sacrificial types and prophetic promises.</p>
+        </div>
+
+        <div class="journey-card" data-target-verse="Matt.1.1">
+          <h4>4. The People & Places Network</h4>
+          <p>Explore the 2,408 names from Hitchcock's Bible Dictionary and the social web of scripture.</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        Click any journey card above to begin, or click &times; to explore the 3D arc loom freely with your mouse or touch.
+      </div>
+    </div>
+  </div>
+
+  <!-- Vite entry script -->
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
