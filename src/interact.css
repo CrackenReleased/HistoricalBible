@@ -2709,6 +2709,6 @@ footer {
   font-weight: 500;
   color: var(--text-main);
   line-height: 1.55;
-  margin-top: 0.65rem;
+  margin: 0;
   letter-spacing: 0.01em;
 }
