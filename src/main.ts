@@ -12,6 +12,7 @@ import {
 import { discoveries } from './discoveries';
 import { CollectionExplorer } from './collectionExplorer';
 import { EgoGraphCanvas, type EgoGraphData, type EgoNode } from './engine/egoGraph';
+import { AncientMapCanvas } from './engine/ancientMap';
 import { readUrlState, writeUrlState, onUrlStateChange, type InteractUrlState } from './store/urlStateRouter';
 
 class HistoricalInteractApp {
@@ -21,7 +22,8 @@ class HistoricalInteractApp {
   private trail: string[] = [];
   private explorer: CollectionExplorer | null = null;
   private egoGraph: EgoGraphCanvas | null = null;
-  private activeView: 'list' | 'graph' = 'list';
+  private ancientMap: AncientMapCanvas | null = null;
+  private activeView: 'list' | 'graph' | 'map' = 'list';
   private activeGraphTarget: HistoricalFigure | string | null = null;
 
   public async bootstrap(): Promise<void> {
@@ -49,6 +51,8 @@ class HistoricalInteractApp {
 
       if (urlState.view === 'graph') {
         this.activeView = 'graph';
+      } else if (urlState.view === 'map') {
+        this.activeView = 'map';
       }
 
       this.renderEraFilterBar();
@@ -91,6 +95,8 @@ class HistoricalInteractApp {
       }
       if (this.activeView === 'graph') {
         this.switchConnectionView('graph');
+      } else if (this.activeView === 'map') {
+        this.switchConnectionView('map');
       }
 
       // Popstate handling for browser back/forward buttons
@@ -309,6 +315,8 @@ class HistoricalInteractApp {
     this.renderActiveFigureWorkspace();
     if (this.activeView === 'graph') {
       this.renderEgoGraph(target);
+    } else if (this.activeView === 'map' && this.ancientMap) {
+      this.ancientMap.focusOnFigure(target.id);
     }
     if (reveal) {
       const discovery = document.getElementById('discovery');
@@ -324,6 +332,8 @@ class HistoricalInteractApp {
     this.renderDiscovery(fig);
     if (this.activeView === 'graph') {
       this.renderEgoGraph(fig);
+    } else if (this.activeView === 'map' && this.ancientMap) {
+      this.ancientMap.focusOnFigure(fig.id);
     }
     const era = sync.eras.find(e => e.id === fig.eraId);
 
@@ -894,32 +904,63 @@ class HistoricalInteractApp {
     document.getElementById('btn-view-graph')?.addEventListener('click', () => {
       this.switchConnectionView('graph');
     });
+    document.getElementById('btn-view-map')?.addEventListener('click', () => {
+      this.switchConnectionView('map');
+    });
   }
 
-  private switchConnectionView(view: 'list' | 'graph'): void {
+  private switchConnectionView(view: 'list' | 'graph' | 'map'): void {
     this.activeView = view;
     const listBtn = document.getElementById('btn-view-list') as HTMLButtonElement | null;
     const graphBtn = document.getElementById('btn-view-graph') as HTMLButtonElement | null;
+    const mapBtn = document.getElementById('btn-view-map') as HTMLButtonElement | null;
     const graphContainer = document.getElementById('ego-graph-container');
+    const mapContainer = document.getElementById('ancient-map-container');
 
-    if (view === 'graph') {
-      listBtn?.classList.remove('active');
-      listBtn?.setAttribute('aria-pressed', 'false');
+    // Reset button states
+    listBtn?.classList.remove('active');
+    listBtn?.setAttribute('aria-pressed', 'false');
+    graphBtn?.classList.remove('active');
+    graphBtn?.setAttribute('aria-pressed', 'false');
+    mapBtn?.classList.remove('active');
+    mapBtn?.setAttribute('aria-pressed', 'false');
+
+    if (view === 'map') {
+      mapBtn?.classList.add('active');
+      mapBtn?.setAttribute('aria-pressed', 'true');
+      if (graphContainer) graphContainer.hidden = true;
+      if (mapContainer) {
+        mapContainer.hidden = false;
+        if (!this.ancientMap) {
+          this.ancientMap = new AncientMapCanvas({
+            container: mapContainer,
+            compact: true,
+            onSelectSite: (site) => {
+              if (site.figureId && site.figureId !== this.activeFigure?.id) {
+                this.selectFigureById(site.figureId);
+              }
+            }
+          });
+        }
+        if (this.activeFigure) {
+          this.ancientMap.focusOnFigure(this.activeFigure.id);
+        }
+      }
+      writeUrlState({ view: 'map' });
+    } else if (view === 'graph') {
       graphBtn?.classList.add('active');
       graphBtn?.setAttribute('aria-pressed', 'true');
+      if (mapContainer) mapContainer.hidden = true;
       if (graphContainer) {
         graphContainer.hidden = false;
         this.renderEgoGraph(this.activeGraphTarget || this.activeFigure || 'Jesus');
       }
       writeUrlState({ view: 'graph' });
     } else {
-      graphBtn?.classList.remove('active');
-      graphBtn?.setAttribute('aria-pressed', 'false');
       listBtn?.classList.add('active');
       listBtn?.setAttribute('aria-pressed', 'true');
-      if (graphContainer) {
-        graphContainer.hidden = true;
-      }
+      if (graphContainer) graphContainer.hidden = true;
+      if (mapContainer) mapContainer.hidden = true;
       writeUrlState({ view: 'list' });
     }
   }

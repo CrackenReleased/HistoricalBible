@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico?v=00.01.08" sizes="any" />
+  <link rel="icon" type="image/png" href="/images/brand/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/images/brand/apple-touch-icon.png" sizes="180x180" />
+  <meta name="theme-color" content="#090c10" />
+  <title>Biblical World Map &amp; Archaeological Atlas &mdash; Historical Bible</title>
+  <meta name="description" content="Explore interactive biblical geography, ancient world empires, and physical archaeological discovery sites across the Ancient Near East and Mediterranean." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./src/interact.css" />
+</head>
+<body>
+  <a class="skip-link" href="#map-main">Skip to the map</a>
+
+  <!-- SITE HEADER -->
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a href="/" class="brand-title" id="brand-logo-link" aria-label="Historical Bible — Home">
+        <img class="brand-emblem brand-image" src="/images/brand/emblem.png" alt="Historical Bible — Home" width="36" height="36" fetchpriority="high" />
+        <span class="brand-text"><span class="brand-white">Historical</span> <span class="brand-gold">Bible</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="/">Home</a>
+        <a href="/bible">Bible</a>
+        <a href="/map" aria-current="page">Map</a>
+        <a href="/interact">Interact</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="map-main" class="wrap">
+    <div class="atlas-page-layout">
+      <!-- 1. ATLAS HEADER -->
+      <header class="atlas-header">
+        <div>
+          <span class="eyebrow">&mdash; BIBLICAL GEOGRAPHY &amp; ARCHAEOLOGY</span>
+          <h1 id="atlas-title">The Biblical World in History</h1>
+          <p>
+            The events of Scripture occurred in real soil. Explore ancient world empires, biblical journeys, and the exact excavation sites of surviving historical records.
+          </p>
+        </div>
+      </header>
+
+      <!-- 2. TOOLBAR: LAYERS & REGION PRESETS -->
+      <section class="atlas-toolbar" aria-label="Map layers and region controls">
+        <div class="atlas-layer-toggles" role="group" aria-label="Layer toggles">
+          <span class="atlas-toolbar-label">LAYERS:</span>
+          <button type="button" class="atlas-toggle-btn active" data-layer="archaeology" aria-pressed="true">
+            <span class="legend-swatch gold-pulse" aria-hidden="true"></span> Archaeological Finds
+          </button>
+          <button type="button" class="atlas-toggle-btn active" data-layer="empires" aria-pressed="true">
+            <span class="legend-swatch empire-zone" aria-hidden="true"></span> World Empires
+          </button>
+          <button type="button" class="atlas-toggle-btn active" data-layer="routes" aria-pressed="true">
+            <span class="legend-swatch route-line" aria-hidden="true"></span> Biblical Journeys
+          </button>
+          <button type="button" class="atlas-toggle-btn active" data-layer="cities" aria-pressed="true">
+            <span class="legend-swatch city-dot" aria-hidden="true"></span> Cities
+          </button>
+          <button type="button" class="atlas-toggle-btn active" data-layer="rivers" aria-pressed="true">
+            Waterways
+          </button>
+        </div>
+
+        <div class="atlas-presets" role="group" aria-label="Quick region camera jumps">
+          <span class="atlas-toolbar-label">REGIONS:</span>
+          <button type="button" class="atlas-preset-btn active" data-preset="all">All World</button>
+          <button type="button" class="atlas-preset-btn" data-preset="levant">The Holy Land</button>
+          <button type="button" class="atlas-preset-btn" data-preset="egypt">Egypt &amp; Sinai</button>
+          <button type="button" class="atlas-preset-btn" data-preset="mesopotamia">Mesopotamia &amp; Persia</button>
+          <button type="button" class="atlas-preset-btn" data-preset="mediterranean">Greece &amp; Rome</button>
+        </div>
+      </section>
+
+      <!-- 3. MAIN INTERACTIVE CANVAS & DETAIL DRAWER -->
+      <section class="atlas-canvas-card" aria-label="Interactive Ancient Near East Map">
+        <div id="atlas-canvas-container" style="width: 100%; height: 100%; position: relative;"></div>
+
+        <!-- DETAIL DRAWER (Overlay when a point is clicked) -->
+        <article id="atlas-detail-drawer" class="atlas-detail-drawer" aria-labelledby="drawer-title" hidden>
+          <div class="atlas-drawer-header">
+            <h2 id="drawer-title" class="atlas-drawer-title">Discovery</h2>
+            <button type="button" id="atlas-drawer-close" class="atlas-drawer-close" aria-label="Close detail panel">&times;</button>
+          </div>
+          <div id="drawer-meta" class="atlas-drawer-meta"></div>
+          <p id="drawer-desc" class="atlas-drawer-desc"></p>
+          <div id="drawer-significance" class="atlas-drawer-significance"></div>
+          <div class="atlas-drawer-actions">
+            <a id="drawer-desk-link" class="atlas-drawer-btn" href="/interact">Explore in Study Desk &rarr;</a>
+            <a id="drawer-scripture-link" class="atlas-drawer-btn" href="/bible">Read Scripture &rarr;</a>
+            <a id="drawer-museum-link" class="atlas-drawer-btn" href="#" target="_blank" rel="noopener">Museum Record &#8599;</a>
+          </div>
+        </article>
+      </section>
+
+      <!-- 4. CARTOGRAPHIC LEGEND -->
+      <footer class="atlas-legend" aria-label="Map legend">
+        <div class="atlas-legend-item">
+          <span class="legend-swatch gold-pulse" aria-hidden="true"></span>
+          <span>Surviving Archaeological Inscription / Artifact</span>
+        </div>
+        <div class="atlas-legend-item">
+          <span class="legend-swatch city-dot" aria-hidden="true"></span>
+          <span>Biblical City &amp; Hitchcock Meaning</span>
+        </div>
+        <div class="atlas-legend-item">
+          <span class="legend-swatch route-line" aria-hidden="true"></span>
+          <span>Biblical Journey (Abraham, Exodus, Paul)</span>
+        </div>
+        <div class="atlas-legend-item">
+          <span class="legend-swatch empire-zone" aria-hidden="true"></span>
+          <span>World Empire Extent (Egypt, Assyria, Babylon, Persia, Rome)</span>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- REVERENT FOOTER -->
+  <footer class="wrap">
+    <a class="footer-brand" href="/"><img src="/images/brand/logo-small.webp" alt="Historical Bible — Home" width="600" height="300" loading="lazy" /></a>
+    <div>John 17:3 &mdash; &ldquo;And this is life eternal, that they might know thee the only true God, and Jesus Christ, whom thou hast sent.&rdquo;</div>
+    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Historical Bible Est. 2019 &middot; All Rights Reserved &middot; Map &middot; v00.01.18</div>
+  </footer>
+
+  <script type="module" src="/src/atlasApp.ts"></script>
+</body>
+</html>

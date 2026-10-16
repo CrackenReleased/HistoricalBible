@@ -9,7 +9,7 @@ export interface InteractUrlState {
   name?: string | null;
   ref?: string | null;
   tab?: string | null;
-  view?: 'list' | 'graph' | null;
+  view?: 'list' | 'graph' | 'map' | null;
   hops?: 1 | 2;
 }
 
@@ -17,12 +17,13 @@ export function readUrlState(): InteractUrlState {
   if (typeof window === 'undefined') return {};
   const params = new URLSearchParams(window.location.search);
   const rawHops = Number(params.get('hops'));
+  const rawView = params.get('view');
   return {
     figure: params.get('figure') || null,
     name: params.get('name') || null,
     ref: params.get('ref') || null,
     tab: params.get('tab') || null,
-    view: params.get('view') === 'graph' ? 'graph' : (params.get('view') === 'list' ? 'list' : null),
+    view: rawView === 'graph' ? 'graph' : (rawView === 'map' ? 'map' : (rawView === 'list' ? 'list' : null)),
     hops: rawHops === 1 ? 1 : 2,
   };
 }

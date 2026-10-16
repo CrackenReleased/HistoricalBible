@@ -26,6 +26,7 @@
       <nav class="site-nav" aria-label="Primary navigation">
         <a href="/">Home</a>
         <a href="/bible">Bible</a>
+        <a href="/map">Map</a>
         <a href="/interact" aria-current="page">Interact</a>
         <a href="/contact">Contact</a>
       </nav>
@@ -190,10 +191,12 @@
             <div class="view-toggle-bar" role="group" aria-label="Connection view mode">
               <button type="button" id="btn-view-list" class="view-toggle-btn active" aria-pressed="true">List</button>
               <button type="button" id="btn-view-graph" class="view-toggle-btn" aria-pressed="false">2D Graph</button>
+              <button type="button" id="btn-view-map" class="view-toggle-btn" aria-pressed="false">Map</button>
             </div>
           </div>
           <div class="panel-body">
             <div id="ego-graph-container" class="ego-graph-container" hidden></div>
+            <div id="ancient-map-container" class="ancient-map-container" hidden></div>
             <div id="personal-network-list" class="network-list"></div>
             <details id="names-directory">
               <summary>Explore the biblical names dictionary</summary>

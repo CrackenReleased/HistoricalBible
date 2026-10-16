@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [00.01.18] - 2026-10-16
 
+- Interactive Biblical Maps & Cartographic Atlas (Option C):
+  - Added dedicated `[Map]` tab in the 3rd column of the Study Desk workspace (`/interact`) beside `List` and `2D Graph`, auto-focusing the Ancient Near East canvas on the active figure's region (Roman Judea, Mesopotamia, Egypt/Sinai, Persia, Greece).
+  - Built dedicated Cartographic Atlas page at `/map` (`map.html` & `map/index.html`) featuring high-DPI 60FPS canvas, layer toggles (Archaeological Discoveries, World Empires, Biblical Journeys, Cities, Waterways), regional quick-jump presets, and a slide-in discovery detail drawer for excavated artifacts.
+  - Added `Map` to primary site navigation header across all pages (`Home`, `Bible`, `Map`, `Interact`, `Contact`).
+  - Implemented 100% local-first, zero-dependency canvas cartographic engine (`src/engine/ancientMap.ts` & `src/data/ancientMapData.ts`) with geodetically accurate coordinates for 12 major archaeological discoveries, 5 world empire territories, and biblical routes (Abraham, Exodus, Paul).
+  - Verification: 5 new Playwright regression tests in `tests/map.spec.ts` passing; 34/34 total suite tests passing; canonical KJV build passes with all 31,098 verses verified.
 - Audited all 2,620 name entries using the explicitly approved source standard; published the complete per-name findings in audit/name-review.csv and audit/NAME_AUDIT.md.
 - Scripture-led introductions and qualified lexical notes replace unchecked dictionary headlines. Original historical meanings remain attributed in the evidence comparison.
 - Corrected identity/context conflicts and restored missing name spellings/capitalization: 2,453 linked entries and 12,323 shared-verse connections. Removed six English Mark verbs from the person index; Bible word lookup now respects the selected verse and Webster 1828 English usage.
