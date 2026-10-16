@@ -15,6 +15,7 @@ import {
   ChapterChronologyInfo,
   BIBLE_CHRONOLOGY
 } from './data/bibleChronology';
+import { AncientMapCanvas } from './engine/ancientMap';
 
 interface BookMeta {
   osis: string;
@@ -27,7 +28,7 @@ class BibleReader {
   private currentChapter = 1;
   private selectedVerseNum: number | null = null;
   private selectedWord: string | null = null;
-  private activeTab: 'xrefs' | 'word' | 'chrono' = 'xrefs';
+  private activeTab: 'xrefs' | 'word' | 'chrono' | 'map' = 'xrefs';
   private sortMode: BibleSortMode = 'canonical';
   private books: BookMeta[] = [];
 
@@ -50,9 +51,12 @@ class BibleReader {
   private tabBtnXrefs!: HTMLButtonElement;
   private tabBtnWord!: HTMLButtonElement;
   private tabBtnChrono!: HTMLButtonElement;
+  private tabBtnMap!: HTMLButtonElement;
   private tabContentXrefs!: HTMLElement;
   private tabContentWord!: HTMLElement;
   private tabContentChrono!: HTMLElement;
+  private tabContentMap!: HTMLElement;
+  private companionMapCanvas: AncientMapCanvas | null = null;
 
   public async init(): Promise<void> {
     const readerRoot = document.getElementById('live-bible-reader');
@@ -96,9 +100,11 @@ class BibleReader {
     this.tabBtnXrefs = document.getElementById('companion-tab-xrefs-btn') as HTMLButtonElement;
     this.tabBtnWord = document.getElementById('companion-tab-word-btn') as HTMLButtonElement;
     this.tabBtnChrono = document.getElementById('companion-tab-chrono-btn') as HTMLButtonElement;
+    this.tabBtnMap = document.getElementById('companion-tab-map-btn') as HTMLButtonElement;
     this.tabContentXrefs = document.getElementById('companion-tab-xrefs-content') as HTMLElement;
     this.tabContentWord = document.getElementById('companion-tab-word-content') as HTMLElement;
     this.tabContentChrono = document.getElementById('companion-tab-chrono-content') as HTMLElement;
+    this.tabContentMap = document.getElementById('companion-tab-map-content') as HTMLElement;
   }
 
   private getActiveBook(): BookMeta {
@@ -252,6 +258,8 @@ class BibleReader {
       this.activeTab = 'word';
     } else if (tabParam === 'chrono') {
       this.activeTab = 'chrono';
+    } else if (tabParam === 'map') {
+      this.activeTab = 'map';
     } else {
       this.activeTab = 'xrefs';
     }
@@ -676,7 +684,7 @@ class BibleReader {
     });
   }
 
-  private switchTab(tab: 'xrefs' | 'word' | 'chrono'): void {
+  private switchTab(tab: 'xrefs' | 'word' | 'chrono' | 'map'): void {
     this.activeTab = tab;
     this.updateUrl();
 
@@ -692,10 +700,89 @@ class BibleReader {
       this.tabBtnChrono.classList.toggle('active', tab === 'chrono');
       this.tabBtnChrono.setAttribute('aria-selected', String(tab === 'chrono'));
     }
+    if (this.tabBtnMap) {
+      this.tabBtnMap.classList.toggle('active', tab === 'map');
+      this.tabBtnMap.setAttribute('aria-selected', String(tab === 'map'));
+    }
 
     if (this.tabContentXrefs) this.tabContentXrefs.hidden = tab !== 'xrefs';
     if (this.tabContentWord) this.tabContentWord.hidden = tab !== 'word';
     if (this.tabContentChrono) this.tabContentChrono.hidden = tab !== 'chrono';
+    if (this.tabContentMap) this.tabContentMap.hidden = tab !== 'map';
+
+    if (tab === 'map') {
+      this.renderCompanionMap();
+    }
+  }
+
+  private getMapEraForCurrentPassage(): string {
+    const book = this.getActiveBook();
+    const osis = book.osis.toLowerCase();
+    const ch = this.currentChapter;
+
+    if (osis === 'gen') {
+      return 'patriarchs';
+    }
+    if (['exod', 'lev', 'num', 'deut', 'josh'].includes(osis)) {
+      return 'exodus';
+    }
+    if (['judg', 'ruth', '1sam', '2sam', '1chr', 'ps', 'prov', 'eccl', 'song'].includes(osis)) {
+      return 'united_monarchy';
+    }
+    if (osis === '1kgs' && ch <= 11) return 'united_monarchy';
+    if (['1kgs', '2kgs', 'isa', 'hos', 'amos', 'mic', 'jonah', 'nah'].includes(osis)) {
+      if (osis === '2kgs' && ch >= 21) return 'babylonian_exile';
+      return 'assyrian_siege';
+    }
+    if (['jer', 'lam', 'ezek', 'dan', 'hab', 'zeph'].includes(osis)) {
+      return 'babylonian_exile';
+    }
+    if (['ezra', 'neh', 'esth', 'hag', 'zech', 'mal'].includes(osis)) {
+      return 'persian_restoration';
+    }
+    if (['matt', 'mark', 'luke', 'john'].includes(osis)) {
+      return 'roman_christ';
+    }
+    if (['acts', 'rom', '1cor', '2cor', 'gal', 'eph', 'phil', 'col', '1thess', '2thess', '1tim', '2tim', 'tit', 'phlm', 'heb', 'jas', '1pet', '2pet', '1john', '2john', '3john', 'jude', 'rev'].includes(osis)) {
+      return 'apostolic_church';
+    }
+    return 'all';
+  }
+
+  private renderCompanionMap(): void {
+    const container = document.getElementById('bible-companion-map-container');
+    if (!container) return;
+
+    const book = this.getActiveBook();
+    const targetEraId = this.getMapEraForCurrentPassage();
+
+    const titleEl = document.getElementById('companion-map-title');
+    const descEl = document.getElementById('companion-map-desc');
+    const fullLink = document.getElementById('companion-map-full-link') as HTMLAnchorElement | null;
+
+    if (fullLink) {
+      fullLink.href = `/map?era=${targetEraId}`;
+    }
+
+    if (!this.companionMapCanvas) {
+      this.companionMapCanvas = new AncientMapCanvas({
+        container,
+        compact: true,
+        initialEraId: targetEraId
+      });
+    } else {
+      this.companionMapCanvas.setEra(targetEraId);
+      setTimeout(() => {
+        this.companionMapCanvas?.map.invalidateSize();
+      }, 100);
+    }
+
+    if (titleEl && this.companionMapCanvas.activeEra) {
+      titleEl.textContent = `${book.name} ${this.currentChapter} · ${this.companionMapCanvas.activeEra.name}`;
+    }
+    if (descEl && this.companionMapCanvas.activeEra) {
+      descEl.textContent = `Historical Setting: ${this.companionMapCanvas.activeEra.yearLabel} — ${this.companionMapCanvas.activeEra.headline}`;
+    }
   }
 
   private goToPreviousChapter(): void {
@@ -781,6 +868,7 @@ class BibleReader {
     this.tabBtnXrefs?.addEventListener('click', () => this.switchTab('xrefs'));
     this.tabBtnWord?.addEventListener('click', () => this.switchTab('word'));
     this.tabBtnChrono?.addEventListener('click', () => this.switchTab('chrono'));
+    this.tabBtnMap?.addEventListener('click', () => this.switchTab('map'));
 
     // Verse and Word Interaction Delegation (Left Click & Right Click)
     this.versesContainer.addEventListener('click', (e) => {

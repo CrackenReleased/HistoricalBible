@@ -1,3 +1,24 @@
+## 2026-10-16 18:55:00 — Bible Side-by-Side Companion Map Tab Integration (v00.01.20)
+
+- User Request & Purpose:
+  - User asked: *"Where is the 'Map' section in the side-by-side?"* referring to the companion panel header on `/bible`.
+  - In Option C, user specified having both the dedicated `/map` atlas page and a dedicated `[Map]` button in the Bible side-by-side workspace.
+- Architectural Implementation:
+  - Added `<button type="button" id="companion-tab-map-btn" class="companion-tab-btn">Map</button>` to `bible.html` and `bible/index.html`.
+  - Added `#companion-tab-map-content` panel containing `#bible-companion-map-container`, chapter/era title, historical setting summary, and `#companion-map-full-link` to `bible.html` and `bible/index.html`.
+  - Integrated `AncientMapCanvas` in `src/bibleReader.ts` initializing an embedded, high-resolution Leaflet map in `compact: true` mode when switching to the Map tab, dynamically synchronized to the current passage via `getMapEraForCurrentPassage()` across all 66 books and chapters.
+  - Handled container geometry invalidation (`map.invalidateSize()`) on tab transition so Leaflet renders immediately without grey canvas glitches.
+  - Added URL parameter synchrony: navigating with `?tab=map` immediately activates the Map companion panel.
+  - Single-Row Companion Tab Header: Streamlined `Chronology & Eras` label to `Chronology` and tuned `.companion-tab-btn` typography (`font-size: 0.76rem`, `padding: 0.35rem 0.55rem`, `white-space: nowrap`, `overflow-x: auto`) so all 4 tabs (`Passage & X-Refs`, `Word Inspector`, `Chronology`, `Map`) sit cleanly on a single row.
+- Sibling Scan (§1):
+  - Verified `bible.html` and `bible/index.html` markup matches 100%.
+  - Verified URL query parsing (`tab=map`) works alongside `book` and `chapter` query parameters.
+  - Verified companion tabs keyboard and touch interactions.
+- Verification (Cardinal Rule):
+  - Created executable Playwright regression test suite `tests/bible-side-by-side-map.spec.ts` asserting companion Map tab visibility, tab click action, Leaflet map initialization, chapter title/summary rendering, and direct link.
+  - Captured and inspected visual proof screenshot `test-results/bible-side-by-side-map-proof.png` verifying all 4 companion tabs on a single row, embedded Leaflet map with illuminated North compass rose, active epoch badge, and historical routes.
+  - Full Playwright test suite passed: 44/44 tests passed in 1.2m.
+  - Production build passed (`npm run build` with canonical KJV invariant verification confirming all 31,098 verses in 745ms).
 ## 2026-10-16 18:38:00 — Biblical World Map Cartography, Compass Rose & Chronological Eras (v00.01.19)
 
 - High-Resolution Geodetic Cartography: Re-architected `src/engine/ancientMap.ts` using Leaflet with Esri World Dark Gray Base tiles (`https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}`), providing clean, high-DPI topography and coastlines (Mediterranean, Levant, Red Sea, Sinai, Nile, Mesopotamia, Greece, Rome) with zero watermarks and no external API keys required.

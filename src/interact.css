@@ -3449,4 +3449,58 @@ footer {
   margin-top: 4px;
 }
 
+/* 6. Bible Reader Companion Map Tab */
+.bible-companion-map-container {
+  width: 100%;
+  height: 380px;
+  background: #080c11;
+  border: 1px solid var(--border-gold, #d4af37);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  margin: 0.75rem 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.bible-map-companion-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.bible-map-title {
+  font-family: var(--font-serif, 'EB Garamond', serif);
+  font-size: 1.15rem;
+  color: var(--text-main, #f8fafc);
+  margin: 0.25rem 0;
+}
+
+.bible-map-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted, #94a3b8);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.bible-map-full-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gold-bright, #ffd700);
+  text-decoration: none;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--border-gold, #d4af37);
+  border-radius: 4px;
+  background: rgba(212, 175, 55, 0.12);
+  transition: all 0.15s ease;
+}
+
+.bible-map-full-link:hover {
+  background: rgba(212, 175, 55, 0.25);
+  color: #ffffff;
+}
+
+
 

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.20] - 2026-10-16
+
+- Bible Side-by-Side Companion Map Tab Integration (/bible):
+  - Added dedicated [Map] tab to the Bible side-by-side companion panel beside Passage & X-Refs, Word Inspector, and Chronology.
+  - Embedded an interactive, high-resolution Leaflet cartographic canvas inside the companion panel synchronized dynamically to the active chapter's historical epoch and geography (e.g. Genesis 1–11 → Patriarchs & Fertile Crescent; Exodus → Egypt & Sinai; Gospels → Christ & Roman Judea).
+  - Features the prominent illuminated Compass Rose indicating North, active epoch watermark, zoom controls, and a direct link to the full-screen atlas (/map?era=...).
+  - Single-Row Companion Tab Header: Streamlined Chronology & Eras label to Chronology and tuned .companion-tab-btn typography (ont-size: 0.76rem, padding: 0.35rem 0.55rem, white-space: nowrap) so all 4 companion tabs (Passage & X-Refs, Word Inspector, Chronology, Map) fit cleanly on a single row.
+  - Automated Regression Tests: Added 	ests/bible-side-by-side-map.spec.ts asserting companion Map tab visibility, tab click action, Leaflet map initialization, chapter title/summary rendering, and direct link. All 44 tests in full test suite pass.
+
 ## [00.01.19] - 2026-10-16
 
 - Upgraded Biblical World Map Cartography (`/map`):
