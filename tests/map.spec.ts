@@ -32,9 +32,10 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
     // Atlas Title
     await expect(page.locator('#atlas-title')).toHaveText('The Biblical World in History');
 
-    // Canvas container
-    const canvas = page.locator('#atlas-canvas-container canvas');
+    // Map container
+    const canvas = page.locator('#atlas-canvas-container');
     await expect(canvas).toBeVisible();
+    await expect(canvas).toHaveClass(/leaflet-container/);
     const box = await canvas.boundingBox();
     expect(box).not.toBeNull();
     expect(box!.width).toBeGreaterThan(300);
@@ -92,7 +93,7 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
   });
 
   test('Study Desk (/interact) 3rd column includes Map button that opens ancient map focused on active figure', async ({ page }) => {
-    await page.goto('/interact');
+    await page.goto('/interact', { waitUntil: 'networkidle' });
 
     // Ensure 3 view toggle buttons exist
     const listBtn = page.locator('#btn-view-list');
@@ -114,11 +115,10 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
     await expect(mapBtn).toHaveAttribute('aria-pressed', 'true');
     await expect(listBtn).not.toHaveClass(/active/);
 
-    // Ancient Map container becomes visible and renders canvas
+    // Ancient Map container becomes visible and renders Leaflet
     const mapContainer = page.locator('#ancient-map-container');
     await expect(mapContainer).toBeVisible();
-    const mapCanvas = mapContainer.locator('canvas');
-    await expect(mapCanvas).toBeVisible();
+    await expect(mapContainer).toHaveClass(/leaflet-container/);
 
     // URL state synchronizes ?view=map
     expect(page.url()).toContain('view=map');

@@ -1,3 +1,18 @@
+## 2026-10-16 18:38:00 — Biblical World Map Cartography, Compass Rose & Chronological Eras (v00.01.19)
+
+- High-Resolution Geodetic Cartography: Re-architected `src/engine/ancientMap.ts` using Leaflet with Esri World Dark Gray Base tiles (`https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}`), providing clean, high-DPI topography and coastlines (Mediterranean, Levant, Red Sea, Sinai, Nile, Mesopotamia, Greece, Rome) with zero watermarks and no external API keys required.
+- Ornate Golden Compass Rose (North Indicator): Built a dedicated illuminated golden dial and compass needle in the top-right corner of the map viewport explicitly marking North (`N`, `S`, `E`, `W`, illuminated crimson/gold pointer, and prominent `NORTH ↑` badge).
+- Active Year & Chronological Timeline HUD:
+  - Added an illuminated timeline header on `/map` featuring the active year in 2rem gold Cinzel typography (e.g. `4 BC – AD 33`, `722 – 701 BC`, `c. 1446 BC`), historical era headline, and biblical/secular context summary.
+  - Added interactive era scrubber pills (`Patriarchs`, `Exodus & Law`, `United Monarchy`, `Assyrian Siege`, `Babylon Exile`, `Persian Return`, `Christ & Rome`, `Apostolic Age`, `All Eras`).
+  - Added an on-canvas floating HUD watermark (`.map-canvas-year-hud`) dynamically reflecting the active epoch.
+- Strict Temporal Isolation: Selecting an era now strictly displays only that era's ruling empire (preventing visual clutter from overlapping multi-millennium empires), focuses the camera on that era's historical theater, and highlights surviving archaeological finds with custom pulsing gold coin markers.
+- Verification (Cardinal Rule):
+  - Created executable Playwright regression test suite `tests/map-chronology-compass.spec.ts` asserting Leaflet container visibility, Compass Rose North indicator, active year display, era switching (Assyrian Siege 701 BC and Christ & Rome AD 33), and capturing full-page screenshot proof.
+  - Regression test passes cleanly (1 passed in 2.4s).
+  - Production build passed (`npm run build` with canonical KJV invariant verification confirming all 31,098 verses).
+  - Inspected screenshot `test-results/map-chronology-compass-proof.png` verifying compass rose, topography, gold markers, and era HUD.
+
 ## 2026-10-16 18:24:13 — Audit delivery confirmed (v00.01.18-docs.1)
 
 - Code commit e4921b5 pushed to master. GitHub Pages run 38975379130 succeeded, including production canonical verification/build. Public Interact verified v00.01.18, Hananiah-first Shadrach result, uncertainty badge and 2,453 / 12,323 corrected totals.

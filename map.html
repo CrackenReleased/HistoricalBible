@@ -78,6 +78,62 @@
         </div>
       </section>
 
+      <!-- 2. CHRONOLOGICAL TIMELINE & ACTIVE YEAR HUD -->
+      <section class="map-chronology-container" aria-label="Chronological Era and Year Selection">
+        <div class="chrono-hud-header">
+          <div class="chrono-year-badge-group">
+            <span class="chrono-tag">HISTORICAL TIMELINE &middot; ACTIVE EPOCH</span>
+            <div id="chrono-current-year" class="chrono-current-year" aria-live="polite">c. 2100 BC &ndash; AD 100+</div>
+          </div>
+          <div class="chrono-narrative">
+            <h2 id="chrono-headline" class="chrono-headline">The Complete Biblical World in History</h2>
+            <p id="chrono-summary" class="chrono-summary">
+              All surviving archaeological discoveries, imperial extents, and biblical routes across the Ancient Near East and Mediterranean.
+            </p>
+          </div>
+        </div>
+
+        <!-- ERA TIMELINE SCRUBBER BUTTONS -->
+        <div class="chrono-era-selector" role="tablist" aria-label="Biblical Chronological Eras">
+          <button type="button" class="chrono-era-btn" data-era="patriarchs" role="tab" aria-selected="false">
+            <span class="era-name">Patriarchs</span>
+            <span class="era-years">c. 2100 BC</span>
+          </button>
+          <button type="button" class="chrono-era-btn" data-era="exodus" role="tab" aria-selected="false">
+            <span class="era-name">Exodus &amp; Law</span>
+            <span class="era-years">c. 1446 BC</span>
+          </button>
+          <button type="button" class="chrono-era-btn" data-era="united_monarchy" role="tab" aria-selected="false">
+            <span class="era-name">United Monarchy</span>
+            <span class="era-years">c. 1000 BC</span>
+          </button>
+          <button type="button" class="chrono-era-btn" data-era="assyrian_siege" role="tab" aria-selected="false">
+            <span class="era-name">Assyrian Siege</span>
+            <span class="era-years">722 &ndash; 701 BC</span>
+          </button>
+          <button type="button" class="chrono-era-btn" data-era="babylonian_exile" role="tab" aria-selected="false">
+            <span class="era-name">Babylon Exile</span>
+            <span class="era-years">605 &ndash; 539 BC</span>
+          </button>
+          <button type="button" class="chrono-era-btn" data-era="persian_restoration" role="tab" aria-selected="false">
+            <span class="era-name">Persian Return</span>
+            <span class="era-years">539 &ndash; 331 BC</span>
+          </button>
+          <button type="button" class="chrono-era-btn" data-era="roman_christ" role="tab" aria-selected="false">
+            <span class="era-name">Christ &amp; Rome</span>
+            <span class="era-years">4 BC &ndash; AD 33</span>
+          </button>
+          <button type="button" class="chrono-era-btn" data-era="apostolic_church" role="tab" aria-selected="false">
+            <span class="era-name">Apostolic Age</span>
+            <span class="era-years">AD 33 &ndash; 96</span>
+          </button>
+          <button type="button" class="chrono-era-btn active" data-era="all" role="tab" aria-selected="true">
+            <span class="era-name">All Eras</span>
+            <span class="era-years">All History</span>
+          </button>
+        </div>
+      </section>
+
       <!-- 3. MAIN INTERACTIVE CANVAS & DETAIL DRAWER -->
       <section class="atlas-canvas-card" aria-label="Interactive Ancient Near East Map">
         <div id="atlas-canvas-container" style="width: 100%; height: 100%; position: relative;"></div>
@@ -125,7 +181,7 @@
   <footer class="wrap">
     <a class="footer-brand" href="/"><img src="/images/brand/logo-small.webp" alt="Historical Bible — Home" width="600" height="300" loading="lazy" /></a>
     <div>John 17:3 &mdash; &ldquo;And this is life eternal, that they might know thee the only true God, and Jesus Christ, whom thou hast sent.&rdquo;</div>
-    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Historical Bible Est. 2019 &middot; All Rights Reserved &middot; Map &middot; v00.01.18</div>
+    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Historical Bible Est. 2019 &middot; All Rights Reserved &middot; Map &middot; v00.01.19</div>
   </footer>
 
   <script type="module" src="/src/atlasApp.ts"></script>

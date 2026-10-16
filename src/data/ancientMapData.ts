@@ -794,3 +794,163 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     biblicalIntersection: 'The fullness of time: census of Augustus, crucifixion under Pilate, proclamation across Roman roads.'
   }
 ];
+
+export interface ChronologicalEra {
+  id: string;
+  name: string;
+  yearLabel: string;
+  startYear: number;
+  endYear: number;
+  rulingEmpireId?: string;
+  focusCenter: GeoCoordinate;
+  focusZoom: number;
+  headline: string;
+  historicalSummary: string;
+  activeSiteIds: string[];
+  activeRouteIds: string[];
+  activeFigureIds: string[];
+}
+
+export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
+  {
+    id: 'patriarchs',
+    name: 'Patriarchs & Promise',
+    yearLabel: 'c. 2100 – 1800 BC',
+    startYear: -2100,
+    endYear: -1800,
+    rulingEmpireId: 'egypt',
+    focusCenter: { lat: 33.0, lng: 42.0 },
+    focusZoom: 5,
+    headline: 'The Call of Abraham · Middle Kingdom Egypt & Ur III',
+    historicalSummary: 'God calls Abram out of Ur of the Chaldees, through Haran, into Canaan. The Middle Kingdom of Egypt and Ur III rule the wider ancient world.',
+    activeRouteIds: ['abraham-call'],
+    activeSiteIds: ['nabonidus-cylinder'],
+    activeFigureIds: ['abraham']
+  },
+  {
+    id: 'exodus',
+    name: 'Exodus & Law',
+    yearLabel: 'c. 1446 – 1406 BC',
+    startYear: -1446,
+    endYear: -1406,
+    rulingEmpireId: 'egypt',
+    focusCenter: { lat: 29.5, lng: 33.2 },
+    focusZoom: 6,
+    headline: 'The Deliverance from Egypt · Mount Sinai & Red Sea',
+    historicalSummary: "The LORD judges Egypt's gods with 10 plagues, delivers Israel through the Red Sea, and establishes His Holy Law at Mount Sinai. Ruled by New Kingdom Egypt (18th Dynasty).",
+    activeRouteIds: ['exodus-route'],
+    activeSiteIds: ['merneptah-stele'],
+    activeFigureIds: ['moses']
+  },
+  {
+    id: 'united_monarchy',
+    name: 'United Monarchy',
+    yearLabel: 'c. 1050 – 930 BC',
+    startYear: -1050,
+    endYear: -930,
+    focusCenter: { lat: 31.8, lng: 35.3 },
+    focusZoom: 7,
+    headline: "The Davidic Kingdom · Solomon's Temple & Jerusalem",
+    historicalSummary: "David establishes Jerusalem as the royal capital; Solomon builds the First Temple. Attested by the Tel Dan Stele ('House of David') and Mesha Stele.",
+    activeRouteIds: [],
+    activeSiteIds: ['tel-dan-stele', 'mesha-stele'],
+    activeFigureIds: ['david', 'solomon']
+  },
+  {
+    id: 'assyrian_siege',
+    name: 'Assyrian Empire',
+    yearLabel: '722 – 701 BC',
+    startYear: -722,
+    endYear: -701,
+    rulingEmpireId: 'assyria',
+    focusCenter: { lat: 34.0, lng: 39.0 },
+    focusZoom: 6,
+    headline: "The Assyrian Invasion · Sennacherib's Siege of Jerusalem",
+    historicalSummary: "The Neo-Assyrian Empire conquers Samaria (722 BC) and besieges Hezekiah in Jerusalem in 701 BC. Discovered: The Taylor Prism of Sennacherib & Siloam Tunnel Inscription.",
+    activeRouteIds: [],
+    activeSiteIds: ['taylor-prism', 'siloam-inscription', 'ketef-hinnom-scrolls'],
+    activeFigureIds: ['hezekiah', 'isaiah']
+  },
+  {
+    id: 'babylonian_exile',
+    name: 'Babylonian Exile',
+    yearLabel: '605 – 539 BC',
+    startYear: -605,
+    endYear: -539,
+    rulingEmpireId: 'babylon',
+    focusCenter: { lat: 32.5, lng: 44.4 },
+    focusZoom: 6,
+    headline: 'The Fall of Jerusalem · Daniel in Babylon',
+    historicalSummary: 'Nebuchadnezzar captures Jerusalem, burns the Temple in 586 BC, and carries Judah into 70 years of exile. Daniel testifies to the Most High in the courts of Babylon. Discovered: Nabonidus Cylinder naming Belshazzar.',
+    activeRouteIds: [],
+    activeSiteIds: ['nabonidus-cylinder'],
+    activeFigureIds: ['daniel', 'jeremiah']
+  },
+  {
+    id: 'persian_restoration',
+    name: 'Persian Restoration',
+    yearLabel: '539 – 331 BC',
+    startYear: -539,
+    endYear: -331,
+    rulingEmpireId: 'persia',
+    focusCenter: { lat: 33.0, lng: 46.0 },
+    focusZoom: 5,
+    headline: 'The Decree of Cyrus · Rebuilding the Temple & Walls',
+    historicalSummary: 'Cyrus the Great conquers Babylon in 539 BC and decrees the Jewish return. Nehemiah and Ezra rebuild the walls and worship in Jerusalem under Artaxerxes. Discovered: The Cyrus Cylinder.',
+    activeRouteIds: [],
+    activeSiteIds: ['cyrus-cylinder'],
+    activeFigureIds: ['ezra-nehemiah', 'daniel']
+  },
+  {
+    id: 'roman_christ',
+    name: 'Christ & Rome',
+    yearLabel: '4 BC – AD 33',
+    startYear: -4,
+    endYear: 33,
+    rulingEmpireId: 'rome',
+    focusCenter: { lat: 32.1, lng: 35.2 },
+    focusZoom: 7,
+    headline: 'The Fullness of Time · Ministry, Death & Resurrection of Christ',
+    historicalSummary: 'In Roman Judea under Caesar Augustus, Tiberius, and Pontius Pilate, Jesus Christ is born in Bethlehem, crucified in Jerusalem, and rises bodily on the third day. Discovered: The Pilate Stone & Caiaphas Ossuary.',
+    activeRouteIds: [],
+    activeSiteIds: ['pilate-stone', 'caiaphas-ossuary'],
+    activeFigureIds: ['jesus-christ']
+  },
+  {
+    id: 'apostolic_church',
+    name: 'Apostolic Age',
+    yearLabel: 'AD 33 – 96',
+    startYear: 33,
+    endYear: 96,
+    rulingEmpireId: 'rome',
+    focusCenter: { lat: 38.0, lng: 25.0 },
+    focusZoom: 5,
+    headline: 'The Gospel to the Nations · Roman Highways & Courts',
+    historicalSummary: 'Apostle Paul and the Apostles proclaim the risen Christ across Roman provinces from Syrian Antioch to Philippi, Athens, Corinth, and Rome. Discovered: Gallio Inscription at Delphi & Erastus Inscription at Corinth.',
+    activeRouteIds: ['paul-second-journey'],
+    activeSiteIds: ['gallio-inscription', 'erastus-inscription'],
+    activeFigureIds: ['paul', 'peter']
+  },
+  {
+    id: 'all',
+    name: 'All Eras',
+    yearLabel: 'c. 2100 BC – AD 100+',
+    startYear: -2100,
+    endYear: 100,
+    focusCenter: { lat: 33.5, lng: 35.5 },
+    focusZoom: 5,
+    headline: 'The Complete Biblical World in History',
+    historicalSummary: 'All surviving archaeological discoveries, imperial extents, and biblical routes across the Ancient Near East and Mediterranean.',
+    activeRouteIds: ['abraham-call', 'exodus-route', 'paul-second-journey'],
+    activeSiteIds: [
+      'pilate-stone', 'caiaphas-ossuary', 'taylor-prism', 'siloam-inscription',
+      'cyrus-cylinder', 'nabonidus-cylinder', 'tel-dan-stele', 'merneptah-stele',
+      'gallio-inscription', 'erastus-inscription', 'ketef-hinnom-scrolls', 'mesha-stele'
+    ],
+    activeFigureIds: [
+      'jesus-christ', 'daniel', 'hezekiah', 'moses', 'abraham', 'david',
+      'isaiah', 'paul', 'peter', 'jeremiah', 'solomon', 'ezra-nehemiah'
+    ]
+  }
+];
+

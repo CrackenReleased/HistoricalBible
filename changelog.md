@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.19] - 2026-10-16
+
+- Upgraded Biblical World Map Cartography (`/map`):
+  - High-Resolution Geodetic Tiles: Integrated Leaflet with Esri World Dark Gray Base (`World_Dark_Gray_Base`), rendering crisp real-world topography, mountain ranges, and water bodies (Mediterranean Sea, Red Sea, Dead Sea, Sea of Galilee, Nile Delta, Euphrates, Tigris) without watermarks or API key requirements.
+  - Ornate Golden Compass Rose: Positioned a prominent dial in the top-right corner of the map viewport explicitly marking North with a crimson/gold needle and an illuminated `NORTH ↑` badge.
+  - Chronological Timeline & Active Year Display: Built an illuminated header displaying the exact active year/range in 2rem gold Cinzel font (`4 BC – AD 33`, `722 – 701 BC`, etc.), headline, context, and 9 clickable era scrubber pills (`Patriarchs`, `Exodus & Law`, `United Monarchy`, `Assyrian Siege`, `Babylon Exile`, `Persian Return`, `Christ & Rome`, `Apostolic Age`, `All Eras`).
+  - Temporal Isolation: Filtering by era strictly isolates the ruling empire and highlights that epoch's surviving archaeological discoveries with pulsing gold coin markers.
+  - Automated Regression Tests: Added `tests/map-chronology-compass.spec.ts` locking down compass rose, north label, active year display, and era switching.
+
 ## [00.01.18] - 2026-10-16
 
 - Interactive Biblical Maps & Cartographic Atlas (Option C):

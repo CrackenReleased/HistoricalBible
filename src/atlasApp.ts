@@ -10,8 +10,10 @@ import {
   REGION_PRESETS,
   ARCHAEOLOGICAL_SITES,
   BIBLICAL_CITIES,
+  CHRONOLOGICAL_ERAS,
   type ArchaeologicalSite,
-  type BiblicalCity
+  type BiblicalCity,
+  type ChronologicalEra
 } from './data/ancientMapData';
 
 class HistoricalAtlasApp {
@@ -25,17 +27,31 @@ class HistoricalAtlasApp {
     this.mapCanvas = new AncientMapCanvas({
       container,
       compact: false,
-      initialRegion: 'all',
+      initialEraId: 'all',
       onSelectSite: (site) => this.showSiteDetail(site),
-      onSelectCity: (city) => this.showCityDetail(city)
+      onSelectCity: (city) => this.showCityDetail(city),
+      onEraChange: (era) => this.syncEraUI(era)
     });
 
     this.bindControls();
     this.checkInitialUrlParams();
+    if (this.mapCanvas.activeEra) {
+      this.syncEraUI(this.mapCanvas.activeEra);
+    }
   }
 
   private bindControls(): void {
     if (!this.mapCanvas) return;
+
+    // 0. Chronological Era Buttons
+    const eraBtns = document.querySelectorAll<HTMLButtonElement>('.chrono-era-btn');
+    eraBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const eraId = btn.getAttribute('data-era');
+        if (!eraId || !this.mapCanvas) return;
+        this.mapCanvas.setEra(eraId);
+      });
+    });
 
     // 1. Layer Toggles
     const layerToggles = document.querySelectorAll<HTMLButtonElement>('.atlas-toggle-btn');
@@ -81,12 +97,37 @@ class HistoricalAtlasApp {
     });
   }
 
+  private syncEraUI(era: ChronologicalEra): void {
+    const yearEl = document.getElementById('chrono-current-year');
+    const headlineEl = document.getElementById('chrono-headline');
+    const summaryEl = document.getElementById('chrono-summary');
+
+    if (yearEl) yearEl.textContent = era.yearLabel;
+    if (headlineEl) headlineEl.textContent = era.headline;
+    if (summaryEl) summaryEl.textContent = era.historicalSummary;
+
+    const eraBtns = document.querySelectorAll<HTMLButtonElement>('.chrono-era-btn');
+    eraBtns.forEach(btn => {
+      const btnEra = btn.getAttribute('data-era');
+      if (btnEra === era.id) {
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+      } else {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-selected', 'false');
+      }
+    });
+  }
+
   private checkInitialUrlParams(): void {
     const params = new URLSearchParams(window.location.search);
     const siteId = params.get('site');
     const region = params.get('region');
+    const eraParam = params.get('era');
 
-    if (region && this.mapCanvas) {
+    if (eraParam && this.mapCanvas) {
+      this.mapCanvas.setEra(eraParam);
+    } else if (region && this.mapCanvas) {
       this.mapCanvas.jumpToPreset(region);
       const activeBtn = document.querySelector(`.atlas-preset-btn[data-preset="${region}"]`);
       if (activeBtn) {
