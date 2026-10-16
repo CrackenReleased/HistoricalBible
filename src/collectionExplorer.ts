@@ -1,4 +1,5 @@
 import { localStore, type KjvVerseData } from './store/localFirstStore';
+import { writeUrlState } from './store/urlStateRouter';
 
 type Mode = 'books' | 'references' | 'names' | 'connections' | 'history';
 type CardBuilder = (verse: KjvVerseData | null, display: string, ref: string, note: string) => HTMLElement;
@@ -21,11 +22,16 @@ export class CollectionExplorer {
   private sourceBook = '';
   private targetBook = '';
   private score = '';
-  constructor(private card: CardBuilder, private figure: (id: string) => void) {
+  constructor(
+    private card: CardBuilder,
+    private figure: (id: string) => void,
+    private openGraph?: (name: string) => void
+  ) {
     const top = el('div', '', 'explorer-heading');
     const intro = el('div'); intro.append(el('p', 'THE COLLECTION · OPEN & EXPLORE', 'eyebrow'), this.heading);
     top.append(intro, button('Close ×', () => {
       this.root.hidden = true;
+      writeUrlState({ tab: null });
       document.querySelectorAll<HTMLButtonElement>('[data-collection]').forEach(node => node.setAttribute('aria-expanded', 'false'));
       document.querySelector<HTMLButtonElement>(`[data-collection="${this.mode}"]`)?.focus();
     }, 'text-button'));
@@ -46,6 +52,7 @@ export class CollectionExplorer {
     this.root.hidden = false; this.heading.textContent = titles[mode];
     this.root.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach(node => node.setAttribute('aria-pressed', String(node.dataset.mode === mode)));
     document.querySelectorAll<HTMLButtonElement>('[data-collection]').forEach(node => node.setAttribute('aria-expanded', String(node.dataset.collection === mode)));
+    writeUrlState({ tab: mode });
     this.render();
     if (reveal) { this.root.scrollIntoView({ behavior: 'instant', block: 'start' }); this.root.focus({ preventScroll: true }); }
   }
@@ -94,6 +101,9 @@ export class CollectionExplorer {
     const show = (page: number) => {
       this.body.replaceChildren(button('← All name connections', () => this.open('connections')));
       const title = el('div', '', 'explorer-pair explorer-subtitle'); title.append(this.nameButton(first), el('span', '↔'), this.nameButton(second));
+      if (this.openGraph) {
+        title.append(button('Explore in 2D Graph ↗', () => this.openGraph!(first)));
+      }
       this.body.append(title, el('p', `${refs.length} shared verse${refs.length === 1 ? '' : 's'} in the Obsidian source index. Follow either name to its complete entry.`, 'explorer-note'));
       this.paged(refs, 10, ref => this.verseCard(ref, `Shared name occurrence: ${first} and ${second}.`), this.body, page, show);
     }; show(0);
@@ -112,7 +122,11 @@ export class CollectionExplorer {
       const verses = button(`${name.refs.length} verse links`, () => show('verses'));
       const connections = button(`${neighbors.length} connected names`, () => show('neighbors'));
       verses.setAttribute('aria-pressed', String(section === 'verses')); connections.setAttribute('aria-pressed', String(section === 'neighbors'));
-      nav.append(verses, connections); passages.append(nav);
+      nav.append(verses, connections);
+      if (this.openGraph) {
+        nav.append(button('Explore in 2D Graph ↗', () => this.openGraph!(name.name)));
+      }
+      passages.append(nav);
       if (section === 'verses') {
         this.paged(name.refs, 5, ref => this.verseCard(ref, `Verse link from the name index for ${name.name}.`), passages, page, next => show(section, next));
       } else {

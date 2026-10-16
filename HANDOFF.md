@@ -1,6 +1,36 @@
-## 2026-10-16 01:36:30 — Antigravity / HistoricalBible — Unified Dark-Gold Redesign v1.6.0 pushed to GitHub
+## 2026-10-16 15:08:00 — Antigravity / HistoricalBible — Dual Chronology Engine & Hero Alignment (v00.01.13)
 
-- Completed and pushed the v1.6.0 dark-gold redesign across `index.html`, `interact.html`, `bible.html`, `contact.html`, and clean directory routes (`bible/index.html`, `contact/index.html`, `interact/index.html`).
+- Updated `/bible` top gold hero text to: `— READ THE BIBLE WITH WORD-FOR-WORD INSPECTION` and main title to `The Holy Bible`. Moved download actions exclusively to the illuminated Archival Print Edition card at the bottom of the page (`#archival-pdf`).
+- Implemented 66-Book Dual Chronology Engine (`src/data/bibleChronology.ts`) distinguishing **Event Chronology** (when events occurred) from **Composition Chronology** (when books were penned).
+- Added `Order:` selector to sticky toolbar supporting `Canonical (Gen → Rev)`, `Chronological (When Happened)`, and `Chronological (When Written)` with dynamic book regrouping.
+- Added Dual Chronology Banner above each chapter displaying Event Date, Authorship Date/Author, and Chronological Delta note.
+- Added `Chronology & Eras` companion tab with detailed historical era context and bridge links to contemporary world empires in the Study Desk (`/interact?era=...`).
+- Word-for-word selectability: Every word is wrapped in `<span class="kjv-word">`. Left-clicking or right-clicking (contextmenu) any word displays its Hitchcock definition and concordance occurrences in the right companion tab without navigating away.
+- In-place verse inspection: Clicking any verse row highlights it and populates Treasury of Scripture Knowledge cross-references in the companion pane, eliminating disruptive page redirects.
+- Small-caps divine names (`LORD`, `GOD`) and bracketed translator italics `[...]` preserved with zero fragmentation.
+- Verification: Updated Playwright regression test `tests/site_pages.spec.ts` locking gold text, dual chronology banner, sort mode switching (Canonical, Event, Written), and Chronology & Eras tab; all 33 Playwright tests and 2 collection regression tests pass. Production build succeeds in 383ms.
+
+## 2026-10-16 14:35:00 — Antigravity / HistoricalBible — Live Scripture Reader & Archival PDF Portal (v00.01.12)
+
+- Replaced the static download card on `/bible` with a live, client-side Scripture Reader (`src/bibleReader.ts`) reading directly from the canonical KJV IndexedDB store with 66 books, chapter navigation, small-caps divine names, and Study Desk links.
+- Elevated the downloadable edition into an illuminated Archival Print Edition (PDF) card with explicit notice clarifying that it is a static printable document for physical printing and offline reading, distinct from an interactive app.
+- Verification: Added regression test in `tests/site_pages.spec.ts` locking 66 books, Genesis 1/2 reading, and archival PDF notice/links; 33/33 Playwright tests and all collection tests pass. Production build succeeds in 369ms.
+
+## 2026-10-16 14:02:00 — Antigravity / HistoricalBible — 2D Interactive Ego-Graph Canvas & Bidirectional URL Deep-Linking (v00.01.11)
+
+- Integrated a lightweight 60FPS 2D HTML5 Canvas Ego-Graph Inspector (`src/engine/egoGraph.ts`) with 1-hop and 2-hop neighborhood expansion, click-to-pivot navigation, hover tooltips, and smooth pan/zoom in untarnished bronze/olive/stone styling.
+- Added bidirectional URL state synchronization (`src/store/urlStateRouter.ts`) making figures (`?figure=`), names (`?name=`), verses (`?ref=`), collection tabs (`?tab=`), and view modes (`?view=graph`) bookmarkable and shareable with full browser back/forward history support.
+- Directly wired into the existing `BibleNetwork` (2,408 names, 12,058 edges) and `HistoricalSynchrony` dataset in IndexedDB, rejecting 67MB redundant markdown chunking.
+- Verification: Added Playwright tests `INT-19` and `INT-20`; all 30 Playwright tests (`bibleviz`, `site_pages`, `interact`) and `npm run test:collection` pass cleanly. Production build succeeds in 464ms.
+
+## 2026-10-16 02:43:15 — Antigravity / HistoricalBible — Realigned Application Version to Beta Sequence (v00.01.07)
+
+- Replaced `1.x` application version numbers across `interact.html` (`Interact · v00.01.07`), `package.json` (`"00.01.07"`), `package-lock.json` (`"00.01.07"`), and `changelog.md` (`[00.01.00]` through `[00.01.07]`), and added a regression test in `tests/site_pages.spec.ts` locking the version to `v00.01.xx`.
+- Verified with `npm run build` and `npx playwright test tests/site_pages.spec.ts` (6 passed).
+
+## 2026-10-16 01:36:30 — Antigravity / HistoricalBible — Unified Dark-Gold Redesign v00.01.06 pushed to GitHub
+
+- Completed and pushed the v00.01.06 dark-gold redesign across `index.html`, `interact.html`, `bible.html`, `contact.html`, and clean directory routes (`bible/index.html`, `contact/index.html`, `interact/index.html`).
 - Preserved verbatim mission/conviction copy (`PURPOSE` / `CONVICTION`), restored the dark-gold "Download the Bible" welcome popup (`#popup-widget6691`), implemented true small-caps `LORD` (`L` + `0.74em` `ORD`), removed all `"hand-typed"` references from pages/meta tags, and added the quiet "Why the KJV" footnote above the footer on Home.
 - Verified with `npm run build` and 20 passing Playwright tests (`tests/interact.spec.ts` and `tests/site_pages.spec.ts`). Canonical detail: `E:\HistoricalBible\what_and_how_log.md`.
 

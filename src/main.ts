@@ -11,6 +11,8 @@ import {
 } from './store/localFirstStore';
 import { discoveries } from './discoveries';
 import { CollectionExplorer } from './collectionExplorer';
+import { EgoGraphCanvas, type EgoGraphData, type EgoNode } from './engine/egoGraph';
+import { readUrlState, writeUrlState, onUrlStateChange, type InteractUrlState } from './store/urlStateRouter';
 
 class HistoricalInteractApp {
   private selectedEraId: string = 'all';
@@ -18,6 +20,9 @@ class HistoricalInteractApp {
   private activeFigure: HistoricalFigure | null = null;
   private trail: string[] = [];
   private explorer: CollectionExplorer | null = null;
+  private egoGraph: EgoGraphCanvas | null = null;
+  private activeView: 'list' | 'graph' = 'list';
+  private activeGraphTarget: HistoricalFigure | string | null = null;
 
   public async bootstrap(): Promise<void> {
     const errorBanner = document.getElementById('error-banner');
@@ -34,24 +39,73 @@ class HistoricalInteractApp {
       }
 
       const sync = localStore.getSynchrony();
-      // Default to Jesus Christ at the center of history
-      const params = new URLSearchParams(window.location.search);
-      const requestedFig = params.get('figure');
+      const urlState = readUrlState();
+      const requestedFig = urlState.figure;
       this.activeFigure =
         sync.figures.find(f => f.id === requestedFig) ||
         sync.figures.find(f => f.id === 'jesus-christ') ||
         sync.figures[0];
       this.trail = [this.activeFigure.id];
 
+      if (urlState.view === 'graph') {
+        this.activeView = 'graph';
+      }
+
       this.renderEraFilterBar();
       this.renderDualStreamSpine();
       this.renderActiveFigureWorkspace();
       this.renderHitchcockDirectory('');
-      this.explorer = new CollectionExplorer((...args) => this.buildScriptureCard(...args), id => this.selectFigureById(id));
+      this.explorer = new CollectionExplorer(
+        (...args) => this.buildScriptureCard(...args),
+        id => this.selectFigureById(id),
+        name => this.openInGraph(name)
+      );
       this.bindEvents();
       this.renderCollectionOverview();
       document.querySelectorAll<HTMLInputElement | HTMLButtonElement>('#collection-search input, #collection-search button').forEach(control => { control.disabled = false; });
       this.setSearchStatus('Search Scripture and the complete Obsidian name network. Every total below opens its records.');
+
+      // Deep link handling
+      if (urlState.tab) {
+        this.explorer.open(urlState.tab as any, false);
+      }
+      if (urlState.ref) {
+        const verse = localStore.getVerseByOsis(urlState.ref);
+        if (verse) {
+          const scripList = document.getElementById('scripture-anchors-list');
+          if (scripList) {
+            const disp = localStore.formatDisplayRef(verse);
+            const card = this.buildScriptureCard(verse, disp, urlState.ref, 'Deep-linked from shared URL reference.');
+            scripList.prepend(card);
+          }
+        }
+      }
+      if (urlState.name) {
+        const netName = localStore.getNetworkName(urlState.name);
+        if (netName) {
+          this.explorer.showName(netName.name, false);
+          if (this.activeView === 'graph') {
+            this.renderEgoGraph(netName.name);
+          }
+        }
+      }
+      if (this.activeView === 'graph') {
+        this.switchConnectionView('graph');
+      }
+
+      // Popstate handling for browser back/forward buttons
+      onUrlStateChange((state) => {
+        if (state.figure && state.figure !== this.activeFigure?.id) {
+          this.selectFigureById(state.figure, false);
+        }
+        if (state.view && state.view !== this.activeView) {
+          this.switchConnectionView(state.view);
+        }
+        if (state.name) {
+          this.renderEgoGraph(state.name);
+        }
+      });
+
       // Links from Home and shared discoveries still land on the requested person.
       if (requestedFig && sync.figures.some(figure => figure.id === requestedFig)) {
         document.getElementById('discovery')?.scrollIntoView({ behavior: 'instant', block: 'start' });
@@ -249,12 +303,13 @@ class HistoricalInteractApp {
     if (this.selectedEmpireId && !target.secularContemporaries.some(c => c.empireId === this.selectedEmpireId)) this.selectedEmpireId = null;
     if (this.trail.at(-1) !== figureId) this.trail.push(figureId);
     if (this.trail.length > 12) this.trail.shift();
-    const url = new URL(window.location.href);
-    url.searchParams.set('figure', figureId);
-    window.history.replaceState(null, '', url);
+    writeUrlState({ figure: figureId });
     this.renderEraFilterBar();
     this.renderDualStreamSpine();
     this.renderActiveFigureWorkspace();
+    if (this.activeView === 'graph') {
+      this.renderEgoGraph(target);
+    }
     if (reveal) {
       const discovery = document.getElementById('discovery');
       discovery?.scrollIntoView({ behavior: 'instant', block: 'start' });
@@ -267,6 +322,9 @@ class HistoricalInteractApp {
     const sync = localStore.getSynchrony();
     const fig = this.activeFigure;
     this.renderDiscovery(fig);
+    if (this.activeView === 'graph') {
+      this.renderEgoGraph(fig);
+    }
     const era = sync.eras.find(e => e.id === fig.eraId);
 
     const eraBadge = document.getElementById('active-era-badge');
@@ -829,6 +887,222 @@ class HistoricalInteractApp {
         this.renderHitchcockDirectory(hitchcockInput.value);
       });
     }
+
+    document.getElementById('btn-view-list')?.addEventListener('click', () => {
+      this.switchConnectionView('list');
+    });
+    document.getElementById('btn-view-graph')?.addEventListener('click', () => {
+      this.switchConnectionView('graph');
+    });
+  }
+
+  private switchConnectionView(view: 'list' | 'graph'): void {
+    this.activeView = view;
+    const listBtn = document.getElementById('btn-view-list') as HTMLButtonElement | null;
+    const graphBtn = document.getElementById('btn-view-graph') as HTMLButtonElement | null;
+    const graphContainer = document.getElementById('ego-graph-container');
+
+    if (view === 'graph') {
+      listBtn?.classList.remove('active');
+      listBtn?.setAttribute('aria-pressed', 'false');
+      graphBtn?.classList.add('active');
+      graphBtn?.setAttribute('aria-pressed', 'true');
+      if (graphContainer) {
+        graphContainer.hidden = false;
+        this.renderEgoGraph(this.activeGraphTarget || this.activeFigure || 'Jesus');
+      }
+      writeUrlState({ view: 'graph' });
+    } else {
+      graphBtn?.classList.remove('active');
+      graphBtn?.setAttribute('aria-pressed', 'false');
+      listBtn?.classList.add('active');
+      listBtn?.setAttribute('aria-pressed', 'true');
+      if (graphContainer) {
+        graphContainer.hidden = true;
+      }
+      writeUrlState({ view: 'list' });
+    }
+  }
+
+  public openInGraph(target: HistoricalFigure | string): void {
+    this.switchConnectionView('graph');
+    this.renderEgoGraph(target);
+    const container = document.getElementById('ego-graph-container');
+    container?.scrollIntoView({ behavior: 'instant', block: 'center' });
+  }
+
+  private renderEgoGraph(target: HistoricalFigure | string): void {
+    this.activeGraphTarget = target;
+    const container = document.getElementById('ego-graph-container');
+    if (!container) return;
+
+    if (!this.egoGraph) {
+      this.egoGraph = new EgoGraphCanvas(container, {
+        onSelectNode: (node) => this.handleEgoNodeClick(node),
+      });
+    }
+
+    const data = this.buildEgoGraphData(target);
+    this.egoGraph.render(data);
+  }
+
+  private handleEgoNodeClick(node: EgoNode): void {
+    const sync = localStore.getSynchrony();
+    const fig = sync.figures.find(f => f.id === node.id || f.name.toLowerCase() === node.title.toLowerCase());
+    if (fig) {
+      this.selectFigureById(fig.id);
+      writeUrlState({ figure: fig.id, view: 'graph' });
+      return;
+    }
+
+    const networkName = localStore.getNetworkName(node.title);
+    if (networkName) {
+      this.renderEgoGraph(networkName.name);
+      writeUrlState({ name: networkName.name, view: 'graph' });
+    }
+  }
+
+  private buildEgoGraphData(target: HistoricalFigure | string): EgoGraphData {
+    const isFigure = typeof target !== 'string';
+    const centerTitle = isFigure ? target.name : target;
+    const centerId = isFigure ? target.id : target;
+    const centerSubtitle = isFigure
+      ? `${target.title} (${target.dateRangeLabel})`
+      : (localStore.getNetworkName(target)?.meaning || 'Biblical Name');
+
+    const nodesMap = new Map<string, EgoNode>();
+    const edges: Array<{ source: string; target: string; weight: number }> = [];
+    const seenEdges = new Set<string>();
+
+    const addEdge = (source: string, targetId: string, weight = 1) => {
+      if (source === targetId) return;
+      const key = [source, targetId].sort().join('::');
+      if (!seenEdges.has(key)) {
+        seenEdges.add(key);
+        edges.push({ source, target: targetId, weight });
+      }
+    };
+
+    nodesMap.set(centerId, {
+      id: centerId,
+      title: centerTitle,
+      subtitle: centerSubtitle,
+      type: isFigure ? 'figure' : 'name',
+      hop: 0,
+      degree: 0,
+    });
+
+    const hop1Names: string[] = [];
+
+    if (isFigure) {
+      for (const rel of target.personalNetwork) {
+        const id = rel.targetId || rel.name;
+        if (!nodesMap.has(id)) {
+          nodesMap.set(id, {
+            id,
+            title: rel.name,
+            subtitle: rel.relation,
+            type: 'name',
+            hop: 1,
+            degree: 1,
+          });
+          hop1Names.push(rel.name);
+          addEdge(centerId, id, 3);
+        }
+      }
+
+      for (const sc of target.secularContemporaries.slice(0, 4)) {
+        const id = `sc-${sc.name.toLowerCase().replace(/\s+/g, '-')}`;
+        if (!nodesMap.has(id)) {
+          nodesMap.set(id, {
+            id,
+            title: sc.name,
+            subtitle: `${sc.role} · ${sc.empireId}`,
+            type: 'contemporary',
+            hop: 1,
+            degree: 1,
+          });
+          addEdge(centerId, id, 2);
+        }
+      }
+
+      const networkName = target.hitchcockKey || target.name.split(' ')[0];
+      const coNames = localStore.getConnectedNames(networkName).slice(0, 8);
+      for (const cn of coNames) {
+        if (!nodesMap.has(cn.name)) {
+          nodesMap.set(cn.name, {
+            id: cn.name,
+            title: cn.name,
+            subtitle: localStore.getNetworkName(cn.name)?.meaning,
+            type: 'name',
+            hop: 1,
+            degree: cn.count,
+            weight: cn.count,
+          });
+          hop1Names.push(cn.name);
+          addEdge(centerId, cn.name, cn.count);
+        }
+      }
+    } else {
+      const coNames = localStore.getConnectedNames(target).slice(0, 14);
+      for (const cn of coNames) {
+        nodesMap.set(cn.name, {
+          id: cn.name,
+          title: cn.name,
+          subtitle: localStore.getNetworkName(cn.name)?.meaning,
+          type: 'name',
+          hop: 1,
+          degree: cn.count,
+          weight: cn.count,
+        });
+        hop1Names.push(cn.name);
+        addEdge(centerId, cn.name, cn.count);
+      }
+    }
+
+    const topHop1 = hop1Names.slice(0, 4);
+    for (const h1Name of topHop1) {
+      const h2Neighbors = localStore.getConnectedNames(h1Name).slice(0, 3);
+      for (const h2 of h2Neighbors) {
+        if (!nodesMap.has(h2.name)) {
+          nodesMap.set(h2.name, {
+            id: h2.name,
+            title: h2.name,
+            subtitle: localStore.getNetworkName(h2.name)?.meaning,
+            type: 'name',
+            hop: 2,
+            degree: h2.count,
+            weight: h2.count,
+          });
+        }
+        addEdge(h1Name, h2.name, h2.count);
+      }
+    }
+
+    for (let i = 0; i < hop1Names.length; i++) {
+      for (let j = i + 1; j < hop1Names.length; j++) {
+        const a = hop1Names[i];
+        const b = hop1Names[j];
+        if (nodesMap.has(a) && nodesMap.has(b)) {
+          const shared = localStore.getSharedRefs(a, b);
+          if (shared.length > 0) {
+            addEdge(a, b, shared.length);
+          }
+        }
+      }
+    }
+
+    const nodes = Array.from(nodesMap.values());
+    for (const n of nodes) {
+      n.degree = edges.filter(e => e.source === n.id || e.target === n.id).length;
+    }
+
+    return {
+      centerId,
+      centerTitle,
+      nodes,
+      edges,
+    };
   }
 }
 

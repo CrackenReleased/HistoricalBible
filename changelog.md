@@ -2,6 +2,67 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.16] - 2026-10-16
+
+- Removed the PDF tab from the right-hand companion exploration panel in `bible.html`, `bible/index.html`, and `src/bibleReader.ts`. The companion panel now focuses strictly on biblical study tools (`Passage & X-Refs`, `Word Inspector`, `Chronology & Eras`).
+- Completely purged the terms "archival" and "archive" from all reader and printable document user-facing text, badges, and layout classes.
+- Re-architected the printable PDF edition section at the bottom of `/bible` as `#printable-edition` featuring an illuminated `✦ COMPLETE PRINT EDITION · 1,162 PAGES ✦` badge, preserving direct `/Bible.pdf` downloading and browser previewing.
+- Updated Playwright regression test suite `tests/site_pages.spec.ts` locking down 3 companion study tabs, absence of `#companion-tab-pdf-btn`, and zero occurrences of "archival" text on `/bible`.
+- Verification: 36/36 Playwright tests pass; 2/2 collection regression tests pass; canonical KJV invariant build succeeds in 369ms.
+
+## [00.01.15] - 2026-10-16
+
+- Corrected Genesis Biblical Chronology: established traditional canonical anchor of Creation at **c. 4004 BC** (Ussher / Biblical Masoretic chronological anchor) and clarified full Genesis sweep as **c. 4004 BC (Creation) – c. 1805 BC (Death of Joseph)** [~2,200-year sweep].
+- Fixed date ambiguity bug where Genesis 1 previously rendered `Creation – c. 1805 BC`, which read erroneously as if Creation occurred around 1805 BC.
+- Implemented Granular Chapter-Level Event Chronology (`getChapterChronology(osis, chapter)` in `src/data/bibleChronology.ts` and `src/bibleReader.ts`):
+  - Genesis 1–2: `c. 4004 BC (Creation Week)` · Primeval History
+  - Genesis 3–5: `c. 4004 – 2348 BC (The Fall & Antediluvian World)` · Primeval History
+  - Genesis 6–9: `c. 2348 – 2347 BC (The Great Deluge & Noah's Ark)` · Primeval History
+  - Genesis 10–11: `c. 2242 – 2091 BC (Tower of Babel & Table of Nations)` · Primeval History
+  - Genesis 12–20: `c. 2091 – 2067 BC (Call of Abram & Covenant of Circumcision)` · Patriarchal Era
+  - Genesis 21–25: `c. 2066 – 1991 BC (Isaac's Birth & Offering on Mount Moriah)` · Patriarchal Era
+  - Genesis 26: `c. 2006 – 1886 BC (Patriarch Isaac at Gerar & Beersheba)` · Patriarchal Era
+  - Genesis 27–36: `c. 1929 – 1859 BC (Jacob at Haran, Wrestling at Peniel & Twelve Tribes)` · Patriarchal Era
+  - Genesis 37–50: `c. 1898 – 1805 BC (Joseph in Egypt, Descent of Israel & Death of Joseph)` · Patriarchal Era
+- Added chapter-level breakdowns for other multi-era narrative books (Exodus, Acts).
+- Enhanced Dual Chronology Banner and Chronology & Eras companion pane to dynamically present the active chapter's event date, setting era, and historical summary, alongside the full book sweep.
+- Added comprehensive written Playwright regression tests in `tests/chronology.spec.ts` locking Creation Week c. 4004 BC, Primeval History era, and dynamic chapter progression; verified 36/36 Playwright tests pass, 2/2 collection regression tests pass, and canonical KJV 31,098 verse invariants verified in production build.
+
+## [00.01.14] - 2026-10-16
+
+- Reduced site header height from ~121px to a sleek, compact 52px (`padding: 0; height: var(--site-header-height);` and brand image `height: 34px`) across all pages, freeing up over 65px of vertical reading real estate.
+- Architected declarative CSS collision geometry controls via `:root` custom properties (`--site-header-height: 52px;`, `--sticky-controls-gap: 12px;`, `--reader-sticky-top: calc(var(--site-header-height) + var(--sticky-controls-gap));`).
+- Pinned `.bible-sticky-toolbar` and `.bible-companion-pane` to `top: var(--reader-sticky-top)`, ensuring that when scrolling through Scripture, the top controls (Order, Book, Chapter, Prev, Next buttons, Tip badge, and Companion tabs) sit crisply 12px below the header with 100% visibility and zero occlusion.
+- Compacted page hero padding on `/bible` via `.bible-hero` (`padding: 1.25rem 0 0.85rem !important;`), bringing Scripture into view immediately on load.
+- Added automated Playwright regression assertions in `tests/site_pages.spec.ts` locking header height <= 65px, verifying scroll geometry down 500px, and confirming toolbar/companion pane positions remain strictly below the header without collisions.
+- Verification: 33/33 Playwright tests pass; 2/2 collection regression tests pass; canonical KJV invariant build succeeds in 375ms with 31,098 verses verified.
+
+## [00.01.13] - 2026-10-16
+
+- Updated `/bible` top hero gold text to: `— READ THE BIBLE WITH WORD-FOR-WORD INSPECTION` and main title to `The Holy Bible`, moving all download actions exclusively to the illuminated Archival Print Edition (PDF) card at the bottom.
+- Added 66-Book Dual Chronology Engine (`src/data/bibleChronology.ts`) separating **Event Chronology** (when events happened) from **Composition Chronology** (when texts were penned).
+- Added `Order:` selector to sticky toolbar supporting `Canonical (Gen → Rev)`, `Chronological (When Happened)`, and `Chronological (When Written)` with dynamic book regrouping.
+- Added Dual Chronology Banner above each chapter displaying Event Date, Authorship Date/Author, and Chronological Delta note.
+- Added `Chronology & Eras` companion tab with detailed historical era context and bridge links to contemporary world empires in the Study Desk (`/interact?era=...`).
+- Redesigned the `/bible` Scripture Reader into a 16:10 split-screen layout (`bible.html`, `bible/index.html`) with a sticky pinned toolbar (`top: 76px; z-index: 40;`) that never scrolls off-screen.
+- Added word-for-word selectability: every single word in Scripture is interactive via `<span class="kjv-word">`, enabling left-click and right-click (context menu) inspection of biblical dictionary definitions (Hitchcock) and concordance occurrences across the KJV without navigating away.
+- Implemented in-place verse inspection: clicking any verse highlights the row and populates direct Treasury of Scripture Knowledge (TSK) cross-references in the right-side companion panel, eliminating external page redirects for study.
+- Maintained small-caps `LORD` (`<span class="kjv-divine-name">L<span class="kjv-divine-rest">ORD</span></span>`) and bracketed translator italics `[...]` without token fragmentation.
+- Added comprehensive regression tests in `tests/site_pages.spec.ts` locking split layout, sticky toolbar, in-place verse selection, word left/right-click inspection, and archival PDF notice; all 33 Playwright tests and collection tests pass.
+
+## [00.01.12] - 2026-10-16
+
+- Elevated `/bible` (`bible.html` and `bible/index.html`) from a static PDF download page into a dedicated, live Scripture Reader with full 66-book selector, chapter picker, previous/next navigation, and deep-links to the Interactive Study Desk.
+- Preserved the downloadable edition as an illuminated Archival Print Edition (PDF) card with explicit notice clarifying that it is a static printable document for physical printing and offline reading, distinct from an interactive app.
+- Added automated regression test in `tests/site_pages.spec.ts` locking 66 books, Genesis 1/2 reading, and archival PDF notice/links; 33/33 Playwright tests and all collection tests pass.
+
+## [00.01.11] - 2026-10-16
+
+- Introduced 60FPS 2D HTML5 Canvas Ego-Graph Inspector (`src/engine/egoGraph.ts`) for biblical figures and names, featuring 1-hop and 2-hop neighborhood expansion, click-to-pivot navigation, hover tooltips, smooth pan/zoom, and untarnished bronze/olive/stone scholarly styling.
+- Added bidirectional URL state synchronization and deep-linking (`src/store/urlStateRouter.ts`), making figures (`?figure=`), names (`?name=`), verses (`?ref=`), collection tabs (`?tab=`), and view modes (`?view=graph`) bookmarkable and shareable with browser back/forward history support.
+- Connected the 2D Ego-Graph directly to the existing 2,408-name / 12,058-edge `BibleNetwork` and `HistoricalSynchrony` dataset without redundant chunk bloat or filesystem re-parsing.
+- Added regression tests `INT-19` and `INT-20` in `tests/interact.spec.ts` locking Ego-Graph view toggling and direct deep-linking.
+
 ## [00.01.10-docs.1] - 2026-10-16
 
 - Remove the unsupported personal transcription narrative and quotation from the README; correct repeated claims in public historical documentation.
@@ -45,9 +106,9 @@ All notable changes to this project will be documented in this file.
 
 - Linked 1,158 visible top-right running book names to the matching book's chapter-one page, reusing the existing book-bookmark destination and zoom behavior.
 - Preserved the two Old/New Testament opening headers as labels, the existing return-to-Contents link on every Scripture page, the 66 contents links, 1,189 chapter bookmarks, page labels, text, layout, and accessibility structure.
-- Three book-header regression checks pass; application version remains 1.5.0. No source replacement, commit, or publication.
+- Three book-header regression checks pass; application version remains 00.01.05. No source replacement, commit, or publication.
 
-## [1.6.0] - 2026-10-16
+## [00.01.06] - 2026-10-16
 
 - Unified all four site pages (`index.html`, `interact.html`, `bible.html`, `contact.html`) and clean directory routes (`bible/index.html`, `contact/index.html`) under the calm dark-gold design system (`Cinzel`, `EB Garamond`, `Inter`, `JetBrains Mono`).
 - Separated the Front Door (`index.html` — welcome headline, 4-century timeline thread, 3 curiosity doors linking to `/interact?figure=<id>`, verbatim `PURPOSE` / `CONVICTION` mission cards, restored dark-gold "Download the Bible" welcome popup `#popup-widget6691`, quiet "Why the KJV" footnote, and PayPal donation form) from the dedicated Interactive Study Desk (`interact.html` — opening directly at the Discovery Pair `01 Read the Scripture` + `02 Meet the Historical Record`, `03 Follow Your Curiosity`, and the 3-column `Go Deeper` research workspace).
@@ -58,13 +119,13 @@ All notable changes to this project will be documented in this file.
 
 - Inserted one short, tagged live-text note after the cover and before the clickable Contents. It visibly distinguishes large-L/smaller-ORD small caps from four equal-height capitals, plus `Lord` and `lord`, while both capital forms copy as `LORD`.
 - Added brief notation and pronoun explanations and one short reading paragraph. The supplied-word line explains that most printed KJVs use italics and this edition uses brackets for search, copying, and machine learning. Preserved the 66 book links, 1,189 chapter bookmarks, all 1,160 tagged return links, printed folios and Scripture text.
-- Four reading-note regression checks pass. Application version remains 1.5.0; no publication, commit or source replacement.
+- Four reading-note regression checks pass. Application version remains 00.01.05; no publication, commit or source replacement.
 
 ## PDF accessibility proof [0.3.1] - 2026-10-15
 
 - Gave the cover semantic title/subtitle headings and readable descriptions for its two ornaments.
 - Tagged and named all 1,160 Scripture-page return links with individual annotation objects, preserving their destinations, book/chapter bookmarks, page labels, text and layout.
-- Three accessibility regression checks pass; five representative pages render pixel-identically to v0.3.0. App version remains 1.5.0; no publication or source replacement.
+- Three accessibility regression checks pass; five representative pages render pixel-identically to v0.3.0. App version remains 00.01.05; no publication or source replacement.
 
 ## PDF navigation proof [0.3.0] - 2026-10-15
 
@@ -75,15 +136,15 @@ All notable changes to this project will be documented in this file.
 
 - Added a separate repair proof from the recovered Word master, preserving layout, selectable Scripture, 74 bookmarks and 1,296 links.
 - Restored missing endings, removed duplicate passages/page-label contamination, recorded narrow wording/case repairs and restored source-based small caps.
-- Added eight DOCX and ten PDF regression checks, before/after provenance and a clearly separated unresolved comparison list. Originals/site untouched; application version remains 1.5.0.
+- Added eight DOCX and ten PDF regression checks, before/after provenance and a clearly separated unresolved comparison list. Originals/site untouched; application version remains 00.01.05.
 
 ## Governance [1.0] - 2026-10-15
 
 - Adopted owner-supplied AGENTS.md and principles.md in the project root with their wording preserved exactly.
 - Added README entry points, the adoption record, and stable change-control guidance; PDF repair remains a separate task.
-- Documentation only; application version remains 1.5.0.
+- Documentation only; application version remains 00.01.05.
 
-## [1.5.0] - 2026-10-15
+## [00.01.05] - 2026-10-15
 
 - Rebuilt Interact around a first discovery: Scripture beside a historical record, followed by questions that lead to another person or passage.
 - Added twelve editorial discovery routes, exploration trail/back navigation, source-linked featured records, and an attributed CC0 photograph of the Pilate inscription.
@@ -97,7 +158,7 @@ All notable changes to this project will be documented in this file.
 - Added native Obsidian Bible notes: complete KJV, names co-occurrence network, book indexes, and all 344,799 OpenBible cross-reference records with full target ranges and votes.
 - Added dependency-free export/validation tools under E:\AI_Hub\Tools\bible-network, source attribution, regeneration rules, and five unit tests.
 - Preserved the app's independent version and existing data; Obsidian export has its own v0.01.00 sequence.
-## [1.4.0] - 2026-10-15
+## [00.01.04] - 2026-10-15
 
 ### Fixed & Restored
 - **Verbatim Restoration of GoDaddy Web Archive**: Restored exact archived pages from `assets/Web_Archive_20261014/` (`Historical Bible - Faith and Religion, The Bible.html` -> `index.html`, `HistoricalBible.html` -> `contact.html`, `Bible-download.html` -> `bible.html`).
@@ -107,7 +168,7 @@ All notable changes to this project will be documented in this file.
 - **Interactive Gateway**: Maintained Three.js 3D WebGL Scripture Tapestry engine at `/interact` (`interact.html`).
 - **Regression Verification**: Updated Playwright test suite (`tests/site_pages.spec.ts`) asserting exact archived content with automated screenshot proofs.
 
-## [1.3.0] - 2026-10-14
+## [00.01.03] - 2026-10-14
 
 ### Added
 - **Full HistoricalBible.com Multi-Page Suite**: Built out Home (`index.html`), Contact Us (`contact.html`), and Bible Download (`bible.html`) pages recreating the complete GoDaddy archive website with elegant Cinzel/Lora typography and local-first architecture.
@@ -118,7 +179,7 @@ All notable changes to this project will be documented in this file.
 - **Clean URL Directory Aliases**: Generated `contact/index.html`, `bible/index.html`, and `interact/index.html` ensuring resilient routing across clean paths and file extensions.
 - **Expanded Automated Regression Suite**: Added `tests/site_pages.spec.ts` (`REG-09`, `REG-10`, `REG-11`). All 12 Playwright tests passing in 8.4s.
 
-## [1.2.0] - 2026-10-14
+## [00.01.02] - 2026-10-14
 
 ### Added
 - **KJV Corpus Ingestion**: Compiled 31,098 verses directly from the project's `Bible.pdf` into `public/data/kjv_verses.json`.
@@ -129,7 +190,7 @@ All notable changes to this project will be documented in this file.
 - **Master README Chapter**: Codified *"The Textual Foundation: Preserving the KJV"* into project documentation.
 - **Regression Test REG-08**: Automated Playwright test verifying KJV language integrity and typography in `tests/interact.spec.ts`.
 
-## [1.1.0] - 2026-10-14
+## [00.01.01] - 2026-10-14
 
 ### Added
 - **Three.js 3D WebGL Spatial Loom Engine** (`src/engine/threeVisualizer.ts`) with orbital camera, 3D quadratic Bézier arc splines, and additive blending.
@@ -140,7 +201,7 @@ All notable changes to this project will be documented in this file.
 - **Hitchcock Bible Names Dictionary & Identity Disambiguation** (`public/data/hitchcock_names.json`, `public/data/name_identities_audit.json`).
 - Expanded Playwright regression test suite (`tests/interact.spec.ts`, 8 tests passing).
 
-## [1.0.0] - 2026-10-14
+## [00.01.00] - 2026-10-14
 
 ### Added
 - Complete project scaffolding at `E:\HistoricalBible`.

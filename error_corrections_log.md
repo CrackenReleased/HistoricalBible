@@ -1,3 +1,15 @@
+## 2026-10-15 21:31:54 — PDF chapter navigation and page labels v0.3.0
+
+- Navigation-only PDF updates can preserve reading text, layout, link annotations and tags: compare every page and annotation after updating the outline and page-label tree.
+- Chapter destinations were taken from each chapter's own verse-one marker. Viewer labels use custom front-matter names, then decimal 1-1160 to match the printed Bible folios. The five existing Psalm divisions must be included when setting the Psalm bookmark's collapsed descendant count.
+- Verified all 1,189 chapter destinations and every page label; five regression checks pass. The accessibility/tag-reading-order assessment was not part of this update.
+
+## 2026-10-15 20:02:19 — PDF proof v0.2.0: source and export integrity
+
+- Shared source defects include four missing final verses, duplicate Exodus paragraphs, two repeated clauses and 25 page-label strings embedded in verses. Repair is applied only to a separate master with per-change evidence; original-source agreement alone does not establish correctness.
+- Native Word export omitted the Adobe body font. The proof embeds the exact font and recodes native strings with explicit Unicode mappings; both readers and all-page word positions verified. Running header/footer text polluted cross-page copies; label vectors now preserve appearance and clickable annotations without selectable label text.
+- Comparison extraction has source-specific defects. Restrict automatic lexical proposals to narrowly corroborated readings; keep 384 ambiguous/variant rows unchanged. Regression suites cover missing/duplicate/contaminated text, brackets, glyph case/sizing, inventory, text and navigation; old originals reproduce six failures in each suite, proof passes all 18.
+
 # Error Corrections Log — HistoricalBible.com
 
 ## [2026-10-14 20:44:00] Initial Build, Pipeline & Sibling Scans
@@ -15,3 +27,8 @@
 ### ERR-03: Main-Thread Freezing During Canvas Overdraw (340k Arcs)
 - **Symptom**: Stroking 343,570 individual arc paths in Canvas 2D on every pan/zoom frame causes heavy frame drops.
 - **Decision Point Fixed**: Implemented adaptive Level-of-Detail (LOD). Background arcs are sub-sampled and rendered with 0.02 alpha, while active chapter arcs are rendered with boosted contrast (0.65 alpha, 1.4px stroke). Pre-indexed arcs by chapter ID (`s` and `t`) so chapter filtering takes O(1) time.
+
+## [2026-10-15 21:47:14] PDF return-link annotation reuse
+
+- The Word-derived PDF shared one header-link annotation object across 1,160 Scripture pages. Assigning a page-specific StructParent directly to it leaves every page pointing at the last tag.
+- In v0.3.1, copy the annotation per page before adding Link/OBJR structure and parent-tree entries. `tests/test_pdf_accessibility.py` verifies unique keys, annotation references, labels and reading-order placement on every Scripture page; all three checks pass.

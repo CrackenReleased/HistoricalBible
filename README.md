@@ -1,5 +1,29 @@
 # HistoricalBible — The Interactive Scripture Tapestry
 
+## Project governance — v1.0 adopted 2026-10-15
+
+The owner selected these documents as the guiding foundations for HistoricalBible on 2026-10-15:
+
+- [principles.md](./principles.md): foundational doctrinal charter, Scripture-first interpretation, source preservation, and evidence boundaries.
+- [AGENTS.md](./AGENTS.md): operating contract for agents and contributors across this project. Read both before work.
+
+These root files are the canonical project copies. Their original proposed-status headers are preserved verbatim from the supplied documents; this dated record confirms owner adoption. Downloads are retained as the original delivery, not a second working source. Both foundations stay stable during ordinary work; amendments require explicit owner authorization.
+
+Before code work, also read the cross-project operating rules at E:\AI_Hub\AGENTS.md. Existing README sections, historical handoffs, and logs describe prior work and do not override these foundations or authorize future actions. Routine work belongs in HANDOFF.md, what_and_how_log.md, and error_corrections_log.md as appropriate.
+
+AGENTS.md references a separately supplied BIBLE_PDF_REPAIR_PLAN.md. That plan remains in the original Downloads folder and was not installed or executed in this governance-only task. The existing [Bible-network-audit.md](./Bible-network-audit.md) is a historical report; its findings have not been reverified here. PDF or corpus repair requires a separately scoped request.
+
+
+## Interact reader — v1.5.0
+
+Run `npm run dev` from this project, then open [Interact locally](http://localhost:5173/interact.html). Opening the source HTML from disk cannot run the data-backed reader. `/interact`, `/interact/`, and `/interact.html` lead to the same experience.
+
+Begin with the Jesus/Pilate discovery, compare the Scripture and historical record, and choose a next question. The exploration trail returns to earlier discoveries. The wider study holds people/empire browsing, Scripture search, connected passages, and the names dictionary. There are currently 12 curated historical profiles; a name dictionary entry does not imply a full historical profile.
+
+Editorial routes live in `src/discoveries.ts`; Scripture comes from the existing local corpus. Featured museum links and evidence-scope notes distinguish surviving records from interpretation. The wider inherited historical commentary has not been comprehensively audited as part of the redesign. The local Pilate inscription photograph is by Gary Todd, CC0, with its [source and license](https://commons.wikimedia.org/wiki/File:Limestone_Inscription_with_Name_of_Pontius_Pilate,_Caesarea,_26-36_AD_(42500903014).jpg) also credited in the reader.
+
+Verification: `npx playwright test tests/interact.spec.ts tests/site_pages.spec.ts --headed` and `npm run build`. Earlier sections below describe the older tapestry implementation, which remains separately available at `/tapestry.html`.
+
 > *"For the word of God is quick, and powerful, and sharper than any twoedged sword, piercing even to the dividing asunder of soul and spirit, and of the joints and marrow, and is a discerner of the thoughts and intents of the heart."*  
 > — **Hebrews 4:12**
 

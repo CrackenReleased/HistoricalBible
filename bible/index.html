@@ -7,15 +7,15 @@
   <link rel="icon" type="image/png" href="/images/brand/favicon-32.png" sizes="32x32" />
   <link rel="apple-touch-icon" href="/images/brand/apple-touch-icon.png" sizes="180x180" />
   <meta name="theme-color" content="#090c10" />
-  <title>Bible — Download the KJV PDF | Historical Bible</title>
-  <meta name="description" content="Download the clean King James Version Bible PDF. No frills, no fillers. Preserves original {chapter:verse} notation, bracketed translator words, and LORD typography." />
+  <title>The Holy Bible — Read Online &amp; Download the KJV PDF | Historical Bible</title>
+  <meta name="description" content="Read the canonical King James Version Bible live online with word-for-word concordance inspection, or download the clean 1,162-page KJV Bible PDF." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/src/interact.css" />
 </head>
 <body>
-  <a class="skip-link" href="#bible-portal">Skip to Bible download</a>
+  <a class="skip-link" href="#bible-reading-pane">Skip to Scripture reader</a>
 
   <!-- SITE HEADER -->
   <header class="site-header">
@@ -25,79 +25,148 @@
       </a>
       <nav class="site-nav" aria-label="Primary navigation">
         <a href="/">Home</a>
-        <a href="/bible" aria-current="page">Bible PDF</a>
+        <a href="/bible" aria-current="page">Bible</a>
         <a href="/interact">Interact</a>
         <a href="/contact">Contact</a>
       </nav>
     </div>
   </header>
 
-  <main id="bible-portal">
+  <main id="live-bible-reader">
     <!-- 1. HERO -->
-    <section class="wrap page-hero">
-      <span class="eyebrow">— THE CANONICAL SCRIPTURE TEXT</span>
-      <h1>Download the Bible</h1>
-      <p>No Frills, no fillers. Just the clean and simple Word of God.</p>
+    <section class="wrap page-hero bible-hero">
+      <span class="eyebrow">— READ THE BIBLE WITH WORD-FOR-WORD INSPECTION</span>
+      <h1>The Holy Bible</h1>
+      <p>Read the canonical King James Version in 16:10 split view with word-for-word inspection, cross-references, and timeline synchrony.</p>
     </section>
 
-    <!-- 2. DOWNLOAD & TEXTUAL INTEGRITY PORTAL -->
-    <section class="wrap content-section" aria-labelledby="download-card-title">
-      <div class="pdf-portal-grid">
-        <div class="mission-card">
-          <span class="eyebrow">KING JAMES VERSION</span>
-          <h2 id="download-card-title" style="font-size: 1.75rem; margin-bottom: 0.75rem;">Bible (pdf)</h2>
-          <p style="margin-bottom: 1.5rem;">
-            This complete King James Version edition was carefully prepared for uninterrupted reading and historical study. Every book, chapter, and verse is presented in a single, portable PDF document without commercial distractions or commentary mixed into the text.
-          </p>
+    <!-- 2. 16:10 SPLIT-SCREEN WORKSPACE -->
+    <div class="bible-split-layout">
+      <!-- LEFT PANE: Continuous Reading Sanctuary with Pinned Navigation -->
+      <section id="bible-reading-pane" class="bible-reading-pane" aria-label="Scripture Reading Sanctuary">
+        <!-- Sticky Navigation Toolbar (Pinned to top on scroll) -->
+        <div class="bible-sticky-toolbar">
+          <div class="reader-select-group">
+            <label for="reader-sort-select" style="font-size: 0.82rem; color: var(--gold-warm); font-weight: 600;">Order:</label>
+            <select id="reader-sort-select" class="reader-select" aria-label="Sort Order of Biblical Books">
+              <option value="canonical">Canonical (Gen &rarr; Rev)</option>
+              <option value="event">Chronological (When Happened)</option>
+              <option value="written">Chronological (When Written)</option>
+            </select>
 
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.5rem;">
-            <a href="/Bible.pdf" download="Bible.pdf" data-aid="DOWNLOAD_DOCUMENT_LINK_WRAPPER" class="primary-link">
-              <span>Download Bible (pdf)</span>
-              <span aria-hidden="true">&darr;</span>
-            </a>
-            <a href="/Bible.pdf" target="_blank" rel="noopener" class="secondary-link">
-              Open PDF in Browser &nearr;
-            </a>
+            <label for="reader-book-select" style="font-size: 0.82rem; color: var(--gold-warm); font-weight: 600;">Book:</label>
+            <select id="reader-book-select" class="reader-select" aria-label="Select Biblical Book"></select>
+
+            <label for="reader-chapter-select" style="font-size: 0.82rem; color: var(--gold-warm); font-weight: 600;">Chapter:</label>
+            <select id="reader-chapter-select" class="reader-select" aria-label="Select Chapter"></select>
           </div>
 
-          <p style="font-size: 0.82rem; color: var(--text-muted);">
-            Direct file: <a href="/Bible.pdf">/Bible.pdf</a> · Complete 66-book Old &amp; New Testament corpus (31,102 verses)
-          </p>
+          <div class="reader-select-group">
+            <button type="button" id="reader-prev-btn" class="reader-nav-btn" aria-label="Previous Chapter">&larr; Prev Chapter</button>
+            <button type="button" id="reader-next-btn" class="reader-nav-btn" aria-label="Next Chapter">Next Chapter &rarr;</button>
+          </div>
+
+          <span class="reader-hint-badge" title="Left-click or right-click any word to inspect concordance; click any verse for cross-references">
+            ✦ Tip: Click or right-click any word / verse
+          </span>
         </div>
 
-        <div>
-          <span class="eyebrow">TEXTUAL FIDELITY &amp; NOTATION</span>
-          <h3 style="font-size: 1.45rem; margin-bottom: 0.5rem;">What makes this edition distinct</h3>
-          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
-            Our interactive reader and downloadable PDF share the exact same canonical text conventions:
-          </p>
+        <header class="reader-chapter-header">
+          <div id="reader-chronology-banner" class="reader-chronology-banner" aria-label="Passage Timeline Synchrony"></div>
+          <span class="eyebrow" id="reader-order-eyebrow">— CANONICAL SCRIPTURE</span>
+          <h2 id="reader-chapter-title" class="reader-chapter-title">GENESIS</h2>
+          <div id="reader-chapter-subtitle" class="reader-chapter-subtitle">Chapter 1</div>
+        </header>
 
-          <div class="feature-list">
-            <div class="feature-item">
-              <strong>Explicit <code>{chapter:verse}</code> Markers</strong>
-              <p style="font-size: 0.86rem; color: var(--text-body);">
-                Every verse is anchored with clear <code>{c:v}</code> delimiters (such as <code>LUKE {3:1}</code>) for rapid verification and cross-referencing.
-              </p>
-            </div>
-            <div class="feature-item">
-              <strong>Bracketed <code>[...]</code> Translator Words</strong>
-              <p style="font-size: 0.86rem; color: var(--text-body);">
-                Words supplied by the King James translators for English grammar are preserved transparently inside brackets and rendered in italics in the study desk.
-              </p>
-            </div>
-            <div class="feature-item">
-              <strong>Preserved <span class="kjv-divine-name">L<span class="kjv-divine-rest">ORD</span></span> Typography</strong>
-              <p style="font-size: 0.86rem; color: var(--text-body);">
-                The covenant name of God is faithfully distinguished in small-caps typography (<span class="kjv-divine-name">L<span class="kjv-divine-rest">ORD</span></span>) throughout the Old Testament.
-              </p>
-            </div>
+        <div id="reader-verses-container" class="reader-verses-container" role="feed" aria-label="Chapter Verses">
+          <!-- Populated by src/bibleReader.ts -->
+        </div>
+
+        <footer class="reader-bottom-pager">
+          <button type="button" id="reader-bottom-prev" class="reader-nav-btn">&larr; Previous Chapter</button>
+          <a href="#bible-reading-pane" id="reader-top-link" class="reader-nav-btn">&uarr; Back to Top</a>
+          <button type="button" id="reader-bottom-next" class="reader-nav-btn">Next Chapter &rarr;</button>
+        </footer>
+      </section>
+
+      <!-- RIGHT PANE: Interactive Companion Inspector (Sticky Side-Panel) -->
+      <aside id="bible-companion-pane" class="bible-companion-pane" aria-label="Interactive Scripture Companion">
+        <nav class="companion-tabs-nav" aria-label="Companion Tabs">
+          <button type="button" id="companion-tab-xrefs-btn" class="companion-tab-btn active">Passage &amp; X-Refs</button>
+          <button type="button" id="companion-tab-word-btn" class="companion-tab-btn">Word Inspector</button>
+          <button type="button" id="companion-tab-chrono-btn" class="companion-tab-btn">Chronology &amp; Eras</button>
+        </nav>
+
+        <!-- Tab 1: Passage Cross-References & Context -->
+        <div id="companion-tab-xrefs-content" class="companion-tab-content" role="tabpanel">
+          <!-- Populated dynamically when selecting a verse -->
+        </div>
+
+        <!-- Tab 2: Word-for-Word Concordance & Dictionary Inspector -->
+        <div id="companion-tab-word-content" class="companion-tab-content" role="tabpanel" hidden>
+          <div class="word-inspect-card">
+            <span class="eyebrow">WORD INSPECTOR</span>
+            <h3 class="word-inspect-name">Select a Word</h3>
+            <p class="word-inspect-meta">Left-click or right-click any word in the Scripture text to dive into its biblical dictionary definition, network connections, and occurrences.</p>
+          </div>
+        </div>
+
+        <!-- Tab 3: Chronology & Historical Eras Companion Panel View -->
+        <div id="companion-tab-chrono-content" class="companion-tab-content" role="tabpanel" hidden>
+          <!-- Populated dynamically with event date vs. authorship date -->
+        </div>
+      </aside>
+    </div>
+
+    <!-- 3. COMPLETE PRINTABLE EDITION (PDF) SECTION -->
+    <section id="printable-edition" class="wrap content-section" aria-labelledby="download-card-title" style="margin-top: 1rem; position: relative;">
+      <span id="archival-pdf" style="position: absolute; top: -60px; left: 0;"></span>
+      <div class="printable-pdf-card">
+        <div class="printable-seal-badge">✦ COMPLETE PRINT EDITION · 1,162 PAGES ✦</div>
+        <h2 id="download-card-title" style="font-size: 1.85rem; margin-bottom: 0.5rem; font-family: var(--font-display); color: var(--gold-warm);">
+          Download the Bible (Printable PDF)
+        </h2>
+        <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+          Complete 66-Book Old &amp; New Testament Corpus · 31,102 Canonical Verses
+        </p>
+
+        <div class="printable-disclaimer-callout">
+          <strong>Printable Document Notice:</strong> This downloadable file is a static, printable PDF document designed for physical printing and deep, distraction-free offline reading—not an interactive web app. It preserves the exact 31,102 canonical King James verses with original <code>{chapter:verse}</code> anchors, bracketed translator words, and small-caps <span class="kjv-divine-name">L<span class="kjv-divine-rest">ORD</span></span> typography without commentary or modern revisions.
+        </div>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.5rem;">
+          <a href="/Bible.pdf" download="Bible.pdf" data-aid="DOWNLOAD_DOCUMENT_LINK_WRAPPER" class="primary-link">
+            <span>Download Bible (PDF)</span>
+            <span aria-hidden="true">&darr;</span>
+          </a>
+          <a href="/Bible.pdf" target="_blank" rel="noopener" class="secondary-link">
+            Open PDF in Browser &nearr;
+          </a>
+        </div>
+
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Direct file: <a href="/Bible.pdf">/Bible.pdf</a> · Zero external commentary · 100% fail-closed textual integrity
+        </p>
+
+        <div class="feature-list" style="margin-top: 1.5rem; border-top: 1px solid var(--border-subtle); padding-top: 1.5rem;">
+          <div class="feature-item">
+            <strong>Explicit <code>{chapter:verse}</code> Markers</strong>
+            <p style="font-size: 0.86rem; color: var(--text-body);">Every verse is anchored with clear <code>{c:v}</code> delimiters (such as <code>LUKE {3:1}</code>) for rapid verification and cross-referencing.</p>
+          </div>
+          <div class="feature-item">
+            <strong>Bracketed <code>[...]</code> Translator Words</strong>
+            <p style="font-size: 0.86rem; color: var(--text-body);">Words supplied by the King James translators for English grammar are preserved transparently inside brackets and rendered in italics in the study desk.</p>
+          </div>
+          <div class="feature-item">
+            <strong>Preserved <span class="kjv-divine-name">L<span class="kjv-divine-rest">ORD</span></span> Typography</strong>
+            <p style="font-size: 0.86rem; color: var(--text-body);">The covenant name of God is faithfully distinguished in small-caps typography (<span class="kjv-divine-name">L<span class="kjv-divine-rest">ORD</span></span>) throughout the Old Testament.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 3. BRIDGE TO INTERACT -->
-    <section class="wrap reading-guide">
+    <!-- 4. BRIDGE TO INTERACT -->
+    <section class="wrap reading-guide" style="margin-top: 2rem;">
       <h2>Read Scripture alongside the archaeological record.</h2>
       <p>
         Want to examine specific passages from this Bible side-by-side with surviving inscriptions from Assyria, Babylon, Egypt, and Rome? Step into the Interactive Study Desk.
@@ -111,5 +180,7 @@
     <div>John 17:3 — &ldquo;And this is life eternal, that they might know thee the only true God, and Jesus Christ, whom thou hast sent.&rdquo;</div>
     <div style="font-family: var(--font-mono); font-size: 0.75rem;">Historical Bible Est. 2019 · All Rights Reserved</div>
   </footer>
+
+  <script type="module" src="/src/bibleReader.ts"></script>
 </body>
 </html>

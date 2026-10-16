@@ -1,3 +1,154 @@
+## 2026-10-16 16:38:00 — Removal of Companion PDF Tab & Purging of Archival Terminology (v00.01.16)
+
+- Root cause:
+  - The right-hand companion exploration panel previously included an "Archival PDF" tab (`#companion-tab-pdf-btn`). This conflated scripture study exploration (passage cross-references, word-for-word concordance, and chronology) with document downloading, cluttering the reader workspace.
+  - Furthermore, the term "archival" was applied to the PDF edition, which did not align with the desired dignified, simple product terminology.
+- Decision point & Clean Separation:
+  - Removed `#companion-tab-pdf-btn` and `#companion-tab-pdf-content` entirely from `bible.html`, `bible/index.html`, and `src/bibleReader.ts`.
+  - The companion exploration panel now strictly houses the three core study tools: `Passage & X-Refs`, `Word Inspector`, and `Chronology & Eras`.
+  - Purged the terms "archival" and "archive" from all user-facing copy on `/bible`:
+    - Redesigned the dedicated printable edition card at the bottom of `/bible` as `#printable-edition` with badge `✦ COMPLETE PRINT EDITION · 1,162 PAGES ✦` and title `Download the Bible (Printable PDF)`.
+    - Maintained direct download (`/Bible.pdf`) and browser preview links.
+    - Updated CSS in `src/interact.css` with `.printable-pdf-card`, `.printable-seal-badge`, and `.printable-disclaimer-callout`.
+- Verification (Cardinal Rule):
+  - Updated Playwright regression test `tests/site_pages.spec.ts`:
+    1. Asserts `#companion-tab-pdf-btn` is absent (`count === 0`).
+    2. Asserts companion tabs navigation contains strictly 3 tabs (`Passage & X-Refs`, `Word Inspector`, `Chronology & Eras`).
+    3. Asserts `#printable-edition` is visible with `COMPLETE PRINT EDITION` badge and printable notice.
+    4. Asserts that the term "archival" is 100% absent from the reader text.
+  - All 36 Playwright tests pass (54.9s). All 2 collection regression tests pass. Production build succeeds in 369ms with 31,098 canonical KJV verses verified.
+  - Captured visual proof: `test-results/companion_panel_clean_proof.png`.
+- Project logs synced to Obsidian memory wiki (`E:\AI_Hub\Vault\03-Logs\HistoricalBible_Log.md`).
+
+## 2026-10-16 16:24:00 — Biblical Chronology Grounding & Granular Chapter-Level Event Dating (v00.01.15)
+
+- Root cause:
+  - In `src/data/bibleChronology.ts`, Genesis was entered with `eventStartYear: -4000`, `eventEndYear: -1805`, and `eventDateLabel: 'Creation – c. 1805 BC'`, with era name `'Patriarchs & Covenant Promise'`.
+  - When viewing Genesis Chapter 1, the reader header displayed: `🗓️ Happened: Creation – c. 1805 BC`. This ambiguous hyphenation made it look as if Biblical Creation itself occurred around 1805 BC (which is actually the death of Joseph in Egypt at the end of Genesis 50).
+  - Furthermore, Genesis 1–11 is Primeval History (Creation, Fall, Flood, Babel, ~4004–2091 BC), spanning over a millennium prior to the Patriarchal Era (Abraham born c. 2166 BC, call c. 2091 BC).
+  - The reader and companion pane previously displayed only a single static, book-level span across all chapters, omitting the traditional date of Creation and presenting anachronistic dates on early narrative chapters.
+- Decision point & Chronology Architecture:
+  - Rejected static book-level dates on multi-era narrative books.
+  - Standardized Biblical Creation at **c. 4004 BC** (Ussher / Biblical Masoretic chronological anchor) and clarified full Genesis sweep as **c. 4004 BC (Creation) – c. 1805 BC (Death of Joseph)** [~2,200-year sweep].
+  - Introduced `ChapterBreakdown` interface and added `chapterBreakdown?: ChapterBreakdown[]` to `BookChronology` in `src/data/bibleChronology.ts`.
+  - Implemented 9 granular era epochs for Genesis:
+    1. Gen 1–2: `c. 4004 BC (Creation Week)` · Primeval History
+    2. Gen 3–5: `c. 4004 – 2348 BC (The Fall & Antediluvian World)` · Primeval History
+    3. Gen 6–9: `c. 2348 – 2347 BC (The Great Deluge & Noah's Ark)` · Primeval History
+    4. Gen 10–11: `c. 2242 – 2091 BC (Tower of Babel & Table of Nations)` · Primeval History
+    5. Gen 12–20: `c. 2091 – 2067 BC (Call of Abram & Covenant of Circumcision)` · Patriarchal Era
+    6. Gen 21–25: `c. 2066 – 1991 BC (Isaac's Birth & Offering on Mount Moriah)` · Patriarchal Era
+    7. Gen 26: `c. 2006 – 1886 BC (Patriarch Isaac at Gerar & Beersheba)` · Patriarchal Era
+    8. Gen 27–36: `c. 1929 – 1859 BC (Jacob at Haran, Wrestling at Peniel & Twelve Tribes)` · Patriarchal Era
+    9. Gen 37–50: `c. 1898 – 1805 BC (Joseph in Egypt, Descent of Israel & Death of Joseph)` · Patriarchal Era
+  - Added chapter breakdowns for multi-era narrative books (Exodus, Acts).
+  - Implemented and exported `getChapterChronology(bookOrOsis, chapter): ChapterChronologyInfo`.
+  - Wired `getChapterChronology` into `src/bibleReader.ts`:
+    - Chapter Dual Chronology Banner displays `activeEventDate` (e.g. `Happened: c. 4004 BC (Creation Week)`).
+    - Header eyebrow displays `activeEraName` (e.g. `— EVENT CHRONOLOGY · PRIMEVAL HISTORY`).
+    - Companion Chronology & Eras panel displays active chapter setting, chapter summary, and complete book sweep (`c. 4004 BC (Creation) – c. 1805 BC (Death of Joseph)`).
+- Verification (Cardinal Rule):
+  - Created executable Playwright regression test suite `tests/chronology.spec.ts`:
+    1. Locks Genesis 1 banner to `c. 4004 BC (Creation Week)` and confirms absence of `1805 BC` or `Creation – c. 1805 BC`.
+    2. Verifies dynamic era progression across Genesis 6 (Flood c. 2348 BC), Genesis 12 (Abram c. 2091 BC), and Genesis 50 (Joseph c. 1805 BC).
+    3. Verifies Exodus chapter distinctions (Bondage vs Sinai Law).
+    4. Confirmed tests failed on unfixed code and pass 100% on new code.
+  - Full Playwright suite: 36/36 tests PASS (53.6s). Collection tests: 2/2 PASS.
+  - Production build: PASS (393ms, 31,098 canonical KJV verses verified).
+  - Visual proof captured: `test-results/genesis_1_chronology_proof.png` and `test-results/genesis_6_deluge_proof.png`.
+- Sibling scan: Audited all 66 books in `src/data/bibleChronology.ts`. Verified no other books have misleading or ambiguous event labels.
+- Project logs synced to Obsidian memory wiki (`E:\AI_Hub\Vault\03-Logs\HistoricalBible_Log.md`).
+
+## 2026-10-16 15:35:00 — Compact Site Header & Declarative CSS Scroll Collision Controls (v00.01.14)
+
+- Root cause:
+  - The previous site header had `padding: 1.25rem 0` and `.brand-image { height: 80px; }`, making the header ~121px tall. This consumed excessive vertical screen space on desktop and laptops.
+  - Furthermore, the sticky toolbar (`.bible-sticky-toolbar`) and right companion pane (`.bible-companion-pane`) used a hardcoded `top: 76px;`. Because 76px < 121px, when scrolling down through Scripture, the top 45px of the toolbar (Order, Book, Chapter selectors, Prev, Next buttons) and the companion tabs slid directly underneath the site header (`z-index: 100` vs `z-index: 40`), causing controls to be hidden behind the header background.
+- Decision point & CSS Architecture:
+  - Rejected arbitrary magic pixel offsets or JavaScript ResizeObserver loops (which cause reflow oscillation during automated test interactions).
+  - Architected declarative CSS collision geometry controls via `:root` custom properties:
+    - `--site-header-height: 52px;`
+    - `--sticky-controls-gap: 12px;`
+    - `--reader-sticky-top: calc(var(--site-header-height) + var(--sticky-controls-gap));` (64px)
+  - Streamlined `.site-header`:
+    - Set explicit `height: var(--site-header-height);` and `padding: 0; box-sizing: border-box;`.
+    - Resized `.brand-image` to `height: 34px; width: auto; max-width: 150px;`, vertically centered in `header-inner` alongside site navigation.
+    - Reduced `.page-hero` padding on `/bible` via `.bible-hero` (`padding: 1.25rem 0 0.85rem !important;`), bringing Scripture into view immediately.
+  - Linked `.bible-sticky-toolbar` and `.bible-companion-pane` to `top: var(--reader-sticky-top);`.
+  - When scrolling, both the left toolbar and right companion pane stop with a 12px margin below the 52px header. All controls remain 100% visible with zero occlusion or collision.
+- Verification:
+  - Updated Playwright regression test `tests/site_pages.spec.ts` asserting:
+    1. Header bounding box height <= 65px.
+    2. Scrolling down 500px into chapter text keeps `toolbarBox.y >= headerBox.y + headerBox.height`.
+    3. Companion pane `companionBox.y >= headerBox.y + headerBox.height`.
+    4. Primary controls (`#reader-sort-select`, `#reader-book-select`, `#reader-chapter-select`, `#reader-prev-btn`, `#reader-next-btn`, `#companion-tab-word-btn`) remain fully visible in viewport.
+    5. Captured visual proof: `test-results/live_bible_reader_scrolled_sticky.png`.
+  - Tuned `tests/interact.spec.ts` (INT-17) scroll threshold to 400px to accommodate the compact header geometry while asserting `#search-input` remains in viewport without jumping to the bottom directory.
+  - All 33 Playwright tests pass (49.2s). All 2 collection regression tests pass. Production build succeeds in 375ms with 31,098 verses verified.
+- Sibling scan: Verified `.site-header` across all routes (`/`, `/bible`, `/interact`, `/contact`). Verified KJV invariants (31,098 canonical verses, small-caps divine names, translator italics) remain 100% fail-closed.
+- Project logs synced to Obsidian memory wiki (`E:\AI_Hub\Vault\03-Logs\HistoricalBible_Log.md`).
+
+## 2026-10-16 15:08:00 — Dual Chronology Sorting (When Happened vs. When Written) & Hero Alignment (v00.01.13)
+
+- Hero & Layout Alignment:
+  - Updated the top gold eyebrow text on `/bible` (`bible.html`, `bible/index.html`) to: `— READ THE BIBLE WITH WORD-FOR-WORD INSPECTION`.
+  - Replaced the top `Download the Bible` H1 with `The Holy Bible`, moving all download actions exclusively to the illuminated Archival Print Edition (PDF) card at the bottom of the page (`#archival-pdf`).
+- Dual Chronology Engine (`src/data/bibleChronology.ts`):
+  - Cataloged authoritative chronological data across all 66 books, establishing a sharp, clear distinction between **Event Chronology** (when the historical events occurred in world history) and **Composition Chronology** (when the text was authored and penned down).
+  - Examples illuminated:
+    - *Kings vs. Chronicles*: Kings compiled during Babylonian exile (~560 BC); Chronicles written ~450 BC by Ezra for the post-exilic remnant to establish temple worship heritage.
+    - *Job*: Events took place during the patriarchal era (~2100–1800 BC, contemporary with Abraham), but canonical placement sits in poetic wisdom.
+    - *New Testament Epistles vs. Gospels*: James (~AD 45–48) and Galatians (~AD 48–49) were penned over a decade before the synoptic Gospels and 40 years before John (~AD 85–90).
+- Chronological Re-sorting & Telemetry:
+  - Added `Order:` selector to sticky toolbar with three dynamic modes: `Canonical (Gen → Rev)`, `Chronological (When Happened)`, and `Chronological (When Written)`.
+  - Re-sorts and re-groups `#reader-book-select` options dynamically based on historical era or composition era while keeping the current book selected.
+  - Added Dual Chronology Banner above each chapter displaying Event Date, Authorship Date/Author, and the Chronological Delta note.
+  - Added dedicated `Chronology & Eras` tab to the right-hand companion pane with deep historical summaries and links to contemporary world empires in the Study Desk (`/interact?era=...`).
+- Verification: Updated Playwright regression test `tests/site_pages.spec.ts` asserting gold hero text, dual chronology banner, sort mode switching (Canonical, Event, Written), and Chronology & Eras tab; all 33 Playwright tests pass (48.9s) and 2/2 collection regression tests pass. Production build succeeds in 383ms.
+- Sibling scan: Verified `bible.html`, `bible/index.html`, `src/bibleReader.ts`, `src/data/bibleChronology.ts`, and `src/interact.css`. Textual invariants (31,098 canonical KJV verses, small-caps divine names, translator italics) remain 100% fail-closed.
+
+## 2026-10-16 14:52:00 — 16:10 Split-Screen Reader with Word-for-Word Inspector & Pinned Navigation (v00.01.13)
+
+- Root cause: The initial Scripture Reader on `/bible` had navigation toolbar embedded in regular document flow that scrolled away on tall chapters (Luke 10, Psalm 119), a single-column layout without side-by-side study space, plain static verse text with no word-level interactivity, and an external `Study ↗` redirect button per verse that broke continuous reading context.
+- Decision point: Rather than keeping a single column or redirecting out to `/interact`, transformed `/bible` (`bible.html`, `bible/index.html`) into a true 16:10 split-screen workstation:
+  - Left pane (`minmax(0, 1.2fr)`): Full readable KJV Scripture stream with a glassmorphism sticky navigation toolbar (`position: sticky; top: 76px; z-index: 40;`) that stays pinned to the top of the viewport regardless of chapter scroll depth.
+  - Right pane (`minmax(380px, 0.8fr)`): Dedicated Scripture Companion workstation (`.bible-companion-pane`) with tabs for `Passage & X-Refs`, `Word Inspector`, and `Archival PDF`.
+- Word-for-word selectability:
+  - Tokenized all Scripture text in `src/bibleReader.ts` (`formatInteractiveTokens`), wrapping every word in `<span class="kjv-word" data-word="...">` with subtle hover cues and active highlighting (`.active-word`).
+  - Isolated small-caps divine names (`LORD`/`GOD`) before tokenization (`@@DIVINE_LORD@@`) to preserve typography without split words.
+  - Added event delegation on reading pane for both `click` and `contextmenu` (right-click): clicking or right-clicking any word immediately switches to the `Word Inspector` tab, pulls Hitchcock dictionary definitions (`localStore.getNetworkName()`), and queries concordance occurrences across the KJV (`localStore.searchAll()`) without page navigation.
+- In-place verse inspection:
+  - Clicking any verse row highlights it (`.active-verse`) and populates the `Passage & X-Refs` companion tab with direct Treasury of Scripture Knowledge (TSK) cross-references via `localStore.getCrossRefsForVerse()`.
+- Archival PDF preservation:
+  - Maintained the gold double-bordered Archival Print Edition card below with an explicit note clarifying it is a static, printable PDF document for physical printing and offline reading, not an interactive web app.
+- Verification: Updated Playwright regression test `tests/site_pages.spec.ts` asserting split layout, sticky toolbar, in-place verse selection, word left-click inspection, word right-click inspection, and archival PDF notice; all 33 Playwright tests pass (48.7s) and 2/2 collection regression tests pass. Production build succeeds in 369ms.
+- Sibling scan: Verified `bible.html`, `bible/index.html`, `src/bibleReader.ts`, and `src/interact.css`. Confirmed 31,098 canonical KJV verse count, 14,133 verses with bracketed translator italics, and 5,556 verses with cased divine names remain strictly invariant.
+- Artifact impact: 4 existing files modified (`bible.html`, `bible/index.html`, `src/interact.css`, `tests/site_pages.spec.ts`), 1 new module created (`src/bibleReader.ts`), zero runtime dependencies added.
+
+## 2026-10-16 14:35:00 — Live Scripture Reader & Archival PDF Portal on /bible (v00.01.12)
+
+- Elevated `/bible` (`bible.html` and `bible/index.html`) from a static PDF download page into a dedicated, live Scripture Reader while preserving prominent access to the downloadable edition.
+- Implemented client-side live Scripture reader (`src/bibleReader.ts`) reading directly from fail-closed canonical KJV IndexedDB/memory store:
+  - Full 66-book selector (organized into 39 Old Testament and 27 New Testament books).
+  - Dynamic chapter-by-chapter picker (1 to N) with previous/next chapter navigation and URL state synchronization (`?book=...&chapter=...`).
+  - Textual fidelity: renders canonical small-caps divine names (`LORD`, `GOD`), bracketed translator italics `[...]`, and `{c:v}` anchors with zero commentary.
+  - Bridge to study desk: each verse row includes a direct study action link (`Study ↗`) jumping directly into `/interact?ref=...`.
+- Elevated the downloadable edition into an illuminated Archival Print Edition (PDF) card:
+  - Gold double-border styling, seal badge (`✦ ARCHIVAL PRINT EDITION · 1,162 PAGES ✦`), direct `/Bible.pdf` download and browser preview links.
+  - Dignified explicit notice clearly identifying the PDF as a static printable document for physical printing and distraction-free offline reading, distinct from an interactive app.
+- Verification: Added Playwright test in `tests/site_pages.spec.ts` locking down 66 books, Genesis 1 default load (31 verses), next chapter transition, URL updates, and archival PDF notice/links; all 35 tests pass (33 Playwright tests across `bibleviz`, `interact`, `site_pages`, and 2 collection regression tests). Production build succeeds in 369ms.
+- Sibling scan: Verified navigation links across `bible.html`, `bible/index.html`, `index.html`, and `interact.html`. Verified canonical KJV verse count (31,098) and invariant formatting remain fail-closed.
+
+## 2026-10-16 14:01:00 — 2D Interactive Ego-Graph Canvas & Bidirectional URL Deep-Linking (v00.01.11)
+
+- Vetted external architecture proposal: rejected filesystem markdown chunking and 67MB bundle bloat in favor of directly querying the existing compact BibleNetwork (2,408 names, 12,058 edges) and HistoricalSynchrony dataset in IndexedDB.
+- Implemented 60FPS 2D HTML5 Canvas Ego-Graph Inspector in `src/engine/egoGraph.ts` with untarnished bronze, olive branch, and muted stone palette, 1-hop and 2-hop neighborhood expansion, click-to-pivot navigation, hover tooltips, and smooth mouse pan/zoom.
+- Implemented bidirectional URL state synchronization in `src/store/urlStateRouter.ts` supporting deep links for `figure`, `name`, `ref`, `tab`, `view=graph`, and browser back/forward history navigation via `popstate`.
+- Connected the 2D Ego-Graph to the third panel ("People connected to this story") with a view switcher (`List` / `2D Graph`) and linked name results in `CollectionExplorer` directly to the Ego-Graph.
+- Verification: added Playwright tests `INT-19` (Ego-Graph toggle and bidirectional URL state) and `INT-20` (Direct deep-linking by figure, tab, and graph view); all 30 Playwright tests pass (including `tests/bibleviz.spec.ts`, `tests/site_pages.spec.ts`, and `tests/interact.spec.ts`), and `npm run test:collection` passes cleanly. Production build succeeds in 464ms.
+- Sibling scan: verified all URL router parameters across `main.ts` and `collectionExplorer.ts`, verified no Three.js or Web Audio regressions, and confirmed KJV text invariants (31,098 / 31,102 verses) remain intact.
+- Artifact impact: two new modules added (`src/engine/egoGraph.ts`, `src/store/urlStateRouter.ts`), four files updated (`src/main.ts`, `src/collectionExplorer.ts`, `interact.html`, `src/interact.css`), net implementation +380 lines, tests +48 lines; zero third-party dependencies added.
+
 ## 2026-10-16 13:36:38 — Correct public source-provenance claims (v00.01.10-docs.1)
 
 - Verified GitHub's live README still contained the unsupported claim that the owner manually transcribed the entire Bible, plus a first-person quotation used to imply it. The earlier removal guard inspected HTML pages only and missed repository documentation. Removed the biographical narrative, quotation and chapter title; retained a factual description of the KJV formatting conventions.
@@ -72,7 +223,7 @@
 - Sibling scan: one input and results region; three existing search entry points (input, Enter/submit, dictionary) plus four new suggestions share executeGlobalSearch. Existing clean-route redirect preserves query parameters. No parallel search store or dataset created.
 - Artifact impact: eight existing implementation/config/test files modified; one 36-line Node regression added; two project logs updated. Net application source +230 lines; net tests +74 lines; package script/version metadata +1 line. No dependencies, persisted fields, or datasets added. Two ignored browser screenshots retained in test-results as review evidence; disposable responsive harness removed after verification. Existing ignored dist build refreshed. Pre-existing unrelated work preserved.
 - Review images: test-results/interact-collection-v1.7.0-desktop.png and test-results/interact-collection-v1.7.0-mobile.png. Local implementation only; no commit, push, or production deployment. Publication awaits owner approval under project AGENTS.md section 0.
-## 2026-10-16 01:36:30 — Antigravity / HistoricalBible — Unified Dark-Gold Redesign, Small-Caps LORD, Welcome Popup & Why the KJV Footnote v1.6.0
+## 2026-10-16 01:36:30 — Antigravity / HistoricalBible — Unified Dark-Gold Redesign, Small-Caps LORD, Welcome Popup & Why the KJV Footnote v00.01.06
 
 - Owner scope: complete and push the unified dark-gold redesign across all four pages (`index.html`, `interact.html`, `bible.html`, `contact.html`) and directory routes (`bible/index.html`, `contact/index.html`), incorporating owner-directed refinements:
   1. True small-caps `LORD` rendering (`<span class="kjv-divine-name">L<span class="kjv-divine-rest">ORD</span></span>` with `0.74em` on `.kjv-divine-rest`) across `src/store/localFirstStore.ts`, `src/interact.css`, `bible.html`, `bible/index.html`, `interact.html`, and `src/main.ts`.

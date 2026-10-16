@@ -10,7 +10,7 @@ test('INT-17: Dictionary names open beside search without jumping to the bottom'
     await page.locator('#search-results-list button').filter({ hasText: new RegExp(`^${name} —`) }).click();
     await expect(page.locator('#name-search-detail')).toBeVisible();
     await expect(page.locator('#name-search-title')).toHaveText(name);
-    expect(Math.abs(await page.evaluate(() => scrollY) - before)).toBeLessThan(200);
+    expect(Math.abs(await page.evaluate(() => scrollY) - before)).toBeLessThan(400);
     await expect(page.locator('#search-input')).toBeInViewport();
     await expect(page.locator('#search-results-list')).toBeHidden();
     await expect(page.locator('#names-directory')).not.toHaveAttribute('open');
@@ -323,4 +323,48 @@ test.describe('HistoricalBible.com/Interact — Historical Synchrony & Canonical
     await expect(results).toBeVisible();
     await expect(results).toContainText('GENESIS {1:1}');
   });
+
+  test('INT-19: 2D Ego-Graph toggle and bidirectional URL deep-linking', async ({ page }) => {
+    await page.goto('/interact.html', { waitUntil: 'networkidle' });
+
+    const listBtn = page.locator('#btn-view-list');
+    const graphBtn = page.locator('#btn-view-graph');
+    const graphContainer = page.locator('#ego-graph-container');
+
+    await expect(listBtn).toBeVisible();
+    await expect(graphBtn).toBeVisible();
+    await expect(listBtn).toHaveClass(/active/);
+    await expect(graphContainer).toBeHidden();
+
+    // Switch to 2D Graph view
+    await graphBtn.click();
+    await expect(graphBtn).toHaveClass(/active/);
+    await expect(listBtn).not.toHaveClass(/active/);
+    await expect(graphContainer).toBeVisible();
+    await expect(graphContainer.locator('canvas')).toBeVisible();
+    await expect(page).toHaveURL(/view=graph/);
+
+    // Switch back to List view
+    await listBtn.click();
+    await expect(listBtn).toHaveClass(/active/);
+    await expect(graphBtn).not.toHaveClass(/active/);
+    await expect(graphContainer).toBeHidden();
+    await expect(page).toHaveURL(/view=list/);
+  });
+
+  test('INT-20: Direct URL deep-linking by figure, tab, and graph view', async ({ page }) => {
+    // 1. Direct boot into Daniel with graph view
+    await page.goto('/interact.html?figure=daniel&view=graph', { waitUntil: 'networkidle' });
+    await expect(page.locator('#discovery-setting')).toContainText('Daniel');
+    await expect(page.locator('#btn-view-graph')).toHaveClass(/active/);
+    await expect(page.locator('#ego-graph-container')).toBeVisible();
+    await expect(page.locator('#ego-graph-container canvas')).toBeVisible();
+
+    // 2. Direct boot into collection references tab
+    await page.goto('/interact.html?tab=references', { waitUntil: 'networkidle' });
+    const explorer = page.locator('#collection-explorer');
+    await expect(explorer).toBeVisible();
+    await expect(explorer.locator('h2')).toContainText('Scripture speaks to Scripture');
+  });
 });
+

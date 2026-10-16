@@ -122,6 +122,133 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
     await page.screenshot({ path: 'test-results/live_bible.png', fullPage: true });
   });
 
+  test('Bible page renders live Scripture Reader with book/chapter navigation and printable PDF edition', async ({ page }) => {
+    await page.goto('/bible');
+    const reader = page.locator('#live-bible-reader');
+    await expect(reader).toBeVisible();
+
+    // Gold Hero text and H1 title
+    const goldEyebrow = page.locator('.page-hero .eyebrow');
+    await expect(goldEyebrow).toHaveText('— READ THE BIBLE WITH WORD-FOR-WORD INSPECTION');
+    await expect(page.locator('.page-hero h1')).toHaveText('The Holy Bible');
+
+    // 66 Books across Old and New Testaments
+    const bookOptions = page.locator('#reader-book-select option');
+    await expect(bookOptions).toHaveCount(66);
+
+    // Initial load defaults to Genesis 1 (31 verses)
+    await expect(page.locator('#reader-chapter-title')).toHaveText('GENESIS');
+    await expect(page.locator('#reader-chapter-subtitle')).toHaveText('Chapter 1');
+    const verses = page.locator('.bible-verse-row');
+    await expect(verses).toHaveCount(31);
+    await expect(verses.first().locator('.verse-anchor')).toHaveText('{1:1}');
+    await expect(verses.first().locator('.verse-text')).toContainText('In the beginning God created');
+
+    // Dual Chronology Banner renders both Event Date and Composition Date
+    const chronoBanner = page.locator('#reader-chronology-banner');
+    await expect(chronoBanner).toBeVisible();
+    await expect(chronoBanner.locator('.chrono-pill-event')).toContainText('Happened:');
+    await expect(chronoBanner.locator('.chrono-pill-written')).toContainText('Written:');
+
+    // Chronology sort order switcher
+    const sortSelect = page.locator('#reader-sort-select');
+    await expect(sortSelect).toBeVisible();
+    await sortSelect.selectOption('event');
+    await expect(page.locator('#reader-order-eyebrow')).toContainText('EVENT CHRONOLOGY');
+    await sortSelect.selectOption('written');
+    await expect(page.locator('#reader-order-eyebrow')).toContainText('COMPOSITION CHRONOLOGY');
+    await sortSelect.selectOption('canonical');
+    await expect(page.locator('#reader-order-eyebrow')).toContainText('CANONICAL SCRIPTURE');
+
+    // Click Next Chapter advances to Genesis 2
+    await page.locator('#reader-next-btn').click();
+    await expect(page.locator('#reader-chapter-subtitle')).toHaveText('Chapter 2');
+    await expect(page.locator('.bible-verse-row')).toHaveCount(25);
+    await expect(page).toHaveURL(/book=Genesis&chapter=2/);
+
+    // 16:10 Split-Screen layout and sticky toolbar
+    await expect(page.locator('.bible-split-layout')).toBeVisible();
+    await expect(page.locator('.bible-sticky-toolbar')).toBeVisible();
+    await expect(page.locator('#bible-companion-pane')).toBeVisible();
+
+    // In-place verse selection populates companion panel without navigating away
+    await page.locator('.bible-verse-row[data-verse="3"]').click();
+    await expect(page.locator('.bible-verse-row[data-verse="3"]')).toHaveClass(/active-verse/);
+    await expect(page.locator('#companion-tab-xrefs-content .companion-verse-ref')).toContainText('GENESIS {2:3}');
+    await expect(page.locator('#companion-tab-xrefs-content .companion-xrefs-list')).toBeVisible();
+
+    // Word-for-word inspection: clicking any word activates Word Inspector in companion panel
+    const firstWord = page.locator('.bible-verse-row[data-verse="3"] .kjv-word').first();
+    const wordText = await firstWord.getAttribute('data-word');
+    await firstWord.click();
+    await expect(page.locator('#companion-tab-word-btn')).toHaveClass(/active/);
+    await expect(page.locator('.word-inspect-name')).toHaveText(new RegExp(wordText || 'and', 'i'));
+    await expect(page.locator('.concordance-verses-list')).toBeVisible();
+
+    // Right-click word context dive works seamlessly
+    const seventhWord = page.locator('.bible-verse-row[data-verse="2"] .kjv-word[data-word="seventh"]').first();
+    await seventhWord.click({ button: 'right' });
+    await expect(page.locator('.word-inspect-name')).toHaveText(/seventh/i);
+
+    // Chronology & Eras companion tab
+    await page.locator('#companion-tab-chrono-btn').click();
+    const chronoTab = page.locator('#companion-tab-chrono-content');
+    await expect(chronoTab).toBeVisible();
+    await expect(chronoTab.locator('.event-section')).toContainText('EVENT CHRONOLOGY');
+    await expect(chronoTab.locator('.written-section')).toContainText('COMPOSITION CHRONOLOGY');
+
+    // Right-hand companion panel strictly houses study exploration tabs, NOT a PDF tab
+    await expect(page.locator('#companion-tab-pdf-btn')).toHaveCount(0);
+    await expect(page.locator('.companion-tabs-nav button')).toHaveCount(3);
+    await expect(page.locator('.companion-tabs-nav')).toContainText('Passage & X-Refs');
+    await expect(page.locator('.companion-tabs-nav')).toContainText('Word Inspector');
+    await expect(page.locator('.companion-tabs-nav')).toContainText('Chronology & Eras');
+
+    // Printable PDF edition is located at the bottom of the page
+    const printableCard = page.locator('#printable-edition');
+    await expect(printableCard).toBeVisible();
+    await expect(printableCard.locator('.printable-seal-badge, .archival-seal-badge')).toContainText('COMPLETE PRINT EDITION');
+    await expect(printableCard.locator('.printable-disclaimer-callout, .archival-disclaimer-callout')).toContainText('This downloadable file is a static, printable PDF document');
+
+    // Ensure "archival" or "archive" term is not displayed in the reader or printable card
+    const readerText = await page.locator('#live-bible-reader').innerText();
+    expect(readerText.toLowerCase()).not.toContain('archival');
+    // Header height check and sticky scroll collision guard
+    const header = page.locator('.site-header');
+    const headerBoxBefore = await header.boundingBox();
+    expect(headerBoxBefore).not.toBeNull();
+    // Header must be compact (less than or equal to 65px tall)
+    expect(headerBoxBefore!.height).toBeLessThanOrEqual(65);
+
+    // Scroll down into the chapter to verify sticky collision offset
+    await page.evaluate(() => window.scrollBy(0, 500));
+    await page.waitForTimeout(200);
+
+    const headerBoxAfter = await header.boundingBox();
+    const toolbarBoxAfter = await page.locator('.bible-sticky-toolbar').boundingBox();
+    const companionBoxAfter = await page.locator('#bible-companion-pane').boundingBox();
+
+    expect(headerBoxAfter).not.toBeNull();
+    expect(toolbarBoxAfter).not.toBeNull();
+    expect(companionBoxAfter).not.toBeNull();
+
+    // Toolbar and Companion Pane must sit completely below the sticky header (zero hidden controls)
+    expect(toolbarBoxAfter!.y).toBeGreaterThanOrEqual(headerBoxAfter!.y + headerBoxAfter!.height);
+    expect(companionBoxAfter!.y).toBeGreaterThanOrEqual(headerBoxAfter!.y + headerBoxAfter!.height);
+
+    // Verify all primary controls inside the sticky toolbar remain fully visible in viewport
+    await expect(page.locator('#reader-sort-select')).toBeVisible();
+    await expect(page.locator('#reader-book-select')).toBeVisible();
+    await expect(page.locator('#reader-chapter-select')).toBeVisible();
+    await expect(page.locator('#reader-prev-btn')).toBeVisible();
+    await expect(page.locator('#reader-next-btn')).toBeVisible();
+    await expect(page.locator('#companion-tab-word-btn')).toBeVisible();
+
+    await page.screenshot({ path: 'test-results/live_bible_reader_scrolled_sticky.png' });
+    await page.screenshot({ path: 'test-results/live_bible_reader_split.png', fullPage: true });
+  });
+
+
   test('Interact introduces its searchable collection without duplicating the Home welcome', async ({ page }) => {
     await page.goto('/interact', { waitUntil: 'domcontentloaded' });
     await expect(page).toHaveTitle(/HistoricalBible/);

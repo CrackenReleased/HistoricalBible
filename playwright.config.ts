@@ -12,7 +12,7 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'npx vite --port 5173',
+    command: 'npx.cmd vite --port 5173',
     port: 5173,
     reuseExistingServer: !process.env.CI,
     timeout: 30000,

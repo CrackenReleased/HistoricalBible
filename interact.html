@@ -179,8 +179,13 @@
         <section class="panel connections-panel" aria-label="People connected to this story">
           <div class="panel-header">
             <h3>People connected to this story</h3>
+            <div class="view-toggle-bar" role="group" aria-label="Connection view mode">
+              <button type="button" id="btn-view-list" class="view-toggle-btn active" aria-pressed="true">List</button>
+              <button type="button" id="btn-view-graph" class="view-toggle-btn" aria-pressed="false">2D Graph</button>
+            </div>
           </div>
           <div class="panel-body">
+            <div id="ego-graph-container" class="ego-graph-container" hidden></div>
             <div id="personal-network-list" class="network-list"></div>
             <details id="names-directory">
               <summary>Explore the biblical names dictionary</summary>
@@ -208,7 +213,7 @@
   <footer class="wrap">
     <a class="footer-brand" href="/"><img src="/images/brand/logo-small.webp" alt="Historical Bible — Home" width="600" height="300" loading="lazy" /></a>
     <div>Keep asking. Keep reading. Follow the thread.</div>
-    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Interact · v00.01.10</div>
+    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Interact · v00.01.16</div>
   </footer>
 
   <noscript>

@@ -8,3 +8,7 @@ playwright-report/
 Thumbs.db
 dist/
 assets/
+TacticalCastle/
+pdf-proof/
+__pycache__/
+*.pyc
