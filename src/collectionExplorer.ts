@@ -146,7 +146,7 @@ export class CollectionExplorer {
     const alternate = ref.toLowerCase() === '3john.1.15';
     const card = this.card(verse, ref, ref, alternate ? `${note} This source uses alternate verse numbering; the adopted KJV chapter ends at verse 14.` : note);
     if (!verse) {
-      const link = el('a', 'Read the complete KJV PDF →') as HTMLAnchorElement; link.href = '/bible'; card.append(link);
+      const link = el('a', 'Read in the Bible reader →') as HTMLAnchorElement; link.href = '/bible'; card.append(link);
     }
     return card;
   }
