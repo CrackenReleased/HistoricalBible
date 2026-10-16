@@ -21,6 +21,19 @@ export interface CrossRefLink {
 }
 
 export interface NetworkName { name: string; meaning: string; refs: string[]; }
+export interface NameReview {
+  name: string; status: 'corroborated' | 'disputed' | 'uncertain' | 'ambiguous' | 'unmatched' | 'not-name';
+  displayMeaning: string; note: string; hitchcock: string[]; hitchcockEntry: string;
+  strongsIds: string[]; scriptureRefs: string[];
+  strongs: Array<{ id: string; lemma: string; derivation?: string; strongs_def?: string; kjv_def?: string; xlit?: string; translit?: string }>;
+  identity?: { text: string; refs: string[]; claimClass: string };
+  english?: { edition: string; word: string; partOfSpeech: string; definition: string; url: string };
+}
+interface NameAudit {
+  meta: { reviewedEntries: number };
+  entries: NameReview[];
+  occurrences: { added: Record<string, string[]>; excluded: Record<string, string[]> };
+}
 export interface BibleNetwork {
   meta: { names: number; nameEdges: number; crossReferences: number; sourceVerseCount: number; unavailableSiteRefs?: string[]; [key: string]: unknown };
   names: NetworkName[];
@@ -144,10 +157,11 @@ for (const [book, osis] of Object.entries(BOOK_TO_OSIS)) {
 }
 
 export class LocalFirstStore {
-  private cacheName = 'historical-bible-cache-v00.01.10';
+  private cacheName = 'historical-bible-cache-v00.01.18-names';
   private network!: BibleNetwork;
   private referenceRecords: CrossRefLink[] = [];
   private networkByName = new Map<string, NetworkName>();
+  private nameReviews = new Map<string, NameReview>();
   private verses: KjvVerseData[] = [];
   private verseByOsis = new Map<string, KjvVerseData>();
   private chapterMap = new Map<string, KjvVerseData[]>();
@@ -190,8 +204,18 @@ export class LocalFirstStore {
 
       if (onProgress) onProgress('Loading & ranking Biblical Names directory...', 85);
       this.network = await this.fetchWithCache<BibleNetwork>(cache, '/data/bible_network.json');
+      try {
+        const audit = await this.fetchWithCache<NameAudit>(cache, '/data/name_audit.json');
+        this.applyNameReview(audit);
+      } catch {
+        this.nameReviews.clear();
+        // A failed lexical resource must not prevent Scripture reading or revive unchecked glosses.
+        for (const name of this.network.names) name.meaning = 'Name study unavailable. Read the Scripture passages below.';
+      }
       this.referenceRecords = rawCrossRefs;
-      this.networkByName = new Map(this.network.names.map(name => [name.name.toLowerCase(), name]));
+      this.networkByName = new Map(this.network.names.flatMap(name => [
+        [name.name.toLowerCase(), name], [name.name.toLowerCase().replace(/[\s-]/g, ''), name],
+      ] as Array<[string, NetworkName]>));
       this.hitchcock = Object.fromEntries(this.network.names.map(name =>
         [name.name, { name: name.name, meanings: [name.meaning] }]));
 
@@ -204,6 +228,47 @@ export class LocalFirstStore {
       throw err;
     }
   }
+
+  private applyNameReview(audit: NameAudit): void {
+    if (audit.entries.length !== audit.meta.reviewedEntries || new Set(audit.entries.map(row => row.name)).size !== audit.entries.length) {
+      throw new Error('Incomplete name-review resource');
+    }
+    this.nameReviews = new Map(audit.entries.map(row => [row.name.toLowerCase(), row]));
+    if (this.network.names.some(name => !this.nameReviews.has(name.name.toLowerCase())) ||
+        Object.keys(audit.occurrences.added).some(name => !this.nameReviews.has(name.toLowerCase()))) {
+      throw new Error('Name-review coverage does not match the source collection');
+    }
+    const byName = new Map(this.network.names.map(row => [row.name, row]));
+    for (const [name, refs] of Object.entries(audit.occurrences.added)) {
+      if (!byName.has(name)) {
+        const review = this.nameReviews.get(name.toLowerCase());
+        if (!review) throw new Error(`No review for added name ${name}`);
+        const node = { name, meaning: review.displayMeaning, refs: [] };
+        this.network.names.push(node); byName.set(name, node);
+      }
+      byName.get(name)!.refs = [...new Set([...byName.get(name)!.refs, ...refs])];
+    }
+    const books = Object.keys(OSIS_TO_BOOK);
+    const order = (ref: string) => { const [book, chapter, verse] = ref.toLowerCase().split('.'); return books.indexOf(book) * 1000000 + Number(chapter) * 1000 + Number(verse); };
+    const atVerse = new Map<string, number[]>();
+    for (const [index, name] of this.network.names.entries()) {
+      const review = this.nameReviews.get(name.name.toLowerCase());
+      if (!review) throw new Error(`Missing name review for ${name.name}`);
+      name.meaning = review.displayMeaning;
+      const excluded = new Set(audit.occurrences.excluded[name.name] || []);
+      name.refs = name.refs.filter(ref => !excluded.has(ref)).sort((a, b) => order(a) - order(b));
+      for (const ref of name.refs) { const nodes = atVerse.get(ref) || []; nodes.push(index); atVerse.set(ref, nodes); }
+    }
+    const weights = new Map<string, number>();
+    for (const nodes of atVerse.values()) for (let a = 0; a < nodes.length; a++) for (let b = a + 1; b < nodes.length; b++) {
+      const key = `${nodes[a]}:${nodes[b]}`; weights.set(key, (weights.get(key) || 0) + 1);
+    }
+    this.network.meta.sourceNameEdges = this.network.edges.length;
+    this.network.edges = [...weights].map(([key, count]) => { const [a, b] = key.split(':').map(Number); return [a, b, count] as [number, number, number]; });
+    this.network.meta.names = this.network.names.length; this.network.meta.nameEdges = this.network.edges.length;
+  }
+
+  public getNameReview(name: string): NameReview | undefined { return this.nameReviews.get(name.toLowerCase()); }
 
   private async fetchWithCache<T>(cache: Cache | null, url: string): Promise<T> {
     if (cache) {
@@ -417,6 +482,7 @@ export class LocalFirstStore {
       .filter(
         n =>
           n.name.toLowerCase().includes(q) ||
+          n.name.toLowerCase().replace(/[\s-]/g, '').includes(q.replace(/[\s-]/g, '')) ||
           n.meanings.some(m => m.toLowerCase().includes(q))
       )
       .slice(0, limit);
@@ -437,7 +503,11 @@ export class LocalFirstStore {
   }
 
   public getNetwork(): BibleNetwork { return this.network; }
-  public getNetworkName(name: string): NetworkName | undefined { return this.networkByName.get(name.toLowerCase()); }
+  public getNetworkName(name: string): NetworkName | undefined { return this.networkByName.get(name.toLowerCase()) || this.networkByName.get(name.toLowerCase().replace(/[\s-]/g, '')); }
+  public getNameAtReference(name: string, ref: string): NetworkName | undefined {
+    const entry = this.getNetworkName(name);
+    return entry?.refs.some(candidate => candidate.toLowerCase() === ref.toLowerCase()) ? entry : undefined;
+  }
   public getReferenceRecords(): readonly CrossRefLink[] { return this.referenceRecords; }
   public getBooks() {
     return Object.entries(OSIS_TO_BOOK).map(([osis, name]) => ({ osis, name,

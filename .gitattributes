@@ -1,0 +1,3 @@
+# Pinned third-party evidence must retain its original bytes and whitespace.
+audit/name-sources/*.js -text -whitespace
+audit/name-sources/README.txt -text -whitespace

@@ -1,4 +1,5 @@
 import { localStore, type KjvVerseData } from './store/localFirstStore';
+import { renderNameStudy } from './nameStudy';
 import { writeUrlState } from './store/urlStateRouter';
 
 type Mode = 'books' | 'references' | 'names' | 'connections' | 'history';
@@ -74,7 +75,7 @@ export class CollectionExplorer {
     details.append(el('summary', title), el('p', text, 'explorer-note')); this.body.append(details);
   }
   private names(): void {
-    this.body.append(el('p', 'People and places from our Bible name network. Open a name to explore its meaning, verse links, and connected names.', 'explorer-note'));
+    this.body.append(el('p', 'People, places and biblical terms from our reviewed index. Open an entry for Scripture, lexical evidence and connected names.', 'explorer-note'));
     this.sourceNote('How name links work', 'Entries represent name spellings, not necessarily unique individuals. Verse links preserve case-sensitive whole-name matches in the Obsidian source snapshot.');
     const names = localStore.getNetwork().names.filter(name => `${name.name} ${name.meaning}`.toLowerCase().includes(this.query.toLowerCase()));
     this.paged(names, 25, name => {
@@ -84,7 +85,7 @@ export class CollectionExplorer {
     });
   }
   private connections(): void {
-    this.body.append(el('p', 'Explore 12,058 connections in our Bible name network. Open a pair of names to discover the verses they share.', 'explorer-note'));
+    this.body.append(el('p', `Explore ${localStore.getNetwork().edges.length.toLocaleString()} connections in our reviewed index. Open a pair of entries to discover the verses they share.`, 'explorer-note'));
     this.sourceNote('What a connection means', 'Each link joins two name spellings appearing in at least one shared verse. Shared text alone does not establish kinship or identify the same person.');
     const network = localStore.getNetwork();
     const edges = network.edges.filter(([a, b]) => `${network.names[a].name} ${network.names[b].name}`.toLowerCase().includes(this.query.toLowerCase()));
@@ -113,7 +114,10 @@ export class CollectionExplorer {
     const panel = document.getElementById('name-search-detail')!;
     const passages = document.getElementById('name-search-passages')!;
     document.getElementById('name-search-title')!.textContent = name.name;
-    document.getElementById('name-search-meaning')!.textContent = name.meaning;
+    renderNameStudy(name.name, document.getElementById('name-search-meaning')!, ref => {
+      const card = this.verseCard(ref, `Scripture supporting the name study for ${name.name}.`);
+      passages.prepend(card); card.scrollIntoView({ behavior: 'instant', block: 'start' });
+    });
     (document.getElementById('search-input') as HTMLInputElement).value = name.name;
     document.getElementById('search-results-list')?.classList.remove('active');
     const neighbors = localStore.getConnectedNames(name.name);

@@ -1,0 +1,1720 @@
+{
+  "identities": {
+    "Shadrach": {
+      "text": "Hananiah, named Shadrach at the Babylonian court. With Mishael and Azariah, he refused to serve the king’s gods or worship the golden image, even if God did not deliver them. God delivered them from the furnace.",
+      "refs": [
+        "Dan.1.6",
+        "Dan.1.7",
+        "Dan.3.16",
+        "Dan.3.17",
+        "Dan.3.18",
+        "Dan.3.27",
+        "Dan.3.28"
+      ]
+    },
+    "Meshach": {
+      "text": "Mishael, named Meshach at the Babylonian court. He stood with Hananiah and Azariah in refusing the king’s idolatry. God delivered the three from the furnace.",
+      "refs": [
+        "Dan.1.6",
+        "Dan.1.7",
+        "Dan.3.16",
+        "Dan.3.17",
+        "Dan.3.18",
+        "Dan.3.27",
+        "Dan.3.28"
+      ]
+    },
+    "Abednego": {
+      "text": "Azariah, given the Babylonian name Abed-nego. With Hananiah and Mishael, he refused to worship the golden image. God delivered the three from the furnace.",
+      "refs": [
+        "Dan.1.6",
+        "Dan.1.7",
+        "Dan.3.16",
+        "Dan.3.18",
+        "Dan.3.27",
+        "Dan.3.28"
+      ]
+    },
+    "Hananiah": {
+      "text": "Daniel’s companion Hananiah was given the name Shadrach and stood with Mishael and Azariah against the king’s idolatry. Other people in Scripture also bear the name Hananiah; these references must be read in context.",
+      "refs": [
+        "Dan.1.6",
+        "Dan.1.7",
+        "Dan.3.16",
+        "Dan.3.18"
+      ]
+    },
+    "Mishael": {
+      "text": "Daniel’s companion Mishael was given the name Meshach and stood with Hananiah and Azariah against the king’s idolatry. Other people in Scripture also bear this name.",
+      "refs": [
+        "Dan.1.6",
+        "Dan.1.7",
+        "Dan.3.16",
+        "Dan.3.18"
+      ]
+    },
+    "Azariah": {
+      "text": "Daniel’s companion Azariah was given the name Abed-nego and stood with Hananiah and Mishael against the king’s idolatry. Many other people in Scripture bear the name Azariah.",
+      "refs": [
+        "Dan.1.6",
+        "Dan.1.7",
+        "Dan.3.16",
+        "Dan.3.18"
+      ]
+    },
+    "Noah": {
+      "text": "This spelling names both Noah, who found grace in the eyes of the LORD, and Noah, a daughter of Zelophehad. Their identities and proposed name derivations must remain distinct.",
+      "refs": [
+        "Gen.6.8",
+        "Num.26.33"
+      ]
+    },
+    "Rahab": {
+      "text": "Joshua’s account names the woman Rahab. Other passages use Rahab in a different context, including Egypt; the same English spelling must not collapse these references into one person.",
+      "refs": [
+        "Josh.2.1",
+        "Heb.11.31",
+        "Ps.87.4",
+        "Isa.51.9"
+      ]
+    },
+    "Eli": {
+      "text": "Eli is the priest named in Samuel. In Matthew 27:46, Eli is part of the Lord Jesus’s cry, which the verse interprets as My God. Those uses are distinct.",
+      "refs": [
+        "1Sam.1.9",
+        "Matt.27.46"
+      ]
+    },
+    "Jesus": {
+      "text": "Jesus Christ is the Son of God and Saviour. The same English name also appears for Joshua in Acts 7:45 and Hebrews 4:8, and for Jesus called Justus in Colossians 4:11. Read each occurrence in its context.",
+      "refs": [
+        "Matt.1.21",
+        "John.20.31",
+        "Acts.7.45",
+        "Heb.4.8",
+        "Col.4.11"
+      ]
+    },
+    "Paul": {
+      "text": "Acts 13:9 identifies Saul as also called Paul. It does not say that his name was changed at his conversion.",
+      "refs": [
+        "Acts.13.9"
+      ]
+    },
+    "Saul": {
+      "text": "This name is borne by different men, including Israel’s king and the apostle also called Paul. Acts 13:9 says also called Paul; it does not describe a conversion-time renaming.",
+      "refs": [
+        "1Sam.9.2",
+        "Acts.13.9"
+      ]
+    },
+    "Belteshazzar": {
+      "text": "The Babylonian court name given to Daniel by the prince of the eunuchs. Daniel and Belshazzar, the king named in Daniel 5, are different people.",
+      "refs": [
+        "Dan.1.7",
+        "Dan.5.1"
+      ]
+    },
+    "Jehovah": {
+      "text": "The KJV prints the divine name JEHOVAH. Exodus 6:3 and Psalm 83:18 identify it as God’s name. Capitalization in the Scripture text is preserved.",
+      "refs": [
+        "Exod.6.3",
+        "Ps.83.18"
+      ]
+    },
+    "Jah": {
+      "text": "Psalm 68:4 calls readers to extol God by his name JAH. This divine name is not an otherwise unidentified human person.",
+      "refs": [
+        "Ps.68.4"
+      ]
+    },
+    "Mene": {
+      "text": "A word in the writing interpreted by Daniel: God hath numbered thy kingdom, and finished it. It is not a person’s name.",
+      "refs": [
+        "Dan.5.25",
+        "Dan.5.26"
+      ]
+    },
+    "Tekel": {
+      "text": "A word in the writing interpreted by Daniel: Thou art weighed in the balances, and art found wanting. It is not a person’s name.",
+      "refs": [
+        "Dan.5.25",
+        "Dan.5.27"
+      ]
+    },
+    "Upharsin": {
+      "text": "A word in the writing in Daniel 5:25. Daniel’s interpretation in verse 28 uses PERES and declares the kingdom divided and given to the Medes and Persians. It is not a person’s name.",
+      "refs": [
+        "Dan.5.25",
+        "Dan.5.28"
+      ]
+    },
+    "Abba": {
+      "text": "An address followed by Father in each of its three KJV occurrences. These passages do not introduce a person named Abba.",
+      "refs": [
+        "Mark.14.36",
+        "Rom.8.15",
+        "Gal.4.6"
+      ]
+    },
+    "Rabbi": {
+      "text": "A title; John 1:38 explicitly interprets it as Master. It is not a personal name.",
+      "refs": [
+        "John.1.38"
+      ]
+    },
+    "Selah": {
+      "text": "The spelling occurs for a place in 2 Kings 14:7 and also repeatedly in the Psalms. The musical or liturgical term must not be assigned the place’s identity.",
+      "refs": [
+        "2Kgs.14.7",
+        "Ps.3.2"
+      ]
+    },
+    "Shiloh": {
+      "text": "The spelling occurs in Jacob’s words in Genesis 49:10 and as a place where the tabernacle was set up in Joshua 18:1. These contexts must not be flattened into one place-name claim.",
+      "refs": [
+        "Gen.49.10",
+        "Josh.18.1"
+      ]
+    },
+    "Arphaxad": {
+      "text": "The KJV names Arphaxad among the sons of Shem. A digital lexical record calling him a son of Noah must not override that genealogy.",
+      "refs": [
+        "Gen.10.22",
+        "Gen.11.10"
+      ]
+    },
+    "Javan": {
+      "text": "Genesis 10:2 names Javan among the sons of Japheth. A digital lexical record attributing him to Joktan must not override the KJV.",
+      "refs": [
+        "Gen.10.2"
+      ]
+    },
+    "Lo-ruhamah": {
+      "text": "Hosea 1:6 explicitly identifies Lo-ruhamah as a daughter. A digital lexical record calling her a son is inconsistent with that passage.",
+      "refs": [
+        "Hos.1.6"
+      ]
+    },
+    "Sherah": {
+      "text": "First Chronicles 7:24 names Sherah as a daughter and credits her with building Beth-horon the nether and the upper, and Uzzen-sherah.",
+      "refs": [
+        "1Chr.7.24"
+      ]
+    },
+    "Lahmi": {
+      "text": "First Chronicles 20:5 identifies Lahmi as the brother of Goliath the Gittite. A lexical source description must be checked against that context.",
+      "refs": [
+        "1Chr.20.5"
+      ]
+    },
+    "Rab-shakeh": {
+      "text": "The KJV places Rabshakeh among those sent by the king of Assyria against Jerusalem. The lexical record’s Babylonian description must not replace that setting.",
+      "refs": [
+        "2Kgs.18.17",
+        "Isa.36.2"
+      ]
+    },
+    "Sarah": {
+      "text": "Sarah is the name God gave Abraham’s wife in Genesis 17:15. Numbers 26:46 also uses Sarah for Asher’s daughter; the shared English spelling does not make them the same woman.",
+      "refs": [
+        "Gen.17.15",
+        "Num.26.46"
+      ]
+    }
+  },
+  "addedRefs": {
+    "Jesus": [
+      "Matt.1.21",
+      "Matt.1.25",
+      "Matt.27.37",
+      "Luke.1.31",
+      "Luke.2.21",
+      "John.19.19"
+    ],
+    "Nazareth": [
+      "John.19.19"
+    ],
+    "Babylon": [
+      "Rev.17.5"
+    ],
+    "Jehovah": [
+      "Exod.6.3",
+      "Ps.83.18",
+      "Isa.12.2",
+      "Isa.26.4"
+    ],
+    "Jah": [
+      "Ps.68.4"
+    ],
+    "Mene": [
+      "Dan.5.25",
+      "Dan.5.26"
+    ],
+    "Tekel": [
+      "Dan.5.25",
+      "Dan.5.27"
+    ],
+    "Upharsin": [
+      "Dan.5.25"
+    ],
+    "Beersheba": [
+      "1Chr.21.2",
+      "1Chr.4.28",
+      "1Kgs.19.3",
+      "1Kgs.4.25",
+      "1Sam.3.20",
+      "1Sam.8.2",
+      "2Chr.19.4",
+      "2Chr.24.1",
+      "2Chr.30.5",
+      "2Kgs.12.1",
+      "2Kgs.23.8",
+      "2Sam.17.11",
+      "2Sam.24.15",
+      "2Sam.24.2",
+      "2Sam.24.7",
+      "2Sam.3.10",
+      "Amos.5.5",
+      "Amos.8.14",
+      "Gen.21.14",
+      "Gen.21.31",
+      "Gen.21.32",
+      "Gen.21.33",
+      "Gen.22.19",
+      "Gen.26.23",
+      "Gen.26.33",
+      "Gen.28.10",
+      "Gen.46.1",
+      "Gen.46.5",
+      "Josh.19.2",
+      "Judg.20.1",
+      "Neh.11.27",
+      "Neh.11.30"
+    ],
+    "Lahairoi": [
+      "Gen.24.62",
+      "Gen.25.11"
+    ],
+    "Benoni": [
+      "Gen.35.18"
+    ],
+    "Beth-lehem": [
+      "John.7.42",
+      "Luke.2.15",
+      "Luke.2.4",
+      "Matt.2.1",
+      "Matt.2.16",
+      "Matt.2.5",
+      "Matt.2.6",
+      "Matt.2.8"
+    ],
+    "Esh-ban": [
+      "1Chr.1.41",
+      "Gen.36.26"
+    ],
+    "Ammi-nadab": [
+      "1Chr.15.10",
+      "1Chr.15.11",
+      "1Chr.2.10",
+      "1Chr.6.22",
+      "Exod.6.23",
+      "Num.1.7",
+      "Num.10.14",
+      "Num.2.3",
+      "Num.7.12",
+      "Num.7.17",
+      "Ruth.4.19",
+      "Ruth.4.20"
+    ],
+    "Beth-baalmeon": [
+      "Josh.13.17"
+    ],
+    "Betharabah": [
+      "Josh.15.6",
+      "Josh.15.61",
+      "Josh.18.22"
+    ],
+    "Hazargaddah": [
+      "Josh.15.27"
+    ],
+    "Migdalgad": [
+      "Josh.15.37"
+    ],
+    "En-dor": [
+      "1Sam.28.7",
+      "Josh.17.11",
+      "Ps.83.10"
+    ],
+    "Bethemek": [
+      "Josh.19.27"
+    ],
+    "Bethanath": [
+      "Josh.19.38",
+      "Judg.1.33"
+    ],
+    "Migdalel": [
+      "Josh.19.38"
+    ],
+    "Irshemesh": [
+      "Josh.19.41"
+    ],
+    "Mejarkon": [
+      "Josh.19.46"
+    ],
+    "Abiezer": [
+      "1Chr.11.28",
+      "1Chr.27.12",
+      "Judg.6.34",
+      "Judg.8.2"
+    ],
+    "Mahanehdan": [
+      "Judg.18.12"
+    ],
+    "Ichabod": [
+      "1Sam.4.21"
+    ],
+    "Bethshan": [
+      "1Sam.31.10",
+      "1Sam.31.12",
+      "2Sam.21.12"
+    ],
+    "Ishbosheth": [
+      "2Sam.2.10",
+      "2Sam.2.12",
+      "2Sam.2.15",
+      "2Sam.2.8",
+      "2Sam.3.14",
+      "2Sam.3.15",
+      "2Sam.3.7",
+      "2Sam.3.8",
+      "2Sam.4.12",
+      "2Sam.4.5",
+      "2Sam.4.8"
+    ],
+    "Bathsheba": [
+      "1Kgs.1.11",
+      "1Kgs.1.15",
+      "1Kgs.1.16",
+      "1Kgs.1.28",
+      "1Kgs.1.31",
+      "1Kgs.2.13",
+      "1Kgs.2.18",
+      "1Kgs.2.19",
+      "2Sam.11.3",
+      "2Sam.12.24",
+      "Ps.50.23"
+    ],
+    "Benhadad": [
+      "1Kgs.15.18",
+      "1Kgs.20.1",
+      "1Kgs.20.10",
+      "1Kgs.20.12",
+      "1Kgs.20.16",
+      "1Kgs.20.17",
+      "1Kgs.20.2",
+      "1Kgs.20.20",
+      "1Kgs.20.26",
+      "1Kgs.20.30",
+      "1Kgs.20.32",
+      "1Kgs.20.33",
+      "1Kgs.20.34",
+      "1Kgs.20.5",
+      "1Kgs.20.9",
+      "2Chr.16.2",
+      "2Kgs.13.25",
+      "2Kgs.13.3",
+      "2Kgs.6.24",
+      "2Kgs.8.7",
+      "2Kgs.8.9",
+      "Amos.1.4",
+      "Jer.49.27"
+    ],
+    "Kirharaseth": [
+      "2Kgs.3.25"
+    ],
+    "Rab-saris": [
+      "2Kgs.18.17"
+    ],
+    "Hephzibah": [
+      "2Kgs.21.1",
+      "Isa.62.4"
+    ],
+    "Eph-lal": [
+      "1Chr.2.37"
+    ],
+    "Jushabhesed": [
+      "1Chr.3.20"
+    ],
+    "Benzoheth": [
+      "1Chr.4.20"
+    ],
+    "Benhanan": [
+      "1Chr.4.20"
+    ],
+    "Ish-pan": [
+      "1Chr.8.22"
+    ],
+    "Meribbaal": [
+      "1Chr.8.34",
+      "1Chr.9.40"
+    ],
+    "Benhail": [
+      "2Chr.17.7"
+    ],
+    "Pahath-Moab": [
+      "Ezra.10.30",
+      "Ezra.2.6",
+      "Neh.10.14",
+      "Neh.3.11",
+      "Neh.7.11"
+    ],
+    "Telharsa": [
+      "Ezra.2.59"
+    ],
+    "Rab-shakeh": [
+      "Isa.36.11",
+      "Isa.36.12",
+      "Isa.36.13",
+      "Isa.36.2",
+      "Isa.36.22",
+      "Isa.36.4",
+      "Isa.37.4",
+      "Isa.37.8"
+    ],
+    "Telabib": [
+      "Ezek.3.15"
+    ],
+    "Hazarenan": [
+      "Ezek.47.17",
+      "Ezek.48.1",
+      "Num.34.10"
+    ],
+    "Abednego": [
+      "Dan.1.7",
+      "Dan.2.49",
+      "Dan.3.12",
+      "Dan.3.13",
+      "Dan.3.14",
+      "Dan.3.16",
+      "Dan.3.19",
+      "Dan.3.20",
+      "Dan.3.22",
+      "Dan.3.23",
+      "Dan.3.26",
+      "Dan.3.28",
+      "Dan.3.29",
+      "Dan.3.30"
+    ],
+    "Ruhamah": [
+      "Hos.2.1"
+    ],
+    "Regemmelech": [
+      "Zech.7.2"
+    ],
+    "Barjesus": [
+      "Acts.13.6"
+    ],
+    "On": [
+      "Gen.41.45",
+      "Gen.41.50",
+      "Gen.46.20",
+      "Num.16.1"
+    ],
+    "So": [
+      "2Kgs.17.4"
+    ],
+    "No": [
+      "Jer.46.25",
+      "Ezek.30.14",
+      "Ezek.30.15",
+      "Ezek.30.16",
+      "Nah.3.8"
+    ]
+  },
+  "excludedRefs": {
+    "Mark": [
+      "2Sam.13.28",
+      "1Kgs.20.7",
+      "Job.21.5",
+      "Job.33.31",
+      "Ps.37.37",
+      "Ps.48.13"
+    ]
+  },
+  "indexNotes": [
+    "Mark: remove six imperative-verb matches from the personal-name index; retain the five person-name occurrences.",
+    "Restore explicitly named uppercase JESUS, NAZARETH, BABYLON, JEHOVAH and JAH, and the interpreted writing MENE/TEKEL/UPHARSIN. No blanket case-insensitive matcher is used.",
+    "NUN and AIN in Psalm 119 are alphabetic headings, not evidence that Joshua’s father or a place appears in those verses. Do not turn those headings into name occurrences.",
+    "Reviewed 104 unique dictionary-spelling / KJV-token punctuation pairs. Restore only explicit capitalized token matches under a unique punctuation-folded key; no case-insensitive English common-word matching. On/So/No have explicit KJV proper-name reference whitelists, replacing blanket omission."
+  ],
+  "punctuationChecks": [
+    {
+      "name": "Abednego",
+      "forms": [
+        "Abed-nego"
+      ],
+      "refs": [
+        "Dan.1.7",
+        "Dan.2.49",
+        "Dan.3.12",
+        "Dan.3.13",
+        "Dan.3.14",
+        "Dan.3.19",
+        "Dan.3.20",
+        "Dan.3.26",
+        "Dan.3.28",
+        "Dan.3.29",
+        "Dan.3.30"
+      ]
+    },
+    {
+      "name": "Abel-beth-maachah",
+      "forms": [
+        "Abel-bethmaachah"
+      ],
+      "refs": [
+        "2Kgs.15.29"
+      ]
+    },
+    {
+      "name": "Abel-maim",
+      "forms": [
+        "Abelmaim"
+      ],
+      "refs": [
+        "2Chr.16.4"
+      ]
+    },
+    {
+      "name": "Abel-meholah",
+      "forms": [
+        "Abelmeholah"
+      ],
+      "refs": [
+        "1Kgs.19.16"
+      ]
+    },
+    {
+      "name": "Abiezer",
+      "forms": [
+        "Abi-ezer"
+      ],
+      "refs": [
+        "1Chr.11.28",
+        "Judg.6.34",
+        "Judg.8.2"
+      ]
+    },
+    {
+      "name": "Adoni-bezek",
+      "forms": [
+        "Adonibezek"
+      ],
+      "refs": [
+        "Judg.1.5"
+      ]
+    },
+    {
+      "name": "Ammi-nadab",
+      "forms": [
+        "Amminadab"
+      ],
+      "refs": [
+        "1Chr.15.10",
+        "1Chr.15.11",
+        "1Chr.2.10",
+        "1Chr.6.22",
+        "Exod.6.23",
+        "Num.1.7",
+        "Num.10.14",
+        "Num.2.3",
+        "Num.7.12",
+        "Num.7.17",
+        "Ruth.4.19",
+        "Ruth.4.20"
+      ]
+    },
+    {
+      "name": "Aznoth-tabor",
+      "forms": [
+        "Aznothtabor"
+      ],
+      "refs": [
+        "Josh.19.34"
+      ]
+    },
+    {
+      "name": "Baal-berith",
+      "forms": [
+        "Baalberith"
+      ],
+      "refs": [
+        "Judg.8.33"
+      ]
+    },
+    {
+      "name": "Baal-hermon",
+      "forms": [
+        "Baalhermon"
+      ],
+      "refs": [
+        "1Chr.5.23"
+      ]
+    },
+    {
+      "name": "Baal-meon",
+      "forms": [
+        "Baalmeon"
+      ],
+      "refs": [
+        "Ezek.25.9"
+      ]
+    },
+    {
+      "name": "Baal-peor",
+      "forms": [
+        "Baalpeor"
+      ],
+      "refs": [
+        "Deut.4.3"
+      ]
+    },
+    {
+      "name": "Baal-perazim",
+      "forms": [
+        "Baalperazim"
+      ],
+      "refs": [
+        "1Chr.14.11"
+      ]
+    },
+    {
+      "name": "Baal-zebub",
+      "forms": [
+        "Baalzebub"
+      ],
+      "refs": [
+        "2Kgs.1.16",
+        "2Kgs.1.2"
+      ]
+    },
+    {
+      "name": "Barjesus",
+      "forms": [
+        "Bar-jesus"
+      ],
+      "refs": [
+        "Acts.13.6"
+      ]
+    },
+    {
+      "name": "Bathsheba",
+      "forms": [
+        "Bath-sheba"
+      ],
+      "refs": [
+        "1Kgs.1.11",
+        "1Kgs.1.15",
+        "1Kgs.1.31",
+        "1Kgs.2.18",
+        "1Kgs.2.19",
+        "2Sam.11.3",
+        "2Sam.12.24"
+      ]
+    },
+    {
+      "name": "Beersheba",
+      "forms": [
+        "Beer-sheba"
+      ],
+      "refs": [
+        "1Chr.4.28",
+        "1Kgs.19.3",
+        "1Kgs.4.25",
+        "1Sam.3.20",
+        "1Sam.8.2",
+        "2Chr.19.4",
+        "2Chr.24.1",
+        "2Chr.30.5",
+        "2Kgs.12.1",
+        "2Kgs.23.8",
+        "2Sam.24.15",
+        "2Sam.24.7",
+        "2Sam.3.10",
+        "Amos.5.5",
+        "Amos.8.14",
+        "Gen.21.14",
+        "Gen.21.31",
+        "Gen.21.32",
+        "Gen.21.33",
+        "Gen.22.19",
+        "Gen.26.23",
+        "Gen.26.33",
+        "Gen.28.10",
+        "Gen.46.1",
+        "Gen.46.5",
+        "Josh.19.2",
+        "Judg.20.1",
+        "Neh.11.27",
+        "Neh.11.30"
+      ]
+    },
+    {
+      "name": "Ben-ammi",
+      "forms": [
+        "Benammi"
+      ],
+      "refs": [
+        "Gen.19.38"
+      ]
+    },
+    {
+      "name": "Benhadad",
+      "forms": [
+        "Ben-hadad"
+      ],
+      "refs": [
+        "1Kgs.20.1",
+        "1Kgs.20.10",
+        "1Kgs.20.12",
+        "1Kgs.20.16",
+        "1Kgs.20.17",
+        "1Kgs.20.2",
+        "1Kgs.20.20",
+        "1Kgs.20.26",
+        "1Kgs.20.30",
+        "1Kgs.20.32",
+        "1Kgs.20.33",
+        "1Kgs.20.34",
+        "1Kgs.20.9",
+        "2Chr.16.2",
+        "2Kgs.13.25",
+        "2Kgs.13.3",
+        "2Kgs.6.24",
+        "2Kgs.8.7",
+        "2Kgs.8.9",
+        "Amos.1.4",
+        "Jer.49.27"
+      ]
+    },
+    {
+      "name": "Benhail",
+      "forms": [
+        "Ben-hail"
+      ],
+      "refs": [
+        "2Chr.17.7"
+      ]
+    },
+    {
+      "name": "Benhanan",
+      "forms": [
+        "Ben-hanan"
+      ],
+      "refs": [
+        "1Chr.4.20"
+      ]
+    },
+    {
+      "name": "Benoni",
+      "forms": [
+        "Ben-oni"
+      ],
+      "refs": [
+        "Gen.35.18"
+      ]
+    },
+    {
+      "name": "Benzoheth",
+      "forms": [
+        "Ben-zoheth"
+      ],
+      "refs": [
+        "1Chr.4.20"
+      ]
+    },
+    {
+      "name": "Beth-aven",
+      "forms": [
+        "Bethaven"
+      ],
+      "refs": [
+        "Hos.5.8"
+      ]
+    },
+    {
+      "name": "Beth-azmaveth",
+      "forms": [
+        "Bethazmaveth"
+      ],
+      "refs": [
+        "Neh.7.28"
+      ]
+    },
+    {
+      "name": "Beth-baalmeon",
+      "forms": [
+        "Beth-baal-meon"
+      ],
+      "refs": [
+        "Josh.13.17"
+      ]
+    },
+    {
+      "name": "Beth-birei",
+      "forms": [
+        "Bethbirei"
+      ],
+      "refs": [
+        "1Chr.4.31"
+      ]
+    },
+    {
+      "name": "Beth-dagon",
+      "forms": [
+        "Bethdagon"
+      ],
+      "refs": [
+        "Josh.15.41",
+        "Josh.19.27"
+      ]
+    },
+    {
+      "name": "Beth-diblathaim",
+      "forms": [
+        "Bethdiblathaim"
+      ],
+      "refs": [
+        "Jer.48.22"
+      ]
+    },
+    {
+      "name": "Beth-el",
+      "forms": [
+        "Bethel"
+      ],
+      "refs": [
+        "1Chr.7.28",
+        "1Kgs.12.29",
+        "1Kgs.12.32",
+        "1Kgs.12.33",
+        "1Kgs.13.1",
+        "1Kgs.13.10",
+        "1Kgs.13.11",
+        "1Kgs.13.32",
+        "1Kgs.13.4",
+        "1Sam.10.3",
+        "1Sam.13.2",
+        "1Sam.30.27",
+        "1Sam.7.16",
+        "2Chr.13.19",
+        "2Kgs.10.29",
+        "2Kgs.17.28",
+        "2Kgs.2.2",
+        "2Kgs.2.23",
+        "2Kgs.2.3",
+        "2Kgs.23.15",
+        "2Kgs.23.17",
+        "2Kgs.23.19",
+        "2Kgs.23.4",
+        "Amos.3.14",
+        "Amos.4.4",
+        "Amos.5.5",
+        "Amos.5.6",
+        "Amos.7.10",
+        "Amos.7.13",
+        "Ezra.2.28",
+        "Gen.12.8",
+        "Gen.13.3",
+        "Gen.28.19",
+        "Gen.31.13",
+        "Gen.35.1",
+        "Gen.35.15",
+        "Gen.35.16",
+        "Gen.35.3",
+        "Gen.35.6",
+        "Gen.35.8",
+        "Hos.10.15",
+        "Hos.12.4",
+        "Jer.48.13",
+        "Josh.12.16",
+        "Josh.12.9",
+        "Josh.16.1",
+        "Josh.16.2",
+        "Josh.18.13",
+        "Josh.18.22",
+        "Josh.7.2",
+        "Josh.8.12",
+        "Josh.8.17",
+        "Josh.8.9",
+        "Judg.1.22",
+        "Judg.1.23",
+        "Judg.21.19",
+        "Judg.4.5",
+        "Neh.11.31",
+        "Neh.7.32"
+      ]
+    },
+    {
+      "name": "Beth-gamul",
+      "forms": [
+        "Bethgamul"
+      ],
+      "refs": [
+        "Jer.48.23"
+      ]
+    },
+    {
+      "name": "Beth-haran",
+      "forms": [
+        "Bethharan"
+      ],
+      "refs": [
+        "Num.32.36"
+      ]
+    },
+    {
+      "name": "Beth-horon",
+      "forms": [
+        "Bethhoron"
+      ],
+      "refs": [
+        "1Chr.6.68",
+        "1Sam.13.18",
+        "Josh.16.5",
+        "Josh.18.13"
+      ]
+    },
+    {
+      "name": "Beth-lehem",
+      "forms": [
+        "Bethlehem"
+      ],
+      "refs": [
+        "1Chr.11.16",
+        "1Chr.11.17",
+        "1Chr.11.18",
+        "1Chr.11.26",
+        "1Chr.2.51",
+        "1Chr.2.54",
+        "1Chr.4.4",
+        "1Sam.16.4",
+        "1Sam.17.15",
+        "1Sam.20.28",
+        "1Sam.20.6",
+        "2Chr.11.6",
+        "2Sam.2.32",
+        "2Sam.23.14",
+        "2Sam.23.15",
+        "2Sam.23.16",
+        "2Sam.23.24",
+        "Ezra.2.21",
+        "Gen.35.19",
+        "Gen.48.7",
+        "Jer.41.17",
+        "John.7.42",
+        "Josh.19.15",
+        "Judg.12.10",
+        "Judg.12.8",
+        "Luke.2.15",
+        "Luke.2.4",
+        "Matt.2.1",
+        "Matt.2.16",
+        "Matt.2.5",
+        "Matt.2.6",
+        "Matt.2.8",
+        "Mic.5.2",
+        "Neh.7.26",
+        "Ruth.1.19",
+        "Ruth.1.22",
+        "Ruth.2.4",
+        "Ruth.4.11"
+      ]
+    },
+    {
+      "name": "Beth-marcaboth",
+      "forms": [
+        "Bethmarcaboth"
+      ],
+      "refs": [
+        "1Chr.4.31",
+        "Josh.19.5"
+      ]
+    },
+    {
+      "name": "Beth-nimrah",
+      "forms": [
+        "Bethnimrah"
+      ],
+      "refs": [
+        "Josh.13.27"
+      ]
+    },
+    {
+      "name": "Beth-peor",
+      "forms": [
+        "Bethpeor"
+      ],
+      "refs": [
+        "Deut.4.46",
+        "Josh.13.20"
+      ]
+    },
+    {
+      "name": "Beth-shemesh",
+      "forms": [
+        "Bethshemesh"
+      ],
+      "refs": [
+        "1Kgs.4.9",
+        "1Sam.6.15",
+        "2Chr.25.23",
+        "2Chr.28.18",
+        "2Kgs.14.13"
+      ]
+    },
+    {
+      "name": "Bethanath",
+      "forms": [
+        "Beth-anath"
+      ],
+      "refs": [
+        "Josh.19.38",
+        "Judg.1.33"
+      ]
+    },
+    {
+      "name": "Betharabah",
+      "forms": [
+        "Beth-arabah"
+      ],
+      "refs": [
+        "Josh.15.6",
+        "Josh.15.61",
+        "Josh.18.22"
+      ]
+    },
+    {
+      "name": "Bethemek",
+      "forms": [
+        "Beth-emek"
+      ],
+      "refs": [
+        "Josh.19.27"
+      ]
+    },
+    {
+      "name": "Bethshan",
+      "forms": [
+        "Beth-shan"
+      ],
+      "refs": [
+        "1Sam.31.10",
+        "2Sam.21.12"
+      ]
+    },
+    {
+      "name": "Chushan-rishathaim",
+      "forms": [
+        "Chushanrishathaim"
+      ],
+      "refs": [
+        "Judg.3.8"
+      ]
+    },
+    {
+      "name": "Dibon-gad",
+      "forms": [
+        "Dibongad"
+      ],
+      "refs": [
+        "Num.33.45"
+      ]
+    },
+    {
+      "name": "El-beth-el",
+      "forms": [
+        "Elbeth-el"
+      ],
+      "refs": [
+        "Gen.35.7"
+      ]
+    },
+    {
+      "name": "El-elohe-Israel",
+      "forms": [
+        "El-eloheIsrael"
+      ],
+      "refs": [
+        "Gen.33.20"
+      ]
+    },
+    {
+      "name": "En-dor",
+      "forms": [
+        "Endor"
+      ],
+      "refs": [
+        "1Sam.28.7",
+        "Josh.17.11",
+        "Ps.83.10"
+      ]
+    },
+    {
+      "name": "En-gedi",
+      "forms": [
+        "Engedi"
+      ],
+      "refs": [
+        "Ezek.47.10"
+      ]
+    },
+    {
+      "name": "En-hakkore",
+      "forms": [
+        "Enhakkore"
+      ],
+      "refs": [
+        "Judg.15.19"
+      ]
+    },
+    {
+      "name": "En-tappuah",
+      "forms": [
+        "Entappuah"
+      ],
+      "refs": [
+        "Josh.17.7"
+      ]
+    },
+    {
+      "name": "Eph-lal",
+      "forms": [
+        "Ephlal"
+      ],
+      "refs": [
+        "1Chr.2.37"
+      ]
+    },
+    {
+      "name": "Esar-haddon",
+      "forms": [
+        "Esarhaddon"
+      ],
+      "refs": [
+        "Ezra.4.2"
+      ]
+    },
+    {
+      "name": "Esh-baal",
+      "forms": [
+        "Eshbaal"
+      ],
+      "refs": [
+        "1Chr.8.33",
+        "1Chr.9.39"
+      ]
+    },
+    {
+      "name": "Esh-ban",
+      "forms": [
+        "Eshban"
+      ],
+      "refs": [
+        "1Chr.1.41",
+        "Gen.36.26"
+      ]
+    },
+    {
+      "name": "Ezion-geber",
+      "forms": [
+        "Eziongeber"
+      ],
+      "refs": [
+        "1Kgs.22.48",
+        "1Kgs.9.26"
+      ]
+    },
+    {
+      "name": "Hamath-zobah",
+      "forms": [
+        "Hamathzobah"
+      ],
+      "refs": [
+        "2Chr.8.3"
+      ]
+    },
+    {
+      "name": "Hamon-gog",
+      "forms": [
+        "Hamongog"
+      ],
+      "refs": [
+        "Ezek.39.11",
+        "Ezek.39.15"
+      ]
+    },
+    {
+      "name": "Hazar-hatticon",
+      "forms": [
+        "Hazarhatticon"
+      ],
+      "refs": [
+        "Ezek.47.16"
+      ]
+    },
+    {
+      "name": "Hazarenan",
+      "forms": [
+        "Hazar-enan"
+      ],
+      "refs": [
+        "Ezek.47.17",
+        "Ezek.48.1"
+      ]
+    },
+    {
+      "name": "Hazargaddah",
+      "forms": [
+        "Hazar-gaddah"
+      ],
+      "refs": [
+        "Josh.15.27"
+      ]
+    },
+    {
+      "name": "Hephzibah",
+      "forms": [
+        "Hephzi-bah"
+      ],
+      "refs": [
+        "2Kgs.21.1",
+        "Isa.62.4"
+      ]
+    },
+    {
+      "name": "Ichabod",
+      "forms": [
+        "I-chabod"
+      ],
+      "refs": [
+        "1Sam.4.21"
+      ]
+    },
+    {
+      "name": "Ije-abarim",
+      "forms": [
+        "Ijeabarim"
+      ],
+      "refs": [
+        "Num.21.11",
+        "Num.33.44"
+      ]
+    },
+    {
+      "name": "Irshemesh",
+      "forms": [
+        "Ir-shemesh"
+      ],
+      "refs": [
+        "Josh.19.41"
+      ]
+    },
+    {
+      "name": "Ish-pan",
+      "forms": [
+        "Ishpan"
+      ],
+      "refs": [
+        "1Chr.8.22"
+      ]
+    },
+    {
+      "name": "Ishbosheth",
+      "forms": [
+        "Ish-bosheth"
+      ],
+      "refs": [
+        "2Sam.2.10",
+        "2Sam.2.15",
+        "2Sam.2.8",
+        "2Sam.3.14",
+        "2Sam.3.15",
+        "2Sam.3.7",
+        "2Sam.4.12",
+        "2Sam.4.5",
+        "2Sam.4.8"
+      ]
+    },
+    {
+      "name": "Jehovah-jireh",
+      "forms": [
+        "Jehovahjireh"
+      ],
+      "refs": [
+        "Gen.22.14"
+      ]
+    },
+    {
+      "name": "Jehovah-nissi",
+      "forms": [
+        "Jehovahnissi"
+      ],
+      "refs": [
+        "Exod.17.15"
+      ]
+    },
+    {
+      "name": "Jushabhesed",
+      "forms": [
+        "Jushab-hesed"
+      ],
+      "refs": [
+        "1Chr.3.20"
+      ]
+    },
+    {
+      "name": "Kadesh-barnea",
+      "forms": [
+        "Kadeshbarnea"
+      ],
+      "refs": [
+        "Deut.9.23",
+        "Josh.14.6",
+        "Num.32.8"
+      ]
+    },
+    {
+      "name": "Keren-happuch",
+      "forms": [
+        "Kerenhappuch"
+      ],
+      "refs": [
+        "Job.42.14"
+      ]
+    },
+    {
+      "name": "Kibroth-hattaavah",
+      "forms": [
+        "Kibrothhattaavah"
+      ],
+      "refs": [
+        "Deut.9.22",
+        "Num.11.34",
+        "Num.11.35",
+        "Num.33.16",
+        "Num.33.17"
+      ]
+    },
+    {
+      "name": "Kirharaseth",
+      "forms": [
+        "Kir-haraseth"
+      ],
+      "refs": [
+        "2Kgs.3.25"
+      ]
+    },
+    {
+      "name": "Kirjath-arba",
+      "forms": [
+        "Kirjatharba"
+      ],
+      "refs": [
+        "Judg.1.10"
+      ]
+    },
+    {
+      "name": "Kirjath-huzoth",
+      "forms": [
+        "Kirjathhuzoth"
+      ],
+      "refs": [
+        "Num.22.39"
+      ]
+    },
+    {
+      "name": "Kirjath-jearim",
+      "forms": [
+        "Kirjathjearim"
+      ],
+      "refs": [
+        "1Chr.13.6",
+        "1Sam.7.2",
+        "2Chr.1.4",
+        "Jer.26.20",
+        "Josh.15.9",
+        "Josh.18.15"
+      ]
+    },
+    {
+      "name": "Lahairoi",
+      "forms": [
+        "Lahai-roi"
+      ],
+      "refs": [
+        "Gen.24.62"
+      ]
+    },
+    {
+      "name": "Mahanehdan",
+      "forms": [
+        "Mahaneh-dan"
+      ],
+      "refs": [
+        "Judg.18.12"
+      ]
+    },
+    {
+      "name": "Maher-shalal-hash-baz",
+      "forms": [
+        "Mahershalal-hash-baz"
+      ],
+      "refs": [
+        "Isa.8.1"
+      ]
+    },
+    {
+      "name": "Mejarkon",
+      "forms": [
+        "Me-jarkon"
+      ],
+      "refs": [
+        "Josh.19.46"
+      ]
+    },
+    {
+      "name": "Meribbaal",
+      "forms": [
+        "Merib-baal"
+      ],
+      "refs": [
+        "1Chr.8.34"
+      ]
+    },
+    {
+      "name": "Metheg-ammah",
+      "forms": [
+        "Methegammah"
+      ],
+      "refs": [
+        "2Sam.8.1"
+      ]
+    },
+    {
+      "name": "Migdalel",
+      "forms": [
+        "Migdal-el"
+      ],
+      "refs": [
+        "Josh.19.38"
+      ]
+    },
+    {
+      "name": "Migdalgad",
+      "forms": [
+        "Migdal-gad"
+      ],
+      "refs": [
+        "Josh.15.37"
+      ]
+    },
+    {
+      "name": "Nebuzar-adan",
+      "forms": [
+        "Nebuzaradan"
+      ],
+      "refs": [
+        "2Kgs.25.20",
+        "Jer.41.10"
+      ]
+    },
+    {
+      "name": "Nergal-sharezer",
+      "forms": [
+        "Nergalsharezer"
+      ],
+      "refs": [
+        "Jer.39.13"
+      ]
+    },
+    {
+      "name": "Obed-edom",
+      "forms": [
+        "Obededom"
+      ],
+      "refs": [
+        "1Chr.13.13",
+        "1Chr.15.24",
+        "1Chr.16.38",
+        "2Chr.25.24",
+        "2Sam.6.12"
+      ]
+    },
+    {
+      "name": "Padan-aram",
+      "forms": [
+        "Padanaram"
+      ],
+      "refs": [
+        "Gen.28.5"
+      ]
+    },
+    {
+      "name": "Pahath-Moab",
+      "forms": [
+        "Pahathmoab"
+      ],
+      "refs": [
+        "Ezra.10.30",
+        "Ezra.2.6",
+        "Neh.3.11"
+      ]
+    },
+    {
+      "name": "Pi-hahiroth",
+      "forms": [
+        "Pihahiroth"
+      ],
+      "refs": [
+        "Exod.14.9"
+      ]
+    },
+    {
+      "name": "Rab-saris",
+      "forms": [
+        "Rabsaris"
+      ],
+      "refs": [
+        "2Kgs.18.17"
+      ]
+    },
+    {
+      "name": "Rab-shakeh",
+      "forms": [
+        "Rabshakeh"
+      ],
+      "refs": [
+        "Isa.36.11",
+        "Isa.36.12",
+        "Isa.36.13",
+        "Isa.36.2",
+        "Isa.36.22",
+        "Isa.36.4",
+        "Isa.37.4",
+        "Isa.37.8"
+      ]
+    },
+    {
+      "name": "Ramath-mizpeh",
+      "forms": [
+        "Ramathmizpeh"
+      ],
+      "refs": [
+        "Josh.13.26"
+      ]
+    },
+    {
+      "name": "Ramathaim-zophim",
+      "forms": [
+        "Ramathaimzophim"
+      ],
+      "refs": [
+        "1Sam.1.1"
+      ]
+    },
+    {
+      "name": "Regemmelech",
+      "forms": [
+        "Regem-melech"
+      ],
+      "refs": [
+        "Zech.7.2"
+      ]
+    },
+    {
+      "name": "Ruhamah",
+      "forms": [
+        "Ru-hamah"
+      ],
+      "refs": [
+        "Hos.2.1"
+      ]
+    },
+    {
+      "name": "Shear-jashub",
+      "forms": [
+        "Shearjashub"
+      ],
+      "refs": [
+        "Isa.7.3"
+      ]
+    },
+    {
+      "name": "Shethar-boznai",
+      "forms": [
+        "Shetharboznai"
+      ],
+      "refs": [
+        "Ezra.6.13"
+      ]
+    },
+    {
+      "name": "Tel-melah",
+      "forms": [
+        "Telmelah"
+      ],
+      "refs": [
+        "Ezra.2.59",
+        "Neh.7.61"
+      ]
+    },
+    {
+      "name": "Telabib",
+      "forms": [
+        "Tel-abib"
+      ],
+      "refs": [
+        "Ezek.3.15"
+      ]
+    },
+    {
+      "name": "Telharsa",
+      "forms": [
+        "Tel-harsa"
+      ],
+      "refs": [
+        "Ezra.2.59"
+      ]
+    },
+    {
+      "name": "Tiglath-pileser",
+      "forms": [
+        "Tiglathpileser"
+      ],
+      "refs": [
+        "2Kgs.15.29",
+        "2Kgs.16.10"
+      ]
+    },
+    {
+      "name": "Tob-adonijah",
+      "forms": [
+        "Tobadonijah"
+      ],
+      "refs": [
+        "2Chr.17.8"
+      ]
+    },
+    {
+      "name": "Zaphnath-paaneah",
+      "forms": [
+        "Zaphnathpaaneah"
+      ],
+      "refs": [
+        "Gen.41.45"
+      ]
+    }
+  ]
+}

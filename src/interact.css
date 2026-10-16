@@ -2712,3 +2712,14 @@ footer {
   margin: 0;
   letter-spacing: 0.01em;
 }
+
+/* Name evidence keeps Scripture, lexical proposals and historical source excerpts distinct. */
+.name-study { margin: 14px 0 24px; }
+.name-study-refs { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 16px; }
+.name-study-status { color: #a9c5c0; font: 10px/1.6 var(--font-mono); letter-spacing: .045em; margin-bottom: 8px; }
+.name-study-status.uncertain, .name-study-status.disputed, .name-study-status.ambiguous { color: #dec48b; }
+.name-study-sources { margin-top: 14px; border-top: 1px solid var(--border-subtle); padding-top: 14px; }
+.name-study-sources summary { cursor: pointer; color: #c9b483; font-size: 12px; }
+.name-study-sources p { margin: 12px 0; font-size: 12px; line-height: 1.8; color: #b8c1ca; }
+.name-study-historical { padding: 12px; border-left: 2px solid #746448; background: #c5a05908; }
+.name-study-source { margin: 16px 0; padding-top: 12px; border-top: 1px solid var(--border-subtle); font-size: 12px; }

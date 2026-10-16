@@ -342,7 +342,7 @@ class HistoricalInteractApp {
           <div class="figure-hero-title">${fig.title}</div>
           <div class="figure-covenant-box">${fig.covenantSummary}</div>
           <div class="figure-meta-row">
-            <span class="meta-tag"><strong>Hitchcock Meaning:</strong> ${fig.hitchcockMeaning}</span>
+            <span class="meta-tag"><strong>Name study:</strong> ${localStore.getNetworkName(fig.hitchcockKey)?.meaning || 'See Scripture and source notes'}</span>
             <button type="button" class="btn-small figure-network-link">Explore ${localStore.getNetworkName(fig.hitchcockKey)?.refs.length ?? 0} verse links &amp; the full name network →</button>
             ${era ? `<span class="meta-tag"><strong>World Horizon:</strong> ${era.worldContext}</span>` : ''}
           </div>

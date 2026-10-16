@@ -1,6 +1,6 @@
 {
   "name": "historicalbible-cross-references",
-  "version": "00.01.17",
+  "version": "00.01.18",
   "type": "module",
   "description": "Interactive KJV Bible Cross-Reference Visualizer (Arcs, Threads, and Entity Loom)",
   "scripts": {
@@ -8,7 +8,7 @@
     "build": "node scripts/verify-canonical-kjv.js && vite build",
     "preview": "vite preview",
     "test": "playwright test",
-    "test:collection": "node --test tests/collection-regression.ts",
+    "test:collection": "node --test tests/collection-regression.ts tests/name-audit-regression.ts",
     "test:ui": "playwright test --ui",
     "verify-kjv": "node scripts/verify-canonical-kjv.js",
     "compile-data": "node scripts/build-curated-kjv.js && node scripts/verify-canonical-kjv.js"

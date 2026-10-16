@@ -1,5 +1,24 @@
 import { test, expect } from '@playwright/test';
 
+test('NAME-01: Scripture leads names, uncertain glosses are qualified, and the three companions stay connected', async ({ page }) => {
+  await page.goto('/interact');
+  await page.locator('#search-input').fill('Shadrach');
+  await page.locator('#search-results-list button').filter({ hasText: /^Shadrach —/ }).click();
+  await expect(page.locator('#name-search-meaning')).toContainText('Hananiah');
+  await expect(page.locator('#name-search-meaning')).not.toContainText('nipple');
+  await expect(page.locator('.name-study-status')).toHaveText(/Uncertain derivation/);
+  await expect(page.locator('.name-study-sources')).not.toHaveAttribute('open');
+  await page.locator('.name-study-sources > summary').click();
+  await expect(page.locator('.name-study-historical')).toContainText('Hitchcock');
+  await expect(page.locator('.name-study-historical')).toContainText('nipple');
+  await page.locator('.name-study-refs').getByRole('button', { name: 'Dan.3.18', exact: true }).click();
+  await expect(page.locator('#name-search-passages > article .kjv-verse-text')).toContainText('we will not serve thy gods');
+  await page.locator('#name-search-detail').getByRole('button', { name: '9 connected names', exact: true }).click();
+  await page.locator('#name-search-passages').getByRole('button', { name: 'Abednego', exact: true }).click();
+  await expect(page.locator('#name-search-meaning')).toContainText('Azariah');
+  await expect(page.locator('#name-search-passages')).toContainText('14 verse links');
+});
+
 test('INT-17: Dictionary names open beside search without jumping to the bottom', async ({ page }) => {
   await page.goto('/interact');
   await page.evaluate(() => document.fonts.ready.then(() => {}));
@@ -38,8 +57,8 @@ test('INT-15: Collection introduction exposes real counts and one prominent sear
   await page.goto('/interact');
   await expect(page.locator('#stat-connections')).toHaveText('344,799');
   await expect(page.locator('#stat-verses')).toHaveText('31,102');
-  await expect(page.locator('#stat-names')).toHaveText('2,408');
-  await expect(page.locator('#stat-nameEdges')).toHaveText('12,058');
+  await expect(page.locator('#stat-names')).toHaveText('2,453');
+  await expect(page.locator('#stat-nameEdges')).toHaveText('12,323');
   await expect(page.locator('#search-input')).toHaveCount(1);
   await expect(page.locator('#collection-title')).toContainText('Every passage');
   expect(await page.locator('#connection-atlas path').count()).toBeGreaterThan(0);
@@ -73,14 +92,14 @@ test('INT-18: Every total opens records, and Obsidian names traverse shared vers
   await explorer.getByRole('button', { name: 'Next →', exact: true }).click();
   await expect(explorer).toContainText('JOHN {3:16}');
   await page.locator('[data-collection="names"]').click();
-  await expect(explorer).toContainText('of 2,408 records');
+  await expect(explorer).toContainText('of 2,453 records');
   await explorer.getByLabel('Filter collection').fill('Gideon');
   await explorer.getByRole('button', { name: 'Gideon', exact: true }).click();
   const name = page.locator('#name-search-detail');
   await expect(name).toContainText('37 verse links');
   await name.getByRole('button', { name: 'Next →', exact: true }).click();
   await expect(name).toContainText('6–10 of 37 records');
-  await name.getByRole('button', { name: '20 connected names', exact: true }).click();
+  await name.getByRole('button', { name: '21 connected names', exact: true }).click();
   await name.getByRole('button', { name: '9 shared verses →', exact: true }).click();
   await expect(explorer.locator('.scripture-card')).toHaveCount(9);
   await expect(explorer).toContainText('Gideon and Israel');
@@ -93,10 +112,10 @@ test('INT-18: Every total opens records, and Obsidian names traverse shared vers
   await explorer.getByLabel('Source votes').selectOption('negative');
   await expect(explorer).toContainText('of 1,229 records');
   await page.locator('[data-collection="connections"]').click();
-  await expect(explorer).toContainText('of 12,058 records');
-  await explorer.getByLabel('Page number', { exact: true }).fill('483');
+  await expect(explorer).toContainText('of 12,323 records');
+  await explorer.getByLabel('Page number', { exact: true }).fill('493');
   await explorer.getByRole('button', { name: 'Go', exact: true }).click();
-  await expect(explorer).toContainText('12,051–12,058 of 12,058 records');
+  await expect(explorer).toContainText('12,301–12,323 of 12,323 records');
   await explorer.locator('[data-mode="history"]').click();
   await expect(explorer).toContainText('12 curated historical profiles and 6 world empires');
 });
@@ -309,7 +328,7 @@ test.describe('HistoricalBible.com/Interact — Historical Synchrony & Canonical
     const filterInput = page.locator('#hitchcock-input');
     await filterInput.fill('Aaron');
     await expect(page.locator('#hitchcock-directory-list .hitchcock-card').first()).toContainText('Aaron');
-    await expect(page.locator('#hitchcock-directory-list .hitchcock-card').first()).toContainText('teacher');
+    await expect(page.locator('#hitchcock-directory-list .hitchcock-card').first()).toContainText('uncertain');
   });
 
   test('INT-05: Global search resolves KJV verses and historical figures', async ({ page }) => {

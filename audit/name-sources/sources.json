@@ -1,0 +1,34 @@
+{
+  "repository": "https://github.com/openscriptures/strongs",
+  "revision": "0acd2f251c2d35ff8db2dece4e0593979d3ac223",
+  "files": [
+    {
+      "path": "strongs-hebrew-dictionary.js",
+      "url": "https://raw.githubusercontent.com/openscriptures/strongs/0acd2f251c2d35ff8db2dece4e0593979d3ac223/hebrew/strongs-hebrew-dictionary.js",
+      "sha256": "5ce6aeed551c709f49bcfa341cadf2f34bc7599b85d9de9e6ac2ecbf60fc3739",
+      "bytes": 2003130
+    },
+    {
+      "path": "strongs-greek-dictionary.js",
+      "url": "https://raw.githubusercontent.com/openscriptures/strongs/0acd2f251c2d35ff8db2dece4e0593979d3ac223/greek/strongs-greek-dictionary.js",
+      "sha256": "7624ee738ae47e80f1a352223e28a26d011c9cd4898822cee52f47a010c04efd",
+      "bytes": 1200839
+    },
+    {
+      "path": "README.txt",
+      "url": "https://raw.githubusercontent.com/openscriptures/strongs/0acd2f251c2d35ff8db2dece4e0593979d3ac223/greek/StrongsGreekDictionaryXML_1.4/README.txt",
+      "sha256": "d6184a7ee7543fb2d0e4e50aa2e6e5de81edddcf3bd3255304b60e8622a515fc",
+      "bytes": 806
+    }
+  ],
+  "attribution": "James Strong, Hebrew and Greek dictionaries; JSON transcription copyright Open Scriptures, CC-BY-SA (source headers retained unchanged; license version not specified in headers).",
+  "webster": {
+    "edition": "Noah Webster, American Dictionary of the English Language (1828)",
+    "url": "https://webstersdictionary1828.com/Dictionary/mark",
+    "word": "mark",
+    "sense": "verb",
+    "excerpt": "To notice; to take particular observation of.",
+    "checked": "2026-10-16",
+    "scope": "English sense only; no claim of a Webster 1828 Shadrach entry or name etymology."
+  }
+}

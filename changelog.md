@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.18] - 2026-10-16
+
+- Audited all 2,620 name entries using the explicitly approved source standard; published the complete per-name findings in audit/name-review.csv and audit/NAME_AUDIT.md.
+- Scripture-led introductions and qualified lexical notes replace unchecked dictionary headlines. Original historical meanings remain attributed in the evidence comparison.
+- Corrected identity/context conflicts and restored missing name spellings/capitalization: 2,453 linked entries and 12,323 shared-verse connections. Removed six English Mark verbs from the person index; Bible word lookup now respects the selected verse and Webster 1828 English usage.
+- Added complete-coverage/source-integrity/index regressions and NAME-01 browser flow; four data tests and production build pass. No Scripture or PDF text changed.
+
+
 ## [00.01.16] - 2026-10-16
 
 - Removed the PDF tab from the right-hand companion exploration panel in `bible.html`, `bible/index.html`, and `src/bibleReader.ts`. The companion panel now focuses strictly on biblical study tools (`Passage & X-Refs`, `Word Inspector`, `Chronology & Eras`).

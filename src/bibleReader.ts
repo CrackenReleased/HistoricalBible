@@ -595,7 +595,10 @@ class BibleReader {
   private renderWordInspector(word: string): void {
     if (!this.tabContentWord) return;
 
-    const netName = localStore.getNetworkName(word);
+    const reference = `${this.currentBookOsis}.${this.currentChapter}.${this.selectedVerseNum || 1}`;
+    const netName = localStore.getNameAtReference(word, reference);
+    const review = netName ? localStore.getNameReview(netName.name) : undefined;
+    const english = localStore.getNameReview(word)?.english;
     const searchRes = localStore.searchAll(word, 8);
 
     const titleCase = word.charAt(0).toUpperCase() + word.slice(1);
@@ -603,10 +606,13 @@ class BibleReader {
     if (netName && netName.meaning) {
       meaningHtml = `
         <div class="word-meaning-box">
-          <strong style="color: var(--gold-warm); display: block; margin-bottom: 0.2rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Hitchcock's Bible Names Dictionary:</strong>
+          <strong style="color: var(--gold-warm); display: block; margin-bottom: 0.2rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Reviewed lexical note · distinct from Scripture:</strong>
+          ${review?.identity ? `<p>${review.identity.text}</p>` : ''}
           <span>${netName.meaning}</span>
         </div>
       `;
+    } else if (english) {
+      meaningHtml = `<div class="word-meaning-box"><strong>Webster’s 1828 · ${english.partOfSpeech}</strong><p>${english.definition}</p><a href="${english.url}">Read the source entry →</a></div>`;
     }
 
     let concordanceHtml = '';
@@ -781,6 +787,8 @@ class BibleReader {
       const target = e.target as HTMLElement;
       const wordEl = target.closest('.kjv-word') as HTMLElement;
       if (wordEl) {
+        const row = wordEl.closest('.bible-verse-row') as HTMLElement | null;
+        if (row) this.selectVerse(Number(row.dataset.verse));
         const wordText = wordEl.getAttribute('data-word') || wordEl.textContent || '';
         this.inspectWord(wordText);
         return;
@@ -799,6 +807,8 @@ class BibleReader {
       const wordEl = target.closest('.kjv-word') as HTMLElement;
       if (wordEl) {
         e.preventDefault();
+        const row = wordEl.closest('.bible-verse-row') as HTMLElement | null;
+        if (row) this.selectVerse(Number(row.dataset.verse));
         const wordText = wordEl.getAttribute('data-word') || wordEl.textContent || '';
         this.inspectWord(wordText);
       }
