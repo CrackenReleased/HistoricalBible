@@ -1,6 +1,27 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('HistoricalBible Verified Routes & Clean Architectural Separation', () => {
+  test('Brand artwork loads across main and clean routes, with a real favicon', async ({ page, request }) => {
+    const favicon = await request.get('/favicon.ico?v=00.01.08');
+    expect(favicon.ok()).toBe(true);
+    expect((await favicon.body()).length).toBeGreaterThan(1000);
+    for (const route of ['/', '/interact', '/bible', '/bible/', '/contact', '/contact/']) {
+      await page.goto(route);
+      const headerLogo = page.locator('header .brand-image');
+      await expect(headerLogo).toBeVisible();
+      await expect(headerLogo).toHaveAttribute('alt', 'Historical Bible — Home');
+      await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute('href', '/images/brand/apple-touch-icon.png');
+      for (const image of await page.locator('header .brand-image, footer .footer-brand img').all()) {
+        await image.scrollIntoViewIfNeeded();
+        await expect(image).toHaveJSProperty('complete', true);
+        expect(await image.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
+      }
+    }
+    await page.goto('/');
+    await expect(page.locator('.home-brand-art')).toHaveJSProperty('complete', true);
+    expect(await page.locator('.home-brand-art').evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
+  });
+
   test('Home page (Front Door) renders dark-gold welcome, 4-stop timeline, 3 curiosity doors, mission, and PayPal donation', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await expect(page).toHaveTitle(/Historical Bible/);

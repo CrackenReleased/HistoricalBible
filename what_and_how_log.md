@@ -1,3 +1,16 @@
+## 2026-10-16 12:25:58 — Website branding (v00.01.08)
+
+- Prepared the user-supplied Downloads/HistoricalBible_ Timeless Atlas Logo-2.png artwork as three isolated brand assets using the built-in image editing tool: circular emblem, upper detailed logo, lower-right compact logo. Original artwork remains unchanged. Generated PNG masters remain in the tool's managed image folder; optimized website assets live in public/images/brand.
+- Placement: detailed logo in Home introduction; compact logo in all six main/clean-route headers and footers; favicon on all eight HTML entry points. Replaced the empty public/favicon.ico with a 16/32/48/64/128/256 icon; added 32px PNG favicon and 180px Apple touch icon. Explicit dimensions, descriptive alt text, transparent WebP logos, and lazy footer loading keep delivery practical.
+- Verification: canonical baseline and production build pass. Browser visually reviewed 1440px desktop and 375px mobile with no horizontal overflow; logo image decoding succeeds. CUA checked header logos and favicon references across /interact, /bible, /bible/, /contact, /contact/. HTTP checks verify all five assets return 200 and nonempty bytes. Old favicon has zero bytes and fails the new >1000-byte guard. tests/site_pages.spec.ts adds route/image/favicon regression coverage; full Playwright runner was not executed.
+- Sibling scan: all six shared headers/footers and all eight HTML head entry points covered; existing Bible/Contact aliases use the same files. No duplicate logo sources.
+- Artifact impact: four public brand files added plus one empty favicon replaced, eight HTML files, shared CSS, package/lock version metadata, existing browser test, and two logs updated. Net source +46 lines, test +21 lines; no dependencies, persisted fields, databases or research datasets introduced. Total delivered brand image bytes: 666,915. Temporary responsive harness removed after review; two ignored screenshots retained as QA evidence. No new servers spawned; existing preview server preserved.
+- Image prompts (built-in tool; source supplied as edit target for each):
+  - Icon: extract only the lower-left circular Bible/compass emblem, preserve gold rim, Bible, star and navy interior, no lettering; transparent exterior, centered square with safety padding.
+  - Large: extract only the upper Bible, compass, globe arcs, exact HistoricalBible lettering and underline; remove lower logos/background; preserve design and fine detail; transparent, tightly framed wide composition.
+  - Small: extract only the lower-right line-art Bible/compass and exact HistoricalBible lettering/underline; preserve design, color, proportions and detail; transparent with a small safety margin.
+- Release uses the user's existing Git publishing authorization. Task-scoped commit/push only; unrelated local work is preserved.
+
 ## 2026-10-16 12:09:14 — Owner-authorized Git release (v00.01.07)
 
 - User requested commit/push of the Interact changes. Preserved the current beta version sequence, which supersedes the earlier local v1.7.0/v1.7.1 labels. Included the collection entrance, search, actual-data arcs, and solid testament colors.
