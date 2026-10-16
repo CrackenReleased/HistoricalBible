@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.23] - 2026-10-16
+
+- Word Inspector UI Polish & Decluttering (`/bible`):
+  - Streamlined Header Hierarchy: Removed redundant `— SCRIPTURE WORD INSPECTOR` eyebrow banner and duplicate `[ANCIENT HEBREW] [H... ]` badge row directly beneath the title.
+  - Placed the inspected Scripture word title directly at the top of the card in illuminated gold Cinzel serif font with zero top margin, achieving immediate visual focus and eliminating redundant vertical height.
+  - Untranslated lemma, transliteration, pronunciation, and Strong's Concordance ID (`Strong's H7307`) remain cleanly consolidated inside the `UNTRANSLATED WORD & ORIGIN` section below.
+  - Automated Regression Tests: Updated `tests/word-inspector.spec.ts` asserting absence of eyebrow and badge row, and added explicit test verifying "Spirit" inspection in Genesis 1:2. All 46 tests pass. Visual proof captured at `test-results/word-inspector-spirit-clean.png`.
+
 ## [00.01.22] - 2026-10-16
 
 - Enhanced Scripture Word Inspector & Lexicon Engine (`/bible`):

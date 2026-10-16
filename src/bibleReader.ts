@@ -678,12 +678,7 @@ class BibleReader {
 
     this.tabContentWord.innerHTML = `
       <div class="word-inspect-card">
-        <span class="eyebrow">— SCRIPTURE WORD INSPECTOR</span>
-        <h3 class="word-inspect-name">${titleCase}</h3>
-        <div class="word-badge-row">
-          <span class="word-badge">${lexicon.untranslated.language}</span>
-          ${lexicon.untranslated.strongsId ? `<span class="word-badge word-badge-strongs">${lexicon.untranslated.strongsId}</span>` : ''}
-        </div>
+        <h3 class="word-inspect-name" style="margin-top: 0; margin-bottom: 0.85rem;">${titleCase}</h3>
 
         ${defHtml}
         ${originHtml}

@@ -1,3 +1,26 @@
+## 2026-10-16 19:42:00 — Word Inspector UI Polish & Decluttering (v00.01.23)
+
+- User Request & Visual Feedback:
+  - User provided an annotated screenshot (`media_1792193976009_a33f837d.png`):
+    1. Red strike-through across `— SCRIPTURE WORD INSPECTOR` eyebrow with an arrow pointing `SPIRIT` directly to the top.
+    2. Red strike-through across duplicate `[ANCIENT HEBREW] [H7307]` badge row.
+    3. User requested: *"Okay, much closer. But we need to get some more of the Ui cleaned up."*
+- Decision Point & Implementation:
+  - In `src/bibleReader.ts` (`renderWordInspector`):
+    - Removed `<span class="eyebrow">— SCRIPTURE WORD INSPECTOR</span>` (tab header already indicates active mode).
+    - Removed `<div class="word-badge-row">` containing the redundant language and Strong's badges.
+    - Set `.word-inspect-name` styling to `margin-top: 0; margin-bottom: 0.85rem;` so the word title anchors the top of the card cleanly.
+    - All untranslated linguistic data (Hebrew/Greek lemma, transliteration, pronunciation, derivation, and `Strong's H7307`) remain consolidated inside the `UNTRANSLATED WORD & ORIGIN` section below.
+- Sibling Scan (§1):
+  - Checked other tabs in companion inspector: verified Passage & X-Refs, Chronology, and Map headers remain clean and unimpacted.
+- Verification (Cardinal Rule):
+  - Updated `tests/word-inspector.spec.ts` asserting count of 0 for `.word-inspect-card .eyebrow` and `.word-badge-row`.
+  - Added dedicated test asserting clicking "Spirit" in Genesis 1:2 renders the word at the top without eyebrow or duplicate badge row.
+  - Captured visual proof screenshot `test-results/word-inspector-spirit-clean.png`.
+  - All 46 Playwright tests passed green in 1.2m.
+  - Canonical KJV verification confirmed all 31,098 verses, 14,133 translator italics, 5,556 cased LORD.
+  - Production build completed in 763ms.
+
 ## 2026-10-16 19:33:00 — Scripture Word Inspector Lexicon & Modern Meaning (v00.01.22)
 
 - User Request & Diagnosis:

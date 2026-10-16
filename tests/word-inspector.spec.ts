@@ -11,8 +11,10 @@ test.describe('Bible Word Inspector & Modern Meaning', () => {
     const wordContent = page.locator('#companion-tab-word-content');
     await expect(wordContent).toBeVisible();
 
-    // 2. Assert Title & Eyebrow
+    // 2. Assert Title sits directly at the top with no redundant eyebrow or badge row
     await expect(wordContent.locator('.word-inspect-name')).toHaveText('WITHOUT');
+    await expect(wordContent.locator('.word-inspect-card .eyebrow')).toHaveCount(0);
+    await expect(wordContent.locator('.word-badge-row')).toHaveCount(0);
 
     // 3. Assert Word Definition is populated (not empty)
     const defSection = wordContent.locator('.word-inspect-section').nth(0);
@@ -48,5 +50,29 @@ test.describe('Bible Word Inspector & Modern Meaning', () => {
     await wordTabBtn.click();
     await page.waitForTimeout(500);
     await page.screenshot({ path: 'test-results/word-inspector-proof.png', fullPage: false });
+  });
+
+  test('clicking "Spirit" in Genesis 1:2 displays clean title without eyebrow or duplicate badge row', async ({ page }) => {
+    await page.goto('/bible?book=Genesis&chapter=1&word=spirit&tab=word', { waitUntil: 'networkidle' });
+
+    const wordContent = page.locator('#companion-tab-word-content');
+    await expect(wordContent).toBeVisible();
+
+    // Verify Title is SPIRIT at the top, no eyebrow, no badge row
+    await expect(wordContent.locator('.word-inspect-name')).toHaveText('SPIRIT');
+    await expect(wordContent.locator('.word-inspect-card .eyebrow')).toHaveCount(0);
+    await expect(wordContent.locator('.word-badge-row')).toHaveCount(0);
+
+    // Verify Untranslated Word & Origin has Strong's H7307 and lemma
+    const originSection = wordContent.locator('.word-inspect-section').nth(1);
+    await expect(originSection).toContainText('H7307');
+    await expect(originSection).toContainText('רוּחַ');
+
+    // Modern Meaning
+    const modernSection = wordContent.locator('.word-section-modern');
+    await expect(modernSection.locator('.word-section-title')).toContainText('MODERN MEANING');
+
+    // Capture visual proof of SPIRIT
+    await page.screenshot({ path: 'test-results/word-inspector-spirit-clean.png', fullPage: false });
   });
 });
