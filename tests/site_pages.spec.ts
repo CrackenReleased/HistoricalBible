@@ -206,11 +206,12 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
 
     // Right-hand companion panel strictly houses study exploration tabs, NOT a PDF tab
     await expect(page.locator('#companion-tab-pdf-btn')).toHaveCount(0);
-    await expect(page.locator('.companion-tabs-nav button')).toHaveCount(4);
-    await expect(page.locator('.companion-tabs-nav')).toContainText('Passage & X-Refs');
-    await expect(page.locator('.companion-tabs-nav')).toContainText('Word Inspector');
-    await expect(page.locator('.companion-tabs-nav')).toContainText('Chronology');
-    await expect(page.locator('.companion-tabs-nav')).toContainText('Map');
+    const navButtons = page.locator('.companion-tabs-nav button');
+    await expect(navButtons).toHaveCount(4);
+    await expect(navButtons.nth(0)).toHaveText('Chronology');
+    await expect(navButtons.nth(1)).toHaveText('Map');
+    await expect(navButtons.nth(2)).toHaveText('Word Inspector');
+    await expect(navButtons.nth(3)).toHaveText('Passage & X-Refs');
 
     // Printable PDF edition is located at the bottom of the page
     const printableCard = page.locator('#printable-edition');

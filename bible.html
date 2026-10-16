@@ -94,32 +94,18 @@
       <!-- RIGHT PANE: Interactive Companion Inspector (Sticky Side-Panel) -->
       <aside id="bible-companion-pane" class="bible-companion-pane" aria-label="Interactive Scripture Companion">
         <nav class="companion-tabs-nav" aria-label="Companion Tabs">
-          <button type="button" id="companion-tab-xrefs-btn" class="companion-tab-btn active">Passage &amp; X-Refs</button>
-          <button type="button" id="companion-tab-word-btn" class="companion-tab-btn">Word Inspector</button>
           <button type="button" id="companion-tab-chrono-btn" class="companion-tab-btn">Chronology</button>
           <button type="button" id="companion-tab-map-btn" class="companion-tab-btn">Map</button>
+          <button type="button" id="companion-tab-word-btn" class="companion-tab-btn">Word Inspector</button>
+          <button type="button" id="companion-tab-xrefs-btn" class="companion-tab-btn active">Passage &amp; X-Refs</button>
         </nav>
 
-        <!-- Tab 1: Passage Cross-References & Context -->
-        <div id="companion-tab-xrefs-content" class="companion-tab-content" role="tabpanel">
-          <!-- Populated dynamically when selecting a verse -->
-        </div>
-
-        <!-- Tab 2: Word-for-Word Concordance & Dictionary Inspector -->
-        <div id="companion-tab-word-content" class="companion-tab-content" role="tabpanel" hidden>
-          <div class="word-inspect-card">
-            <span class="eyebrow">WORD INSPECTOR</span>
-            <h3 class="word-inspect-name">Select a Word</h3>
-            <p class="word-inspect-meta">Left-click or right-click any word in the Scripture text to dive into its biblical dictionary definition, network connections, and occurrences.</p>
-          </div>
-        </div>
-
-        <!-- Tab 3: Chronology & Historical Eras Companion Panel View -->
+        <!-- Tab 1: Chronology & Historical Eras Companion Panel View -->
         <div id="companion-tab-chrono-content" class="companion-tab-content" role="tabpanel" hidden>
           <!-- Populated dynamically with event date vs. authorship date -->
         </div>
 
-        <!-- Tab 4: Biblical Geography & Interactive Map Companion -->
+        <!-- Tab 2: Biblical Geography & Interactive Map Companion -->
         <div id="companion-tab-map-content" class="companion-tab-content" role="tabpanel" hidden>
           <div class="bible-map-companion-card">
             <div class="bible-map-header">
@@ -134,6 +120,19 @@
               <a href="/map" class="bible-map-full-link" id="companion-map-full-link">Open Full-Screen Atlas &rarr;</a>
             </div>
           </div>
+        </div>
+
+        <!-- Tab 3: Word-for-Word Concordance & Dictionary Inspector -->
+        <div id="companion-tab-word-content" class="companion-tab-content" role="tabpanel" hidden>
+          <div class="word-inspect-card">
+            <h3 class="word-inspect-name" style="margin-top: 0; margin-bottom: 0.85rem;">Select a Word</h3>
+            <p class="word-inspect-meta">Left-click or right-click any word in the Scripture text to dive into its biblical dictionary definition, network connections, and occurrences.</p>
+          </div>
+        </div>
+
+        <!-- Tab 4: Passage Cross-References & Context -->
+        <div id="companion-tab-xrefs-content" class="companion-tab-content" role="tabpanel">
+          <!-- Populated dynamically when selecting a verse -->
         </div>
       </aside>
     </div>

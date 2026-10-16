@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.24] - 2026-10-16
+
+- Companion Tab Button Reordering (`/bible`):
+  - Reordered the 4 side-panel companion tab buttons according to explicit user workflow priority:
+    1. **Chronology** (`#companion-tab-chrono-btn`): Historical event dating vs. composition dating and chapter context.
+    2. **Map** (`#companion-tab-map-btn`): Synchronized biblical world geography and ancient cartography.
+    3. **Word Inspector** (`#companion-tab-word-btn`): Lexical definitions, untranslated root lemmas, and modern meaning.
+    4. **Passage & X-Refs** (`#companion-tab-xrefs-btn`): Active verse context and cross-reference network connections.
+  - Aligned HTML markup across both `bible.html` and `bible/index.html` including DOM panels for consistent tab navigation.
+  - Automated Regression Tests: Updated `tests/site_pages.spec.ts` and `tests/word-inspector.spec.ts` locking in button order index assertions. All 47 tests pass. Visual proof captured at `test-results/companion-tabs-reordered-proof.png`.
+
 ## [00.01.23] - 2026-10-16
 
 - Word Inspector UI Polish & Decluttering (`/bible`):

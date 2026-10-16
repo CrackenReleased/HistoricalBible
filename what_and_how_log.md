@@ -1,3 +1,29 @@
+## 2026-10-16 19:54:00 — Companion Tab Button Reordering (v00.01.24)
+
+- User Request & Visual Feedback:
+  - User provided an annotated screenshot (`media_1792194681490_418203ad.png`) numbering the side-panel companion buttons:
+    - `1` above Chronology
+    - `2` above Map
+    - `3` above Word Inspector
+    - `4` above Passage & X-Refs
+  - User instruction: *"Let's re-sort the order of the buttons on the side panel."*
+- Decision Point & Implementation:
+  - Reordered the button elements in `.companion-tabs-nav` in `bible.html` and `bible/index.html`:
+    1. `#companion-tab-chrono-btn` (Chronology)
+    2. `#companion-tab-map-btn` (Map)
+    3. `#companion-tab-word-btn` (Word Inspector)
+    4. `#companion-tab-xrefs-btn` (Passage & X-Refs)
+  - Also aligned the DOM panel ordering for accessibility and logical document flow.
+- Sibling Scan (§1):
+  - Verified `bible.html` and `bible/index.html` have 100% synchronized navigation order.
+  - Verified active state triggers (click verse -> opens Passage & X-Refs, click word -> opens Word Inspector, click tabs -> opens respective panel) remain fully functional without interference.
+- Verification (Cardinal Rule):
+  - Updated `tests/site_pages.spec.ts` asserting the exact sequence of 4 buttons (`Chronology`, `Map`, `Word Inspector`, `Passage & X-Refs`).
+  - Added dedicated Playwright test in `tests/word-inspector.spec.ts` asserting button order and capturing screenshot proof of Genesis 1:6 (`test-results/companion-tabs-reordered-proof.png`).
+  - All 47 Playwright tests passed green in 1.2m.
+  - Canonical KJV verification confirmed all 31,098 verses, 14,133 translator italics, 5,556 cased LORD.
+  - Production build completed in 745ms.
+
 ## 2026-10-16 19:42:00 — Word Inspector UI Polish & Decluttering (v00.01.23)
 
 - User Request & Visual Feedback:

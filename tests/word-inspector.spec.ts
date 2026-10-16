@@ -75,4 +75,21 @@ test.describe('Bible Word Inspector & Modern Meaning', () => {
     // Capture visual proof of SPIRIT
     await page.screenshot({ path: 'test-results/word-inspector-spirit-clean.png', fullPage: false });
   });
+
+  test('companion tabs are ordered: 1. Chronology, 2. Map, 3. Word Inspector, 4. Passage & X-Refs', async ({ page }) => {
+    await page.goto('/bible?book=Genesis&chapter=1', { waitUntil: 'networkidle' });
+
+    // Click verse 6 to match user screenshot
+    await page.locator('.bible-verse-row[data-verse="6"]').click();
+
+    const navButtons = page.locator('.companion-tabs-nav button');
+    await expect(navButtons).toHaveCount(4);
+    await expect(navButtons.nth(0)).toHaveText('Chronology');
+    await expect(navButtons.nth(1)).toHaveText('Map');
+    await expect(navButtons.nth(2)).toHaveText('Word Inspector');
+    await expect(navButtons.nth(3)).toHaveText('Passage & X-Refs');
+
+    // Visual screenshot proof of Genesis 1:6 with reordered buttons
+    await page.screenshot({ path: 'test-results/companion-tabs-reordered-proof.png', fullPage: false });
+  });
 });
