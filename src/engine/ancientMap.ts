@@ -123,46 +123,38 @@ export class AncientMapCanvas {
     const compassEl = document.createElement('div');
     compassEl.className = 'ornate-compass-rose';
     compassEl.setAttribute('role', 'img');
-    compassEl.setAttribute('aria-label', 'Compass Rose indicating North direction');
+    compassEl.setAttribute('aria-label', 'Compass needle indicating North direction');
     compassEl.innerHTML = `
       <div class="compass-inner">
-        <svg viewBox="0 0 100 100" class="compass-svg" width="84" height="84">
-          <!-- Outer Dial Ring -->
-          <circle cx="50" cy="50" r="46" fill="rgba(8, 12, 17, 0.85)" stroke="#d4af37" stroke-width="1.8"/>
-          <circle cx="50" cy="50" r="41" fill="none" stroke="rgba(212, 175, 55, 0.4)" stroke-width="0.8" stroke-dasharray="2,3"/>
+        <svg viewBox="0 0 36 44" class="compass-svg" width="32" height="38" aria-hidden="true">
+          <!-- Subtle North N indicator -->
+          <text x="18" y="7" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="8" fill="#ef4444">N</text>
+          
+          <!-- Faint East & West subtle labels -->
+          <text x="33" y="24" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="500" font-size="6" fill="rgba(148, 163, 184, 0.4)">E</text>
+          <text x="3" y="24" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-weight="500" font-size="6" fill="rgba(148, 163, 184, 0.4)">W</text>
+          
+          <!-- Faint horizontal cross tick -->
+          <line x1="8" y1="22" x2="13" y2="22" stroke="rgba(148, 163, 184, 0.3)" stroke-width="0.8" stroke-linecap="round"/>
+          <line x1="23" y1="22" x2="28" y2="22" stroke="rgba(148, 163, 184, 0.3)" stroke-width="0.8" stroke-linecap="round"/>
 
-          <!-- Cardinal Cross Lines -->
-          <line x1="50" y1="12" x2="50" y2="88" stroke="rgba(212, 175, 55, 0.3)" stroke-width="0.8"/>
-          <line x1="12" y1="50" x2="88" y2="50" stroke="rgba(212, 175, 55, 0.3)" stroke-width="0.8"/>
+          <!-- Faint East & West wings -->
+          <polygon points="18,22 13,22 18,20" fill="rgba(148, 163, 184, 0.2)"/>
+          <polygon points="18,22 13,22 18,24" fill="rgba(100, 116, 139, 0.2)"/>
+          <polygon points="18,22 23,22 18,20" fill="rgba(148, 163, 184, 0.2)"/>
+          <polygon points="18,22 23,22 18,24" fill="rgba(100, 116, 139, 0.2)"/>
 
-          <!-- Secondary Star Points (NW, NE, SW, SE) -->
-          <polygon points="50,50 46,30 50,22 54,30" fill="rgba(197, 160, 89, 0.5)"/>
-          <polygon points="50,50 70,46 78,50 70,54" fill="rgba(197, 160, 89, 0.5)"/>
-          <polygon points="50,50 54,70 50,78 46,70" fill="rgba(197, 160, 89, 0.5)"/>
-          <polygon points="50,50 30,54 22,50 30,46" fill="rgba(197, 160, 89, 0.5)"/>
+          <!-- North Needle (Red: bright red left, shaded red right) -->
+          <polygon points="18,9 15,22 18,22" fill="#ef4444"/>
+          <polygon points="18,9 21,22 18,22" fill="#b91c1c"/>
 
-          <!-- Primary Compass Needle pointing NORTH (Crisp Gold & Red) -->
-          <!-- North Point (Illuminated Red & Gold) -->
-          <polygon points="50,10 44,48 50,50" fill="#e11d48"/>
-          <polygon points="50,10 56,48 50,50" fill="#be123c"/>
-          <!-- South Point -->
-          <polygon points="50,90 44,52 50,50" fill="#475569"/>
-          <polygon points="50,90 56,52 50,50" fill="#334155"/>
-          <!-- East & West Points -->
-          <polygon points="90,50 52,44 50,50" fill="#94a3b8"/>
-          <polygon points="10,50 48,44 50,50" fill="#64748b"/>
+          <!-- South Needle (Gray: light slate left, slate gray right) -->
+          <polygon points="18,35 15,22 18,22" fill="#94a3b8"/>
+          <polygon points="18,35 21,22 18,22" fill="#64748b"/>
 
           <!-- Center Pivot Core -->
-          <circle cx="50" cy="50" r="5" fill="#d4af37" stroke="#080c11" stroke-width="1.5"/>
-          <circle cx="50" cy="50" r="2" fill="#ffffff"/>
-
-          <!-- Cardinal Labels -->
-          <text x="50" y="8" text-anchor="middle" font-family="'Cinzel', Georgia, serif" font-weight="700" font-size="10" fill="#ffd700">N</text>
-          <text x="50" y="98" text-anchor="middle" font-family="'Cinzel', Georgia, serif" font-weight="600" font-size="8" fill="#94a3b8">S</text>
-          <text x="96" y="53" text-anchor="middle" font-family="'Cinzel', Georgia, serif" font-weight="600" font-size="8" fill="#94a3b8">E</text>
-          <text x="5" y="53" text-anchor="middle" font-family="'Cinzel', Georgia, serif" font-weight="600" font-size="8" fill="#94a3b8">W</text>
+          <circle cx="18" cy="22" r="1.8" fill="#0f172a" stroke="#cbd5e1" stroke-width="0.8"/>
         </svg>
-        <div class="compass-label-banner">NORTH &uarr;</div>
       </div>
     `;
 

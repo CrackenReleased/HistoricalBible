@@ -10,10 +10,9 @@ test.describe('Biblical World Map Cartography, Compass Rose & Chronology', () =>
     await expect(mapContainer).toBeVisible();
     await expect(page.locator('.leaflet-container')).toBeVisible({ timeout: 5000 });
 
-    // 2. Assert Prominent North Compass Rose
+    // 2. Assert Minimal North Compass Indicator (red north, gray south, faint east/west)
     const compassRose = page.locator('.ornate-compass-rose');
     await expect(compassRose).toBeVisible();
-    await expect(compassRose.locator('.compass-label-banner')).toHaveText(/NORTH\s*↑/i);
     await expect(compassRose.getByText('N', { exact: true })).toBeVisible();
 
     // 3. Assert Active Year & Chronological Era HUD

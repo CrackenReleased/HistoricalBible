@@ -1,3 +1,21 @@
+## 2026-10-16 19:08:00 — Minimalist Map Compass Indicator (v00.01.21)
+
+- User Feedback & Diagnosis:
+  - User noted: *"that compas is RIDICULIOUSLY ANNOYING for something that is literally just a visual aid. Should be just the north red and south gray, with faint east and west. Everyone who reads a map knows that... the honkin compas is insane..."*
+  - The previous compass was excessively large (~100px x 115px), taking up the entire upper-right quadrant of the companion map panel and obscuring Turkey, Georgia, and the Black Sea with heavy gold concentric circles and a loud "NORTH ↑" banner.
+- Decision Point & Implementation:
+  - Re-engineered `buildCompassRose()` in `src/engine/ancientMap.ts` to render a sleek, minimalist cartographic needle.
+  - North pointer: Crisp two-tone red arrow (`#ef4444` / `#b91c1c`) with subtle red 'N' indicator.
+  - South pointer: Clean two-tone slate gray arrow (`#94a3b8` / `#64748b`).
+  - East & West: Subtle, faint cross ticks and delicate labels in slate gray with 40% opacity (`rgba(148, 163, 184, 0.4)`).
+  - Center: Tiny dark slate core with delicate silver stroke.
+  - Removed `.compass-label-banner` completely.
+  - Updated `src/interact.css`: Positioned `.ornate-compass-rose` as a compact 34px × 42px translucent glass HUD tile (`top: 12px; right: 12px;`) with a subtle 6px blur and dark backdrop, freeing up 85% of previously obscured map canvas.
+- Verification (Cardinal Rule):
+  - Updated `tests/map-chronology-compass.spec.ts` asserting presence of the minimalist North compass indicator without bulky banners.
+  - Captured and inspected visual proof screenshots (`test-results/bible-side-by-side-map-proof.png` and `test-results/map-chronology-compass-proof.png`) confirming clean, unobtrusive rendering across both the Bible companion panel and the full atlas.
+  - All 44 Playwright tests passed in 1.1m.
+  - Production build passed (`npm run build` in 737ms verifying all 31,098 canonical KJV verses).
 ## 2026-10-16 18:55:00 — Bible Side-by-Side Companion Map Tab Integration (v00.01.20)
 
 - User Request & Purpose:
