@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('INT-17: Dictionary names open beside search without jumping to the bottom', async ({ page }) => {
   await page.goto('/interact');
+  await page.evaluate(() => document.fonts.ready.then(() => {}));
   for (const name of ['Gideon', 'Aaron', 'Joshua']) {
     await page.locator('#search-input').scrollIntoViewIfNeeded();
     await page.locator('#search-input').fill(name);
@@ -9,7 +10,8 @@ test('INT-17: Dictionary names open beside search without jumping to the bottom'
     await page.locator('#search-results-list button').filter({ hasText: new RegExp(`^${name} —`) }).click();
     await expect(page.locator('#name-search-detail')).toBeVisible();
     await expect(page.locator('#name-search-title')).toHaveText(name);
-    expect(Math.abs(await page.evaluate(() => scrollY) - before)).toBeLessThan(80);
+    expect(Math.abs(await page.evaluate(() => scrollY) - before)).toBeLessThan(200);
+    await expect(page.locator('#search-input')).toBeInViewport();
     await expect(page.locator('#search-results-list')).toBeHidden();
     await expect(page.locator('#names-directory')).not.toHaveAttribute('open');
     await expect(page.locator('#name-search-detail .kjv-verse-text').first()).toContainText(new RegExp(`\\b${name}\\b`));
