@@ -10,12 +10,14 @@ import {
   RankedBiblicalName
 } from './store/localFirstStore';
 import { discoveries } from './discoveries';
+import { CollectionExplorer } from './collectionExplorer';
 
 class HistoricalInteractApp {
   private selectedEraId: string = 'all';
   private selectedEmpireId: string | null = null;
   private activeFigure: HistoricalFigure | null = null;
   private trail: string[] = [];
+  private explorer: CollectionExplorer | null = null;
 
   public async bootstrap(): Promise<void> {
     const errorBanner = document.getElementById('error-banner');
@@ -28,7 +30,7 @@ class HistoricalInteractApp {
 
       const count = localStore.getVerseCount();
       if (telemetryPill) {
-        telemetryPill.innerHTML = `${count.toLocaleString()} Canonical KJV Verses · {c:v} · [...] · <span class="kjv-divine-name">L<span class="kjv-divine-rest">ORD</span></span>`;
+        telemetryPill.innerHTML = `${count.toLocaleString()} Indexed KJV Verse Records · {c:v} · [...] · <span class="kjv-divine-name">L<span class="kjv-divine-rest">ORD</span></span>`;
       }
 
       const sync = localStore.getSynchrony();
@@ -45,10 +47,11 @@ class HistoricalInteractApp {
       this.renderDualStreamSpine();
       this.renderActiveFigureWorkspace();
       this.renderHitchcockDirectory('');
+      this.explorer = new CollectionExplorer((...args) => this.buildScriptureCard(...args), id => this.selectFigureById(id));
       this.bindEvents();
       this.renderCollectionOverview();
       document.querySelectorAll<HTMLInputElement | HTMLButtonElement>('#collection-search input, #collection-search button').forEach(control => { control.disabled = false; });
-      this.setSearchStatus('Search Scripture, historical profiles, empires, and biblical names.');
+      this.setSearchStatus('Search Scripture and the complete Obsidian name network. Every total below opens its records.');
       // Links from Home and shared discoveries still land on the requested person.
       if (requestedFig && sync.figures.some(figure => figure.id === requestedFig)) {
         document.getElementById('discovery')?.scrollIntoView({ behavior: 'instant', block: 'start' });
@@ -76,7 +79,7 @@ class HistoricalInteractApp {
 
   private renderCollectionOverview(): void {
     const collection = localStore.getCollectionOverview();
-    for (const key of ['connections', 'verses', 'profiles', 'empires'] as const) {
+    for (const key of ['connections', 'names', 'nameEdges'] as const) {
       const el = document.getElementById(`stat-${key}`);
       if (el) el.textContent = collection[key].toLocaleString('en-US');
     }
@@ -226,7 +229,7 @@ class HistoricalInteractApp {
       btn.className = `figure-node ${isSelected ? 'active' : ''} ${isChrist ? 'christ-center' : ''}`;
       btn.setAttribute('data-figure-id', fig.id);
       btn.innerHTML = `
-        <span class="figure-node-rank">${isChrist ? 'Jesus & the Roman world' : `${fig.measuredMentions} Scripture mentions`}</span>
+        <span class="figure-node-rank">${isChrist ? 'Jesus & the Roman world' : `${localStore.getNetworkName(fig.hitchcockKey)?.refs.length ?? 0} indexed verse links`}</span>
         <span class="figure-node-name">${fig.name}</span>
         <span class="figure-node-dates">${fig.dateRangeLabel}</span>
       `;
@@ -282,11 +285,12 @@ class HistoricalInteractApp {
           <div class="figure-covenant-box">${fig.covenantSummary}</div>
           <div class="figure-meta-row">
             <span class="meta-tag"><strong>Hitchcock Meaning:</strong> ${fig.hitchcockMeaning}</span>
-            <span class="meta-tag"><strong>Scripture Mentions:</strong> ${fig.measuredMentions.toLocaleString()}</span>
+            <button type="button" class="btn-small figure-network-link">Explore ${localStore.getNetworkName(fig.hitchcockKey)?.refs.length ?? 0} verse links &amp; the full name network →</button>
             ${era ? `<span class="meta-tag"><strong>World Horizon:</strong> ${era.worldContext}</span>` : ''}
           </div>
         </article>
       `;
+      heroContainer.querySelector('.figure-network-link')?.addEventListener('click', () => this.explorer?.showName(fig.hitchcockKey, true));
     }
 
     // 2. Secular Contemporaries & Evidence Cards
@@ -517,7 +521,8 @@ class HistoricalInteractApp {
         <span class="scripture-ref">${verseObj ? localStore.formatDisplayRef(verseObj) : displayRef}</span>
         <div class="scripture-actions">
           <button type="button" class="btn-small btn-toggle-chapter" aria-expanded="false">Read in context</button>
-          <button type="button" class="btn-small btn-toggle-xrefs" aria-expanded="false">Connected passages (${crossRefs.length})</button>
+          <button type="button" class="btn-small btn-toggle-xrefs" aria-expanded="false">Connected passages · preview (${crossRefs.length})</button>
+          <button type="button" class="btn-small btn-all-xrefs">All source records →</button>
         </div>
       </div>
       <div class="kjv-verse-text">${formattedHtml}</div>
@@ -526,7 +531,10 @@ class HistoricalInteractApp {
       <div class="drawer-box drawer-xrefs"></div>
     `;
 
+    card.querySelector('.btn-all-xrefs')?.addEventListener('click', () => this.explorer?.openReferences(osisRef));
+
     const chapBtn = card.querySelector('.btn-toggle-chapter') as HTMLButtonElement | null;
+    if (chapBtn && !verseObj) chapBtn.disabled = true;
     const chapDrawer = card.querySelector('.drawer-chapter') as HTMLElement | null;
     const xrefBtn = card.querySelector('.btn-toggle-xrefs') as HTMLButtonElement | null;
     const xrefDrawer = card.querySelector('.drawer-xrefs') as HTMLElement | null;
@@ -560,7 +568,7 @@ class HistoricalInteractApp {
         xrefBtn.setAttribute('aria-expanded', String(isOpen));
         if (isOpen && xrefDrawer.innerHTML === '') {
           if (crossRefs.length === 0) {
-            xrefDrawer.innerHTML = '<div class="crossref-item">No curated cross-references indexed for this verse.</div>';
+            xrefDrawer.innerHTML = '<div class="crossref-item">No preview passages available for this verse. Open the full source records to check ranges and unavailable references.</div>';
           } else {
             xrefDrawer.innerHTML = crossRefs
               .map(
@@ -626,29 +634,7 @@ class HistoricalInteractApp {
   }
 
   private openNameSearchResult(name: RankedBiblicalName, reveal = false): void {
-    const panel = document.getElementById('name-search-detail');
-    const passages = document.getElementById('name-search-passages');
-    const search = document.getElementById('search-input') as HTMLInputElement | null;
-    if (!panel || !passages) return;
-    document.getElementById('name-search-title')!.textContent = name.name;
-    document.getElementById('name-search-meaning')!.textContent = name.meanings.join('; ');
-    if (search) search.value = name.name;
-    passages.replaceChildren();
-    // Gideon must open Gideon passages, rather than earlier substring matches for Gideoni.
-    const escaped = name.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const exactName = new RegExp(`\\b${escaped}\\b`, 'i');
-    const verses = localStore.searchAll(name.name, Infinity).verses
-      .filter(verse => exactName.test(verse.text)).slice(0, 3);
-    for (const verse of verses) {
-      passages.appendChild(this.buildScriptureCard(verse, localStore.formatDisplayRef(verse),
-        localStore.toOsisRef(verse), 'Found by the selected name in the KJV text.'));
-    }
-    if (!verses.length) passages.textContent = 'No exact occurrence found in the loaded KJV text. Try a spelling variant in search.';
-    document.getElementById('search-results-list')?.classList.remove('active');
-    panel.hidden = false;
-    this.setSearchStatus(`Selected ${name.name}. Name meaning and Scripture passages are below the search.`);
-    if (reveal) panel.scrollIntoView({ behavior: 'instant', block: 'start' });
-    panel.focus({ preventScroll: true });
+    this.explorer?.showName(name.name, reveal);
   }
 
   private executeGlobalSearch(query: string): void {
@@ -661,7 +647,7 @@ class HistoricalInteractApp {
     if (!trimmed) {
       dropdown.classList.remove('active');
       dropdown.innerHTML = '';
-      this.setSearchStatus('Search Scripture, historical profiles, empires, and biblical names.');
+      this.setSearchStatus('Search Scripture and the complete Obsidian name network. Every total below opens its records.');
       return;
     }
 
@@ -788,7 +774,7 @@ class HistoricalInteractApp {
     document.getElementById('name-search-close')?.addEventListener('click', () => {
       document.getElementById('name-search-detail')!.hidden = true;
       searchInput?.focus({ preventScroll: true });
-      this.setSearchStatus('Search Scripture, historical profiles, empires, and biblical names.');
+      this.setSearchStatus('Search Scripture and the complete Obsidian name network. Every total below opens its records.');
     });
 
     document.getElementById('collection-search-form')?.addEventListener('submit', event => {

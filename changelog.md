@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.10] - 2026-10-16
+
+- Make every collection total open its complete browsable records: 31,102 verse references, 344,799 cross-references, 2,408 name entries and 12,058 name connections.
+- Connect the existing Obsidian network to search: all name passages, connected names and their shared verses; add book/chapter reading, full cross-reference ranges, filters and page-number navigation.
+- Preserve original vote scores and source attribution; disclose the four website text omissions and alternate source numbering without changing Scripture.
+- Add source export, full-network and UI traversal regression coverage.
+
 ## [00.01.09] - 2026-10-16
 
 - Keep searched names such as Gideon beside the search field, with their dictionary meaning and exact-name Scripture passages, instead of jumping to the bottom directory.

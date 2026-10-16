@@ -57,12 +57,13 @@
             <figcaption id="atlas-caption">Many books. A connected testimony.<small>Arcs sample the loaded cross-reference index; each joins two biblical books.</small></figcaption>
           </figure>
         </div>
-        <dl class="collection-stats" aria-label="Inside the loaded collection">
-          <div><dt>Indexed cross-references</dt><dd id="stat-connections">—</dd></div>
-          <div><dt>KJV verses to explore</dt><dd id="stat-verses">—</dd></div>
-          <div><dt>Historical profiles</dt><dd id="stat-profiles">—</dd></div>
-          <div><dt>World empires</dt><dd id="stat-empires">—</dd></div>
-        </dl>
+        <div class="collection-stats" aria-label="Explore the collection">
+          <button type="button" data-collection="references" aria-controls="collection-explorer" aria-expanded="false" disabled><strong id="stat-connections">—</strong><span>Cross-reference records <b>↗</b></span><small>Follow Scripture to Scripture</small></button>
+          <button type="button" data-collection="books" aria-controls="collection-explorer" aria-expanded="false" disabled><strong id="stat-verses">31,102</strong><span>KJV verses · 66 books <b>↗</b></span><small>Choose a book. Read a chapter.</small></button>
+          <button type="button" data-collection="names" aria-controls="collection-explorer" aria-expanded="false" disabled><strong id="stat-names">—</strong><span>Biblical name entries <b>↗</b></span><small>Meanings, passages &amp; connections</small></button>
+          <button type="button" data-collection="connections" aria-controls="collection-explorer" aria-expanded="false" disabled><strong id="stat-nameEdges">—</strong><span>Name connections <b>↗</b></span><small>Discover where their stories meet</small></button>
+        </div>
+        <section id="collection-explorer" class="collection-explorer" aria-label="Collection explorer" tabindex="-1" hidden></section>
         <div class="collection-search" id="collection-search">
           <div class="search-introduction"><span class="eyebrow">YOUR NEXT DISCOVERY</span><label for="search-input">Where will you begin?</label></div>
           <form id="collection-search-form" role="search" aria-label="Search the Bible and its connections">
@@ -77,13 +78,13 @@
               <button id="name-search-close" class="text-button" type="button" aria-label="Close name result">Close ×</button>
             </div>
             <p id="name-search-meaning"></p>
-            <p class="helper">Explore passages mentioning this name.</p>
+            <p class="helper">Explore the verse links and connected names preserved in the Obsidian index.</p>
             <div id="name-search-passages"></div>
           </section>
           <div class="search-suggestions"><span id="search-help">Try a thread</span><button type="button" data-search="John 3:16" disabled>John 3:16 <span>↗</span></button><button type="button" data-search="Daniel" disabled>Daniel <span>↗</span></button><button type="button" data-search="Pilate" disabled>Pilate <span>↗</span></button><button type="button" data-search="In the beginning" disabled>In the beginning <span>↗</span></button></div>
           <p id="search-status" class="search-status" role="status">Loading the collection for search…</p>
         </div>
-        <p class="collection-provenance">Cross-reference index: OpenBible.info / Treasury of Scripture Knowledge · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Historical profiles are a curated starting point. Scripture, commentary, and external evidence remain distinct.</p>
+        <p class="collection-provenance">31,102 KJV verses in 66 books and 1,189 chapters. Cross-reference records: <a href="https://www.openbible.info/labs/cross-references/">OpenBible.info / Treasury of Scripture Knowledge</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Name entries and shared-verse connections come from our existing Obsidian Bible network; dictionary meanings: <a href="https://github.com/BradyStephenson/bible-data">Hitchcock / Brady Stephenson</a> (CC BY 4.0). Connections are study aids, distinct from Scripture and external historical evidence. Every total opens the underlying collection.</p>
       </div>
     </section>
 
@@ -207,7 +208,7 @@
   <footer class="wrap">
     <a class="footer-brand" href="/"><img src="/images/brand/logo-small.webp" alt="Historical Bible — Home" width="600" height="300" loading="lazy" /></a>
     <div>Keep asking. Keep reading. Follow the thread.</div>
-    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Interact · v00.01.09</div>
+    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Interact · v00.01.10</div>
   </footer>
 
   <noscript>

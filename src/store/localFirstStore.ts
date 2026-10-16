@@ -11,12 +11,20 @@ export interface KjvVerseData {
 }
 
 export interface CrossRefLink {
+  r?: string;
   s?: string;
   t?: string;
   from?: string;
   to?: string;
   v?: number;
   votes?: number;
+}
+
+export interface NetworkName { name: string; meaning: string; refs: string[]; }
+export interface BibleNetwork {
+  meta: { names: number; nameEdges: number; crossReferences: number; sourceVerseCount: number; unavailableSiteRefs?: string[]; [key: string]: unknown };
+  names: NetworkName[];
+  edges: Array<[number, number, number]>;
 }
 
 export interface HitchcockName {
@@ -136,7 +144,10 @@ for (const [book, osis] of Object.entries(BOOK_TO_OSIS)) {
 }
 
 export class LocalFirstStore {
-  private cacheName = 'historical-bible-cache-v2';
+  private cacheName = 'historical-bible-cache-v00.01.10';
+  private network!: BibleNetwork;
+  private referenceRecords: CrossRefLink[] = [];
+  private networkByName = new Map<string, NetworkName>();
   private verses: KjvVerseData[] = [];
   private verseByOsis = new Map<string, KjvVerseData>();
   private chapterMap = new Map<string, KjvVerseData[]>();
@@ -168,39 +179,23 @@ export class LocalFirstStore {
         '/data/history/historical_synchrony.v1.json'
       );
 
-      if (onProgress) onProgress('Indexing curated Scripture cross-references...', 70);
+      if (onProgress) onProgress('Indexing the complete Scripture cross-reference source...', 70);
       const crossRefPayload = await this.fetchWithCache<any>(
         cache,
-        '/data/cross_references_curated.json'
+        '/data/cross_references_bundle.json'
       );
       const rawCrossRefs: CrossRefLink[] = Array.isArray(crossRefPayload)
         ? crossRefPayload
         : (crossRefPayload?.links || []);
 
       if (onProgress) onProgress('Loading & ranking Biblical Names directory...', 85);
-      this.hitchcock = await this.fetchWithCache<Record<string, HitchcockName>>(
-        cache,
-        '/data/hitchcock_names.json'
-      );
+      this.network = await this.fetchWithCache<BibleNetwork>(cache, '/data/bible_network.json');
+      this.referenceRecords = rawCrossRefs;
+      this.networkByName = new Map(this.network.names.map(name => [name.name.toLowerCase(), name]));
+      this.hitchcock = Object.fromEntries(this.network.names.map(name =>
+        [name.name, { name: name.name, meanings: [name.meaning] }]));
 
-      let falsePositiveNodes = new Set<string>();
-      try {
-        const auditJson = await this.fetchWithCache<{ findings?: Array<{ kind: string; node: string }> }>(
-          cache,
-          '/data/name_identities_audit.json'
-        );
-        if (auditJson && Array.isArray(auditJson.findings)) {
-          for (const f of auditJson.findings) {
-            if (f.kind === 'common_word_false_positive' && f.node) {
-              falsePositiveNodes.add(f.node);
-            }
-          }
-        }
-      } catch {
-        // Optional audit filter
-      }
-
-      this.buildIndices(rawCrossRefs, falsePositiveNodes);
+      this.buildIndices(rawCrossRefs);
       this.isLoaded = true;
       if (onProgress) onProgress('Ready', 100);
     } catch (err) {
@@ -227,7 +222,7 @@ export class LocalFirstStore {
     return (await networkResponse.json()) as T;
   }
 
-  private buildIndices(rawCrossRefs: CrossRefLink[], falsePositiveNodes: Set<string>): void {
+  private buildIndices(rawCrossRefs: CrossRefLink[]): void {
     this.verseByOsis.clear();
     this.chapterMap.clear();
     this.crossRefAdj.clear();
@@ -285,22 +280,10 @@ export class LocalFirstStore {
       }
     }
 
-    // Pre-seeded canonical frequency weights for top biblical figures + live lookup
-    const canonicalWeights: Record<string, number> = {
-      'Jesus': 983, 'David': 1085, 'Moses': 847, 'Abraham': 250, 'Saul': 406,
-      'Solomon': 305, 'Jacob': 377, 'Isaac': 132, 'Joseph': 250, 'Joshua': 218,
-      'Samuel': 145, 'Paul': 185, 'Peter': 162, 'Aaron': 350, 'Hezekiah': 128,
-      'Jeremiah': 147, 'Daniel': 85, 'Isaiah': 52, 'Elijah': 69, 'Elisha': 58,
-      'John': 135, 'Noah': 58, 'Gideon': 39, 'Josiah': 53, 'Nehemiah': 82, 'Ezra': 78
-    };
-
     this.rankedNames = Object.values(this.hitchcock)
-      .filter(entry => !falsePositiveNodes.has(entry.name))
       .map(entry => {
         const flagship = flagshipByHitchcock.get(entry.name.toLowerCase());
-        const occurrences = flagship
-          ? flagship.measuredMentions
-          : (canonicalWeights[entry.name] || 0);
+        const occurrences = this.networkByName.get(entry.name.toLowerCase())?.refs.length || 0;
         return {
           name: entry.name,
           meanings: entry.meanings || [],
@@ -364,6 +347,13 @@ export class LocalFirstStore {
   public getChapterVerses(bookOrOsis: string, chapter: number): KjvVerseData[] {
     const osis = BOOK_TO_OSIS[bookOrOsis] || bookOrOsis;
     return this.chapterMap.get(`${osis}.${chapter}`.toLowerCase()) || [];
+  }
+
+  public getChapterReferences(book: string, chapter: number): string[] {
+    const refs = this.getChapterVerses(book, chapter).map(verse => this.toOsisRef(verse));
+    const prefix = `${book}.${chapter}.`.toLowerCase();
+    return [...refs, ...(this.network.meta.unavailableSiteRefs || []).filter(ref => ref.toLowerCase().startsWith(prefix))]
+      .sort((a, b) => Number(a.split('.')[2]) - Number(b.split('.')[2]));
   }
 
   public formatDisplayRef(v: KjvVerseData): string {
@@ -439,8 +429,49 @@ export class LocalFirstStore {
       profiles: this.synchrony?.figures.length ?? 0,
       empires: this.synchrony?.empires.length ?? 0,
       books: Object.keys(OSIS_TO_BOOK).length,
+      chapters: this.chapterMap.size,
+      names: this.network.names.length,
+      nameEdges: this.network.edges.length,
       pairs: this.atlasPairs,
     };
+  }
+
+  public getNetwork(): BibleNetwork { return this.network; }
+  public getNetworkName(name: string): NetworkName | undefined { return this.networkByName.get(name.toLowerCase()); }
+  public getReferenceRecords(): readonly CrossRefLink[] { return this.referenceRecords; }
+  public getBooks() {
+    return Object.entries(OSIS_TO_BOOK).map(([osis, name]) => ({ osis, name,
+      chapters: [...this.chapterMap.keys()].filter(key => key.startsWith(`${osis}.`)).length,
+    }));
+  }
+  public getConnectedNames(name: string) {
+    const index = this.network.names.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
+    return this.network.edges.filter(([a, b]) => a === index || b === index)
+      .map(([a, b, count]) => ({ name: this.network.names[a === index ? b : a].name, count }))
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  }
+  public getSharedRefs(a: string, b: string): string[] {
+    const other = new Set(this.getNetworkName(b)?.refs || []);
+    return (this.getNetworkName(a)?.refs || []).filter(ref => other.has(ref));
+  }
+  public referenceContains(raw: string, ref: string): boolean {
+    const coordinate = (value: string) => {
+      const [book, chapter, verse] = value.toLowerCase().split('.');
+      const order = Object.keys(OSIS_TO_BOOK).indexOf(book);
+      return order < 0 ? -1 : order * 1000000 + Number(chapter) * 1000 + Number(verse);
+    };
+    const [first, last = first] = raw.split('-');
+    const point = coordinate(ref);
+    return point >= 0 && point >= coordinate(first) && point <= coordinate(last);
+  }
+
+  public expandReference(raw: string): string[] {
+    const [first, last = first] = raw.split('-');
+    if (first === last) return [first];
+    const refs = this.verses.map(verse => this.toOsisRef(verse)).filter(ref => this.referenceContains(raw, ref));
+    if (!refs.some(ref => ref.toLowerCase() === first.toLowerCase())) refs.unshift(first);
+    if (!refs.some(ref => ref.toLowerCase() === last.toLowerCase())) refs.push(last);
+    return refs;
   }
 
   public searchAll(query: string, maxVerses = 25): {

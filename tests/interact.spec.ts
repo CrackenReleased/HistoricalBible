@@ -18,13 +18,13 @@ test('INT-17: Dictionary names open beside search without jumping to the bottom'
     if (name === 'Gideon') {
       await expect(page.locator('#name-search-detail .scripture-ref').first()).toHaveText('JUDGES {6:11}');
       await expect(page.locator('#name-search-detail')).not.toContainText('Gideoni');
-      const card = page.locator('#name-search-passages > article').first();
+      const card = page.locator('#name-search-passages .explorer-list > article').first();
       await card.getByRole('button', { name: 'Read in context', exact: true }).click();
       await expect(card.locator('.drawer-chapter')).toHaveClass(/open/);
       await card.getByRole('button', { name: /Connected passages/ }).click();
       const next = await card.locator('.drawer-xrefs .crossref-item strong').first().innerText();
       await card.getByRole('button', { name: 'Read this passage →' }).first().click();
-      await expect(page.locator('#name-search-passages > article').first().locator('.scripture-ref')).toHaveText(next);
+      await expect(page.locator('#name-search-passages .explorer-list > article').first().locator('.scripture-ref')).toHaveText(next);
     }
   }
   await page.locator('#search-input').fill('Daniel');
@@ -36,10 +36,10 @@ test('INT-17: Dictionary names open beside search without jumping to the bottom'
 
 test('INT-15: Collection introduction exposes real counts and one prominent search', async ({ page }) => {
   await page.goto('/interact');
-  await expect(page.locator('#stat-connections')).toHaveText('117,200');
-  await expect(page.locator('#stat-verses')).toHaveText('31,098');
-  await expect(page.locator('#stat-profiles')).toHaveText('12');
-  await expect(page.locator('#stat-empires')).toHaveText('6');
+  await expect(page.locator('#stat-connections')).toHaveText('344,799');
+  await expect(page.locator('#stat-verses')).toHaveText('31,102');
+  await expect(page.locator('#stat-names')).toHaveText('2,408');
+  await expect(page.locator('#stat-nameEdges')).toHaveText('12,058');
   await expect(page.locator('#search-input')).toHaveCount(1);
   await expect(page.locator('#collection-title')).toContainText('Every passage');
   expect(await page.locator('#connection-atlas path').count()).toBeGreaterThan(0);
@@ -60,6 +60,45 @@ test('INT-15: Collection introduction exposes real counts and one prominent sear
     const search = await page.locator('#search-input').boundingBox();
     expect(search!.y + search!.height).toBeLessThan(900);
   }
+});
+
+test('INT-18: Every total opens records, and Obsidian names traverse shared verses and full ranges', async ({ page }) => {
+  await page.goto('/interact');
+  const explorer = page.locator('#collection-explorer');
+  await page.locator('[data-collection="books"]').click();
+  await expect(explorer).toContainText('31,102 KJV verses');
+  await expect(explorer.locator('.book-grid button')).toHaveCount(66);
+  await explorer.locator('.book-grid').getByRole('button', { name: 'John', exact: true }).click();
+  await explorer.getByRole('button', { name: 'John chapter 3', exact: true }).click();
+  await explorer.getByRole('button', { name: 'Next →', exact: true }).click();
+  await expect(explorer).toContainText('JOHN {3:16}');
+  await page.locator('[data-collection="names"]').click();
+  await expect(explorer).toContainText('of 2,408 records');
+  await explorer.getByLabel('Filter collection').fill('Gideon');
+  await explorer.getByRole('button', { name: 'Gideon', exact: true }).click();
+  const name = page.locator('#name-search-detail');
+  await expect(name).toContainText('37 verse links');
+  await name.getByRole('button', { name: 'Next →', exact: true }).click();
+  await expect(name).toContainText('6–10 of 37 records');
+  await name.getByRole('button', { name: '20 connected names', exact: true }).click();
+  await name.getByRole('button', { name: '9 shared verses →', exact: true }).click();
+  await expect(explorer.locator('.scripture-card')).toHaveCount(9);
+  await expect(explorer).toContainText('Gideon and Israel');
+  await explorer.locator('.btn-all-xrefs').first().click();
+  await expect(explorer.getByLabel('Filter collection')).toHaveValue('Judg.6.36');
+  await explorer.getByRole('button', { name: 'Gen.15.8 → Judg.6.36-Judg.6.40', exact: true }).click();
+  await expect(explorer).toContainText('JUDGES {6:40}');
+  await expect(explorer.locator('.scripture-card')).toHaveCount(6);
+  await page.locator('[data-collection="references"]').click();
+  await explorer.getByLabel('Source votes').selectOption('negative');
+  await expect(explorer).toContainText('of 1,229 records');
+  await page.locator('[data-collection="connections"]').click();
+  await expect(explorer).toContainText('of 12,058 records');
+  await explorer.getByLabel('Page number', { exact: true }).fill('483');
+  await explorer.getByRole('button', { name: 'Go', exact: true }).click();
+  await expect(explorer).toContainText('12,051–12,058 of 12,058 records');
+  await explorer.locator('[data-mode="history"]').click();
+  await expect(explorer).toContainText('12 curated historical profiles and 6 world empires');
 });
 
 test('INT-16: Suggested search, keyboard selection, no results and dismissal work', async ({ page }) => {
