@@ -3,6 +3,15 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 const { LocalFirstStore } = await import(process.env.STORE_UNDER_TEST || '../src/store/localFirstStore.ts');
 
+test('public documentation does not claim manual transcription of the Bible', async () => {
+  const readme = await readFile(new URL('../README.md', import.meta.url), 'utf8');
+  assert.equal(/hand[- ]?typed|(?:re[- ]?typed|typed)\s+by\s+hand|work of my fingers|keystroke[- ]by[- ]keystroke/i.test(readme), false, 'README must not repeat the unsupported transcription story');
+  for (const file of ['changelog.md', 'HANDOFF.md', 'what_and_how_log.md']) {
+    const content = await readFile(new URL(`../${file}`, import.meta.url), 'utf8');
+    assert.equal(/Joel(?: McCracken Jr\.?)?'s hand[- ]typed|hand[- ]typed (?:authoritative|KJV|textual)|(?:re[- ]?typed|typed)\s+(?:the entire Bible\s+)?by\s+hand|work of Joel's fingers|keystroke[- ]by[- ]keystroke/i.test(content), false, `${file} must not assert the unsupported transcription story`);
+  }
+});
+
 test('collection overview counts the loaded records and draws only real book connections', async () => {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (input) => new Response(await readFile(new URL(`../public${input}`, import.meta.url), 'utf8'));

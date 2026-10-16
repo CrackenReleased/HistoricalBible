@@ -26,13 +26,9 @@ Built using the proven local-first engineering philosophy developed in `boarderl
 
 ---
 
-## 📜 The Textual Foundation: Typed by Hand for the Glory of God
+## 📜 The Textual Foundation: Preserving the KJV
 
-> *"So that `Bible.pdf` version is literally the work of my fingers."* — Joel McCracken Jr.
-
-The scripture corpus serving **HistoricalBible.com** is not an unvetted web scrape, a casual OCR scan, or an automated machine dump. It is the result of years of exhaustive scholarship, prayer, and keystroke-by-keystroke labor by Joel McCracken Jr., who evaluated **12 distinct downloadable PDF editions** of the King James Bible to curate a pristine, authoritative text.
-
-To ensure absolute fidelity to the historical witness, **all 31,102 verses—over 783,000 words and 3.5 million characters—were re-typed by hand**. This immense work of devotion was undertaken to preserve three foundational linguistic and theological truths that modern digital formats routinely destroy:
+HistoricalBible presents the King James Version through its PDF and interactive reader. The project preserves three textual distinctions: translator-supplied words in brackets, the capitalization of divine names, and explicit chapter-and-verse markers.
 
 ### 1. Preserving "What Was Added" — Translator Italics in Brackets `[...]`
 In the King James Version (1611), the translators faithfully italicized English words that had no direct verbal counterpart in the original Hebrew, Aramaic, or Greek manuscripts, but were required to complete English grammar and syntax (e.g., `[them,]`, `[is]`, `[was]`, `[are]`). 

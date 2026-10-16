@@ -1,3 +1,10 @@
+## 2026-10-16 13:36:38 — Correct public source-provenance claims (v00.01.10-docs.1)
+
+- Verified GitHub's live README still contained the unsupported claim that the owner manually transcribed the entire Bible, plus a first-person quotation used to imply it. The earlier removal guard inspected HTML pages only and missed repository documentation. Removed the biographical narrative, quotation and chapter title; retained a factual description of the KJV formatting conventions.
+- Sibling scan: README, changelog, project HANDOFF and why-log were the four tracked public documents with affirmative repeats. Corrected those repeats, explicitly retracting the erroneous historical log claim rather than deleting its entry. References documenting earlier wording-removal checks remain historical verification records. Frozen governance, canonical Scripture, app code and unrelated local edits remain untouched.
+- Regression: tests/collection-regression.ts now checks the README and affirmative claims in the three sibling documents. The focused public-documentation test failed before the correction; passes afterward. No application/browser suite or production rebuild required for this documentation-only revision. App version remains 00.01.10; documentation revision is 00.01.10-docs.1.
+- Artifact impact: five existing files modified (four public documents and one regression harness); no files added/removed, application source growth zero, tests +9 lines, dependencies/data/binaries unchanged. Existing guard harness reused; no temporary artifacts or processes created. Git staging applies the scoped correction to HEAD separately so unrelated dirty documentation edits are preserved and excluded.
+
 ## 2026-10-16 13:21:04 — Existing Bible network becomes a browsable collection (v00.01.10)
 
 - Replaced static collection totals with buttons opening all 344,799 cross-reference source records, 31,102 KJV verse references across 66 books / 1,189 chapters, 2,408 name entries and 12,058 shared-verse name connections. Added book/chapter reading, source/target book and vote filters, complete target ranges, searchable directories, pagination and direct page-number navigation. Curated historical profiles and empires remain accessible through the same explorer.
@@ -249,11 +256,11 @@
    - Verified 17 U.S.C. § 102(b) procedural clearance.
    - Ensured all local raster print assets (`BibleVizArc7WiderOTNTMedQuality.jpg`, `BibleNetwork.jpg`) remain strictly on the host machine and are untracked via `.gitignore` to protect personal-use licensing.
 
-## 2026-10-14 23:28:00 — Hand-Typed KJV Scripture Corpus & Linguistic Integrity Ingestion
+## 2026-10-14 23:28:00 — KJV Scripture Corpus & Linguistic Integrity Ingestion
 
 ### WHAT was built
-1. **Ingested Hand-Typed KJV Corpus into Production**:
-   - Built and executed `scripts/build-curated-kjv.js` to compile the 31,098 verses directly extracted from Joel's hand-typed masterwork (`Bible.pdf` via `audit-context.json`) into `public/data/kjv_verses.json`.
+1. **Ingested KJV Corpus into Production**:
+   - Built and executed `scripts/build-curated-kjv.js` to compile the 31,098 verses directly extracted from the project's masterwork (`Bible.pdf` via `audit-context.json`) into `public/data/kjv_verses.json`.
    - Restored **14,134 bracketed verses** (`[...]`) that preserve the KJV translator-added italicized words (which previous public domain scrapers had silently stripped).
    - Preserved all **5,556 verses** containing the divine Tetragrammaton `LORD` (יהוה / Jehovah) and **1,010 verses** containing `Lord` (Adonai / Master).
    - Preserved all **247 verses** containing internal scripture parentheses `(...)`.
@@ -262,16 +269,16 @@
    - Updated verse inspector header to display the canonical `{chapter:verse}` delimiter standard (e.g., `Genesis {18:2}`).
    - Added a permanent `kjv-legend-bar` to `interact.html` explaining the `{c:v}` delimiter, `[...]` added italics, and `LORD` Tetragrammaton.
 3. **Master README Documentation**:
-   - Codified the chapter **"The Textual Foundation: Typed by Hand for the Glory of God"** into `README.md` at `E:\HistoricalBible\README.md` and published to GitHub.
+   - Codified the chapter **"The Textual Foundation: Preserving the KJV"** into `README.md` at `E:\HistoricalBible\README.md` and published to GitHub.
 4. **Automated Regression Test Suite**:
    - Added `REG-08` in `tests/interact.spec.ts` testing bracketed word detection (`[them,]` in Genesis 18:2), `LORD` styling in Genesis 18:1, and legend bar visibility.
    - All 9 Playwright regression tests passing cleanly in 6.5s.
 
 ### HOW it works & WHY these decisions were made
-- **The Work of Joel's Fingers**: Joel re-typed the entire Bible by hand across 12 downloadable PDF editions to achieve this pristine state. The web application now honors this exact keystroke-by-keystroke text as its canonical data source.
+- **Provenance correction (2026-10-16)**: The earlier personal transcription claim was unsupported and has been withdrawn. The application uses the project's supplied PDF-derived corpus.
 - **Why Brackets `[...]` Matter**: The KJV translators (1611) faithfully italicized words not present in the original Hebrew/Greek manuscripts. Collapsing them robs the reader of transparency. Brackets preserve this distinction across all digital contexts.
 - **Why Braces `{c:v}` Matter**: Because the Bible contains 247 verses with internal parentheses `(...)`, using parentheses or bare numbers for verses creates parsing collisions with inspired text. Braces provide an unbreakable, non-colliding boundary.
-- **README Scope Adjustment**: Removed explicit public dedication text from `README.md` per user request, preserving the focus on the living hyperlinked Word, local-first technical architecture, and hand-typed textual foundation.
+- **README Scope Adjustment**: Removed explicit public dedication text from `README.md` per user request, preserving the focus on the living hyperlinked Word, local-first technical architecture, and KJV textual foundation.
 
 ## 2026-10-14 23:48:00 — Full Multi-Page Suite & GitHub Pages Custom Domain Hosting Ready
 
@@ -282,7 +289,7 @@
    - Built Bible Download page (`bible.html`) providing direct link to `/Bible.pdf` with document metadata and textual integrity highlights.
    - Preserved standalone 2D Canvas Tapestry visualizer at `tapestry.html`.
 2. **Self-Hosted Bible PDF**:
-   - Copied Joel's hand-typed `Bible.pdf` directly into `public/Bible.pdf` and `public/downloads/Bible.pdf` (~9.5 MB) so downloads are served directly by the domain with zero dependence on external CDNs.
+   - Copied the project's `Bible.pdf` directly into `public/Bible.pdf` and `public/downloads/Bible.pdf` (~9.5 MB) so downloads are served directly by the domain with zero dependence on external CDNs.
 3. **GitHub Pages & Custom Domain Automation**:
    - Added `public/CNAME` and root `CNAME` for `historicalbible.com`.
    - Added `public/.nojekyll` and root `.nojekyll` to disable Jekyll.

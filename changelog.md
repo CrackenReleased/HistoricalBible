@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.10-docs.1] - 2026-10-16
+
+- Remove the unsupported personal transcription narrative and quotation from the README; correct repeated claims in public historical documentation.
+- Add a focused documentation regression covering README, changelog, handoff and why-log. Website/app version remains 00.01.10.
+
 ## [00.01.10] - 2026-10-16
 
 - Make every collection total open its complete browsable records: 31,102 verse references, 344,799 cross-references, 2,408 name entries and 12,058 name connections.
@@ -98,7 +103,7 @@ All notable changes to this project will be documented in this file.
 - **Verbatim Restoration of GoDaddy Web Archive**: Restored exact archived pages from `assets/Web_Archive_20261014/` (`Historical Bible - Faith and Religion, The Bible.html` -> `index.html`, `HistoricalBible.html` -> `contact.html`, `Bible-download.html` -> `bible.html`).
 - **Complete Visual & Brand Fidelity**: Restored original GoDaddy typography (`Righteous`, `Josefin Sans`), header layout, sunset Bible banner, "Help Our Cause" section, and PayPal donation button flow (`BibleHistorical@gmail.com`).
 - **Asset Directory Mirroring**: Copied `Historical Bible - Faith and Religion, The Bible_files`, `HistoricalBible_files`, and `Bible-download_files` to root and `public/` directories for zero-404 static hosting on GitHub Pages.
-- **Direct Bible.pdf Serving**: Linked download button to Joel's hand-typed 9.5MB `Bible.pdf` hosted directly on the repository domain.
+- **Direct Bible.pdf Serving**: Linked download button to the project's 9.5MB `Bible.pdf` hosted directly on the repository domain.
 - **Interactive Gateway**: Maintained Three.js 3D WebGL Scripture Tapestry engine at `/interact` (`interact.html`).
 - **Regression Verification**: Updated Playwright test suite (`tests/site_pages.spec.ts`) asserting exact archived content with automated screenshot proofs.
 
@@ -107,7 +112,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - **Full HistoricalBible.com Multi-Page Suite**: Built out Home (`index.html`), Contact Us (`contact.html`), and Bible Download (`bible.html`) pages recreating the complete GoDaddy archive website with elegant Cinzel/Lora typography and local-first architecture.
 - **Stand-alone 2D Tapestry Engine**: Preserved at `tapestry.html` alongside the unified `interact.html` engine.
-- **Self-Hosted Bible PDF**: Copied Joel's hand-typed `Bible.pdf` directly into `public/Bible.pdf` and `public/downloads/Bible.pdf` (~9.5 MB) for direct, serverless downloads independent of third-party CDNs.
+- **Self-Hosted Bible PDF**: Copied the project's `Bible.pdf` directly into `public/Bible.pdf` and `public/downloads/Bible.pdf` (~9.5 MB) for direct, serverless downloads independent of third-party CDNs.
 - **Brand Assets**: Migrated `logo.jpg`, PayPal, and accepted card badges into `public/images/`.
 - **GitHub Pages & Custom Domain Preparation**: Configured `CNAME` for `historicalbible.com`, `.nojekyll`, and automated `.github/workflows/deploy.yml` deployment workflow.
 - **Clean URL Directory Aliases**: Generated `contact/index.html`, `bible/index.html`, and `interact/index.html` ensuring resilient routing across clean paths and file extensions.
@@ -116,12 +121,12 @@ All notable changes to this project will be documented in this file.
 ## [1.2.0] - 2026-10-14
 
 ### Added
-- **Hand-Typed Authoritative KJV Corpus Ingestion**: Compiled 31,098 verses directly from Joel McCracken Jr.'s hand-typed `Bible.pdf` into `public/data/kjv_verses.json`.
+- **KJV Corpus Ingestion**: Compiled 31,098 verses directly from the project's `Bible.pdf` into `public/data/kjv_verses.json`.
 - **Restored Translator-Added Italics**: 14,134 bracketed verses (`[...]`) preserving KJV italics with `.kjv-added` CSS styling and transparent scholarly tooltips.
 - **Divine Covenant Name Typography**: Preserved 5,556 verses with `LORD` (יהוה / Jehovah) in dedicated small-caps gold styling, distinguished from 1,010 verses with `Lord` (Adonai / Master).
 - **Canonical `{chapter:verse}` Delimiters**: Standardized `{c:v}` across UI inspectors and headers, preventing collision with the 247 verses containing internal scripture parentheses `(...)`.
 - **Permanent KJV Legend Bar**: Added interactive typography guide to `interact.html`.
-- **Master README Chapter**: Codified *"The Textual Foundation: Typed by Hand for the Glory of God"* into project documentation.
+- **Master README Chapter**: Codified *"The Textual Foundation: Preserving the KJV"* into project documentation.
 - **Regression Test REG-08**: Automated Playwright test verifying KJV language integrity and typography in `tests/interact.spec.ts`.
 
 ## [1.1.0] - 2026-10-14

@@ -57,7 +57,7 @@
 - **Verbatim Restoration**: Restored original GoDaddy archive files (`Historical Bible - Faith and Religion, The Bible.html` -> `index.html`, `HistoricalBible.html` -> `contact.html`, `Bible-download.html` -> `bible.html`) with 100% visual fidelity.
 - **Original Brand & Layout**: Maintained GoDaddy typography (`Righteous` and `Josefin Sans`), header navigation, hero banner (`20190908_192538.jpg`), PayPal donation workflow (`BibleHistorical@gmail.com`), and popup modal.
 - **Asset Mirroring**: Full asset directories mirrored into root and `public/` (`Historical Bible - Faith and Religion, The Bible_files`, `HistoricalBible_files`, `Bible-download_files`).
-- **Direct PDF Serving**: Download link routes to Joel's hand-typed 9.5MB `Bible.pdf`.
+- **Direct PDF Serving**: Download link routes to the project's 9.5MB `Bible.pdf`.
 - **Interactive Gateway**: 3D Scripture Tapestry accessible at `/interact` (`interact.html`).
 - **Automated Verification**: Full Playwright test suite passes (4/4 routes verified with screenshots in `test-results/`). Production Vite build succeeds in 1.01s.
 
@@ -71,14 +71,14 @@
 - **Directory Routing**: Clean routing aliases created for `/contact`, `/bible`, and `/interact`.
 - **Automated Verification**: 12/12 Playwright regression tests passing in 8.4s. Production Vite build in 838ms.
 
-## 2026-10-14 23:28:00 — Antigravity / HistoricalBible — Hand-Typed KJV Scripture Corpus & Linguistic Integrity Ingestion Live
+## 2026-10-14 23:28:00 — Antigravity / HistoricalBible — KJV Scripture Corpus & Linguistic Integrity Ingestion Live
 
 ### Status Overview
-- **Authoritative Text**: Ingested all 31,098 verses extracted directly from Joel McCracken Jr.'s hand-typed `Bible.pdf` into `public/data/kjv_verses.json`.
+- **Authoritative Text**: Ingested all 31,098 verses extracted directly from the project's `Bible.pdf` into `public/data/kjv_verses.json`.
 - **Translator Additions**: Restored **14,134 bracketed verses** (`[...]`) preserving the KJV italicized translator additions with dedicated `.kjv-added` styling and informative scholarly tooltips.
 - **Divine Tetragrammaton**: Preserved **5,556 verses** with `LORD` in divine small-caps covenant styling, distinguishing from **1,010 verses** with `Lord` (Adonai / Master).
 - **Verse Delimiters**: Standardized `{chapter:verse}` notation across all UI inspectors and headers, protecting all **247 verses** containing internal scripture parentheses `(...)` from parsing collisions.
-- **Master README**: Published the permanent chapter **"The Textual Foundation: Typed by Hand for the Glory of God"** to GitHub.
+- **Master README**: Published the permanent chapter **"The Textual Foundation: Preserving the KJV"** to GitHub.
 - **Automated Regression Suite**: 9 Playwright tests passing cleanly in 6.5s (including new `REG-08` KJV language integrity test). Production Vite build compiling in 809ms.
 
 ## 2026-10-14 23:08:00 — Antigravity / HistoricalBible — Public GitHub Release at CrackenReleased/HistoricalBible Live
@@ -86,7 +86,7 @@
 ### Status Overview
 - **Public GitHub Repository**: **[https://github.com/CrackenReleased/HistoricalBible](https://github.com/CrackenReleased/HistoricalBible)**
 - **Landing Page & Gateway**: `https://historicalbible.com/interact` (`interact.html`)
-- **Master README**: Authoritative technical and historical documentation covering the local-first architecture and hand-typed textual foundation.
+- **Master README**: Authoritative technical and historical documentation covering the local-first architecture and KJV textual foundation.
 - **Three.js 3D Spatial Loom**: GPU-accelerated WebGL arc engine plotting 1,189 chapters in 3D orbit with additive-blended Bézier splines and 60 FPS orbital camera controls.
 - **Local-First Architecture**: Powered by browser `CacheStorage` & `IndexedDB`, downloading all scripture, names, and cross-references once to user's device for 0ms offline capability.
 - **Harmonic Acoustic Synthesis**: Web Audio engine rooted in Boarderless harmonic series ($G_3 = 196\text{ Hz}$) with canonical division overtones and stereo positioning.
