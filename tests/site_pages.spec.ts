@@ -10,6 +10,10 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
       const headerLogo = page.locator('header .brand-image');
       await expect(headerLogo).toBeVisible();
       await expect(headerLogo).toHaveAttribute('alt', 'Historical Bible — Home');
+      await expect(page.locator('header .brand-emblem')).toBeVisible();
+      await expect(page.locator('header .brand-text')).toContainText('Historical Bible');
+      await expect(page.locator('header .brand-white')).toHaveText('Historical');
+      await expect(page.locator('header .brand-gold')).toHaveText('Bible');
       await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute('href', '/images/brand/apple-touch-icon.png');
       for (const image of await page.locator('header .brand-image, footer .footer-brand img').all()) {
         await image.scrollIntoViewIfNeeded();
@@ -36,11 +40,14 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
     await expect(page.locator('.entry-card[data-door="daniel"]')).toHaveAttribute('href', '/interact?figure=daniel');
     await expect(page.locator('.entry-card[data-door="moses"]')).toHaveAttribute('href', '/interact?figure=moses');
 
+    // Full Study Desk declaration quote
+    await expect(page.locator('.declaration-quote')).toContainText('This is not a Bible website. This is the study desk where the Word and the historical record finally sit in the same room.');
+
     // Mission & PayPal stewardship preserved verbatim with PURPOSE & CONVICTION gold headers (no numbers)
     await expect(page.locator('#mission-title')).toHaveText('Connecting the historicity of the Bible to world history: Historical Bible');
     await expect(page.locator('.mission-grid .mission-card .eyebrow').nth(0)).toHaveText('PURPOSE');
     await expect(page.locator('.mission-grid .mission-card .eyebrow').nth(1)).toHaveText('CONVICTION');
-    await expect(page.locator('.mission-card').nth(0)).toContainText("Are you struggling to correlate the people's and timelines of the Bible to your known world history?");
+    await expect(page.locator('.mission-card').nth(0)).toContainText("Are you struggling to correlate the peoples and timelines of the Bible to your known world history?");
     await expect(page.locator('.mission-card').nth(1)).toContainText('We at Historical Bible believe that the Bible is the inerrant word of God. We believe the Bible literally, and that it is not only historically accurate, but that it is also eschatologically accurate.');
 
     const donateBtn = page.locator('text=Donate Now');
@@ -84,7 +91,7 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
 
   test('Contact page renders dark-gold contact form and confirmation state', async ({ page }) => {
     await page.goto('/contact', { waitUntil: 'domcontentloaded' });
-    await expect(page).toHaveTitle(/HistoricalBible/);
+    await expect(page).toHaveTitle(/Historical\s*Bible/);
 
     const contactHeading = page.locator('text=Contact Me');
     await expect(contactHeading.first()).toBeVisible();
@@ -127,10 +134,10 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
     const reader = page.locator('#live-bible-reader');
     await expect(reader).toBeVisible();
 
-    // Gold Hero text and H1 title
-    const goldEyebrow = page.locator('.page-hero .eyebrow');
-    await expect(goldEyebrow).toHaveText('— READ THE BIBLE WITH WORD-FOR-WORD INSPECTION');
-    await expect(page.locator('.page-hero h1')).toHaveText('The Holy Bible');
+    // Study Desk Slogan Header (matches user vision)
+    const sloganHeading = page.locator('.bible-desk-slogan');
+    await expect(sloganHeading).toBeVisible();
+    await expect(sloganHeading).toHaveText('The study desk where the Word and the historical record finally sit in the same room.');
 
     // 66 Books across Old and New Testaments
     const bookOptions = page.locator('#reader-book-select option');
@@ -251,7 +258,7 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
 
   test('Interact introduces its searchable collection without duplicating the Home welcome', async ({ page }) => {
     await page.goto('/interact', { waitUntil: 'domcontentloaded' });
-    await expect(page).toHaveTitle(/HistoricalBible/);
+    await expect(page).toHaveTitle(/Historical\s*Bible/);
     // No duplicate front-door hero or 3 curiosity doors on /interact
     await expect(page.locator('section.intro')).toHaveCount(0);
     await expect(page.locator('section.entry-section')).toHaveCount(0);

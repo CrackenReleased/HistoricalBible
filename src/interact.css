@@ -142,19 +142,46 @@ summary:focus-visible {
 }
 
 .brand-title {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
   text-decoration: none;
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--text-main);
+  line-height: 1;
 }
 
 .brand-title:hover {
-  color: var(--text-main);
+  opacity: 0.94;
+}
+
+.brand-emblem {
+  display: block;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: contain;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.35);
+  flex-shrink: 0;
+}
+
+.brand-text {
+  font-family: var(--font-serif);
+  font-size: 1.68rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  line-height: 1;
+  white-space: nowrap;
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: baseline;
+}
+
+.brand-text .brand-white {
+  color: #ffffff;
+}
+
+.brand-text .brand-gold {
+  color: var(--gold-bright);
 }
 
 .brand-image {
@@ -2638,4 +2665,50 @@ footer {
 /* Bible Reader Page Hero Compact Styling */
 .bible-hero {
   padding: 1.25rem 0 0.85rem !important;
+}
+
+/* Bible Desk Slogan Header (matches user screenshot) */
+.bible-desk-header {
+  width: 100%;
+  text-align: center;
+  padding: 0.95rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  background: linear-gradient(180deg, rgba(14, 18, 24, 0.75) 0%, rgba(9, 12, 16, 0.95) 100%);
+}
+
+.bible-desk-slogan {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 2.2vw, 1.48rem);
+  font-style: normal;
+  font-weight: 500;
+  color: var(--gold-bright);
+  letter-spacing: 0.015em;
+  line-height: 1.4;
+  margin: 0 auto;
+  max-width: 1100px;
+}
+
+/* Full Declaration Creed Banner */
+.declaration-section {
+  padding: 2.25rem 0 1.25rem;
+}
+
+.declaration-card {
+  background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.09) 0%, rgba(14, 18, 24, 0.7) 100%);
+  border: 1px solid var(--border-gold);
+  border-radius: 8px;
+  padding: 2rem 2.5rem;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.declaration-quote {
+  font-family: var(--font-serif);
+  font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--text-main);
+  line-height: 1.55;
+  margin-top: 0.65rem;
+  letter-spacing: 0.01em;
 }
