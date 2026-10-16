@@ -2,6 +2,63 @@
 
 All notable changes to this project will be documented in this file.
 
+## PDF publication [0.3.3] - 2026-10-16
+
+- Replaced the local and website Bible.pdf copies with the verified 1,163-page edition, including chapter bookmarks, matching page labels, clickable book-name headers, and the brief reading note.
+- Cleared the proof-version label from PDF document properties; no PDF page or metadata carries a proof version. The release version appears in GitHub commit 75af469, not in the reader-facing file.
+- GitHub Pages deployment succeeded; both public PDF URLs match the local release SHA-256 B804F1BD546EBED2745654401BC66A173C2B7BC662C2EEBB354A1650875DFF65.
+
+## PDF book-header links proof [0.3.3] - 2026-10-16
+
+- Linked 1,158 visible top-right running book names to the matching book's chapter-one page, reusing the existing book-bookmark destination and zoom behavior.
+- Preserved the two Old/New Testament opening headers as labels, the existing return-to-Contents link on every Scripture page, the 66 contents links, 1,189 chapter bookmarks, page labels, text, layout, and accessibility structure.
+- Three book-header regression checks pass; application version remains 1.5.0. No source replacement, commit, or publication.
+
+## [1.6.0] - 2026-10-16
+
+- Unified all four site pages (`index.html`, `interact.html`, `bible.html`, `contact.html`) and clean directory routes (`bible/index.html`, `contact/index.html`) under the calm dark-gold design system (`Cinzel`, `EB Garamond`, `Inter`, `JetBrains Mono`).
+- Separated the Front Door (`index.html` — welcome headline, 4-century timeline thread, 3 curiosity doors linking to `/interact?figure=<id>`, verbatim `PURPOSE` / `CONVICTION` mission cards, restored dark-gold "Download the Bible" welcome popup `#popup-widget6691`, quiet "Why the KJV" footnote, and PayPal donation form) from the dedicated Interactive Study Desk (`interact.html` — opening directly at the Discovery Pair `01 Read the Scripture` + `02 Meet the Historical Record`, `03 Follow Your Curiosity`, and the 3-column `Go Deeper` research workspace).
+- Implemented true small-caps `LORD` typography (`L` + `0.74em` `ORD`) in the UI while preserving clean `LORD` text copy, and removed all `"hand-typed"` references from page copy and metadata.
+- Updated `tests/interact.spec.ts` and `tests/site_pages.spec.ts` (20 Playwright tests passing) to lock in separated page roles, curiosity door transitions, true small-caps `LORD` glyph ratios, welcome popup behavior, `"Why the KJV"` footnote order, and zero `"hand-typed"` wording across all routes.
+
+## PDF reading-note proof [0.3.2] - 2026-10-15
+
+- Inserted one short, tagged live-text note after the cover and before the clickable Contents. It visibly distinguishes large-L/smaller-ORD small caps from four equal-height capitals, plus `Lord` and `lord`, while both capital forms copy as `LORD`.
+- Added brief notation and pronoun explanations and one short reading paragraph. The supplied-word line explains that most printed KJVs use italics and this edition uses brackets for search, copying, and machine learning. Preserved the 66 book links, 1,189 chapter bookmarks, all 1,160 tagged return links, printed folios and Scripture text.
+- Four reading-note regression checks pass. Application version remains 1.5.0; no publication, commit or source replacement.
+
+## PDF accessibility proof [0.3.1] - 2026-10-15
+
+- Gave the cover semantic title/subtitle headings and readable descriptions for its two ornaments.
+- Tagged and named all 1,160 Scripture-page return links with individual annotation objects, preserving their destinations, book/chapter bookmarks, page labels, text and layout.
+- Three accessibility regression checks pass; five representative pages render pixel-identically to v0.3.0. App version remains 1.5.0; no publication or source replacement.
+
+## PDF navigation proof [0.3.0] - 2026-10-15
+
+- Added 1,189 nested chapter bookmarks and PDF viewer page labels that match printed Scripture folios (1-1160), while preserving the existing layout, links, tagged text, and the prior v0.2.0 proof.
+- Verified every chapter destination and page label, plus all-page text, geometry, link, and structure-tree preservation with five regression checks. Accessibility improvements remain a separately scoped review.
+
+## PDF proof [0.2.0] - 2026-10-15
+
+- Added a separate repair proof from the recovered Word master, preserving layout, selectable Scripture, 74 bookmarks and 1,296 links.
+- Restored missing endings, removed duplicate passages/page-label contamination, recorded narrow wording/case repairs and restored source-based small caps.
+- Added eight DOCX and ten PDF regression checks, before/after provenance and a clearly separated unresolved comparison list. Originals/site untouched; application version remains 1.5.0.
+
+## Governance [1.0] - 2026-10-15
+
+- Adopted owner-supplied AGENTS.md and principles.md in the project root with their wording preserved exactly.
+- Added README entry points, the adoption record, and stable change-control guidance; PDF repair remains a separate task.
+- Documentation only; application version remains 1.5.0.
+
+## [1.5.0] - 2026-10-15
+
+- Rebuilt Interact around a first discovery: Scripture beside a historical record, followed by questions that lead to another person or passage.
+- Added twelve editorial discovery routes, exploration trail/back navigation, source-linked featured records, and an attributed CC0 photograph of the Pilate inscription.
+- Moved era filters and the names dictionary into the deeper study; improved search, connected-passage navigation, empty states, and small-screen reading.
+- Unified Interact URL aliases and explained the local-preview requirement when source HTML is opened from disk.
+- Preserved the existing KJV corpus and historical collection. No dependencies added. Verified with headed browser regressions and the canonical production build.
+
+
 ## Obsidian Bible Network [0.01.00] - 2026-10-14
 
 - Added native Obsidian Bible notes: complete KJV, names co-occurrence network, book indexes, and all 344,799 OpenBible cross-reference records with full target ranges and votes.

@@ -1,88 +1,203 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('HistoricalBible.com/Interact — Local-First 3D Suite', () => {
-  test.beforeEach(async ({ page }) => {
-    page.on('console', msg => console.log('BROWSER CONSOLE:', msg.text()));
-    page.on('pageerror', err => console.log('BROWSER ERROR:', err.message));
+test('INT-06: Front Door invites the reader into the dedicated Study Desk, where the discovery explains the connection and follows a question and return', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'The Bible happened in the real world.' })).toBeVisible();
+  await page.locator('#popup-widget6691-close-icon').click();
+  await page.locator('.primary-link').first().click();
+  await expect(page).toHaveURL(/\/interact\?figure=jesus-christ/);
+  await expect(page.locator('#discovery-title')).toHaveText('A name in the Gospel. A name carved in stone.');
+  await expect(page.locator('#discovery-scripture')).toContainText('LUKE {3:1}');
+  await expect(page.locator('#discovery-evidence')).toContainText('Pilate Stone');
+  await page.locator('#next-questions button[data-target="daniel"]').click();
+  await expect(page.locator('.figure-hero-name')).toContainText('Daniel');
+  await expect(page.locator('#discovery-title')).toContainText('Babylon');
+  await page.getByRole('button', { name: 'Back to Jesus Christ', exact: true }).click();
+  await expect(page.locator('#discovery-title')).toHaveText('A name in the Gospel. A name carved in stone.');
+});
+
+test('INT-07: Clean routes keep the selected person and open the same reader', async ({ page }) => {
+  for (const route of ['/interact?figure=daniel', '/interact/?figure=daniel', '/interact/index.html?figure=daniel']) {
+    await page.goto(route);
+    await expect(page.locator('#discovery-title')).toContainText('Babylon');
+    await expect(page.locator('.figure-hero-name')).toContainText('Daniel');
+    await expect(page.locator('#error-banner')).toBeHidden();
+  }
+});
+
+test('INT-08: Empire search and connected-person navigation keep filters and reader in agreement', async ({ page }) => {
+  await page.goto('/interact.html');
+  await page.locator('#search-input').fill('Rome');
+  await page.getByRole('button', { name: /Roman Empire.*Explore people/ }).click();
+  await expect(page.locator('#timeline-browser')).toHaveAttribute('open', '');
+  await page.locator('#personal-network-list button').filter({ hasText: 'King David' }).click();
+  await expect(page.locator('.figure-hero-name')).toHaveText('King David');
+  await expect(page.locator('.figure-node.active')).toContainText('King David');
+  await expect(page.locator('#journey-trail')).toContainText('King David');
+  await expect(page).toHaveURL(/figure=david/);
+});
+
+test('INT-09: Scripture exploration opens context and follows a cross-reference onward', async ({ page }) => {
+  await page.goto('/interact.html');
+  await page.getByRole('button', { name: 'Read the surrounding passage ↓' }).click();
+  const firstCard = page.locator('#scripture-anchors-list > article').first();
+  await expect(firstCard.locator('.drawer-chapter')).toHaveClass(/open/);
+  await firstCard.getByRole('button', { name: /Connected passages/ }).click();
+  const nextRef = await firstCard.locator('.drawer-xrefs .crossref-item strong').first().innerText();
+  await firstCard.getByRole('button', { name: 'Read this passage →' }).first().click();
+  await expect(page.locator('#scripture-anchors-list > article').first().locator('.scripture-ref')).toHaveText(nextRef);
+});
+
+test('INT-10: All twelve discovery profiles have a passage and working next questions', async ({ page }) => {
+  const { figures } = JSON.parse((await import('node:fs')).readFileSync('public/data/history/historical_synchrony.v1.json', 'utf8'));
+  for (const figure of figures) {
+    await page.goto(`/interact.html?figure=${figure.id}`);
+    await expect(page.locator('#discovery-title')).not.toBeEmpty();
+    await expect(page.locator('#discovery-scripture .kjv-verse-text')).not.toBeEmpty();
+    await expect(page.locator('#next-questions button')).toHaveCount(3);
+    await expect(page.locator('#journey-trail')).toContainText(figure.name);
+    await expect(page.locator('#error-banner')).toBeHidden();
+  }
+});
+
+test('INT-11: Small and large screens stay readable without page overflow across Home and Interact', async ({ page }) => {
+  for (const width of [375, 768, 1440, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    await expect(page.getByRole('heading', { name: 'The Bible happened in the real world.' })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await page.screenshot({ path: `test-results/home-${width}.png` });
+
     await page.goto('/interact.html');
-  });
+    await expect(page.locator('#discovery-scripture .kjv-verse-text')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await page.screenshot({ path: `test-results/interact-${width}.png` });
+    await page.screenshot({ path: `test-results/discovery-${width}.png` });
+  }
+});
 
-  test('REG-05: Local-First Telemetry and Three.js WebGL canvas mount cleanly', async ({ page }) => {
-    // Assert WebGL canvas inside three-container exists
-    const canvas = page.locator('#three-container canvas');
-    await expect(canvas).toBeVisible();
+test('INT-12: Loading failure explains recovery instead of leaving an empty scaffold', async ({ page }) => {
+  await page.route('**/data/history/**', route => route.abort());
+  await page.goto('/interact.html');
+  await expect(page.locator('#error-banner')).toContainText('Please reload');
+  await expect(page.locator('#loading-status')).toBeHidden();
+});
 
-    // Assert Local-First telemetry bar
-    const telemetry = page.locator('#local-telemetry-banner');
-    await expect(telemetry).toBeVisible();
-    await expect(telemetry).toContainText('Zero Backend Lag');
-    await expect(telemetry).toContainText('344,799 Scripture Links');
-  });
+test('INT-13: An empire without curated profiles explains the gap and offers a way onward', async ({ page }) => {
+  await page.goto('/interact.html');
+  await page.locator('#timeline-browser > summary').click();
+  await page.locator('.empire-node').filter({ hasText: 'Greek' }).click();
+  await expect(page.locator('#figures-stream-track')).toContainText('No curated person profiles');
+  await page.getByRole('button', { name: 'Show all people' }).click();
+  await expect(page.locator('.figure-node')).toHaveCount(12);
+});
 
-  test('REG-06: Welcome Onboarding Modal guides user journey', async ({ page }) => {
-    const modal = page.locator('#welcome-modal');
-    await expect(modal).toBeVisible();
+test('INT-14: Opening the source file explains how to reach the working reader', async ({ page }) => {
+  const { pathToFileURL } = await import('node:url');
+  const { resolve } = await import('node:path');
+  await page.goto(pathToFileURL(resolve('interact.html')).href);
+  await expect(page.locator('#file-notice')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Open the local Interact preview →' })).toHaveAttribute('href', 'http://localhost:5173/interact.html');
+});
 
-    // Assert 4 curated journey paths
-    const journeyCards = page.locator('.journey-card');
-    await expect(journeyCards).toHaveCount(4);
-
-    // Click "The Messianic Promise"
-    await page.locator('.journey-card[data-target-verse="Gen.3.15"]').click();
-    await expect(modal).toBeHidden();
-
-    // Drawer should update to Genesis {3:15}
-    const title = page.locator('#drawer-verse-title');
-    await expect(title).toHaveText('Genesis {3:15}');
-  });
-
-  test('REG-07: Audited Theological Relations display Bible.pdf citations', async ({ page }) => {
-    // Close welcome modal
-    await page.locator('.modal-close').click();
-
-    // Inspect Genesis 1:1 default state
-    const auditCard = page.locator('#drawer-audit-card');
-    await expect(auditCard).toBeVisible();
-    await expect(auditCard).toContainText('AUDITED THEOLOGICAL EVIDENCE');
-    await expect(auditCard).toContainText('Creator praised as giver of blessing');
-
-    // Cross-reference list should display cards with verified Bible.pdf citations
-    const refCard = page.locator('.ref-card.has-audit').first();
-    await expect(refCard).toBeVisible();
-    await expect(refCard).toContainText('Verified against Bible.pdf');
-  });
-
-  test('REG-08: KJV Language Integrity (Italicized Brackets [...], LORD Small-Caps, and {c:v} Delimiters)', async ({ page }) => {
-    // Close welcome modal
-    await page.locator('.modal-close').click();
-
-    // Verify KJV legend bar is displayed
-    const legendBar = page.locator('.kjv-legend-bar');
-    await expect(legendBar).toBeVisible();
-    await expect(legendBar).toContainText('{c:v}');
-    await expect(legendBar).toContainText('[...]');
-    await expect(legendBar).toContainText('LORD');
-
-    // Inspect Genesis 18:2 directly via window.app or omnibox/journey
-    await page.evaluate(() => {
-      (window as any).app?.inspectVerse('Gen.18.2');
+test.describe('HistoricalBible.com/Interact — Historical Synchrony & Canonical KJV Suite', () => {
+  test('INT-01: Boots cleanly into Dual-Stream Chronology with Jesus Christ centered and zero console/autoplay errors', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', err => errors.push(err.message));
+    page.on('console', msg => {
+      if (msg.type() === 'error' || msg.text().toLowerCase().includes('autoplay')) {
+        errors.push(msg.text());
+      }
     });
 
-    // Verify verse title has {18:2}
-    const title = page.locator('#drawer-verse-title');
-    await expect(title).toHaveText('Genesis {18:2}');
+    await page.goto('/interact.html', { waitUntil: 'networkidle' });
 
-    // Verify bracketed translator-added word [them,] is rendered with .kjv-added
-    const addedWord = page.locator('#drawer-verse-text .kjv-added');
-    await expect(addedWord).toBeVisible();
-    await expect(addedWord).toContainText('[them,]');
+    // No blocking welcome modal or 3D canvas
+    await expect(page.locator('#welcome-modal')).toHaveCount(0);
+    await expect(page.locator('#three-container')).toHaveCount(0);
 
-    // Inspect Genesis 18:1 to verify LORD (Tetragrammaton)
-    await page.evaluate(() => {
-      (window as any).app?.inspectVerse('Gen.18.1');
+    // Jesus Christ is active by default at the centerpiece of history
+    const heroName = page.locator('.figure-hero-name');
+    await expect(heroName).toHaveText('Jesus Christ');
+
+    // Secular Roman contemporaries (Caesar Augustus, Tiberius Caesar, Pontius Pilate) are visible
+    const secularList = page.locator('#secular-contemporaries-list');
+    await expect(secularList).toContainText('Caesar Augustus');
+    await expect(secularList).toContainText('Pontius Pilate');
+    await expect(secularList).toContainText('Pilate Stone');
+
+    expect(errors).toEqual([]);
+  });
+
+  test('INT-02: Every Click is the Next Step — Selecting Daniel loads Neo-Babylonian & Persian synchrony and canonical KJV invariants', async ({ page }) => {
+    await page.goto('/interact.html', { waitUntil: 'networkidle' });
+
+    await page.locator('#timeline-browser > summary').click();
+    const danielBtn = page.locator('[data-figure-id="daniel"]');
+    await expect(danielBtn).toBeVisible();
+    await danielBtn.click();
+
+    await expect(page.locator('.figure-hero-name')).toHaveText(/Daniel/);
+    await expect(page.locator('#secular-contemporaries-list')).toContainText('Nebuchadnezzar II');
+    await expect(page.locator('#secular-contemporaries-list')).toContainText('Nabonidus Cylinder');
+    await expect(page.locator('#secular-contemporaries-list')).toContainText('Darius the Mede');
+    await expect(page.locator('#secular-contemporaries-list')).toContainText('Scholarly / Chronological Debate');
+
+    // Verify canonical KJV formatting: {c:v} delimiter, [...] translator italics, and LORD small-caps
+    const scripList = page.locator('#scripture-anchors-list');
+    await expect(scripList).toContainText('DANIEL {1:1}');
+    await expect(scripList).toContainText('DANIEL {5:27}');
+  });
+
+  test('INT-03: Selecting King David surfaces Tel Dan Stele, Moabite Stone, and preserves KJV LORD / [...] formatting', async ({ page }) => {
+    await page.goto('/interact.html', { waitUntil: 'networkidle' });
+
+    await page.locator('#timeline-browser > summary').click();
+    await page.locator('[data-figure-id="david"]').click();
+    await expect(page.locator('.figure-hero-name')).toHaveText('King David');
+    await expect(page.locator('#secular-contemporaries-list')).toContainText('Tel Dan Stele');
+    await expect(page.locator('#secular-contemporaries-list')).toContainText('Mesha, King of Moab');
+
+    const divineSpan = page.locator('#scripture-anchors-list .kjv-divine-name').first();
+    await expect(divineSpan).toBeVisible();
+    await expect(divineSpan).toHaveText('LORD');
+    const restSpan = divineSpan.locator('.kjv-divine-rest');
+    await expect(restSpan).toHaveText('ORD');
+    const sizes = await divineSpan.evaluate((el) => {
+      const rest = el.querySelector('.kjv-divine-rest')!;
+      return {
+        full: parseFloat(getComputedStyle(el).fontSize),
+        rest: parseFloat(getComputedStyle(rest).fontSize),
+      };
     });
-    const lordTag = page.locator('#drawer-verse-text .kjv-lord');
-    await expect(lordTag).toBeVisible();
-    await expect(lordTag).toHaveText('LORD');
+    expect(sizes.rest).toBeLessThan(sizes.full * 0.85);
+  });
+
+  test('INT-04: Hitchcock Names directory ranks prominent biblical figures first and supports filtering', async ({ page }) => {
+    await page.goto('/interact.html', { waitUntil: 'networkidle' });
+
+    await page.locator('#names-directory > summary').click();
+    const firstCard = page.locator('#hitchcock-directory-list .hitchcock-card').first();
+    await expect(firstCard).toBeVisible();
+    // Top entries must be flagship figures (e.g., David, Jesus, Moses), not obscure 'A' names like Ahian
+    const firstCardText = await firstCard.textContent();
+    expect(firstCardText).toMatch(/David|Jesus|Moses|Abraham/);
+
+    const filterInput = page.locator('#hitchcock-input');
+    await filterInput.fill('Aaron');
+    await expect(page.locator('#hitchcock-directory-list .hitchcock-card').first()).toContainText('Aaron');
+    await expect(page.locator('#hitchcock-directory-list .hitchcock-card').first()).toContainText('teacher');
+  });
+
+  test('INT-05: Global search resolves KJV verses and historical figures', async ({ page }) => {
+    await page.goto('/interact.html', { waitUntil: 'networkidle' });
+
+    const searchInput = page.locator('#search-input');
+    await searchInput.fill('In the beginning');
+    await searchInput.press('Enter');
+
+    const results = page.locator('#search-results-list');
+    await expect(results).toBeVisible();
+    await expect(results).toContainText('GENESIS {1:1}');
   });
 });

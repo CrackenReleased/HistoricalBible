@@ -1,0 +1,933 @@
+{
+  "version": "1.0.0",
+  "missionStatement": "Connecting the people and timelines of the Bible to verifiable world history.",
+  "covenantPosture": "The God of Scripture is not a myth or sentimental abstraction. He is the Holy, Sovereign Creator who judged real world empires, held kings and nations accountable in verifiable human history, and stepped into Roman Judea in Jesus Christ so that whosoever chooses Him might not perish but have everlasting life.",
+  "evidenceCategories": {
+    "scripture": {
+      "label": "Scripture Witness",
+      "description": "Directly recorded in the canonical King James Version text."
+    },
+    "external_attestation": {
+      "label": "Archaeological / Secular Attestation",
+      "description": "Independently corroborated by named non-biblical inscriptions, steles, cylinders, or ancient chronicles."
+    },
+    "chronological_reconstruction": {
+      "label": "Chronological Synchrony",
+      "description": "Dated by correlating biblical regnal years with astronomical and secular historical timelines."
+    },
+    "disputed": {
+      "label": "Scholarly / Chronological Debate",
+      "description": "Multiple historical identifications or chronological intervals exist in scholarship; uncertainty is stated transparently."
+    },
+    "theological_covenant": {
+      "label": "Covenant & Prophetic Fulfillment",
+      "description": "Demonstrates God's holiness, judgment, or messianic promise fulfilled across history."
+    }
+  },
+  "eras": [
+    {
+      "id": "patriarchs",
+      "name": "Patriarchs & Covenant Promise",
+      "dateRangeLabel": "c. 2100 – 1800 BC",
+      "startYear": -2100,
+      "endYear": -1800,
+      "worldContext": "Middle Bronze Age Mesopotamia (Ur III / Old Babylonian Period) & Middle Kingdom Egypt",
+      "summary": "God calls Abram out of idolatrous Ur of the Chaldees and establishes an everlasting covenant promising land, seed, and blessing to all nations."
+    },
+    {
+      "id": "exodus_conquest",
+      "name": "Exodus, Law & Conquest",
+      "dateRangeLabel": "c. 1526 – 1350 BC",
+      "startYear": -1526,
+      "endYear": -1350,
+      "worldContext": "New Kingdom Egypt (18th Dynasty) & Late Bronze Age Canaan",
+      "summary": "The LORD judges the gods and Pharaoh of Egypt, delivers Israel through the Red Sea, gives His holy Law at Sinai, and establishes Israel in Canaan."
+    },
+    {
+      "id": "united_monarchy",
+      "name": "United Monarchy of Israel",
+      "dateRangeLabel": "c. 1050 – 930 BC",
+      "startYear": -1050,
+      "endYear": -930,
+      "worldContext": "Iron Age Levant during Simultaneous Weakness of Egypt (21st Dynasty) & Assyria",
+      "summary": "God establishes the Davidic throne in Jerusalem and covenants with David that his royal house and the Messiah's kingdom will endure forever."
+    },
+    {
+      "id": "divided_kingdom",
+      "name": "Divided Kingdom & Assyrian Judgment",
+      "dateRangeLabel": "930 – 609 BC",
+      "startYear": -930,
+      "endYear": -609,
+      "worldContext": "Neo-Assyrian Empire (Shalmaneser III, Tiglath-Pileser III, Sennacherib) & 22nd Dynasty Egypt",
+      "summary": "Persistent idolatry fractures the nation. Assyria conquers the Northern Kingdom in 722 BC, while God miraculously delivers Hezekiah's Jerusalem in 701 BC."
+    },
+    {
+      "id": "babylonian_exile",
+      "name": "Babylonian Exile & Sovereignty of God",
+      "dateRangeLabel": "605 – 539 BC",
+      "startYear": -605,
+      "endYear": -539,
+      "worldContext": "Neo-Babylonian Empire (Nebuchadnezzar II, Nabonidus, Belshazzar)",
+      "summary": "God uses Nebuchadnezzar to judge unrepentant Judah in 586 BC, yet proves in the courts of Babylon through Daniel that the Most High rules in the kingdom of men."
+    },
+    {
+      "id": "medo_persian_return",
+      "name": "Medo-Persian Decree & Restoration",
+      "dateRangeLabel": "539 – 331 BC",
+      "startYear": -539,
+      "endYear": -331,
+      "worldContext": "Achaemenid Persian Empire (Cyrus the Great, Darius I, Xerxes I, Artaxerxes I)",
+      "summary": "Exactly as prophesied by Isaiah and Jeremiah, Cyrus conquers Babylon in 539 BC and decrees the return of the Jewish remnant to rebuild the Temple and walls of Jerusalem."
+    },
+    {
+      "id": "christ_roman_empire",
+      "name": "The Fullness of Time: Christ & Rome",
+      "dateRangeLabel": "4 BC – AD 33",
+      "startYear": -4,
+      "endYear": 33,
+      "worldContext": "Early Roman Empire / Pax Romana (Caesar Augustus, Tiberius Caesar, Pontius Pilate, Herod)",
+      "summary": "In the fullness of time under Roman imperial census and law, Jesus Christ—the Eternal Word made flesh—lives a sinless life, is crucified under Pontius Pilate for our sins, and rises bodily from the dead."
+    },
+    {
+      "id": "apostolic_church",
+      "name": "The Apostolic Witness to the Nations",
+      "dateRangeLabel": "AD 33 – 96",
+      "startYear": 33,
+      "endYear": 96,
+      "worldContext": "Roman Empire (Claudius, Nero, Gallio, Felix, Festus, Vespasian, Domitian)",
+      "summary": "Eyewitnesses of the risen Christ proclaim the Gospel across Roman roads, courts, and provinces, sealing their testimony with their blood because men do not die for a lie they invented."
+    }
+  ],
+  "empires": [
+    {
+      "id": "egypt",
+      "name": "Ancient Egypt (Middle & New Kingdoms / 22nd Dynasty)",
+      "dateRangeLabel": "c. 2100 – 609 BC",
+      "startYear": -2100,
+      "endYear": -609,
+      "color": "#c99738",
+      "keyRulers": ["Pharaoh of the Oppression & Exodus", "Pharaoh Shishak (Sheshonq I)", "Pharaoh Necho II"],
+      "biblicalIntersection": "Refuge for Abraham and Jacob; crucible of Israel's slavery and the Exodus plagues; Shishak invades Rehoboam's Judah in year 5 (1 Kings 14:25)."
+    },
+    {
+      "id": "assyria",
+      "name": "Neo-Assyrian Empire",
+      "dateRangeLabel": "c. 911 – 609 BC",
+      "startYear": -911,
+      "endYear": -609,
+      "color": "#9e4747",
+      "keyRulers": ["Shalmaneser III", "Tiglath-Pileser III (Pul)", "Shalmaneser V", "Sargon II", "Sennacherib", "Esarhaddon"],
+      "biblicalIntersection": "Instrument of God's judgment against the idolatrous Northern Kingdom of Israel (722 BC) and invader of Judah under Hezekiah (701 BC)."
+    },
+    {
+      "id": "babylon",
+      "name": "Neo-Babylonian (Chaldean) Empire",
+      "dateRangeLabel": "626 – 539 BC",
+      "startYear": -626,
+      "endYear": -539,
+      "color": "#467599",
+      "keyRulers": ["Nabopolassar", "Nebuchadnezzar II", "Evil-Merodach (Amel-Marduk)", "Nabonidus", "Belshazzar (Co-Regent)"],
+      "biblicalIntersection": "Destroys Solomon's Temple in 586 BC, carries Daniel and Judah into the 70-year captivity, and falls in a single night in 539 BC (Daniel 5)."
+    },
+    {
+      "id": "persia",
+      "name": "Achaemenid Medo-Persian Empire",
+      "dateRangeLabel": "539 – 331 BC",
+      "startYear": -539,
+      "endYear": -331,
+      "color": "#3d8b7d",
+      "keyRulers": ["Cyrus II (the Great)", "Darius the Mede", "Darius I Hystaspes", "Xerxes I (Ahasuerus)", "Artaxerxes I Longimanus"],
+      "biblicalIntersection": "Overthrows Babylon, issues the decree for Israel's return (Ezra 1), protects the Jewish people in Esther, and authorizes Nehemiah to rebuild Jerusalem's walls (445/444 BC)."
+    },
+    {
+      "id": "greece",
+      "name": "Hellenistic Greek Empires (Alexander, Ptolemies & Seleucids)",
+      "dateRangeLabel": "331 – 63 BC",
+      "startYear": -331,
+      "endYear": -63,
+      "color": "#7c6799",
+      "keyRulers": ["Alexander the Great", "Ptolemy I–VI", "Antiochus III", "Antiochus IV Epiphanes"],
+      "biblicalIntersection": "Prophesied in precision by Daniel 8 and Daniel 11 (the rough goat of Grecia and the four divided kingdoms); spreads Koine Greek across the Mediterranean ahead of the New Testament."
+    },
+    {
+      "id": "rome",
+      "name": "Roman Empire",
+      "dateRangeLabel": "63 BC – AD 100+",
+      "startYear": -63,
+      "endYear": 100,
+      "color": "#b55938",
+      "keyRulers": ["Caesar Augustus", "Tiberius Caesar", "Pontius Pilate", "Herod the Great", "Herod Antipas", "Claudius", "Nero", "Gallio", "Felix", "Porcius Festus"],
+      "biblicalIntersection": "The fourth kingdom of iron (Daniel 2:40). Roman decrees, governors, procurators, and magistracies timestamp the birth, ministry, crucifixion, resurrection, and apostolic proclamation of Jesus Christ."
+    }
+  ],
+  "figures": [
+    {
+      "id": "jesus-christ",
+      "name": "Jesus Christ",
+      "hitchcockKey": "Jesus",
+      "title": "The Eternal Word Made Flesh · Messiah, Savior & Judge",
+      "eraId": "christ_roman_empire",
+      "editorialProminence": 1,
+      "measuredMentions": 983,
+      "dateRangeLabel": "c. 4 BC – AD 30/33 (Earthly Ministry; Eternal Pre-existence)",
+      "startYear": -4,
+      "endYear": 33,
+      "hitchcockMeaning": "Jehovah is salvation; Savior; deliverer",
+      "covenantSummary": "The centerpiece of all human history. Because God is perfectly Holy and cannot overlook sin, the Eternal Son stepped into Roman history, fulfilled the Law and the Prophets, bore the full wrath of God on the Cross under Pontius Pilate, and rose bodily on the third day—commanding all men everywhere to repent and believe the Gospel.",
+      "secularContemporaries": [
+        {
+          "name": "Caesar Augustus (Octavian)",
+          "role": "First Roman Emperor (27 BC – AD 14)",
+          "empireId": "rome",
+          "synchronyDetail": "Issued the imperial census decree (Luke 2:1) that brought Joseph and Mary from Nazareth to Bethlehem in fulfillment of Micah 5:2.",
+          "evidenceCategory": "scripture",
+          "sourceCitation": "LUKE {2:1}; Res Gestae Divi Augusti"
+        },
+        {
+          "name": "Tiberius Caesar",
+          "role": "Roman Emperor (AD 14 – 37)",
+          "empireId": "rome",
+          "synchronyDetail": "Luke explicitly anchors the beginning of John the Baptist's and Jesus' public ministry to the 15th year of the reign of Tiberius Caesar (AD 28/29).",
+          "evidenceCategory": "scripture",
+          "sourceCitation": "LUKE {3:1}; Suetonius, Lives of the Twelve Caesars (Tiberius)"
+        },
+        {
+          "name": "Pontius Pilate",
+          "role": "Roman Prefect of Judaea (AD 26 – 36)",
+          "empireId": "rome",
+          "synchronyDetail": "Presided over the trial and crucifixion of Jesus in Jerusalem. Independently attested on the limestone Pilate Stone discovered at Caesarea Maritima (1961) and by the Roman historian Tacitus.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Pilate Stone (Israel Museum AE 1963/0104); Tacitus, Annals 15.44; LUKE {23:1}–{23:25}"
+        },
+        {
+          "name": "Joseph Caiaphas",
+          "role": "Jewish High Priest (AD 18 – 36)",
+          "empireId": "rome",
+          "synchronyDetail": "Chief priest who presided over the Sanhedrin trial of Jesus. His ornate limestone ossuary inscribed 'Yehosef bar Qayafa' was discovered in Jerusalem in 1990.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Caiaphas Ossuary (Israel Museum 91-500); MATTHEW {26:57}; JOHN {11:49}"
+        },
+        {
+          "name": "Herod the Great & Herod Antipas",
+          "role": "Client King of Judaea (37–4 BC) & Tetrarch of Galilee (4 BC – AD 39)",
+          "empireId": "rome",
+          "synchronyDetail": "Herod the Great ordered the Bethlehem massacre prior to his death (4 BC); his son Herod Antipas beheaded John the Baptist and examined Jesus during Passion Week.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Josephus, Antiquities 17.6–8 & 18.5.2; MATTHEW {2:1}; LUKE {23:7}"
+        }
+      ],
+      "personalNetwork": [
+        { "targetId": "david", "name": "King David", "relation": "Royal Ancestor according to the Flesh (Son of David)", "ref": "Matt.1.1" },
+        { "targetId": "abraham", "name": "Abraham", "relation": "Covenant Forefather (Before Abraham was, I am)", "ref": "John.8.58" },
+        { "targetId": "moses", "name": "Moses", "relation": "Lawgiver Who Wrote of Christ & Appeared at the Transfiguration", "ref": "John.5.46" },
+        { "targetId": "daniel", "name": "Daniel", "relation": "Prophet of the Son of Man & Messiah the Prince", "ref": "Dan.7.13" },
+        { "targetId": "isaiah", "name": "Isaiah", "relation": "Prophet of the Virgin Birth & Suffering Servant", "ref": "Isa.53.5" },
+        { "targetId": "peter", "name": "Apostle Peter", "relation": "Eyewitness Apostle of the Resurrection", "ref": "2Pet.1.16" },
+        { "targetId": "paul", "name": "Apostle Paul", "relation": "Persecutor Confronted by the Risen Christ on the Damascus Road", "ref": "Acts.9.5" }
+      ],
+      "scriptureAnchors": [
+        {
+          "osisRef": "John.1.1",
+          "displayRef": "JOHN {1:1}",
+          "historicalContextNote": "Establishes the eternal deity of Christ before creation, who then stepped into flesh in John 1:14."
+        },
+        {
+          "osisRef": "Luke.2.1",
+          "displayRef": "LUKE {2:1}",
+          "historicalContextNote": "Anchors the Nativity directly to the imperial decree of Caesar Augustus."
+        },
+        {
+          "osisRef": "Luke.3.1",
+          "displayRef": "LUKE {3:1}",
+          "historicalContextNote": "Sixfold historical synchrony locking the start of ministry to Tiberius Caesar, Pontius Pilate, Herod, Philip, Lysanias, and Annas & Caiaphas."
+        },
+        {
+          "osisRef": "John.14.6",
+          "displayRef": "JOHN {14:6}",
+          "historicalContextNote": "Christ's exclusive claim to truth, holiness, and access to the Father."
+        },
+        {
+          "osisRef": "1Cor.15.3",
+          "displayRef": "1 CORINTHIANS {15:3}",
+          "historicalContextNote": "Early apostolic creed received within years of the Crucifixion, naming eyewitnesses including Cephas, the Twelve, and above 500 brethren at once."
+        },
+        {
+          "osisRef": "Rom.5.8",
+          "displayRef": "ROMANS {5:8}",
+          "historicalContextNote": "The heart of the Gospel: while we were yet sinners, Christ died for us in real history."
+        }
+      ]
+    },
+    {
+      "id": "daniel",
+      "name": "Daniel (Belteshazzar)",
+      "hitchcockKey": "Daniel",
+      "title": "Prophet of the Exile & Statesman in Babylon and Medo-Persia",
+      "eraId": "babylonian_exile",
+      "editorialProminence": 2,
+      "measuredMentions": 85,
+      "dateRangeLabel": "c. 620 – 535 BC (Deported to Babylon 605 BC)",
+      "startYear": -620,
+      "endYear": -535,
+      "hitchcockMeaning": "judgment of God; God my judge",
+      "covenantSummary": "Taken captive from Jerusalem in Nebuchadnezzar's first siege (605 BC), Daniel refused to defile himself in Babylon's royal court. Across seventy years and two world empires, God used Daniel to humble pagan emperors, reveal the rise and fall of Babylon, Medo-Persia, Greece, and Rome, and pinpoint the timeline of Messiah the Prince.",
+      "secularContemporaries": [
+        {
+          "name": "Nebuchadnezzar II",
+          "role": "King of the Neo-Babylonian Empire (605 – 562 BC)",
+          "empireId": "babylon",
+          "synchronyDetail": "Besieged Jerusalem in 605, 597, and 586 BC. His 605 BC accession after Carchemish and 597 BC capture of Jerusalem are explicitly recorded on the Babylonian Chronicle tablet (BM 21946).",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Babylonian Chronicle (BM 21946, British Museum); DANIEL {1:1}; {2:1}"
+        },
+        {
+          "name": "Belshazzar & Nabonidus",
+          "role": "Co-Regent & Last King of Babylon (556 – 539 BC)",
+          "empireId": "babylon",
+          "synchronyDetail": "For centuries critics claimed Belshazzar was fictional because Nabonidus was the last king. The Nabonidus Cylinder and Verse Account proved Nabonidus stayed in Teima while entrusting the kingship in Babylon to his eldest son Belshazzar—explaining why Belshazzar offered Daniel the 'third ruler' position in the kingdom (Daniel 5:16, 29).",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Nabonidus Cylinder from Ur (BM 91125); DANIEL {5:1}; {5:16}; {5:29}"
+        },
+        {
+          "name": "Cyrus II (the Great)",
+          "role": "Founder of the Achaemenid Persian Empire (559 – 530 BC)",
+          "empireId": "persia",
+          "synchronyDetail": "Conquered Babylon in October 539 BC and decreed the repatriation of exiled peoples and restoration of their temples, corroborated by the Cyrus Cylinder and Ezra 1.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Cyrus Cylinder (BM 90920); DANIEL {1:21}; {6:28}; {10:1}; EZRA {1:1}"
+        },
+        {
+          "name": "Darius the Mede",
+          "role": "Ruler over the Chaldean Realm at Babylon's Fall (539 BC)",
+          "empireId": "persia",
+          "synchronyDetail": "Received the kingdom at age 62 (Daniel 5:31). Scholars debate whether 'Darius the Mede' was the throne name of Gubaru (Gobryas, Cyrus's governor installed over Babylon), Cyaxares II, or a co-regnal title of Cyrus himself.",
+          "evidenceCategory": "disputed",
+          "sourceCitation": "DANIEL {5:31}; {6:1}; Nabonidus Chronicle (BM 35382)"
+        }
+      ],
+      "personalNetwork": [
+        { "targetId": "jeremiah", "name": "Jeremiah", "relation": "Prophet Whose 70-Year Desolation Scroll Daniel Studied in Prayer", "ref": "Dan.9.2" },
+        { "targetId": "hezekiah", "name": "King Hezekiah", "relation": "Royal Forebear Whose Babylonian Envoys Triggered Isaiah's Exile Prophecy", "ref": "Isa.39.6" },
+        { "targetId": "ezra-nehemiah", "name": "Ezra & Nehemiah", "relation": "Leaders of the Post-Exilic Return Fulfilling Daniel 9", "ref": "Ezra.1.1" },
+        { "targetId": "jesus-christ", "name": "Jesus Christ", "relation": "The Son of Man & Messiah the Prince Foretold by Daniel", "ref": "Dan.9.25" }
+      ],
+      "scriptureAnchors": [
+        {
+          "osisRef": "Dan.1.1",
+          "displayRef": "DANIEL {1:1}",
+          "historicalContextNote": "Dates Nebuchadnezzar's first campaign against Jehoiakim of Judah (605 BC accession-year reckoning)."
+        },
+        {
+          "osisRef": "Dan.2.21",
+          "displayRef": "DANIEL {2:21}",
+          "historicalContextNote": "Declares the thesis of biblical history: God changeth the times and the seasons: He removeth kings, and setteth up kings."
+        },
+        {
+          "osisRef": "Dan.2.44",
+          "displayRef": "DANIEL {2:44}",
+          "historicalContextNote": "Prophesies that in the days of the fourth kingdom (Rome), the God of heaven will set up an indestructible kingdom."
+        },
+        {
+          "osisRef": "Dan.5.27",
+          "displayRef": "DANIEL {5:27}",
+          "historicalContextNote": "God's holy verdict on Belshazzar on the night Babylon fell (October 539 BC): TEKEL; Thou art weighed in the balances, and art found wanting."
+        },
+        {
+          "osisRef": "Dan.9.25",
+          "displayRef": "DANIEL {9:25}",
+          "historicalContextNote": "The 70-Weeks prophecy linking the Persian decree to restore and build Jerusalem directly to Messiah the Prince."
+        }
+      ]
+    },
+    {
+      "id": "david",
+      "name": "King David",
+      "hitchcockKey": "David",
+      "title": "Second King of Israel · Sweet Psalmist & Covenant Ancestor of Christ",
+      "eraId": "united_monarchy",
+      "editorialProminence": 3,
+      "measuredMentions": 1085,
+      "dateRangeLabel": "c. 1040 – 970 BC (Reigned 1010 – 970 BC)",
+      "startYear": -1040,
+      "endYear": -970,
+      "hitchcockMeaning": "well-beloved; dear",
+      "covenantSummary": "Shepherd of Bethlehem anointed by Samuel, David united the twelve tribes, established Jerusalem as the royal capital, and received the Davidic Covenant (2 Samuel 7). Yet when David sinned with Bathsheba and Uriah, God's holiness did not spare him from severe covenant chastisement—producing the broken, contrite repentance of Psalm 51.",
+      "secularContemporaries": [
+        {
+          "name": "Hazael / Aramean Kings (Tel Dan Stele Witness)",
+          "role": "9th-Century BC Aramean Royal Inscription Citing the 'House of David'",
+          "empireId": "assyria",
+          "synchronyDetail": "Discovered at Tel Dan in 1993–1994, this basalt victory stele written by an enemy king of Aram-Damascus explicitly names 'bytdwd' (the House of David) within ~150 years of David's reign, shattering minimalist claims that David was mythical.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Tel Dan Stele (Israel Museum IAA 1996-125); 2 SAMUEL {7:16}"
+        },
+        {
+          "name": "Mesha, King of Moab (Moabite Stone Witness)",
+          "role": "9th-Century BC Moabite Royal Stele (c. 840 BC)",
+          "empireId": "assyria",
+          "synchronyDetail": "Discovered at Dibon in 1868, the Mesha Stele names Yahweh (YHWH), King Omri of Israel, and in Line 31 (per André Lemaire's reconstruction) the 'House of David' ruling in Horonaim.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Mesha Stele / Moabite Stone (Louvre AO 5066); 2 KINGS {3:4}"
+        },
+        {
+          "name": "Hiram I, King of Tyre",
+          "role": "Phoenician Monarch of Tyre (c. 980 – 947 BC)",
+          "empireId": "egypt",
+          "synchronyDetail": "Allied with both David and Solomon, supplying cedar timber from Lebanon and master craftsmen for David's palace and Solomon's Temple; attested in Phoenician annals cited by Menander of Ephesus and Josephus.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "2 SAMUEL {5:11}; 1 KINGS {5:1}; Josephus, Against Apion 1.17–18"
+        }
+      ],
+      "personalNetwork": [
+        { "targetId": "solomon", "name": "King Solomon", "relation": "Son & Royal Successor Who Built the First Temple", "ref": "1Kgs.1.30" },
+        { "targetId": "abraham", "name": "Abraham", "relation": "Covenant Forefather", "ref": "Matt.1.1" },
+        { "targetId": "jesus-christ", "name": "Jesus Christ", "relation": "The Promised Son of David & Eternal King", "ref": "Luke.1.32" }
+      ],
+      "scriptureAnchors": [
+        {
+          "osisRef": "1Sam.16.13",
+          "displayRef": "1 SAMUEL {16:13}",
+          "historicalContextNote": "Samuel anoints David in Bethlehem; the Spirit of the LORD comes upon David from that day forward."
+        },
+        {
+          "osisRef": "2Sam.5.7",
+          "displayRef": "2 SAMUEL {5:7}",
+          "historicalContextNote": "David captures the stronghold of Zion (Jerusalem), establishing the City of David."
+        },
+        {
+          "osisRef": "2Sam.7.16",
+          "displayRef": "2 SAMUEL {7:16}",
+          "historicalContextNote": "The Davidic Covenant: thine house and thy kingdom shall be established for ever before thee."
+        },
+        {
+          "osisRef": "2Sam.12.7",
+          "displayRef": "2 SAMUEL {12:7}",
+          "historicalContextNote": "God's holy accountability over kings: Nathan confronts David with 'Thou art the man.'"
+        },
+        {
+          "osisRef": "Ps.51.4",
+          "displayRef": "PSALMS {51:4}",
+          "historicalContextNote": "David's contrite confession before a Holy God after Nathan's rebuke."
+        },
+        {
+          "osisRef": "Ps.22.16",
+          "displayRef": "PSALMS {22:16}",
+          "historicalContextNote": "David's prophetic Psalm written centuries before Roman crucifixion was invented: 'they pierced my hands and my feet.'"
+        }
+      ]
+    },
+    {
+      "id": "moses",
+      "name": "Moses",
+      "hitchcockKey": "Moses",
+      "title": "Deliverer of Israel, Prophet & Mediator of the Sinai Covenant",
+      "eraId": "exodus_conquest",
+      "editorialProminence": 4,
+      "measuredMentions": 847,
+      "dateRangeLabel": "c. 1526 – 1406 BC (Early Date) / c. 1350 – 1230 BC (Late Date)",
+      "startYear": -1526,
+      "endYear": -1406,
+      "hitchcockMeaning": "taken out; drawn forth",
+      "covenantSummary": "Raised in the royal court of Pharaoh—the superpower of the ancient world—Moses was humbled in Midian and sent back under the authority of the great I AM to confront tyranny, execute judgment on Egypt's gods, lead Israel through the Red Sea, and record the Torah.",
+      "secularContemporaries": [
+        {
+          "name": "New Kingdom Pharaohs (Thutmose III / Amenhotep II vs. Ramesses II)",
+          "role": "18th Dynasty (1446 BC Synchrony) or 19th Dynasty (c. 1260 BC Synchrony)",
+          "empireId": "egypt",
+          "synchronyDetail": "1 Kings 6:1 states Solomon began the Temple (966 BC) in the 480th year after the Exodus (pointing to 1446 BC under the 18th Dynasty). Other scholars argue from the store-city name 'Raamses' (Exodus 1:11) for a 13th-century BC date.",
+          "evidenceCategory": "disputed",
+          "sourceCitation": "1 KINGS {6:1}; EXODUS {1:11}; {12:40}"
+        },
+        {
+          "name": "Merneptah (Merneptah Stele / Israel Stele)",
+          "role": "Pharaoh of Egypt (c. 1208 BC)",
+          "empireId": "egypt",
+          "synchronyDetail": "Granite victory stele in Cairo Museum (JE 31408) dated to c. 1208 BC contains the earliest extrabiblical reference to 'Israel' already established as a distinct people group inside Canaan.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Merneptah Stele (Cairo Museum JE 31408)"
+        }
+      ],
+      "personalNetwork": [
+        { "targetId": "abraham", "name": "Abraham", "relation": "Patriarch Whose 400-Year Prophecy (Gen 15:13) Returned in the Exodus", "ref": "Exod.2.24" },
+        { "targetId": "jesus-christ", "name": "Jesus Christ", "relation": "The Greater Prophet Like Unto Moses (Deut 18:15) & Passover Lamb", "ref": "Deut.18.15" }
+      ],
+      "scriptureAnchors": [
+        {
+          "osisRef": "Exod.3.14",
+          "displayRef": "EXODUS {3:14}",
+          "historicalContextNote": "God reveals His self-existent covenant name at the burning bush: I AM THAT I AM."
+        },
+        {
+          "osisRef": "Exod.12.13",
+          "displayRef": "EXODUS {12:13}",
+          "historicalContextNote": "The Passover judgment in Egypt: 'when I see the blood, I will pass over you.'"
+        },
+        {
+          "osisRef": "Exod.20.2",
+          "displayRef": "EXODUS {20:2}",
+          "historicalContextNote": "The giving of the Moral Law (Ten Commandments) at Mount Sinai."
+        },
+        {
+          "osisRef": "Deut.18.15",
+          "displayRef": "DEUTERONOMY {18:15}",
+          "historicalContextNote": "Moses prophesies the coming of Christ: a Prophet from the midst of thee, of thy brethren, like unto me; unto him ye shall hearken."
+        },
+        {
+          "osisRef": "Heb.11.24",
+          "displayRef": "HEBREWS {11:24}",
+          "historicalContextNote": "By faith Moses refused to be called the son of Pharaoh's daughter, esteeming the reproach of Christ greater riches than the treasures in Egypt."
+        }
+      ]
+    },
+    {
+      "id": "abraham",
+      "name": "Abraham (Abram)",
+      "hitchcockKey": "Abraham",
+      "title": "Father of the Faithful & Recipient of the Abrahamic Covenant",
+      "eraId": "patriarchs",
+      "editorialProminence": 5,
+      "measuredMentions": 250,
+      "dateRangeLabel": "c. 2166 – 1991 BC (or Middle Bronze IIA)",
+      "startYear": -2166,
+      "endYear": -1991,
+      "hitchcockMeaning": "father of a great multitude",
+      "covenantSummary": "Called out of Ur of the Chaldees into Canaan, Abraham believed the LORD, and it was counted unto him for righteousness (Genesis 15:6). Through his seed—ultimately fulfilled in Jesus Christ (Galatians 3:16)—God promised to bless all families of the earth.",
+      "secularContemporaries": [
+        {
+          "name": "Ur III / Old Babylonian & Mari Archive Cultural Horizon",
+          "role": "Middle Bronze Age Mesopotamian City-States (Ur, Haran, Mari)",
+          "empireId": "egypt",
+          "synchronyDetail": "Cuneiform tablets from Mari and Nuzi confirm personal names (Abi-ramu, Nahor, Terah, Serug), inheritance customs, and treaty covenants matching the exact patriarchal milieu of Genesis 12–24.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Mari Royal Archives; GENESIS {11:31}; {14:1}"
+        }
+      ],
+      "personalNetwork": [
+        { "targetId": "moses", "name": "Moses", "relation": "Deliverer Who Led Abraham's Seed Out of Egypt", "ref": "Exod.3.6" },
+        { "targetId": "david", "name": "King David", "relation": "Royal Descendant of Judah", "ref": "Matt.1.1" },
+        { "targetId": "jesus-christ", "name": "Jesus Christ", "relation": "The Promised Seed of Abraham (Galatians 3:16)", "ref": "Gal.3.16" },
+        { "targetId": "paul", "name": "Apostle Paul", "relation": "Expounder of Justification by Faith in Romans 4 & Galatians 3", "ref": "Rom.4.3" }
+      ],
+      "scriptureAnchors": [
+        {
+          "osisRef": "Gen.12.1",
+          "displayRef": "GENESIS {12:1}",
+          "historicalContextNote": "The Abrahamic call and promise that in thee shall all families of the earth be blessed."
+        },
+        {
+          "osisRef": "Gen.15.6",
+          "displayRef": "GENESIS {15:6}",
+          "historicalContextNote": "Foundational verse of justification by faith: And he believed in the LORD; and he counted it to him for righteousness."
+        },
+        {
+          "osisRef": "Gen.22.8",
+          "displayRef": "GENESIS {22:8}",
+          "historicalContextNote": "On Mount Moriah (the future site of Jerusalem's Temple and Calvary), Abraham prophesies: God will provide himself a lamb."
+        },
+        {
+          "osisRef": "Gal.3.16",
+          "displayRef": "GALATIANS {3:16}",
+          "historicalContextNote": "Identifies the singular Seed of Abraham's covenant promise as Christ."
+        }
+      ]
+    },
+    {
+      "id": "hezekiah",
+      "name": "King Hezekiah",
+      "hitchcockKey": "Hezekiah",
+      "title": "Reforming King of Judah Preserved During Sennacherib's Invasion (701 BC)",
+      "eraId": "divided_kingdom",
+      "editorialProminence": 6,
+      "measuredMentions": 128,
+      "dateRangeLabel": "Reigned c. 715 – 686 BC (Assyrian Siege 701 BC)",
+      "startYear": -715,
+      "endYear": -686,
+      "hitchcockMeaning": "strength of Jehovah; supported of the Lord",
+      "covenantSummary": "Hezekiah tore down the idols and brazen serpent in Judah, trusted in the LORD God of Israel, and spread Sennacherib's blasphemous Assyrian ultimatum before the LORD in prayer—resulting in one of the most heavily corroborated events in ancient Near Eastern archaeology.",
+      "secularContemporaries": [
+        {
+          "name": "Sennacherib, King of Assyria",
+          "role": "Neo-Assyrian Emperor (705 – 681 BC)",
+          "empireId": "assyria",
+          "synchronyDetail": "On the hexagonal clay Taylor Prism (and Oriental Institute Prism), Sennacherib boasts of capturing 46 walled cities of 'Hezekiah the Judahite' and shutting him up in Jerusalem 'like a bird in a cage'—yet notably never claims to have taken Jerusalem, matching 2 Kings 19:32–36!",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Taylor Prism (British Museum BM 91032); Lachish Reliefs; 2 KINGS {18:13}; {19:35}"
+        },
+        {
+          "name": "Hezekiah's Royal Bulla & Siloam Tunnel Inscription",
+          "role": "8th-Century BC Jerusalem Archaeological Artifacts",
+          "empireId": "assyria",
+          "synchronyDetail": "Hezekiah's clay royal seal impression ('Belonging to Hezekiah [son of] Ahaz, king of Judah') was excavated in the Ophel of Jerusalem (2015), alongside the Siloam Tunnel inscription documenting the water conduit described in 2 Kings 20:20.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Ophel Royal Bulla of Hezekiah (2015); Siloam Inscription; 2 KINGS {20:20}"
+        }
+      ],
+      "personalNetwork": [
+        { "targetId": "isaiah", "name": "Isaiah", "relation": "Prophet Who Counselled Hezekiah During the 701 BC Assyrian Siege", "ref": "2Kgs.19.2" },
+        { "targetId": "david", "name": "King David", "relation": "Royal Forefather Whose Righteous Walk Hezekiah Emulated", "ref": "2Kgs.18.3" },
+        { "targetId": "daniel", "name": "Daniel", "relation": "Descendant Taken in the Babylonian Exile Foretold in 2 Kings 20:17", "ref": "2Kgs.20.17" }
+      ],
+      "scriptureAnchors": [
+        {
+          "osisRef": "2Kgs.18.5",
+          "displayRef": "2 KINGS {18:5}",
+          "historicalContextNote": "Hezekiah trusted in the LORD God of Israel; so that after him was none like him among all the kings of Judah."
+        },
+        {
+          "osisRef": "2Kgs.19.14",
+          "displayRef": "2 KINGS {19:14}",
+          "historicalContextNote": "Hezekiah receives Sennacherib's letter and spreads it before the LORD in the house of the LORD."
+        },
+        {
+          "osisRef": "2Kgs.19.35",
+          "displayRef": "2 KINGS {19:35}",
+          "historicalContextNote": "The angel of the LORD smites 185,000 in the Assyrian camp; Sennacherib retreats to Nineveh and is later assassinated by his sons."
+        },
+        {
+          "osisRef": "2Kgs.20.20",
+          "displayRef": "2 KINGS {20:20}",
+          "historicalContextNote": "Records the engineering of Hezekiah's pool and conduit (the Siloam Tunnel still walkable in Jerusalem today)."
+        }
+      ]
+    },
+    {
+      "id": "isaiah",
+      "name": "Isaiah",
+      "hitchcockKey": "Isaiah",
+      "title": "Prophet of the Holiness of God, Cyrus by Name, and the Suffering Servant",
+      "eraId": "divided_kingdom",
+      "editorialProminence": 7,
+      "measuredMentions": 52,
+      "dateRangeLabel": "Ministered c. 740 – 681 BC (Uzziah, Jotham, Ahaz, Hezekiah)",
+      "startYear": -740,
+      "endYear": -681,
+      "hitchcockMeaning": "the salvation of the Lord",
+      "covenantSummary": "Beholding the thrice-holy LORD high and lifted up in the year King Uzziah died (Isaiah 6), Isaiah warned Judah of Assyrian and Babylonian judgment, named Cyrus the Persian 150 years before his decree (Isaiah 44:28–45:1), and penned the clearest portrait of Christ's substitutionary atonement in Isaiah 53.",
+      "secularContemporaries": [
+        {
+          "name": "Tiglath-Pileser III, Sargon II & Sennacherib",
+          "role": "Emperors of the Neo-Assyrian Empire (745 – 681 BC)",
+          "empireId": "assyria",
+          "synchronyDetail": "Isaiah 20:1 is the only ancient text outside Assyria naming Sargon II; Critics doubted Sargon's existence until Paul-Émile Botta excavated Sargon's palace at Khorsabad in 1843.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Khorsabad Annals of Sargon II; Great Isaiah Scroll (1QIsa-a, Dead Sea Scrolls c. 125 BC); ISAIAH {20:1}"
+        }
+      ],
+      "personalNetwork": [
+        { "targetId": "hezekiah", "name": "King Hezekiah", "relation": "King of Judah Supported by Isaiah's Prophecies", "ref": "Isa.37.21" },
+        { "targetId": "daniel", "name": "Daniel", "relation": "Witness to Cyrus's Overthrow of Babylon Foretold in Isaiah 45", "ref": "Isa.45.1" },
+        { "targetId": "jesus-christ", "name": "Jesus Christ", "relation": "The Virgin-Born Immanuel (Isa 7:14) & Suffering Servant (Isa 53)", "ref": "Isa.53.5" }
+      ],
+      "scriptureAnchors": [
+        {
+          "osisRef": "Isa.6.3",
+          "displayRef": "ISAIAH {6:3}",
+          "historicalContextNote": "The seraphim proclaim the foundational attribute of God: Holy, holy, holy, [is] the LORD of hosts."
+        },
+        {
+          "osisRef": "Isa.7.14",
+          "displayRef": "ISAIAH {7:14}",
+          "historicalContextNote": "Prophecy of the Virgin Birth of Immanuel given during the Syro-Ephraimite crisis."
+        },
+        {
+          "osisRef": "Isa.9.6",
+          "displayRef": "ISAIAH {9:6}",
+          "historicalContextNote": "Unto us a child is born: Wonderful, Counsellor, The mighty God, The everlasting Father, The Prince of Peace."
+        },
+        {
+          "osisRef": "Isa.44.28",
+          "displayRef": "ISAIAH {44:28}",
+          "historicalContextNote": "Names Cyrus 150 years in advance: 'He is my shepherd, and shall perform all my pleasure: even saying to Jerusalem, Thou shalt be built.'"
+        },
+        {
+          "osisRef": "Isa.53.5",
+          "displayRef": "ISAIAH {53:5}",
+          "historicalContextNote": "Preserved verbatim in the Dead Sea Scrolls (1QIsa-a) over a century before Christ's birth: 'he was wounded for our transgressions.'"
+        }
+      ]
+    },
+    {
+      "id": "paul",
+      "name": "Apostle Paul (Saul of Tarsus)",
+      "hitchcockKey": "Paul",
+      "title": "Persecutor Turned Apostle to the Gentiles & Author of 13–14 New Testament Epistles",
+      "eraId": "apostolic_church",
+      "editorialProminence": 8,
+      "measuredMentions": 185,
+      "dateRangeLabel": "c. AD 5 – 64/67 (Converted c. AD 34; Martyrdom in Rome under Nero)",
+      "startYear": 5,
+      "endYear": 67,
+      "hitchcockMeaning": "small; little (Saul: demanded; lent)",
+      "covenantSummary": "A Pharisee and violent persecutor of Christians who consented to Stephen's stoning, Saul of Tarsus was confronted by the risen, glorified Jesus Christ on the road to Damascus. He spent the rest of his life traversing the Roman Empire—appearing before proconsuls, governors, and Caesar—before being beheaded in Rome under Nero.",
+      "secularContemporaries": [
+        {
+          "name": "Lucius Junius Gallio (Proconsul of Achaia)",
+          "role": "Roman Senator & Proconsul at Corinth (AD 51–52)",
+          "empireId": "rome",
+          "synchronyDetail": "Acts 18:12 records Paul brought before Gallio when he was deputy (proconsul) of Achaia. The Delphi Inscription of Emperor Claudius explicitly dates Gallio's proconsulship to AD 51–52, providing a rock-solid absolute anchor for New Testament chronology.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Delphi Inscription (Fouilles de Delphes III 4, 286); ACTS {18:12}"
+        },
+        {
+          "name": "Antonius Felix & Porcius Festus",
+          "role": "Roman Procurators of Judaea at Caesarea (AD 52–62)",
+          "empireId": "rome",
+          "synchronyDetail": "Examined Paul in Caesarea before Paul appealed to Caesar (Acts 24–26); both procurators and their exact succession are documented by Josephus and Tacitus.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Josephus, Antiquities 20.7–8; ACTS {24:27}; {25:1}"
+        },
+        {
+          "name": "Emperor Claudius & Emperor Nero",
+          "role": "Roman Emperors (AD 41–54 & AD 54–68)",
+          "empireId": "rome",
+          "synchronyDetail": "Claudius expelled Jews from Rome (Acts 18:2; Suetonius, Claudius 25.4), bringing Aquila and Priscilla to Corinth; Paul appealed his case to Nero's tribunal and was martyred in Rome during Nero's persecution.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Suetonius, Claudius 25.4; Tacitus, Annals 15.44; ACTS {18:2}; {25:11}"
+        }
+      ],
+      "personalNetwork": [
+        { "targetId": "jesus-christ", "name": "Jesus Christ", "relation": "Risen Lord Who Appeared to Saul on the Damascus Road", "ref": "Acts.9.5" },
+        { "targetId": "peter", "name": "Apostle Peter", "relation": "Fellow Apostle in Jerusalem & Antioch", "ref": "Gal.1.18" },
+        { "targetId": "abraham", "name": "Abraham", "relation": "Model of Justification by Faith in Romans 4", "ref": "Rom.4.3" }
+      ],
+      "scriptureAnchors": [
+        {
+          "osisRef": "Acts.9.4",
+          "displayRef": "ACTS {9:4}",
+          "historicalContextNote": "Saul's Damascus road encounter with the risen Christ: 'Saul, Saul, why persecutest thou me?'"
+        },
+        {
+          "osisRef": "Acts.17.30",
+          "displayRef": "ACTS {17:30}",
+          "historicalContextNote": "Paul's proclamation before the Greek philosophers on Mars' Hill (Areopagus) in Athens: God commandeth all men every where to repent."
+        },
+        {
+          "osisRef": "Acts.18.12",
+          "displayRef": "ACTS {18:12}",
+          "historicalContextNote": "The Gallio synchronism in Corinth (AD 51–52), verified by the Delphi Inscription."
+        },
+        {
+          "osisRef": "Rom.10.9",
+          "displayRef": "ROMANS {10:9}",
+          "historicalContextNote": "The clear Gospel response: confess the Lord Jesus and believe in thine heart that God hath raised him from the dead."
+        },
+        {
+          "osisRef": "Eph.2.8",
+          "displayRef": "EPHESIANS {2:8}",
+          "historicalContextNote": "Salvation by grace through faith, not of works, lest any man should boast."
+        },
+        {
+          "osisRef": "Phil.3.14",
+          "displayRef": "PHILIPPIANS {3:14}",
+          "historicalContextNote": "I press toward the mark for the prize of the high calling of God in Christ Jesus."
+        }
+      ]
+    },
+    {
+      "id": "peter",
+      "name": "Apostle Peter (Simon Cephas)",
+      "hitchcockKey": "Peter",
+      "title": "Lead Apostle of the Twelve & Eyewitness of Christ's Majesty",
+      "eraId": "apostolic_church",
+      "editorialProminence": 9,
+      "measuredMentions": 162,
+      "dateRangeLabel": "c. 1 BC – AD 64/67 (Crucified in Rome under Nero)",
+      "startYear": -1,
+      "endYear": 67,
+      "hitchcockMeaning": "a rock or stone",
+      "covenantSummary": "Galilean fisherman who walked with Jesus for three years, denied Him three times in fear on the night of His arrest, and was utterly transformed by seeing the risen Christ—boldly preaching at Pentecost before thousands in the very city where Jesus was crucified and eventually dying as a martyr.",
+      "secularContemporaries": [
+        {
+          "name": "Herod Agrippa I",
+          "role": "King of Judaea (AD 41 – 44)",
+          "empireId": "rome",
+          "synchronyDetail": "Executed James the brother of John, imprisoned Peter (Acts 12:1–4), and died suddenly at Caesarea after being hailed as a god (Acts 12:21–23)—an event independently recorded by Josephus in Antiquities 19.8.2.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Josephus, Antiquities 19.8.2; ACTS {12:1}–{12:23}"
+        }
+      ],
+      "personalNetwork": [
+        { "targetId": "jesus-christ", "name": "Jesus Christ", "relation": "Master, Savior & Risen Lord", "ref": "Matt.16.16" },
+        { "targetId": "paul", "name": "Apostle Paul", "relation": "Beloved Brother & Fellow Apostle (2 Peter 3:15)", "ref": "2Pet.3.15" }
+      ],
+      "scriptureAnchors": [
+        {
+          "osisRef": "Matt.16.16",
+          "displayRef": "MATTHEW {16:16}",
+          "historicalContextNote": "Peter's confession at Caesarea Philippi: Thou art the Christ, the Son of the living God."
+        },
+        {
+          "osisRef": "Acts.2.32",
+          "displayRef": "ACTS {2:32}",
+          "historicalContextNote": "Peter's public proclamation at Pentecost in Jerusalem: This Jesus hath God raised up, whereof we all are witnesses."
+        },
+        {
+          "osisRef": "Acts.4.12",
+          "displayRef": "ACTS {4:12}",
+          "historicalContextNote": "Declared before the Sanhedrin: Neither is there salvation in any other."
+        },
+        {
+          "osisRef": "2Pet.1.16",
+          "displayRef": "2 PETER {1:16}",
+          "historicalContextNote": "For we have not followed cunningly devised fables... but were eyewitnesses of his majesty."
+        },
+        {
+          "osisRef": "2Pet.3.9",
+          "displayRef": "2 PETER {3:9}",
+          "historicalContextNote": "The Lord is not slack concerning his promise... not willing that any should perish, but that all should come to repentance."
+        }
+      ]
+    },
+    {
+      "id": "jeremiah",
+      "name": "Jeremiah",
+      "hitchcockKey": "Jeremiah",
+      "title": "Weeping Prophet of Jerusalem's Fall & the New Covenant",
+      "eraId": "babylonian_exile",
+      "editorialProminence": 10,
+      "measuredMentions": 147,
+      "dateRangeLabel": "Ministered 627 – c. 580 BC",
+      "startYear": -627,
+      "endYear": -580,
+      "hitchcockMeaning": "exaltation of the Lord",
+      "covenantSummary": "Called in the 13th year of King Josiah, Jeremiah warned Judah for 40 years that refusing to repent would bring Nebuchadnezzar's sword, prophesied the exact 70-year duration of Babylonian supremacy, and foretold the New Covenant (Jeremiah 31:31).",
+      "secularContemporaries": [
+        {
+          "name": "Bullae of Gemariah, Baruch, Jehucal & Gedaliah + Lachish Ostraca",
+          "role": "Late 7th / Early 6th Century BC Judahite Clay Seals & Military Dispatches",
+          "empireId": "babylon",
+          "synchronyDetail": "Archaeologists have unearthed the actual clay bullae (seal impressions) of Jeremiah's scribe Baruch son of Neriah, Gemariah son of Shaphan (Jer 36:10), Jehucal son of Shelemiah (Jer 37:3), and Gedaliah son of Pashhur (Jer 38:1) in Jerusalem, plus the Lachish Letters written during Nebuchadnezzar's final siege (Jer 34:7)!",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Lachish Ostraca (British Museum); City of David Bullae of Jehucal & Gedaliah (2005–2008); JEREMIAH {34:7}; {38:1}"
+        }
+      ],
+      "personalNetwork": [
+        { "targetId": "daniel", "name": "Daniel", "relation": "Exiled Prophet Who Read Jeremiah's 70-Year Scroll in Babylon", "ref": "Dan.9.2" },
+        { "targetId": "jesus-christ", "name": "Jesus Christ", "relation": "Mediator of the New Covenant Foretold in Jeremiah 31:31", "ref": "Jer.31.31" }
+      ],
+      "scriptureAnchors": [
+        {
+          "osisRef": "Jer.25.11",
+          "displayRef": "JEREMIAH {25:11}",
+          "historicalContextNote": "Prophesies the exact 70-year servitude to the king of Babylon."
+        },
+        {
+          "osisRef": "Jer.29.13",
+          "displayRef": "JEREMIAH {29:13}",
+          "historicalContextNote": "And ye shall seek me, and find [me], when ye shall search for me with all your heart."
+        },
+        {
+          "osisRef": "Jer.31.31",
+          "displayRef": "JEREMIAH {31:31}",
+          "historicalContextNote": "Prophecy of the New Covenant written on the heart and fulfilled in Christ's blood (Luke 22:20)."
+        },
+        {
+          "osisRef": "Jer.38.1",
+          "displayRef": "JEREMIAH {38:1}",
+          "historicalContextNote": "Names Jehucal son of Shelemiah and Gedaliah son of Pashhur—both of whose physical clay seals were excavated in Jerusalem."
+        }
+      ]
+    },
+    {
+      "id": "solomon",
+      "name": "King Solomon (Jedidiah)",
+      "hitchcockKey": "Solomon",
+      "title": "Third King of Israel · Builder of the First Temple in Jerusalem",
+      "eraId": "united_monarchy",
+      "editorialProminence": 11,
+      "measuredMentions": 305,
+      "dateRangeLabel": "Reigned c. 970 – 930 BC (Temple Begun 966 BC)",
+      "startYear": -970,
+      "endYear": -930,
+      "hitchcockMeaning": "peaceable; perfect; one who recompenses",
+      "covenantSummary": "Endowed with unmatched wisdom by God, Solomon built the First Temple in Jerusalem (1 Kings 6:1) and authored Proverbs, Ecclesiastes, and Song of Solomon. Yet his compromise with foreign wives and idols brought God's righteous judgment, splitting the kingdom after his death.",
+      "secularContemporaries": [
+        {
+          "name": "Pharaoh Siamun & Pharaoh Shishak (Sheshonq I)",
+          "role": "Late 21st Dynasty & Founder of 22nd Dynasty of Egypt (c. 978 – 924 BC)",
+          "empireId": "egypt",
+          "synchronyDetail": "Shishak gave refuge to Jeroboam during Solomon's reign (1 Kings 11:40) and invaded Judah in the 5th year of Rehoboam (925 BC), carving his campaign list onto the Bubastite Portal at Karnak Temple in Egypt.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Bubastite Portal Relief of Sheshonq I at Karnak; 1 KINGS {11:40}; {14:25}"
+        }
+      ],
+      "personalNetwork": [
+        { "targetId": "david", "name": "King David", "relation": "Father & Royal Predecessor", "ref": "1Kgs.2.1" },
+        { "targetId": "moses", "name": "Moses", "relation": "Exodus Benchmark Cited in 1 Kings 6:1 (480th Year)", "ref": "1Kgs.6.1" },
+        { "targetId": "jesus-christ", "name": "Jesus Christ", "relation": "Behold, a Greater than Solomon is Here (Matthew 12:42)", "ref": "Matt.12.42" }
+      ],
+      "scriptureAnchors": [
+        {
+          "osisRef": "1Kgs.6.1",
+          "displayRef": "1 KINGS {6:1}",
+          "historicalContextNote": "Primary chronological anchor of the Old Testament: 480th year after the Exodus, in the 4th year of Solomon's reign."
+        },
+        {
+          "osisRef": "1Kgs.8.27",
+          "displayRef": "1 KINGS {8:27}",
+          "historicalContextNote": "Solomon's Temple dedication prayer acknowledging God's infinite transcendence."
+        },
+        {
+          "osisRef": "1Kgs.11.9",
+          "displayRef": "1 KINGS {11:9}",
+          "historicalContextNote": "The LORD was angry with Solomon because his heart was turned from the LORD God of Israel."
+        },
+        {
+          "osisRef": "Eccl.12.13",
+          "displayRef": "ECCLESIASTES {12:13}",
+          "historicalContextNote": "Solomon's final conclusion: Fear God, and keep his commandments: for this [is] the whole [duty] of man."
+        }
+      ]
+    },
+    {
+      "id": "ezra-nehemiah",
+      "name": "Ezra & Nehemiah",
+      "hitchcockKey": "Nehemiah",
+      "title": "Scribe of the Law & Royal Cupbearer Who Rebuilt Jerusalem's Walls",
+      "eraId": "medo_persian_return",
+      "editorialProminence": 12,
+      "measuredMentions": 82,
+      "dateRangeLabel": "c. 458 – 430 BC (Decree of Artaxerxes I in 458 & 445/444 BC)",
+      "startYear": -465,
+      "endYear": -430,
+      "hitchcockMeaning": "Ezra: help; Nehemiah: consolation of Jehovah",
+      "covenantSummary": "Serving under the Persian king Artaxerxes I Longimanus, Ezra restored the public reading of God's Law and Nehemiah rebuilt Jerusalem's walls in 52 days despite fierce opposition from Sanballat and Tobiah—establishing the exact Persian restoration benchmark prophesied in Daniel 9:25.",
+      "secularContemporaries": [
+        {
+          "name": "Artaxerxes I Longimanus & Sanballat the Horonite (Elephantine Papyri)",
+          "role": "Achaemenid Persian King (465–424 BC) & Governor of Samaria",
+          "empireId": "persia",
+          "synchronyDetail": "5th-century BC Aramaic Elephantine Papyri discovered in Egypt explicitly name 'Sanballat governor of Samaria' (Nehemiah's adversary in Nehemiah 2:19; 4:1) and 'Johanan the high priest' in Jerusalem (Nehemiah 12:22–23) under the Persian Empire.",
+          "evidenceCategory": "external_attestation",
+          "sourceCitation": "Elephantine Papyri (Cowley #30 / Berlin P. 13495, 407 BC); NEHEMIAH {2:1}; {2:19}"
+        }
+      ],
+      "personalNetwork": [
+        { "targetId": "daniel", "name": "Daniel", "relation": "Prophet Who Foretold the Decree to Restore and Build Jerusalem", "ref": "Dan.9.25" },
+        { "targetId": "jesus-christ", "name": "Jesus Christ", "relation": "Messiah the Prince Toward Whom the Post-Exilic Restoration Pointed", "ref": "Dan.9.25" }
+      ],
+      "scriptureAnchors": [
+        {
+          "osisRef": "Ezra.1.1",
+          "displayRef": "EZRA {1:1}",
+          "historicalContextNote": "In the first year of Cyrus king of Persia (539/538 BC), the LORD stirred up the spirit of Cyrus to fulfill the word of the LORD by the mouth of Jeremiah."
+        },
+        {
+          "osisRef": "Neh.2.1",
+          "displayRef": "NEHEMIAH {2:1}",
+          "historicalContextNote": "Dated to the month Nisan in the 20th year of Artaxerxes the king (445/444 BC)—authorizing the rebuilding of Jerusalem's walls and streets."
+        },
+        {
+          "osisRef": "Neh.6.15",
+          "displayRef": "NEHEMIAH {6:15}",
+          "historicalContextNote": "The wall was finished in fifty and two days, so that surrounding enemies perceived this work was wrought of our God."
+        },
+        {
+          "osisRef": "Neh.8.8",
+          "displayRef": "NEHEMIAH {8:8}",
+          "historicalContextNote": "Ezra and the Levites read in the book in the law of God distinctly, and gave the sense, and caused [them] to understand the reading."
+        }
+      ]
+    }
+  ]
+}

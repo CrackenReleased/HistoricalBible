@@ -1,661 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HistoricalBible Interactive Scripture Tapestry — 344,799 Cross-References</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-dark: #08090d;
-      --bg-panel: #0f1118;
-      --bg-card: #151824;
-      --border: #232738;
-      --gold: #d4af37;
-      --gold-dim: #997b24;
-      --text: #e2e8f0;
-      --text-muted: #8e99ab;
-      --cyan: #22d3ee;
-      --accent: #38bdf8;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg-dark);
-      color: var(--text);
-      font-family: 'Inter', -apple-system, sans-serif;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Top Navigation Bar */
-    header {
-      background: var(--bg-panel);
-      border-bottom: 1px solid var(--border);
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      z-index: 50;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--gold);
-      letter-spacing: 0.05em;
-      text-decoration: none;
-    }
-
-    .brand-badge {
-      background: rgba(212, 175, 55, 0.15);
-      border: 1px solid var(--gold-dim);
-      color: var(--gold);
-      font-size: 0.7rem;
-      padding: 2px 7px;
-      border-radius: 4px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .nav-controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .mode-switch-group {
-      display: flex;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 3px;
-    }
-
-    .mode-toggle-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .mode-toggle-btn.active {
-      background: var(--gold);
-      color: #000;
-      font-weight: 700;
-    }
-
-    .omnibox {
-      display: flex;
-      align-items: center;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 4px 10px;
-    }
-
-    .omnibox input {
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 0.85rem;
-      width: 170px;
-      outline: none;
-    }
-
-    .audio-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--gold);
-      font-size: 0.78rem;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .audio-btn.muted {
-      color: var(--text-muted);
-      opacity: 0.7;
-    }
-
-    /* Telemetry Banner */
-    .local-telemetry-banner {
-      background: #0d131f;
-      border-bottom: 1px solid #1a273e;
-      padding: 4px 20px;
-      font-size: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--text-muted);
-      z-index: 40;
-    }
-
-    .local-telemetry-banner.ready .status-dot {
-      background: #10b981;
-      box-shadow: 0 0 8px #10b981;
-    }
-
-    .status-dot {
-      display: inline-block;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #f59e0b;
-      margin-right: 6px;
-      transition: all 0.3s ease;
-    }
-
-    .progress-bar-wrap {
-      width: 140px;
-      height: 6px;
-      background: #1e293b;
-      border-radius: 3px;
-      overflow: hidden;
-      margin-left: 10px;
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      width: 5%;
-      background: var(--gold);
-      transition: width 0.25s ease;
-    }
-
-    /* Main Viewport Workspace */
-    .viewport-container {
-      flex: 1;
-      display: flex;
-      position: relative;
-      overflow: hidden;
-    }
-
-    #three-container, #canvas-2d-container, #names-container {
-      flex: 1;
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
-
-    #canvas-2d-container, #threads-container, #names-container {
-      display: none;
-    }
-
-    /* Scripture & Theological Inspector Drawer */
-    .inspector-drawer {
-      width: 440px;
-      background: var(--bg-panel);
-      border-left: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      z-index: 30;
-      box-shadow: -6px 0 24px rgba(0,0,0,0.5);
-    }
-
-    .drawer-header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .drawer-header h2 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.25rem;
-      color: var(--gold);
-    }
-
-    .drawer-verse-text {
-      font-family: 'Lora', serif;
-      font-size: 0.98rem;
-      line-height: 1.6;
-      color: #e2e8f0;
-      margin-top: 8px;
-      font-style: normal;
-    }
-
-    .kjv-added {
-      font-style: italic;
-      color: #7dd3fc;
-      background: rgba(125, 211, 252, 0.08);
-      padding: 0 3px;
-      border-radius: 3px;
-      border-bottom: 1px dotted rgba(125, 211, 252, 0.4);
-      cursor: help;
-    }
-
-    .kjv-lord {
-      font-variant: small-caps;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      color: var(--gold);
-      text-shadow: 0 0 10px rgba(212, 175, 55, 0.25);
-    }
-
-    .kjv-legend-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 10px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .kjv-legend-pill {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      background: rgba(255, 255, 255, 0.03);
-      padding: 2px 7px;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .kjv-legend-pill strong {
-      color: #cbd5e1;
-    }
-
-    .drawer-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    /* Audited Theological Relation Card */
-    .audit-card {
-      background: rgba(34, 211, 238, 0.08);
-      border: 1px solid rgba(34, 211, 238, 0.35);
-      border-radius: 8px;
-      padding: 14px;
-    }
-
-    .audit-flag-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .audit-reviewer {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
-
-    .audit-card h4 {
-      color: var(--cyan);
-      font-size: 0.95rem;
-      margin-bottom: 6px;
-    }
-
-    .audit-card p {
-      font-size: 0.82rem;
-      line-height: 1.45;
-      color: #94a3b8;
-    }
-
-    .ref-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .ref-card:hover {
-      border-color: var(--gold);
-      transform: translateY(-1px);
-    }
-
-    .ref-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .ref-osis {
-      font-weight: 700;
-      color: #fff;
-      font-size: 0.88rem;
-    }
-
-    .ref-votes {
-      font-size: 0.72rem;
-      color: var(--gold);
-    }
-
-    .badge {
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 4px;
-      letter-spacing: 0.05em;
-    }
-
-    .badge-supported {
-      background: rgba(16, 185, 129, 0.2);
-      color: #34d399;
-      border: 1px solid #10b981;
-    }
-
-    .badge-ambiguous {
-      background: rgba(245, 158, 11, 0.2);
-      color: #fbbf24;
-      border: 1px solid #f59e0b;
-    }
-
-    .ref-text {
-      font-family: 'Lora', serif;
-      font-size: 0.82rem;
-      color: #94a3b8;
-      line-height: 1.4;
-      margin-bottom: 8px;
-    }
-
-    .audit-badge-pill {
-      font-size: 0.75rem;
-      color: var(--cyan);
-      margin-bottom: 4px;
-    }
-
-    .audit-reason {
-      font-size: 0.74rem;
-      color: #94a3b8;
-      line-height: 1.35;
-      margin-bottom: 6px;
-    }
-
-    .audit-pdf-cite {
-      font-size: 0.7rem;
-      color: var(--gold);
-      background: rgba(212, 175, 55, 0.08);
-      padding: 3px 6px;
-      border-radius: 4px;
-      display: inline-block;
-    }
-
-    /* Names Grid */
-    .names-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
-      padding: 20px;
-      overflow-y: auto;
-      height: 100%;
-    }
-
-    .name-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 12px;
-    }
-
-    .name-card h3 {
-      font-size: 0.95rem;
-      color: var(--gold);
-      margin-bottom: 4px;
-    }
-
-    .name-card p {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      line-height: 1.35;
-    }
-
-    /* Welcome Onboarding Modal */
-    .modal-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(4, 6, 10, 0.85);
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-    }
-
-    .modal-box {
-      width: 720px;
-      max-width: 90vw;
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 30px;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.8);
-      position: relative;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 18px;
-      right: 20px;
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.4rem;
-      cursor: pointer;
-    }
-
-    .modal-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.5rem;
-      color: var(--gold);
-      margin-bottom: 8px;
-      text-align: center;
-    }
-
-    .modal-subtitle {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      text-align: center;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
-
-    .journey-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    .journey-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .journey-card:hover {
-      border-color: var(--gold);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(212, 175, 55, 0.15);
-    }
-
-    .journey-card h4 {
-      color: var(--gold);
-      font-size: 0.95rem;
-      margin-bottom: 6px;
-    }
-
-    .journey-card p {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    .modal-footer {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      border-top: 1px solid var(--border);
-      padding-top: 15px;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explore the Bible in History — HistoricalBible.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./src/interact.css" />
 </head>
 <body>
+  <a class="skip-link" href="#discovery">Skip to the study desk</a>
 
-  <!-- Top Navigation & Telemetry -->
-  <header>
-    <div class="brand">
-      <a href="https://historicalbible.com" class="brand-title">HISTORICALBIBLE</a>
-      <span class="brand-badge">Interact</span>
-    </div>
-
-    <div class="nav-controls">
-      <!-- Mode Toggle -->
-      <div class="mode-switch-group">
-        <button class="mode-toggle-btn active" data-mode="3d">3D Spatial Loom</button>
-        <button class="mode-toggle-btn" data-mode="2d">2D Macro Arcs</button>
-        <button class="mode-toggle-btn" data-mode="names">Names Network</button>
-      </div>
-
-      <!-- Omnibox Search -->
-      <div class="omnibox">
-        <input type="text" id="omnibox-input" placeholder="Search passage or name..." value="Gen 1:1">
-      </div>
-
-      <!-- Web Audio Harmonic Chime Toggle -->
-      <button class="audio-btn" id="btn-audio-toggle">🔔 196Hz Harmonic Chimes On</button>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a href="/" class="brand-title">
+        <div class="brand-logo-text">HISTORICAL <span>BIBLE</span></div>
+        <div class="brand-subtitle">SCRIPTURE. PEOPLE. THE WORLD THEY LIVED IN.</div>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="/">Home</a>
+        <a href="/bible">Bible PDF</a>
+        <a href="/interact" aria-current="page">Interact</a>
+        <a href="/contact">Contact</a>
+      </nav>
     </div>
   </header>
 
-  <!-- Local-First Telemetry Bar -->
-  <div class="local-telemetry-banner" id="local-telemetry-banner">
-    <div>
-      <span class="status-dot"></span>
-      <span id="local-progress-text">Initializing Local-First Scripture Cache...</span>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar-fill" id="local-progress-fill"></div>
-      </div>
+  <main>
+    <div id="file-notice" hidden style="margin:24px;padding:24px;background:#141a22;border:1px solid #d4af37;color:#f0ede6;font:18px/1.6 'EB Garamond',Georgia,serif">
+      This is the source file. The interactive reader needs the local preview to load Scripture and history.<br />
+      <a href="http://localhost:5173/interact.html">Open the local Interact preview →</a>
     </div>
-    <div>
-      <span>Zero Backend Lag · Client GPU & RAM Acceleration · 344,799 Scripture Links</span>
-    </div>
-  </div>
 
-  <!-- Main Viewport Workspace -->
-  <div class="viewport-container">
-    <!-- View 1: Three.js 3D Spatial Loom -->
-    <div id="three-container"></div>
+    <div id="error-banner" class="wrap" role="alert" hidden></div>
 
-    <!-- View 2: 2D Canvas Tapestry -->
-    <div id="canvas-2d-container"></div>
-
-    <!-- View 3: Names Social Network -->
-    <div id="names-container"></div>
-
-    <!-- Right Drawer: Scripture & Theological Audit Inspector -->
-    <aside class="inspector-drawer">
-      <div class="drawer-header">
-        <h2 id="drawer-verse-title">Genesis {1:1}</h2>
-        <div class="drawer-verse-text" id="drawer-verse-text">
-          "In the beginning God created the heaven and the earth."
+    <!-- 1. DEDICATED STUDY DESK: STEP-BY-STEP DISCOVERY WALK -->
+    <section id="discovery" class="wrap discovery" aria-labelledby="discovery-title" tabindex="-1">
+      <div class="journey-bar">
+        <div>
+          <span class="eyebrow">YOUR EXPLORATION</span>
+          <nav id="journey-trail" aria-label="Your exploration trail"></nav>
         </div>
-        <div class="kjv-legend-bar">
-          <span class="kjv-legend-pill" title="Braces denote exact verse boundaries to prevent confusion with internal scripture parentheses">
-            <strong>{c:v}</strong> Boundary
-          </span>
-          <span class="kjv-legend-pill" title="Brackets preserve words added by translators for English syntax (traditional italics)">
-            <strong style="color: #7dd3fc;">[...]</strong> Added Italics
-          </span>
-          <span class="kjv-legend-pill" title="All-caps LORD denotes the divine Tetragrammaton YHWH (Jehovah)">
-            <strong style="color: var(--gold);">LORD</strong> = Jehovah
-          </span>
-        </div>
+        <button id="journey-back" class="text-button" hidden>← Back</button>
       </div>
 
-      <div class="drawer-content">
-        <!-- Audited Relation Banner (if verified) -->
-        <div class="audit-card" id="drawer-audit-card">
-          <div class="audit-flag-header">
-            <span class="badge badge-supported">AUDITED THEOLOGICAL EVIDENCE</span>
-            <span class="audit-reviewer">Reviewer: context_genesis</span>
+      <div id="discovery-heading">
+        <p class="eyebrow" id="discovery-setting">ROMAN JUDEA · 1ST CENTURY AD</p>
+        <h1 id="discovery-title">A name in the Gospel. A name carved in stone.</h1>
+        <p id="discovery-lead">Luke names Pontius Pilate as governor of Judea. A surviving Roman inscription names him too. Start with that meeting of text and stone.</p>
+      </div>
+
+      <p id="loading-status" role="status">Preparing the Scripture and historical connections…</p>
+
+      <div class="discovery-pair">
+        <article class="discovery-scripture">
+          <p class="eyebrow"><span class="step-number">01</span> READ THE SCRIPTURE</p>
+          <div id="discovery-scripture"></div>
+        </article>
+        <article class="discovery-evidence">
+          <p class="eyebrow"><span class="step-number">02</span> MEET THE HISTORICAL RECORD</p>
+          <div id="discovery-evidence"></div>
+        </article>
+      </div>
+
+      <div class="connection-note" id="connection-note"></div>
+
+      <section class="next-section" aria-labelledby="next-title">
+        <div>
+          <p class="eyebrow">03 · FOLLOW YOUR CURIOSITY</p>
+          <h3 id="next-title">One connection opens another.</h3>
+          <p>Choose the question you want to follow.</p>
+        </div>
+        <div id="next-questions"></div>
+      </section>
+    </section>
+
+    <!-- 2. GO DEEPER: QUIET 3-COLUMN RESEARCH WORKSPACE -->
+    <section class="wrap research-section" aria-labelledby="research-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">GO DEEPER</p>
+          <h2 id="research-title">Open the wider study.</h2>
+        </div>
+        <p>Explore any person, period, or passage without hurry.</p>
+      </div>
+
+      <label for="search-input" class="search-label">Find a person, empire, phrase, or Bible reference</label>
+      <div class="search-wrapper">
+        <input id="search-input" type="search" placeholder="Try searching 'Pilate', 'Daniel', 'Rome', 'Abraham', or 'John 3:16'..." autocomplete="off" />
+        <div id="search-results-list" class="search-dropdown"></div>
+      </div>
+
+      <details id="timeline-browser">
+        <summary>Browse the people &amp; world empires</summary>
+        <p class="helper">Choose a period or empire, then a person. Dates are approximate where indicated; this browsing guide is not a proportional timeline.</p>
+        <nav id="era-filter-bar" class="era-bar" aria-label="Biblical and world historical eras"></nav>
+        <div class="stream-label">WORLD EMPIRES</div>
+        <div id="empires-stream-track" class="stream-track"></div>
+        <div class="stream-label">PEOPLE OF THE BIBLE</div>
+        <div id="figures-stream-track" class="stream-track"></div>
+      </details>
+
+      <div class="workspace-grid">
+        <section class="panel" aria-label="The person and their world">
+          <div class="panel-header">
+            <h3>The person &amp; their world</h3>
+            <span id="active-era-badge" class="meta-tag"></span>
           </div>
-          <h4>Creator praised as giver of blessing</h4>
-          <p>Genesis attributes heaven and earth to God; Psalm 115 explicitly describes the LORD who blesses as their maker.</p>
-        </div>
+          <div class="panel-body">
+            <div id="figure-hero-container"></div>
+            <details open>
+              <summary>Rulers, records &amp; historical context</summary>
+              <div id="secular-contemporaries-list" class="network-list"></div>
+            </details>
+          </div>
+        </section>
 
-        <!-- Cross-References List -->
-        <h3 style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gold); margin-top: 6px;">
-          Cross-References & Parallel Evidence
-        </h3>
-        <div id="drawer-links-list" style="display: flex; flex-direction: column; gap: 10px;">
-          <!-- Dynamically populated -->
-        </div>
+        <section id="cross-ref-inspector" class="panel" aria-label="Read further in Scripture">
+          <div class="panel-header">
+            <h3>Read further in Scripture</h3>
+            <a href="/Bible.pdf" target="_blank" rel="noopener">KJV PDF ↗</a>
+          </div>
+          <div class="panel-body">
+            <div id="scripture-anchors-list" class="network-list"></div>
+          </div>
+        </section>
+
+        <section class="panel connections-panel" aria-label="People connected to this story">
+          <div class="panel-header">
+            <h3>People connected to this story</h3>
+          </div>
+          <div class="panel-body">
+            <div id="personal-network-list" class="network-list"></div>
+            <details id="names-directory">
+              <summary>Explore the biblical names dictionary</summary>
+              <label for="hitchcock-input" class="helper">Hitchcock’s name meanings · historical dictionary</label>
+              <input id="hitchcock-input" type="search" placeholder="Filter names, e.g. Aaron" />
+              <div id="hitchcock-directory-list" class="names-directory-list"></div>
+            </details>
+          </div>
+        </section>
       </div>
-    </aside>
-  </div>
+    </section>
 
-  <!-- Welcome / "Begin the Journey" Onboarding Modal -->
-  <div class="modal-overlay" id="welcome-modal">
-    <div class="modal-box">
-      <button class="modal-close" aria-label="Close modal">&times;</button>
-      <h2 class="modal-title">Enter the Scripture Tapestry</h2>
-      <p class="modal-subtitle">
-        Welcome to <strong>HistoricalBible.com/Interact</strong>.<br>
-        344,799 cross-references · 31,102 verses · 2,408 biblical people & places.<br>
-        Rendered 100% locally on your computer with zero server lag and zero tracking.
-      </p>
+    <!-- 3. REVERENT READING GUIDE -->
+    <section class="wrap reading-guide" id="reading-guide">
+      <h2>Awe and careful reading belong together.</h2>
+      <p>Scripture, surviving records, historical reconstruction, and theological connections answer different questions. Each historical card identifies its kind of evidence. A shared name or date establishes a connection; the scope of each source still matters.</p>
+      <details>
+        <summary>About the text &amp; this collection</summary>
+        <p id="canonical-telemetry-pill">Loading the King James Version…</p>
+        <p>Scripture preserves the original {chapter:verse} markers, bracketed translator additions, and <span class="kjv-divine-name">L<span class="kjv-divine-rest">ORD</span></span> typography. The current historical collection is a curated starting point of 12 profiles, not an exhaustive history. Dates and identifications may be debated. Historical commentary is separate from the biblical text.</p>
+      </details>
+    </section>
+  </main>
 
-      <div class="journey-grid">
-        <div class="journey-card" data-target-verse="Gen.1.1">
-          <h4>1. The Creation Witness</h4>
-          <p>Trace the foundational witness of God as Creator from Genesis 1:1 across John 1, Colossians 1, and Revelation 4.</p>
-        </div>
+  <footer class="wrap">
+    <div class="footer-brand">HISTORICAL BIBLE</div>
+    <div>Keep asking. Keep reading. Follow the thread.</div>
+    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Interact · v1.5.0</div>
+  </footer>
 
-        <div class="journey-card" data-target-verse="Gen.3.15">
-          <h4>2. The Messianic Promise</h4>
-          <p>Explore the seed of the woman in Genesis 3:15 through Psalm 22, Isaiah 53, and the resurrection testimony.</p>
-        </div>
-
-        <div class="journey-card" data-target-verse="John.3.16">
-          <h4>3. The Golden Thread</h4>
-          <p>Explore John 3:16 and its interconnections across the Old Testament sacrificial types and prophetic promises.</p>
-        </div>
-
-        <div class="journey-card" data-target-verse="Matt.1.1">
-          <h4>4. The People & Places Network</h4>
-          <p>Explore the 2,408 names from Hitchcock's Bible Dictionary and the social web of scripture.</p>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        Click any journey card above to begin, or click &times; to explore the 3D arc loom freely with your mouse or touch.
-      </div>
-    </div>
-  </div>
-
-  <!-- Vite entry script -->
+  <noscript>
+    <p style="padding:2rem">Enable JavaScript to explore the connections. You can also <a href="/Bible.pdf">read the KJV PDF</a>.</p>
+  </noscript>
+  <script>
+    if (location.protocol === 'file:') {
+      document.getElementById('file-notice').hidden = false;
+      document.getElementById('loading-status').textContent = 'Open the local preview using the link above to begin exploring.';
+    }
+  </script>
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

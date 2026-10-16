@@ -1,0 +1,1792 @@
+:root {
+  --bg-canvas: #090c10;
+  --bg-surface: #0e1218;
+  --bg-card: #141a22;
+  --bg-card-hover: #1a222d;
+  --border-subtle: #212936;
+  --border-gold: rgba(212, 175, 55, 0.35);
+  --gold-primary: #d4af37;
+  --gold-warm: #c5a059;
+  --gold-bright: #f0cf65;
+  --gold-muted: #8c7849;
+  --text-main: #f0ede6;
+  --text-body: #c9d1d9;
+  --text-muted: #8b949e;
+  --text-dim: #5a6472;
+  --accent-badge: rgba(212, 175, 55, 0.12);
+  --font-serif: 'EB Garamond', Georgia, serif;
+  --font-display: 'Cinzel', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Compatibility aliases */
+  --bg-primary: var(--bg-canvas);
+  --bg-elevated: var(--bg-surface);
+  --text-primary: var(--text-main);
+  --text-secondary: var(--text-body);
+  --serif: var(--font-serif);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px;
+}
+
+body {
+  background-color: var(--bg-canvas);
+  color: var(--text-body);
+  font-family: var(--font-sans);
+  line-height: 1.65;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button,
+summary {
+  cursor: pointer;
+}
+
+a {
+  color: var(--gold-warm);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--gold-bright);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 4px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.wrap {
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* SKIP LINK */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 24px;
+  background: var(--gold-primary);
+  color: #090c10;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  border-radius: 4px;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+/* HEADER */
+.site-header {
+  background: rgba(9, 12, 16, 0.95);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 1.25rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(8px);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.brand-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-main);
+}
+
+.brand-title:hover {
+  color: var(--text-main);
+}
+
+.brand-title > span,
+.brand-logo-text span {
+  color: var(--gold-primary);
+}
+
+.brand-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-main);
+}
+
+.brand-title small,
+.brand-subtitle {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.site-nav a {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.site-nav a:hover,
+.site-nav a[aria-current="page"] {
+  color: var(--gold-primary);
+  border-bottom-color: var(--gold-primary);
+}
+
+/* TYPOGRAPHY COMPONENTS */
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-warm);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  color: var(--text-main);
+}
+
+/* INTRO SECTION (FRONT DOOR ON HOME PAGE) */
+.intro {
+  padding: 4.5rem 0 3.5rem;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 3.5rem;
+  align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.intro-headline,
+.intro h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 4.2vw, 3.5rem);
+  line-height: 1.15;
+  color: var(--text-main);
+  font-weight: 400;
+  margin-bottom: 1.25rem;
+}
+
+.intro-headline em,
+.intro h1 em {
+  font-style: italic;
+  color: var(--gold-primary);
+  font-family: var(--font-serif);
+}
+
+.intro-description {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--text-body);
+  max-width: 35rem;
+  margin-bottom: 1.75rem;
+}
+
+.primary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: var(--gold-warm);
+  color: #0b0e14;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.78rem 1.45rem;
+  border-radius: 4px;
+  border: none;
+  transition: background 0.15s ease, transform 0.12s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.primary-link:hover {
+  background: var(--gold-bright);
+  color: #000;
+  transform: translateY(-1px);
+}
+
+.secondary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-bright);
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.72rem 1.25rem;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.secondary-link:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--gold-primary);
+  color: var(--gold-bright);
+}
+
+.intro-caption {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 0.85rem;
+}
+
+/* VERTICAL THREAD VISUAL */
+.thread-visual {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 1.75rem 2rem;
+  position: relative;
+}
+
+.thread-caption {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-muted);
+  margin-bottom: 1.5rem;
+}
+
+.thread-stops {
+  position: relative;
+  padding-left: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.thread-line {
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 0.45rem;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    rgba(212, 175, 55, 0.2) 0%,
+    rgba(212, 175, 55, 0.6) 80%,
+    var(--gold-primary) 100%
+  );
+}
+
+.thread-stop {
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  border: none;
+  color: var(--text-body);
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  padding: 0.35rem 0.65rem;
+  border-radius: 4px;
+  transition: all 0.14s ease;
+  text-decoration: none;
+}
+
+.thread-stop::before {
+  content: '';
+  position: absolute;
+  left: -1.55rem;
+  top: 0.55rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg-canvas);
+  border: 2px solid var(--text-muted);
+  transition: all 0.15s ease;
+}
+
+.thread-stop:hover {
+  background: var(--bg-card);
+  color: var(--text-main);
+}
+
+.thread-stop:hover::before {
+  border-color: var(--gold-warm);
+  background: var(--gold-warm);
+}
+
+.thread-stop.active,
+.thread-stop.thread-center {
+  background: rgba(212, 175, 55, 0.08);
+  border-left: 2px solid var(--gold-primary);
+  padding-left: 0.75rem;
+}
+
+.thread-stop.active::before,
+.thread-stop.thread-center::before {
+  border-color: var(--gold-bright);
+  background: var(--gold-bright);
+  box-shadow: 0 0 8px rgba(240, 207, 101, 0.6);
+}
+
+.thread-date {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.thread-name,
+.thread-stop strong {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0.1rem 0;
+}
+
+.thread-stop.active .thread-name,
+.thread-stop.thread-center strong,
+.thread-stop.thread-center .thread-name {
+  color: var(--gold-bright);
+}
+
+.thread-sub,
+.thread-stop small {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.visual-note {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* ANOTHER WAY IN (3 CURIOSITY DOORS) */
+.entry-section {
+  padding: 3.5rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.section-title,
+.section-heading h2 {
+  font-family: var(--font-serif);
+  font-size: 1.95rem;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.section-subtitle,
+.section-heading > span,
+.section-heading > p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.entry-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-top: 2px solid var(--gold-muted);
+  border-radius: 8px;
+  padding: 1.65rem;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  color: var(--text-body);
+  text-decoration: none;
+}
+
+.entry-card:hover {
+  border-color: var(--border-gold);
+  border-top-color: var(--gold-primary);
+  background: var(--bg-card);
+  transform: translateY(-2px);
+}
+
+.entry-card-title,
+.entry-card strong {
+  font-family: var(--font-serif);
+  font-size: 1.28rem;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.35;
+  margin: 0.35rem 0 0.65rem;
+}
+
+.entry-card-desc,
+.entry-card > span:not(.eyebrow):not(.entry-card-link) {
+  font-size: 0.88rem;
+  color: var(--text-body);
+  margin-bottom: 1.25rem;
+  line-height: 1.55;
+}
+
+.entry-card-link,
+.entry-card b {
+  margin-top: auto;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--gold-warm);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* DISCOVERY WALK (INTERACT STUDY DESK) */
+.discovery {
+  padding: 2.75rem 0 3.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+  scroll-margin-top: 84px;
+}
+
+.journey-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  gap: 1rem;
+}
+
+.journey-bar .eyebrow {
+  margin-bottom: 0.25rem;
+  font-size: 0.66rem;
+}
+
+#journey-trail {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.trail-link,
+.text-button {
+  border: 1px solid transparent;
+  background: none;
+  color: var(--gold-warm);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  transition: all 0.15s ease;
+}
+
+.trail-link:hover,
+.text-button:hover {
+  color: var(--gold-bright);
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+}
+
+#journey-back {
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  padding: 0.35rem 0.75rem;
+}
+
+.trail-current {
+  color: var(--gold-bright);
+  font-weight: 600;
+}
+
+#discovery-heading {
+  margin-bottom: 2rem;
+  max-width: 52rem;
+}
+
+#discovery-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.85rem, 2.8vw, 2.4rem);
+  color: var(--text-main);
+  font-weight: 500;
+  line-height: 1.25;
+  margin-bottom: 0.65rem;
+}
+
+#discovery-lead {
+  font-size: 1.05rem;
+  color: var(--text-body);
+  max-width: 46rem;
+  line-height: 1.65;
+}
+
+/* THE PAIR: 01 SCRIPTURE + 02 HISTORICAL RECORD */
+.discovery-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.discovery-pair > article {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.15s ease;
+}
+
+.discovery-pair > article:hover {
+  border-color: var(--border-gold);
+}
+
+.step-number {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--gold-bright);
+  background: var(--accent-badge);
+  border: 1px solid var(--border-gold);
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  margin-right: 0.45rem;
+}
+
+.discovery-pair .scripture-ref {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--gold-bright);
+  margin-bottom: 0.85rem;
+}
+
+.discovery-pair .kjv-verse-text {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  line-height: 1.75;
+  color: var(--text-main);
+  margin-bottom: 1.25rem;
+}
+
+.discovery-pair h3 {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.55rem;
+}
+
+.discovery-pair p:not(.eyebrow):not(.evidence-label) {
+  font-size: 0.94rem;
+  line-height: 1.65;
+  color: var(--text-body);
+  margin-bottom: 0.95rem;
+}
+
+.discovery-pair .evidence-label {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-warm);
+  background: var(--accent-badge);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
+
+.discovery-pair .source-link {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--gold-warm);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 0.75rem;
+  margin-top: auto;
+}
+
+.discovery-pair .source-link:hover {
+  color: var(--gold-bright);
+}
+
+.connection-note {
+  background: var(--bg-card);
+  border-left: 3px solid var(--gold-primary);
+  padding: 1.15rem 1.4rem;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.95rem;
+  color: var(--text-body);
+  margin-bottom: 2rem;
+  line-height: 1.65;
+}
+
+.connection-note strong {
+  color: var(--text-main);
+}
+
+/* STEP 03: FOLLOW YOUR CURIOSITY */
+.next-section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 1.75rem 2rem;
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.next-section h3 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--text-main);
+  margin-bottom: 0.35rem;
+}
+
+.next-section p:not(.eyebrow) {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+#next-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.question-button {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  padding: 0.8rem 1.05rem;
+  border-radius: 6px;
+  text-align: left;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  transition: all 0.14s ease;
+}
+
+.question-button span {
+  color: var(--gold-warm);
+  font-size: 1.05rem;
+}
+
+.question-button:hover {
+  border-color: var(--gold-primary);
+  background: var(--bg-card-hover);
+  color: var(--gold-bright);
+  transform: translateX(2px);
+}
+
+/* GO DEEPER: RESEARCH WORKSPACE */
+.research-section {
+  padding: 3.5rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.search-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.search-wrapper {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+input[type="search"],
+input[type="text"],
+input[type="email"],
+textarea {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  padding: 0.85rem 1.15rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease;
+}
+
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  border-color: var(--gold-primary);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--gold-primary);
+  border-radius: 6px;
+  z-index: 30;
+  max-height: 420px;
+  overflow-y: auto;
+  display: none;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.75);
+  padding: 0.5rem;
+}
+
+.search-dropdown.active {
+  display: block;
+}
+
+.search-group-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-warm);
+  padding: 0.5rem 0.65rem 0.25rem;
+}
+
+.search-result-item {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  color: var(--text-main);
+  font-size: 0.86rem;
+}
+
+.search-result-item:hover {
+  background: var(--bg-card-hover);
+}
+
+details {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 0.85rem 1.15rem;
+  margin-bottom: 1.5rem;
+}
+
+summary {
+  font-weight: 600;
+  color: var(--text-main);
+  font-size: 0.9rem;
+}
+
+details[open] > summary {
+  margin-bottom: 1rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.helper {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.era-bar {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin: 0.85rem 0 1.25rem;
+}
+
+.era-chip,
+.figure-node,
+.empire-node {
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  border-radius: 6px;
+  padding: 0.6rem 0.85rem;
+  color: var(--text-body);
+  font-size: 0.78rem;
+  text-align: left;
+  transition: all 0.14s ease;
+}
+
+.era-chip:hover,
+.figure-node:hover,
+.empire-node:hover {
+  border-color: var(--border-gold);
+  background: var(--bg-card-hover);
+}
+
+.era-chip.active,
+.figure-node.active,
+.empire-node.active {
+  border-color: var(--gold-primary);
+  color: var(--gold-bright);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.stream-track {
+  display: flex;
+  gap: 0.65rem;
+  overflow-x: auto;
+  padding-bottom: 0.75rem;
+  max-width: 100%;
+}
+
+.stream-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-warm);
+  margin: 0.85rem 0 0.45rem;
+}
+
+.figure-node,
+.empire-node {
+  flex: 0 0 175px;
+}
+
+.figure-node span,
+.empire-node span {
+  display: block;
+}
+
+.figure-node-name,
+.empire-node-name {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0.15rem 0;
+}
+
+.figure-node-rank {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  color: var(--gold-warm);
+}
+
+.figure-node-dates,
+.empire-node-dates {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+/* 3-COLUMN WORKSPACE GRID */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 0.85fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  align-items: start;
+}
+
+.panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.15rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.panel-header h3 {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gold-primary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.panel-header > a {
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.panel-body {
+  padding: 1.15rem;
+}
+
+.panel-body details {
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+  border-radius: 0;
+  padding: 1rem 0 0;
+  margin: 1rem 0 0;
+}
+
+.figure-hero-dates {
+  color: var(--gold-warm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.figure-hero-name {
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0.25rem 0;
+}
+
+.figure-hero-title {
+  font-size: 0.84rem;
+  color: var(--gold-warm);
+  margin-bottom: 0.75rem;
+}
+
+.figure-covenant-box {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-body);
+}
+
+.figure-meta-row {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin: 1rem 0 0.25rem;
+}
+
+.meta-tag {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+}
+
+.meta-tag strong {
+  color: var(--gold-warm);
+}
+
+.network-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.contemporary-card,
+.scripture-card {
+  border: 1px solid var(--border-subtle);
+  padding: 1rem;
+  border-radius: 6px;
+  background: var(--bg-card);
+}
+
+.contemporary-top {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.contemporary-name {
+  font-family: var(--font-serif);
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.contemporary-role {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.evidence-badge {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  color: var(--gold-bright);
+  background: var(--accent-badge);
+  border: 1px solid var(--border-gold);
+  padding: 0.18rem 0.5rem;
+  border-radius: 4px;
+  align-self: flex-start;
+}
+
+.evidence-disputed {
+  color: #f0c28e;
+  border-color: rgba(240, 194, 142, 0.4);
+  background: rgba(240, 194, 142, 0.1);
+}
+
+.contemporary-detail {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-body);
+  margin: 0.65rem 0;
+}
+
+.contemporary-source {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 0.55rem;
+}
+
+.scripture-ref-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.scripture-ref {
+  font-family: var(--font-display);
+  color: var(--gold-bright);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.scripture-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.btn-small {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-body);
+  font-size: 0.74rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  transition: all 0.14s ease;
+}
+
+.btn-small:hover {
+  border-color: var(--gold-primary);
+  color: var(--gold-bright);
+}
+
+.kjv-verse-text {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text-main);
+}
+
+.kjv-divine-name {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--gold-bright);
+  white-space: nowrap;
+}
+
+.kjv-divine-rest {
+  font-size: 0.74em;
+  letter-spacing: 0.04em;
+}
+
+.kjv-italics {
+  font-style: italic;
+  color: #e2e8f0;
+}
+
+.scripture-context-note {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.65rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.drawer-box {
+  display: none;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.drawer-box.open {
+  display: block;
+}
+
+.crossref-item {
+  font-size: 0.84rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.crossref-item:last-child {
+  border-bottom: 0;
+}
+
+.network-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-radius: 6px;
+  width: 100%;
+  transition: all 0.14s ease;
+}
+
+.network-card:hover {
+  border-color: var(--gold-primary);
+  background: var(--bg-card-hover);
+}
+
+.network-card-top {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.network-card-rel {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.names-directory-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.hitchcock-card {
+  padding: 0.65rem 0.8rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  text-align: left;
+  border-radius: 6px;
+  transition: border-color 0.14s ease;
+}
+
+.hitchcock-card:hover {
+  border-color: var(--gold-primary);
+}
+
+/* READING GUIDE */
+.reading-guide {
+  padding: 3rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.reading-guide h2 {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  color: var(--text-main);
+  margin-bottom: 0.65rem;
+  font-weight: 500;
+}
+
+.reading-guide p {
+  font-size: 0.95rem;
+  color: var(--text-body);
+  line-height: 1.65;
+  max-width: 52rem;
+  margin-bottom: 1rem;
+}
+
+.reading-guide details {
+  max-width: 52rem;
+  margin-bottom: 0;
+}
+
+/* RECORD PHOTO */
+.record-photo {
+  margin: 0.75rem 0 1rem;
+}
+
+.record-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 280px;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: #07090d;
+}
+
+.record-photo figcaption {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+}
+
+/* MISSION, CONFESSION, & CAUSE SECTIONS (HOME / BIBLE / CONTACT) */
+.content-section {
+  padding: 3.5rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.mission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.75rem;
+}
+
+.mission-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.mission-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  color: var(--text-main);
+  margin-bottom: 0.85rem;
+}
+
+.mission-card p {
+  font-size: 0.96rem;
+  line-height: 1.75;
+  color: var(--text-body);
+}
+
+.cause-panel {
+  background: linear-gradient(145deg, var(--bg-surface), var(--bg-card));
+  border: 1px solid var(--border-gold);
+  border-radius: 8px;
+  padding: 2.25rem;
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.donate-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--bg-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 1.75rem;
+  gap: 1rem;
+}
+
+.donate-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  background: var(--gold-warm);
+  color: #090c10;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.75rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.donate-btn:hover {
+  background: var(--gold-bright);
+  transform: translateY(-1px);
+}
+
+.donate-btn img {
+  height: 20px;
+  width: auto;
+}
+
+.cc-badges {
+  max-width: 210px;
+  height: auto;
+  opacity: 0.88;
+}
+
+/* BIBLE PDF PORTAL & CONTACT LAYOUTS */
+.page-hero {
+  padding: 3.75rem 0 2.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.page-hero h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(2.25rem, 3.6vw, 3.1rem);
+  color: var(--text-main);
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.page-hero p {
+  font-size: 1.05rem;
+  color: var(--text-body);
+  max-width: 44rem;
+}
+
+.pdf-portal-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.feature-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--gold-primary);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+}
+
+.feature-item strong {
+  display: block;
+  color: var(--text-main);
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 2.25rem;
+  align-items: start;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.form-field label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-body);
+  margin-bottom: 0.35rem;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 0.15rem;
+  accent-color: var(--gold-primary);
+}
+
+.social-links {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.social-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-body);
+  padding: 0.55rem 0.95rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.social-pill:hover {
+  border-color: var(--gold-primary);
+  color: var(--gold-bright);
+  background: var(--bg-card-hover);
+}
+
+/* FOOTER */
+footer {
+  padding: 2.5rem 0 3.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-brand {
+  font-family: var(--font-display);
+  color: var(--gold-warm);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+#error-banner {
+  padding: 1.25rem 1.5rem;
+  background: #351c18;
+  border: 1px solid #8a3c32;
+  color: #f7d6d0;
+  border-radius: 6px;
+  margin: 1.5rem auto;
+}
+
+#loading-status {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+/* RESPONSIVE MEDIA QUERIES */
+@media (max-width: 1024px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+  .mission-grid,
+  .cause-panel,
+  .pdf-portal-grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .intro {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 3rem 0;
+  }
+  .entry-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 820px) {
+  .discovery-pair,
+  .next-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .wrap {
+    padding: 0 1.15rem;
+  }
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+  .site-nav {
+    gap: 1.15rem;
+  }
+  .discovery-pair > article,
+  .next-section,
+  .mission-card,
+  .cause-panel {
+    padding: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* DOWNLOAD THE BIBLE WELCOME POPUP MODAL */
+.bible-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 7, 10, 0.78);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  z-index: 200;
+  animation: popupFadeIn 0.25s ease-out;
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bible-popup-card {
+  position: relative;
+  width: 100%;
+  max-width: 515px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-gold);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(212, 175, 55, 0.15);
+  text-align: center;
+}
+
+.bible-popup-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(9, 12, 16, 0.82);
+  border: 1px solid var(--border-gold);
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.15s ease;
+}
+
+.bible-popup-close:hover {
+  background: var(--gold-primary);
+  color: #090c10;
+}
+
+.bible-popup-image {
+  display: block;
+  width: 100%;
+  height: 224px;
+  object-fit: cover;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.bible-popup-body {
+  padding: 1.85rem 2rem 2.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.bible-popup-title {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.bible-popup-desc {
+  font-size: 0.98rem;
+  color: var(--text-body);
+  margin-bottom: 0.5rem;
+}
+
+.bible-popup-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gold-warm);
+  color: #090c10;
+  font-weight: 700;
+  font-size: 0.86rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.85rem 2.25rem;
+  border-radius: 48px;
+  border: 1px solid var(--gold-primary);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.bible-popup-cta:hover {
+  background: var(--gold-bright);
+  color: #000;
+  transform: translateY(-1px);
+}
+
+/* QUIET FOOTNOTE FOR THE CURIOUS: WHY THE KJV */
+.kjv-footnote {
+  padding: 2rem 0 2.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.kjv-footnote-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.kjv-footnote-label {
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-warm);
+}
+
+.kjv-footnote-sub {
+  font-size: 0.76rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.kjv-footnote-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.kjv-footnote-grid p {
+  margin: 0;
+}
+
+.kjv-footnote-grid strong {
+  color: var(--text-body);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .kjv-footnote-grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+}
+
+

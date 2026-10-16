@@ -1,379 +1,746 @@
 /**
- * HistoricalBible.com/Interact — Main Application Orchestrator
- * Integrates:
- * - Local-First Cache Storage (0ms offline retrieval)
- * - Three.js 3D WebGL Arc Visualizer
- * - 2D Canvas Tapestry & Baseline Histogram
- * - Hitchcock Bible Names Entity Network
- * - Chapter Threads S-Curve Loom
- * - Audited Theological Relation Inspector with Bible.pdf page citations
- * - Boarderless Harmonic Web Audio Chimes (G3 196Hz)
+ * src/main.ts
+ * Controller for HistoricalBible.com/interact
+ * Synchronizes Biblical Figures, Secular World Empires, and the Canonical KJV Text.
  */
-import { localStore, CrossRefLink } from './store/localFirstStore';
-import { acousticEngine } from './audio/acousticEngine';
-import { ThreeVisualizer } from './engine/threeVisualizer';
+import {
+  localStore,
+  HistoricalFigure,
+  KjvVerseData
+} from './store/localFirstStore';
+import { discoveries } from './discoveries';
 
-// 66 Canonical Books metadata
-export const CANON_BOOKS = [
-  { abbr: "Gen", name: "Genesis", chapters: 50, division: "Law", color: "#f87171" },
-  { abbr: "Exod", name: "Exodus", chapters: 40, division: "Law", color: "#f87171" },
-  { abbr: "Lev", name: "Leviticus", chapters: 27, division: "Law", color: "#f87171" },
-  { abbr: "Num", name: "Numbers", chapters: 36, division: "Law", color: "#f87171" },
-  { abbr: "Deut", name: "Deuteronomy", chapters: 34, division: "Law", color: "#f87171" },
-  { abbr: "Josh", name: "Joshua", chapters: 24, division: "History", color: "#fb923c" },
-  { abbr: "Judg", name: "Judges", chapters: 21, division: "History", color: "#fb923c" },
-  { abbr: "Ruth", name: "Ruth", chapters: 4, division: "History", color: "#fb923c" },
-  { abbr: "1Sam", name: "1 Samuel", chapters: 31, division: "History", color: "#fb923c" },
-  { abbr: "2Sam", name: "2 Samuel", chapters: 24, division: "History", color: "#fb923c" },
-  { abbr: "1Kgs", name: "1 Kings", chapters: 22, division: "History", color: "#fb923c" },
-  { abbr: "2Kgs", name: "2 Kings", chapters: 25, division: "History", color: "#fb923c" },
-  { abbr: "1Chr", name: "1 Chronicles", chapters: 29, division: "History", color: "#fb923c" },
-  { abbr: "2Chr", name: "2 Chronicles", chapters: 36, division: "History", color: "#fb923c" },
-  { abbr: "Ezra", name: "Ezra", chapters: 10, division: "History", color: "#fb923c" },
-  { abbr: "Neh", name: "Nehemiah", chapters: 13, division: "History", color: "#fb923c" },
-  { abbr: "Esth", name: "Esther", chapters: 10, division: "History", color: "#fb923c" },
-  { abbr: "Job", name: "Job", chapters: 42, division: "Poetry", color: "#facc15" },
-  { abbr: "Ps", name: "Psalms", chapters: 150, division: "Poetry", color: "#facc15" },
-  { abbr: "Prov", name: "Proverbs", chapters: 31, division: "Poetry", color: "#facc15" },
-  { abbr: "Eccl", name: "Ecclesiastes", chapters: 12, division: "Poetry", color: "#facc15" },
-  { abbr: "Song", name: "Song of Solomon", chapters: 8, division: "Poetry", color: "#facc15" },
-  { abbr: "Isa", name: "Isaiah", chapters: 66, division: "MajorProphets", color: "#a3e635" },
-  { abbr: "Jer", name: "Jeremiah", chapters: 52, division: "MajorProphets", color: "#a3e635" },
-  { abbr: "Lam", name: "Lamentations", chapters: 5, division: "MajorProphets", color: "#a3e635" },
-  { abbr: "Ezek", name: "Ezekiel", chapters: 48, division: "MajorProphets", color: "#a3e635" },
-  { abbr: "Dan", name: "Daniel", chapters: 12, division: "MajorProphets", color: "#a3e635" },
-  { abbr: "Hos", name: "Hosea", chapters: 14, division: "MinorProphets", color: "#2dd4bf" },
-  { abbr: "Joel", name: "Joel", chapters: 3, division: "MinorProphets", color: "#2dd4bf" },
-  { abbr: "Amos", name: "Amos", chapters: 9, division: "MinorProphets", color: "#2dd4bf" },
-  { abbr: "Obad", name: "Obadiah", chapters: 1, division: "MinorProphets", color: "#2dd4bf" },
-  { abbr: "Jonah", name: "Jonah", chapters: 4, division: "MinorProphets", color: "#2dd4bf" },
-  { abbr: "Mic", name: "Micah", chapters: 7, division: "MinorProphets", color: "#2dd4bf" },
-  { abbr: "Nah", name: "Nahum", chapters: 3, division: "MinorProphets", color: "#2dd4bf" },
-  { abbr: "Hab", name: "Habakkuk", chapters: 3, division: "MinorProphets", color: "#2dd4bf" },
-  { abbr: "Zeph", name: "Zephaniah", chapters: 3, division: "MinorProphets", color: "#2dd4bf" },
-  { abbr: "Hag", name: "Haggai", chapters: 2, division: "MinorProphets", color: "#2dd4bf" },
-  { abbr: "Zech", name: "Zechariah", chapters: 14, division: "MinorProphets", color: "#2dd4bf" },
-  { abbr: "Mal", name: "Malachi", chapters: 4, division: "MinorProphets", color: "#2dd4bf" },
-  { abbr: "Matt", name: "Matthew", chapters: 28, division: "Gospels", color: "#22d3ee" },
-  { abbr: "Mark", name: "Mark", chapters: 16, division: "Gospels", color: "#22d3ee" },
-  { abbr: "Luke", name: "Luke", chapters: 24, division: "Gospels", color: "#22d3ee" },
-  { abbr: "John", name: "John", chapters: 21, division: "Gospels", color: "#22d3ee" },
-  { abbr: "Acts", name: "Acts", chapters: 28, division: "Acts", color: "#38bdf8" },
-  { abbr: "Rom", name: "Romans", chapters: 16, division: "Pauline", color: "#818cf8" },
-  { abbr: "1Cor", name: "1 Corinthians", chapters: 16, division: "Pauline", color: "#818cf8" },
-  { abbr: "2Cor", name: "2 Corinthians", chapters: 13, division: "Pauline", color: "#818cf8" },
-  { abbr: "Gal", name: "Galatians", chapters: 6, division: "Pauline", color: "#818cf8" },
-  { abbr: "Eph", name: "Ephesians", chapters: 6, division: "Pauline", color: "#818cf8" },
-  { abbr: "Phil", name: "Philippians", chapters: 4, division: "Pauline", color: "#818cf8" },
-  { abbr: "Col", name: "Colossians", chapters: 4, division: "Pauline", color: "#818cf8" },
-  { abbr: "1Thess", name: "1 Thessalonians", chapters: 5, division: "Pauline", color: "#818cf8" },
-  { abbr: "2Thess", name: "2 Thessalonians", chapters: 3, division: "Pauline", color: "#818cf8" },
-  { abbr: "1Tim", name: "1 Timothy", chapters: 6, division: "Pauline", color: "#818cf8" },
-  { abbr: "2Tim", name: "2 Timothy", chapters: 4, division: "Pauline", color: "#818cf8" },
-  { abbr: "Titus", name: "Titus", chapters: 3, division: "Pauline", color: "#818cf8" },
-  { abbr: "Phlm", name: "Philemon", chapters: 1, division: "Pauline", color: "#818cf8" },
-  { abbr: "Heb", name: "Hebrews", chapters: 13, division: "General", color: "#c084fc" },
-  { abbr: "Jas", name: "James", chapters: 5, division: "General", color: "#c084fc" },
-  { abbr: "1Pet", name: "1 Peter", chapters: 5, division: "General", color: "#c084fc" },
-  { abbr: "2Pet", name: "2 Peter", chapters: 3, division: "General", color: "#c084fc" },
-  { abbr: "1John", name: "1 John", chapters: 5, division: "General", color: "#c084fc" },
-  { abbr: "2John", name: "2 John", chapters: 1, division: "General", color: "#c084fc" },
-  { abbr: "3John", name: "3 John", chapters: 1, division: "General", color: "#c084fc" },
-  { abbr: "Jude", name: "Jude", chapters: 1, division: "General", color: "#c084fc" },
-  { abbr: "Rev", name: "Revelation", chapters: 22, division: "Revelation", color: "#f472b6" }
-];
+class HistoricalInteractApp {
+  private selectedEraId: string = 'all';
+  private selectedEmpireId: string | null = null;
+  private activeFigure: HistoricalFigure | null = null;
+  private trail: string[] = [];
 
-// Flatten all 1,189 chapters
-export const ALL_CHAPTERS: Array<{ osis: string; book: string; chapter: number; division: string; color: string; globalIndex: number }> = [];
-let chCounter = 0;
-CANON_BOOKS.forEach(b => {
-  for (let c = 1; c <= b.chapters; c++) {
-    ALL_CHAPTERS.push({
-      osis: `${b.abbr}.${c}`,
-      book: b.name,
-      chapter: c,
-      division: b.division,
-      color: b.color,
-      globalIndex: chCounter++
-    });
-  }
-});
+  public async bootstrap(): Promise<void> {
+    const errorBanner = document.getElementById('error-banner');
+    const telemetryPill = document.getElementById('canonical-telemetry-pill');
 
-class HistoricalBibleApp {
-  private threeVis: ThreeVisualizer | null = null;
-  private currentMode: '3d' | '2d' | 'threads' | 'names' = '3d';
-  private selectedVerse: string = 'Gen.1.1';
+    try {
+      await localStore.init((msg) => {
+        if (telemetryPill) telemetryPill.textContent = msg;
+      });
 
-  public async start() {
-    this.setupUI();
-    this.setupAudio();
-
-    // Initialize local-first storage
-    localStore.onProgress = (msg, pct) => {
-      const bar = document.getElementById('local-progress-fill');
-      const text = document.getElementById('local-progress-text');
-      if (bar) bar.style.width = `${pct}%`;
-      if (text) text.innerText = msg;
-      if (pct >= 100) {
-        setTimeout(() => {
-          const banner = document.getElementById('local-telemetry-banner');
-          if (banner) banner.classList.add('ready');
-        }, 500);
+      const count = localStore.getVerseCount();
+      if (telemetryPill) {
+        telemetryPill.innerHTML = `${count.toLocaleString()} Canonical KJV Verses · {c:v} · [...] · <span class="kjv-divine-name">L<span class="kjv-divine-rest">ORD</span></span>`;
       }
-    };
 
-    await localStore.init(false); // Curated bundle for instant 60 FPS load
+      const sync = localStore.getSynchrony();
+      // Default to Jesus Christ at the center of history
+      const params = new URLSearchParams(window.location.search);
+      const requestedFig = params.get('figure');
+      this.activeFigure =
+        sync.figures.find(f => f.id === requestedFig) ||
+        sync.figures.find(f => f.id === 'jesus-christ') ||
+        sync.figures[0];
+      this.trail = [this.activeFigure.id];
 
-    // Initialize 3D Visualizer
-    const threeContainer = document.getElementById('three-container');
-    if (threeContainer) {
-      this.threeVis = new ThreeVisualizer(threeContainer);
-      this.threeVis.buildCanonRing(ALL_CHAPTERS);
-      this.threeVis.renderArcs(localStore.crossRefs, 6000);
-      this.threeVis.start();
-    }
-
-    // Inspect initial verse (Genesis 1:1)
-    this.inspectVerse('Gen.1.1');
-  }
-
-  private setupAudio() {
-    const audioBtn = document.getElementById('btn-audio-toggle');
-    if (audioBtn) {
-      audioBtn.addEventListener('click', () => {
-        const isMuted = acousticEngine.toggleMute();
-        audioBtn.classList.toggle('muted', isMuted);
-        audioBtn.innerText = isMuted ? '🔇 Audio Off' : '🔔 196Hz Harmonic Chimes On';
-        if (!isMuted) {
-          acousticEngine.playCanonicalResonance('Law', 0.1, 0.7);
-        }
-      });
-    }
-  }
-
-  private setupUI() {
-    // Mode switcher buttons
-    const modeBtns = document.querySelectorAll<HTMLButtonElement>('.mode-toggle-btn');
-    modeBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        modeBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const mode = btn.dataset.mode as '3d' | '2d' | 'threads' | 'names';
-        this.switchMode(mode);
-      });
-    });
-
-    // Omnibox search
-    const omnibox = document.getElementById('omnibox-input') as HTMLInputElement;
-    if (omnibox) {
-      omnibox.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          const val = omnibox.value.trim();
-          this.searchPassage(val);
-        }
-      });
-    }
-
-    // Journey card buttons
-    const journeyBtns = document.querySelectorAll<HTMLElement>('.journey-card');
-    journeyBtns.forEach(card => {
-      card.addEventListener('click', () => {
-        const target = card.dataset.targetVerse || 'Gen.1.1';
-        this.inspectVerse(target);
-        this.closeModal('welcome-modal');
-      });
-    });
-
-    // Close modal triggers
-    const closeBtns = document.querySelectorAll<HTMLElement>('.modal-close');
-    closeBtns.forEach(b => b.addEventListener('click', () => {
-      this.closeModal('welcome-modal');
-    }));
-  }
-
-  private switchMode(mode: '3d' | '2d' | 'threads' | 'names') {
-    this.currentMode = mode;
-    const threeWrap = document.getElementById('three-container');
-    const canvas2dWrap = document.getElementById('canvas-2d-container');
-    const threadsWrap = document.getElementById('threads-container');
-    const namesWrap = document.getElementById('names-container');
-
-    if (threeWrap) threeWrap.style.display = mode === '3d' ? 'block' : 'none';
-    if (canvas2dWrap) canvas2dWrap.style.display = mode === '2d' ? 'block' : 'none';
-    if (threadsWrap) threadsWrap.style.display = mode === 'threads' ? 'flex' : 'none';
-    if (namesWrap) namesWrap.style.display = mode === 'names' ? 'block' : 'none';
-
-    if (mode === '3d' && this.threeVis) {
-      this.threeVis.start();
-    } else if (this.threeVis) {
-      this.threeVis.stop();
-    }
-
-    if (mode === 'names') {
-      this.renderNamesNetwork();
-    }
-  }
-
-  /**
-   * Formats KJV scripture text to preserve:
-   * 1. Translator-added words in brackets [...] (traditional KJV italics)
-   * 2. The divine Tetragrammaton LORD (YHWH / Jehovah) in small-caps covenant styling
-   */
-  public formatScriptureHtml(raw: string): string {
-    if (!raw) return '';
-    let escaped = raw
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-
-    // Translator-added words (traditional KJV italics) preserved in brackets [...]
-    escaped = escaped.replace(/\[(.*?)\]/g, '<span class="kjv-added" title="Added by KJV translators for English readability (traditional italics)">[$1]</span>');
-
-    // The divine Tetragrammaton יהוה (YHWH / Jehovah)
-    escaped = escaped.replace(/\bLORD\b/g, '<span class="kjv-lord" title="The Tetragrammaton יהוה (YHWH / Jehovah)">LORD</span>');
-
-    return escaped;
-  }
-
-  public inspectVerse(osisRef: string) {
-    this.selectedVerse = osisRef;
-    const drawerTitle = document.getElementById('drawer-verse-title');
-    const drawerText = document.getElementById('drawer-verse-text');
-    const linksList = document.getElementById('drawer-links-list');
-    const auditCard = document.getElementById('drawer-audit-card');
-
-    const parts = osisRef.split('.');
-    const bookObj = CANON_BOOKS.find(b => b.abbr === parts[0]);
-    const bookName = bookObj ? bookObj.name : parts[0];
-    const formattedTitle = parts.length === 3 ? `${bookName} {${parts[1]}:${parts[2]}}` : osisRef;
-    if (drawerTitle) drawerTitle.innerHTML = formattedTitle;
-    
-    // Get local scripture text from Joel's curated Bible corpus
-    const text = localStore.getVerseText(osisRef) || "In the beginning God created the heaven and the earth.";
-    if (drawerText) drawerText.innerHTML = `"${this.formatScriptureHtml(text)}"`;
-
-    // Acoustic feedback
-    acousticEngine.playCanonicalResonance('Law', 0.2, 0.5);
-
-    // Get cross-references
-    const refs = localStore.getCrossReferencesForVerse(osisRef);
-    if (linksList) {
-      linksList.innerHTML = '';
-      if (refs.length === 0) {
-        linksList.innerHTML = '<div class="no-links">No cross-reference records in curated subset.</div>';
-      } else {
-        refs.slice(0, 30).forEach(link => {
-          const src = link.s || link.from || '';
-          const tgt = link.t || link.to || '';
-          const targetRef = src === osisRef ? tgt : src;
-          const votes = link.v ?? link.votes ?? 0;
-          const targetText = localStore.getVerseText(targetRef);
-          const rel = localStore.getTheologicalRelation(osisRef, targetRef);
-
-          const targetParts = targetRef.split('.');
-          const targetBookObj = CANON_BOOKS.find(b => b.abbr === targetParts[0]);
-          const targetBookName = targetBookObj ? targetBookObj.name : targetParts[0];
-          const targetTitle = targetParts.length === 3 ? `${targetBookName} {${targetParts[1]}:${targetParts[2]}}` : targetRef;
-
-          const card = document.createElement('div');
-          card.className = `ref-card ${rel ? 'has-audit' : ''}`;
-          card.innerHTML = `
-            <div class="ref-header">
-              <span class="ref-osis">${targetTitle}</span>
-              <span class="ref-votes">★ ${votes} votes</span>
-              ${rel ? `<span class="badge badge-${rel.classification}">${rel.classification.toUpperCase()}</span>` : ''}
-            </div>
-            <div class="ref-text">${targetText ? `"${this.formatScriptureHtml(targetText)}"` : ''}</div>
-            ${rel ? `
-              <div class="audit-badge-pill">
-                <strong>Theological Relation:</strong> ${rel.relation}
-              </div>
-              <div class="audit-reason">${rel.reason}</div>
-              ${rel.evidence.length > 0 ? `
-                <div class="audit-pdf-cite">
-                  📖 Verified against <code>Bible.pdf</code> (Page ${rel.evidence[0].pdf_page})
-                </div>
-              ` : ''}
-            ` : ''}
-          `;
-          card.addEventListener('click', () => {
-            acousticEngine.playCanonicalResonance('Poetry', 0.5, 0.4);
-            this.inspectVerse(targetRef);
-          });
-          linksList.appendChild(card);
-        });
+      this.renderEraFilterBar();
+      this.renderDualStreamSpine();
+      this.renderActiveFigureWorkspace();
+      this.renderHitchcockDirectory('');
+      this.bindEvents();
+      const loading = document.getElementById('loading-status');
+      if (loading) loading.hidden = true;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (errorBanner) {
+        errorBanner.hidden = false;
+        errorBanner.textContent = `The reader could not load its local collection. Please reload the page. Details: ${msg}`;
       }
-    }
-
-    // Top theological audit badge for Genesis 1:1 or audited source
-    if (auditCard) {
-      const topRel = localStore.getTheologicalRelation(osisRef, 'Ps.115.15') || 
-                     localStore.getTheologicalRelation(osisRef, 'Rom.11.36') || 
-                     localStore.getTheologicalRelation(osisRef, 'Heb.1.2');
-      if (topRel) {
-        auditCard.style.display = 'block';
-        auditCard.innerHTML = `
-          <div class="audit-flag-header">
-            <span class="badge badge-supported">AUDITED THEOLOGICAL EVIDENCE</span>
-            <span class="audit-reviewer">Reviewer: ${topRel.reviewer}</span>
-          </div>
-          <h4>${topRel.relation}</h4>
-          <p>${topRel.reason}</p>
-        `;
-      } else {
-        auditCard.style.display = 'none';
-      }
+      const loading = document.getElementById('loading-status');
+      if (loading) loading.hidden = true;
     }
   }
 
-  private searchPassage(query: string) {
-    if (!query) return;
-    const clean = query.trim().replace(' ', '.').replace(':', '.');
-    // Basic match
-    if (localStore.getVerseText(clean)) {
-      this.inspectVerse(clean);
-      return;
-    }
-    // Search in names
-    const nameMatch = localStore.getNameMeaning(query);
-    if (nameMatch) {
-      alert(`Biblical Name Found: ${nameMatch.name}\nMeanings: ${nameMatch.meanings.join('; ')}`);
-      return;
-    }
-    // Default to Gen 1:1 if not found
-    this.inspectVerse('Gen.1.1');
-  }
-
-  private renderNamesNetwork() {
-    const container = document.getElementById('names-container');
+  private renderEraFilterBar(): void {
+    const container = document.getElementById('era-filter-bar');
     if (!container) return;
-    const names = Object.values(localStore.hitchcockNames).slice(0, 150);
-    container.innerHTML = `
-      <div class="names-grid">
-        ${names.map(n => `
-          <div class="name-card">
-            <h3>${n.name}</h3>
-            <p>${n.meanings.join(' · ')}</p>
+    const sync = localStore.getSynchrony();
+
+    const allBtn = document.createElement('button');
+    allBtn.className = `era-chip ${this.selectedEraId === 'all' ? 'active' : ''}`;
+    allBtn.textContent = 'All periods';
+    allBtn.addEventListener('click', () => {
+      this.selectedEraId = 'all';
+      this.selectedEmpireId = null;
+      this.renderEraFilterBar();
+      this.renderDualStreamSpine();
+    });
+    container.innerHTML = '';
+    container.appendChild(allBtn);
+
+    for (const era of sync.eras) {
+      const btn = document.createElement('button');
+      btn.className = `era-chip ${this.selectedEraId === era.id ? 'active' : ''}`;
+      btn.textContent = `${era.name} (${era.dateRangeLabel})`;
+      btn.addEventListener('click', () => {
+        this.selectedEraId = era.id;
+        this.selectedEmpireId = null;
+        const firstFigInEra = sync.figures
+          .filter(f => f.eraId === era.id)
+          .sort((a, b) => a.editorialProminence - b.editorialProminence)[0];
+        if (firstFigInEra) {
+          this.selectFigureById(firstFigInEra.id, false);
+        }
+        this.renderEraFilterBar();
+        this.renderDualStreamSpine();
+      });
+      container.appendChild(btn);
+    }
+  }
+
+  private renderDualStreamSpine(): void {
+    const empiresTrack = document.getElementById('empires-stream-track');
+    const figuresTrack = document.getElementById('figures-stream-track');
+    if (!empiresTrack || !figuresTrack) return;
+
+    const sync = localStore.getSynchrony();
+    empiresTrack.innerHTML = '';
+    figuresTrack.innerHTML = '';
+
+    const activeEmpires = new Set(
+      this.activeFigure?.secularContemporaries.map(c => c.empireId) || []
+    );
+
+    for (const emp of sync.empires) {
+      const btn = document.createElement('button');
+      const isHighlighted =
+        this.selectedEmpireId === emp.id ||
+        (this.selectedEmpireId === null && activeEmpires.has(emp.id));
+      btn.className = `empire-node ${isHighlighted ? 'active' : ''}`;
+      btn.style.background = `linear-gradient(135deg, ${emp.color}44 0%, #141a22 100%)`;
+      btn.innerHTML = `
+        <span class="empire-node-name">${emp.name}</span>
+        <span class="empire-node-dates">${emp.dateRangeLabel}</span>
+      `;
+      btn.addEventListener('click', () => {
+        this.selectedEraId = 'all';
+        this.selectedEmpireId = this.selectedEmpireId === emp.id ? null : emp.id;
+        const matchingFig = sync.figures.find(f =>
+          f.secularContemporaries.some(c => c.empireId === emp.id)
+        );
+        if (matchingFig) {
+          this.selectFigureById(matchingFig.id, false);
+        }
+        this.renderEraFilterBar();
+        this.renderDualStreamSpine();
+      });
+      empiresTrack.appendChild(btn);
+    }
+
+    const sortedFigures = [...sync.figures]
+      .filter(f => {
+        if (this.selectedEraId !== 'all' && f.eraId !== this.selectedEraId) return false;
+        if (
+          this.selectedEmpireId &&
+          !f.secularContemporaries.some(c => c.empireId === this.selectedEmpireId)
+        ) {
+          return false;
+        }
+        return true;
+      })
+      .sort((a, b) => a.editorialProminence - b.editorialProminence);
+
+    if (sortedFigures.length === 0) {
+      const overview = document.createElement('div');
+      overview.className = 'empty-profiles';
+      const empire = sync.empires.find(e => e.id === this.selectedEmpireId);
+      const message = document.createElement('p');
+      message.textContent = `No curated person profiles are included for ${empire?.name || 'this combination'} yet. Your current discovery remains open.`;
+      overview.appendChild(message);
+      if (empire) {
+        const context = document.createElement('p');
+        context.textContent = `${empire.dateRangeLabel} · ${empire.biblicalIntersection}`;
+        overview.appendChild(context);
+      }
+      const reset = document.createElement('button');
+      reset.className = 'btn-small';
+      reset.textContent = 'Show all people';
+      reset.addEventListener('click', () => {
+        this.selectedEraId = 'all';
+        this.selectedEmpireId = null;
+        this.renderEraFilterBar();
+        this.renderDualStreamSpine();
+      });
+      overview.appendChild(reset);
+      figuresTrack.appendChild(overview);
+    }
+
+    for (const fig of sortedFigures) {
+      const btn = document.createElement('button');
+      const isSelected = this.activeFigure?.id === fig.id;
+      const isChrist = fig.id === 'jesus-christ';
+      btn.className = `figure-node ${isSelected ? 'active' : ''} ${isChrist ? 'christ-center' : ''}`;
+      btn.setAttribute('data-figure-id', fig.id);
+      btn.innerHTML = `
+        <span class="figure-node-rank">${isChrist ? 'Jesus & the Roman world' : `${fig.measuredMentions} Scripture mentions`}</span>
+        <span class="figure-node-name">${fig.name}</span>
+        <span class="figure-node-dates">${fig.dateRangeLabel}</span>
+      `;
+      btn.addEventListener('click', () => {
+        this.selectFigureById(fig.id);
+      });
+      figuresTrack.appendChild(btn);
+    }
+  }
+
+  public selectFigureById(figureId: string, reveal = true): void {
+    const sync = localStore.getSynchrony();
+    const target = sync.figures.find(f => f.id === figureId);
+    if (!target) return;
+    this.activeFigure = target;
+    if (this.selectedEraId !== 'all' && target.eraId !== this.selectedEraId) this.selectedEraId = 'all';
+    if (this.selectedEmpireId && !target.secularContemporaries.some(c => c.empireId === this.selectedEmpireId)) this.selectedEmpireId = null;
+    if (this.trail.at(-1) !== figureId) this.trail.push(figureId);
+    if (this.trail.length > 12) this.trail.shift();
+    const url = new URL(window.location.href);
+    url.searchParams.set('figure', figureId);
+    window.history.replaceState(null, '', url);
+    this.renderEraFilterBar();
+    this.renderDualStreamSpine();
+    this.renderActiveFigureWorkspace();
+    if (reveal) {
+      const discovery = document.getElementById('discovery');
+      discovery?.scrollIntoView({ behavior: 'instant', block: 'start' });
+      discovery?.focus({ preventScroll: true });
+    }
+  }
+
+  private renderActiveFigureWorkspace(): void {
+    if (!this.activeFigure) return;
+    const sync = localStore.getSynchrony();
+    const fig = this.activeFigure;
+    this.renderDiscovery(fig);
+    const era = sync.eras.find(e => e.id === fig.eraId);
+
+    const eraBadge = document.getElementById('active-era-badge');
+    if (eraBadge && era) {
+      eraBadge.textContent = era.name;
+    }
+
+    // 1. Hero & Covenant Summary
+    const heroContainer = document.getElementById('figure-hero-container');
+    if (heroContainer) {
+      heroContainer.innerHTML = `
+        <article class="figure-hero">
+          <div class="figure-hero-dates">${fig.dateRangeLabel}</div>
+          <h3 class="figure-hero-name">${fig.name}</h3>
+          <div class="figure-hero-title">${fig.title}</div>
+          <div class="figure-covenant-box">${fig.covenantSummary}</div>
+          <div class="figure-meta-row">
+            <span class="meta-tag"><strong>Hitchcock Meaning:</strong> ${fig.hitchcockMeaning}</span>
+            <span class="meta-tag"><strong>Scripture Mentions:</strong> ${fig.measuredMentions.toLocaleString()}</span>
+            ${era ? `<span class="meta-tag"><strong>World Horizon:</strong> ${era.worldContext}</span>` : ''}
           </div>
-        `).join('')}
+        </article>
+      `;
+    }
+
+    // 2. Secular Contemporaries & Evidence Cards
+    const secList = document.getElementById('secular-contemporaries-list');
+    if (secList) {
+      secList.innerHTML = '';
+      for (const item of fig.secularContemporaries) {
+        const evMeta = sync.evidenceCategories[item.evidenceCategory];
+        const card = document.createElement('div');
+        card.className = 'contemporary-card';
+        card.innerHTML = `
+          <div class="contemporary-top">
+            <div>
+              <div class="contemporary-name">${item.name}</div>
+              <div class="contemporary-role">${item.role}</div>
+            </div>
+            <span class="evidence-badge evidence-${item.evidenceCategory}" title="${evMeta?.description || ''}">
+              ${evMeta?.label || item.evidenceCategory}
+            </span>
+          </div>
+          <p class="contemporary-detail">${item.synchronyDetail}</p>
+          <div class="contemporary-source"><strong>Sources to investigate:</strong> ${item.sourceCitation}</div>
+        `;
+        secList.appendChild(card);
+      }
+    }
+
+    // 3. Canonical KJV Scripture Anchors
+    const scripList = document.getElementById('scripture-anchors-list');
+    if (scripList) {
+      scripList.innerHTML = '';
+      for (const anchor of fig.scriptureAnchors) {
+        const verseObj = localStore.getVerseByOsis(anchor.osisRef);
+        const card = this.buildScriptureCard(
+          verseObj,
+          anchor.displayRef,
+          anchor.osisRef,
+          anchor.historicalContextNote
+        );
+        scripList.appendChild(card);
+      }
+    }
+
+    // 4. Personal Network
+    const netList = document.getElementById('personal-network-list');
+    if (netList) {
+      netList.innerHTML = '';
+      for (const rel of fig.personalNetwork) {
+        const btn = document.createElement('button');
+        btn.className = 'network-card';
+        const refVerse = localStore.getVerseByOsis(rel.ref);
+        const dispRef = refVerse ? localStore.formatDisplayRef(refVerse) : rel.ref;
+        btn.innerHTML = `
+          <div class="network-card-top">
+            <span>${rel.name}</span>
+            <span style="color: var(--gold-primary); font-size: 0.75rem;">${dispRef} &rarr;</span>
+          </div>
+          <div class="network-card-rel">${rel.relation}</div>
+        `;
+        btn.addEventListener('click', () => {
+          this.selectFigureById(rel.targetId);
+        });
+        netList.appendChild(btn);
+      }
+    }
+  }
+
+  private renderDiscovery(fig: HistoricalFigure): void {
+    const discovery = discoveries[fig.id];
+    const sync = localStore.getSynchrony();
+    const setText = (id: string, text: string) => {
+      const element = document.getElementById(id);
+      if (element) element.textContent = text;
+    };
+    setText('discovery-title', discovery.title);
+    setText('discovery-lead', discovery.lead);
+    setText('discovery-setting', `${fig.name} · ${sync.eras.find(e => e.id === fig.eraId)?.dateRangeLabel || ''}`);
+    const scripture = document.getElementById('discovery-scripture');
+    const verse = localStore.getVerseByOsis(discovery.verse);
+    if (scripture && verse) {
+      scripture.innerHTML = `<span class="scripture-ref">${localStore.formatDisplayRef(verse)}</span><div class="kjv-verse-text">${localStore.formatCanonicalKjvHtml(verse.text)}</div><button class="btn-small" type="button">Read the surrounding passage ↓</button>`;
+      scripture.querySelector('button')?.addEventListener('click', () => {
+        const reader = document.getElementById('scripture-anchors-list');
+        if (!reader) return;
+        reader.prepend(this.buildScriptureCard(verse, localStore.formatDisplayRef(verse), discovery.verse, 'The passage from your current discovery.'));
+        const card = reader.firstElementChild as HTMLElement;
+        (card.querySelector('.btn-toggle-chapter') as HTMLButtonElement).click();
+        card.scrollIntoView({ behavior: 'instant', block: 'start' });
+        card.tabIndex = -1;
+        card.focus({ preventScroll: true });
+      });
+    }
+    const record = discovery.record;
+    const evidence = document.getElementById('discovery-evidence');
+    if (evidence) {
+      evidence.replaceChildren();
+      const label = document.createElement('p');
+      label.className = 'evidence-label';
+      label.textContent = record?.label || 'Context from the study collection';
+      const heading = document.createElement('h3');
+      heading.textContent = record?.title || fig.secularContemporaries[0]?.name || 'The historical setting';
+      const text = document.createElement('p');
+      text.textContent = record?.text || 'The wider study below brings together the biblical passages and named historical sources for this person. Examine each source and its evidence category before drawing a conclusion.';
+      evidence.append(label, heading, text);
+      if (fig.id === 'jesus-christ') {
+        const photo = document.createElement('figure');
+        photo.className = 'record-photo';
+        const link = document.createElement('a');
+        link.href = '/images/pilate-stone.jpg';
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.setAttribute('aria-label', 'Examine the photograph of the Pilate Stone');
+        const image = document.createElement('img');
+        image.src = '/images/pilate-stone.jpg';
+        image.alt = 'The surviving Pilate inscription on a broken limestone block in the Israel Museum';
+        image.width = 960;
+        image.height = 640;
+        link.appendChild(image);
+        const caption = document.createElement('figcaption');
+        const credit = document.createElement('a');
+        credit.href = 'https://commons.wikimedia.org/wiki/File:Limestone_Inscription_with_Name_of_Pontius_Pilate,_Caesarea,_26-36_AD_(42500903014).jpg';
+        credit.textContent = 'Photograph: Gary Todd / CC0';
+        credit.target = '_blank';
+        credit.rel = 'noopener noreferrer';
+        caption.append('Israel Museum · ', credit);
+        photo.append(link, caption);
+        evidence.insertBefore(photo, text);
+      }
+      if (record?.url) {
+        const link = document.createElement('a');
+        link.href = record.url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.className = 'source-link';
+        link.textContent = `${record.source} ↗`;
+        evidence.appendChild(link);
+      } else {
+        const link = document.createElement('a');
+        link.href = '#figure-hero-container';
+        link.className = 'source-link';
+        link.textContent = 'Explore the passages & historical context below ↓';
+        evidence.appendChild(link);
+      }
+    }
+    const note = document.getElementById('connection-note');
+    if (note) {
+      note.replaceChildren();
+      const heading = document.createElement('strong');
+      heading.textContent = 'What this connection tells us. ';
+      note.append(heading, discovery.distinction);
+    }
+    const questions = document.getElementById('next-questions');
+    if (questions) {
+      questions.replaceChildren();
+      const next = [...fig.personalNetwork.map(n => n.targetId), 'hezekiah', 'daniel', 'jesus-christ'];
+      // Include a historical thread alongside the first two personal connections.
+      const targets = [...new Set(next)].filter(id => id !== fig.id);
+      const visible = targets.slice(0, 2);
+      const historyThread = targets.find(id => ['daniel', 'hezekiah'].includes(id) && !visible.includes(id));
+      if (historyThread) visible.push(historyThread);
+      else if (targets[2]) visible.push(targets[2]);
+      for (const targetId of visible) {
+        const target = sync.figures.find(f => f.id === targetId);
+        if (!target || !discoveries[targetId]) continue;
+        const button = document.createElement('button');
+        button.className = 'question-button';
+        button.dataset.target = targetId;
+        button.append(discoveries[targetId].question);
+        const arrow = document.createElement('span');
+        arrow.textContent = '→';
+        arrow.setAttribute('aria-hidden', 'true');
+        button.appendChild(arrow);
+        button.addEventListener('click', () => this.selectFigureById(targetId));
+        questions.appendChild(button);
+      }
+    }
+    const trail = document.getElementById('journey-trail');
+    if (trail) {
+      trail.replaceChildren();
+      this.trail.forEach((id, index) => {
+        const name = sync.figures.find(f => f.id === id)?.name || id;
+        if (index > 0) trail.append(' → ');
+        if (index === this.trail.length - 1) {
+          const current = document.createElement('span');
+          current.className = 'trail-current';
+          current.setAttribute('aria-current', 'step');
+          current.textContent = name;
+          trail.appendChild(current);
+        } else {
+          const button = document.createElement('button');
+          button.className = 'trail-link';
+          button.textContent = name;
+          button.addEventListener('click', () => this.returnToTrail(index));
+          trail.appendChild(button);
+        }
+      });
+    }
+    const back = document.getElementById('journey-back') as HTMLButtonElement;
+    back.hidden = this.trail.length < 2;
+    if (!back.hidden) back.textContent = `Back to ${sync.figures.find(f => f.id === this.trail.at(-2))?.name}`;
+    document.querySelectorAll<HTMLButtonElement>('[data-start]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.start === fig.id)));
+  }
+
+  private returnToTrail(index: number): void {
+    const target = this.trail[index];
+    if (!target) return;
+    this.trail = this.trail.slice(0, index + 1);
+    this.selectFigureById(target);
+  }
+
+  private buildScriptureCard(
+    verseObj: KjvVerseData | null,
+    displayRef: string,
+    osisRef: string,
+    contextNote: string
+  ): HTMLElement {
+    const card = document.createElement('article');
+    card.className = 'scripture-card';
+
+    const formattedHtml = verseObj
+      ? localStore.formatCanonicalKjvHtml(verseObj.text)
+      : `<em>[Missing reference in local corpus: ${osisRef}]</em>`;
+
+    const crossRefs = localStore.getCrossRefsForVerse(osisRef, 6);
+
+    card.innerHTML = `
+      <div class="scripture-ref-bar">
+        <span class="scripture-ref">${verseObj ? localStore.formatDisplayRef(verseObj) : displayRef}</span>
+        <div class="scripture-actions">
+          <button type="button" class="btn-small btn-toggle-chapter" aria-expanded="false">Read in context</button>
+          <button type="button" class="btn-small btn-toggle-xrefs" aria-expanded="false">Connected passages (${crossRefs.length})</button>
+        </div>
       </div>
+      <div class="kjv-verse-text">${formattedHtml}</div>
+      <div class="scripture-context-note"><strong>Study note:</strong> ${contextNote}</div>
+      <div class="drawer-box drawer-chapter"></div>
+      <div class="drawer-box drawer-xrefs"></div>
     `;
+
+    const chapBtn = card.querySelector('.btn-toggle-chapter') as HTMLButtonElement | null;
+    const chapDrawer = card.querySelector('.drawer-chapter') as HTMLElement | null;
+    const xrefBtn = card.querySelector('.btn-toggle-xrefs') as HTMLButtonElement | null;
+    const xrefDrawer = card.querySelector('.drawer-xrefs') as HTMLElement | null;
+
+    if (chapBtn && chapDrawer && verseObj) {
+      chapBtn.addEventListener('click', () => {
+        const isOpen = chapDrawer.classList.toggle('open');
+        chapBtn.setAttribute('aria-expanded', String(isOpen));
+        if (isOpen && chapDrawer.innerHTML === '') {
+          const allChap = localStore.getChapterVerses(verseObj.book, verseObj.chapter);
+          const start = Math.max(1, verseObj.verse - 2);
+          const end = Math.min(allChap.length, verseObj.verse + 3);
+          const slice = allChap.filter(v => v.verse >= start && v.verse <= end);
+          chapDrawer.innerHTML = slice
+            .map(
+              v => `
+                <div class="crossref-item">
+                  <strong style="color: var(--gold-primary);">${localStore.formatDisplayRef(v)}</strong>
+                  <span> ${localStore.formatCanonicalKjvHtml(v.text)}</span>
+                </div>
+              `
+            )
+            .join('');
+        }
+      });
+    }
+
+    if (xrefBtn && xrefDrawer) {
+      xrefBtn.addEventListener('click', () => {
+        const isOpen = xrefDrawer.classList.toggle('open');
+        xrefBtn.setAttribute('aria-expanded', String(isOpen));
+        if (isOpen && xrefDrawer.innerHTML === '') {
+          if (crossRefs.length === 0) {
+            xrefDrawer.innerHTML = '<div class="crossref-item">No curated cross-references indexed for this verse.</div>';
+          } else {
+            xrefDrawer.innerHTML = crossRefs
+              .map(
+                xr => `
+                  <div class="crossref-item">
+                    <strong style="color: var(--gold-bright);">${localStore.formatDisplayRef(xr.verse)}</strong>
+                    <div>${localStore.formatCanonicalKjvHtml(xr.verse.text)}</div>
+                    <button class="btn-small btn-follow-ref" data-ref-index="${crossRefs.indexOf(xr)}">Read this passage →</button>
+                  </div>
+                `
+              )
+              .join('');
+            xrefDrawer.querySelectorAll<HTMLButtonElement>('.btn-follow-ref').forEach(button => {
+              button.addEventListener('click', () => {
+                const ref = crossRefs[Number(button.dataset.refIndex)];
+                const reader = document.getElementById('scripture-anchors-list');
+                if (!reader || !ref) return;
+                const next = this.buildScriptureCard(ref.verse, localStore.formatDisplayRef(ref.verse), localStore.toOsisRef(ref.verse), `Followed from ${displayRef}. A cross-reference connects passages; it is not an independent historical source.`);
+                reader.prepend(next);
+                next.scrollIntoView({ behavior: 'instant', block: 'start' });
+                next.tabIndex = -1;
+                next.focus({ preventScroll: true });
+              });
+            });
+          }
+        }
+      });
+    }
+
+    return card;
   }
 
-  private closeModal(id: string) {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
+  private renderHitchcockDirectory(filterQuery: string): void {
+    const container = document.getElementById('hitchcock-directory-list');
+    if (!container) return;
+
+    const entries = localStore.getRankedNames(filterQuery, 50);
+    container.innerHTML = '';
+
+    for (const item of entries) {
+      const div = document.createElement('button');
+      div.className = 'hitchcock-card';
+      div.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <strong style="color: ${item.isFlagship ? 'var(--gold-bright)' : 'var(--text-primary)'};">${item.name}</strong>
+          <span style="font-size: 0.7rem; color: var(--text-muted);">
+            ${item.occurrences > 0 ? `${item.occurrences} refs` : 'Dictionary entry'}
+          </span>
+        </div>
+        <div style="color: var(--text-secondary); font-size: 0.76rem; margin-top: 0.15rem;">
+          ${item.meanings.join('; ')}
+        </div>
+      `;
+      div.addEventListener('click', () => {
+        if (item.flagshipId) {
+          this.selectFigureById(item.flagshipId);
+        } else {
+          const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+          if (searchInput) {
+            searchInput.value = item.name;
+            this.executeGlobalSearch(item.name);
+          }
+        }
+      });
+      container.appendChild(div);
+    }
+  }
+
+  private executeGlobalSearch(query: string): void {
+    const dropdown = document.getElementById('search-results-list');
+    if (!dropdown) return;
+
+    const trimmed = query.trim();
+    if (!trimmed) {
+      dropdown.classList.remove('active');
+      dropdown.innerHTML = '';
+      return;
+    }
+
+    const results = localStore.searchAll(trimmed, 15);
+    dropdown.innerHTML = '';
+
+    if (
+      results.figures.length === 0 &&
+      results.empires.length === 0 &&
+      results.verses.length === 0 &&
+      results.names.length === 0
+    ) {
+      dropdown.innerHTML = '<div class="search-result-item">No matching figures, empires, or KJV verses found.</div>';
+      dropdown.classList.add('active');
+      return;
+    }
+
+    if (results.figures.length > 0) {
+      const h = document.createElement('div');
+      h.className = 'search-group-title';
+      h.textContent = 'Historical Figures';
+      dropdown.appendChild(h);
+
+      for (const fig of results.figures) {
+        const btn = document.createElement('button');
+        btn.className = 'search-result-item';
+        btn.innerHTML = `<strong>${fig.name}</strong> <span style="color: var(--text-secondary);">— ${fig.dateRangeLabel}</span>`;
+        btn.addEventListener('click', () => {
+          this.selectFigureById(fig.id);
+          dropdown.classList.remove('active');
+        });
+        dropdown.appendChild(btn);
+      }
+    }
+
+    for (const empire of results.empires) {
+      const button = document.createElement('button');
+      button.className = 'search-result-item';
+      button.textContent = `${empire.name} — Explore people in this empire`;
+      button.addEventListener('click', () => {
+        this.selectedEraId = 'all';
+        this.selectedEmpireId = empire.id;
+        const figure = localStore.getSynchrony().figures.find(f => f.secularContemporaries.some(c => c.empireId === empire.id));
+        if (figure) this.selectFigureById(figure.id);
+        else {
+          this.renderEraFilterBar();
+          this.renderDualStreamSpine();
+        }
+        const browser = document.getElementById('timeline-browser') as HTMLDetailsElement;
+        browser.open = true;
+        browser.scrollIntoView({ behavior: 'instant', block: 'start' });
+        dropdown.classList.remove('active');
+      });
+      dropdown.appendChild(button);
+    }
+
+    for (const name of results.names) {
+      const button = document.createElement('button');
+      button.className = 'search-result-item';
+      button.textContent = `${name.name} — ${name.meanings.join('; ')}`;
+      button.addEventListener('click', () => {
+        if (name.flagshipId) this.selectFigureById(name.flagshipId);
+        else {
+          const directory = document.getElementById('names-directory') as HTMLDetailsElement;
+          directory.open = true;
+          const input = document.getElementById('hitchcock-input') as HTMLInputElement;
+          input.value = name.name;
+          this.renderHitchcockDirectory(name.name);
+          directory.scrollIntoView({ behavior: 'instant', block: 'start' });
+          input.focus({ preventScroll: true });
+        }
+        dropdown.classList.remove('active');
+      });
+      dropdown.appendChild(button);
+    }
+
+    if (results.verses.length > 0) {
+      const h = document.createElement('div');
+      h.className = 'search-group-title';
+      h.textContent = 'Canonical KJV Verses';
+      dropdown.appendChild(h);
+
+      for (const v of results.verses) {
+        const btn = document.createElement('button');
+        btn.className = 'search-result-item';
+        const disp = localStore.formatDisplayRef(v);
+        btn.innerHTML = `<strong style="color: var(--gold-bright);">${disp}</strong> <span>${localStore.formatCanonicalKjvHtml(v.text)}</span>`;
+        btn.addEventListener('click', () => {
+          const scripList = document.getElementById('scripture-anchors-list');
+          if (scripList) {
+            const osis = localStore.toOsisRef(v);
+            const card = this.buildScriptureCard(
+              v,
+              disp,
+              osis,
+              'Selected directly from canonical KJV search.'
+            );
+            scripList.prepend(card);
+            card.scrollIntoView({ behavior: 'instant', block: 'start' });
+            card.tabIndex = -1;
+            card.focus({ preventScroll: true });
+          }
+          dropdown.classList.remove('active');
+        });
+        dropdown.appendChild(btn);
+      }
+    }
+
+    dropdown.classList.add('active');
+  }
+
+  private bindEvents(): void {
+    document.querySelector('.primary-link')?.addEventListener('click', e => {
+      e.preventDefault();
+      this.selectFigureById('jesus-christ');
+    });
+    document.querySelectorAll<HTMLButtonElement>('[data-start]').forEach(button => {
+      button.addEventListener('click', () => this.selectFigureById(button.dataset.start!));
+    });
+    document.getElementById('journey-back')?.addEventListener('click', () => this.returnToTrail(this.trail.length - 2));
+    const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+    const dropdown = document.getElementById('search-results-list');
+
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        this.executeGlobalSearch(searchInput.value);
+      });
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') dropdown?.classList.remove('active');
+        if (e.key === 'Enter') {
+          this.executeGlobalSearch(searchInput.value);
+        }
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (dropdown && searchInput && !searchInput.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
+        dropdown.classList.remove('active');
+      }
+    });
+
+    const hitchcockInput = document.getElementById('hitchcock-input') as HTMLInputElement | null;
+    if (hitchcockInput) {
+      hitchcockInput.addEventListener('input', () => {
+        this.renderHitchcockDirectory(hitchcockInput.value);
+      });
+    }
   }
 }
 
-function boot() {
-  const app = new HistoricalBibleApp();
-  (window as any).app = app;
-  app.start();
-}
-
-if (document.readyState === 'loading') {
-  window.addEventListener('DOMContentLoaded', boot);
-} else {
-  boot();
-}
+const app = new HistoricalInteractApp();
+window.addEventListener('DOMContentLoaded', () => {
+  void app.bootstrap();
+});

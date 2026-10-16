@@ -1,3 +1,54 @@
+## 2026-10-16 01:36:30 — Antigravity / HistoricalBible — Unified Dark-Gold Redesign v1.6.0 pushed to GitHub
+
+- Completed and pushed the v1.6.0 dark-gold redesign across `index.html`, `interact.html`, `bible.html`, `contact.html`, and clean directory routes (`bible/index.html`, `contact/index.html`, `interact/index.html`).
+- Preserved verbatim mission/conviction copy (`PURPOSE` / `CONVICTION`), restored the dark-gold "Download the Bible" welcome popup (`#popup-widget6691`), implemented true small-caps `LORD` (`L` + `0.74em` `ORD`), removed all `"hand-typed"` references from pages/meta tags, and added the quiet "Why the KJV" footnote above the footer on Home.
+- Verified with `npm run build` and 20 passing Playwright tests (`tests/interact.spec.ts` and `tests/site_pages.spec.ts`). Canonical detail: `E:\HistoricalBible\what_and_how_log.md`.
+
+## 2026-10-15 21:47:14 — Codex / HistoricalBible — Accessibility proof v0.3.1 completed
+
+- Produced E:/HistoricalBible/pdf-proof/v0.3.1/Bible-proof-v0.3.1.pdf: cover headings and readable ornament text; 1,160 labeled, tagged return links with unique page annotations. v0.2.0 and v0.3.0 remain as comparison proofs; originals and website untouched.
+- Three accessibility tests pass; all 1,162 pages preserve text, geometry and link destinations; bookmarks and labels match v0.3.0. Five rendered pages are pixel-identical. See E:/HistoricalBible/what_and_how_log.md and pdf-proof/v0.3.1/verification-summary.json. Screen-reader behavior and PDF/UA conformance remain untested.
+- Proof version 0.3.1; application version 1.5.0. No commit, push or deployment. Current proof-folder footprint ~141.7 MB under revised 160 MB cap.
+
+## 2026-10-15 21:38:26 — Codex / HistoricalBible — Accessibility proof v0.3.1 started
+
+- Intent: improve tagged reading structure and accessible navigation in a new versioned PDF proof. Keep Scripture text, page layout, click destinations, recovered originals, and website files unchanged.
+
+## 2026-10-15 21:31:54 — Codex / HistoricalBible — Chapter navigation v0.3.0 completed
+
+- Added 1,189 nested chapter bookmarks and viewer labels Cover/Contents/1-1160 in E:/HistoricalBible/pdf-proof/v0.3.0/Bible-proof-v0.3.0.pdf. Previous v0.2.0 and original PDF/DOCX remain intact. No text, page layout, or links changed; no publish/commit/deploy.
+- Five navigation regression checks pass. Every chapter destination and label sequence checked. All 1,162 pages' text, geometry, links and tagged structure match; original 74 outline entries and 1,296 links preserved. Source/test: scripts/add_pdf_navigation.py; tests/test_pdf_navigation.py.
+- Reproduce from the v0.2.0 proof with the navigation script; verify with the new five-test suite. Full shared-source/lifecycle notes are in E:/HistoricalBible/pdf-proof/README.md and v0.3.0/verification-summary.json.
+- Current proof-folder footprint: approximately 106 MB against the documented 120 MB cap. The previous proof is retained. Accessibility remains a separate future review, with no changes made here.
+
+## 2026-10-15 20:02:19 — Codex / HistoricalBible — PDF proof v0.2.0 delivered
+
+- Separate review proof and repaired master: E:/HistoricalBible/pdf-proof/v0.2.0/. Preserves cover/layout, 74 bookmarks, 1,296 links; clean native Scripture selection with embedded exact body font. Originals, corpus/site, governance and user's open Word window unchanged. No commit/push/deploy.
+- Verification: 18 tests pass; six tests in each suite fail on corresponding original. All 31,102 ordered verse texts and 1,162 native body geometries checked; 11 pages rendered/reviewed. Canonical detail: what_and_how_log.md entry 2026-10-15 20:02:19; proof guide and verification-summary.json.
+- Review boundary: 384 comparison rows retained unchanged (mostly boundaries/spellings; some fallible witness extraction). This proof is not editorially certified or approved to replace the website PDF. Future authorized text adjudication should use the recorded source pages, not automatically adopt witness text. Preserve recovered per-word CSV/XLSX files for the owner's later language-comparison goal.
+- Artifact impact: +1,032 source/+281 test lines; 21 retained artifact files (~68.2 MiB); two bundled-runtime packages added, no app dependency change. Obsolete approach and intermediate exports removed. Two bounded delegate contributions manually verified/integrated; no pending delegate work.
+
+## 2026-10-15 16:23:05 — Codex / HistoricalBible — PDF repair v0.1.0 started
+
+- Owner authorized work on the PDF, preserving intended structure, clickable navigation, and clean text selection/copying.
+- Writable: separate local candidate, repair tools/tests and audit records, required logs. Original Bible.pdf, website corpus, constitutional files, remote Git and deployment remain unchanged.
+- Existing audit's PDF SHA-256 matches the current original. Use native PDF text/links and inspect rendered pages before applying changes widely.
+
+## 2026-10-15 16:16:37 — Codex / HistoricalBible — Governance v1.0 adopted
+
+- Installed owner-selected AGENTS.md and principles.md as byte-identical root copies from Downloads/HistoricalBible_Revised_Governance_and_PDF_Plan. README records owner adoption despite the preserved proposed-status headers, canonical ownership, stable amendment rules, and read-before-work links.
+- Scope: local governance installation and discovery links only. No PDF/corpus, application, dependency, runtime, remote, branch, commit, or deployment changes. Existing uncommitted work preserved.
+- Verification: both SHA-256 hashes match supplied originals; reciprocal governance links and existing Bible-network-audit.md resolve. Referenced BIBLE_PDF_REPAIR_PLAN.md remains in Downloads and is explicitly outside this task. No project mirror exists at E:/AI_Hub/Projects/HistoricalBible.
+- Prose-only verification: exact insertion/prefix checks preserve previous README and log content; application/tests unchanged, so no browser/build suite or application version bump. Governance revision: v1.0.
+- Artifact impact: 2 Markdown files added; README and 3 project records updated; 0 source/test lines, dependencies, datasets, generated binaries, or scratch files added.
+- Future work: follow the adopted foundations; proposed PDF repair remains unauthorized and unexecuted.
+
+## 2026-10-15 14:59:43 — Codex / HistoricalBible — Interact v1.5.0
+
+- Completed a discovery-led reader: Jesus/Pilate opening, 12 profile routes, questions, source links, local artifact photograph, trail/back, onward cross-reference reading, and responsive layouts.
+- Verified 17 scoped headed browser checks plus final responsive/direct-file checks and canonical build. New INT-06 was observed failing on the old interface and passes now. Source and evidence distinctions are in the page; the inherited wider historical collection was not fully audited.
+- Preview: http://127.0.0.1:5173/interact.html . Vite preview process is intentionally retained for user review. No commit/push/deployment. Other preexisting changes preserved.
+- Canonical record: E:\HistoricalBible\what_and_how_log.md (v1.5.0). Three owned additions; no dependencies or databases; one CC0 photo, 118 KB.
 # HANDOFF.md — HistoricalBible.com
 
 ## 2026-10-15 00:15:00 — Antigravity / HistoricalBible — Exact GoDaddy Web Archive Verbatim Restoration
