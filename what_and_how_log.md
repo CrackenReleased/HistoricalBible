@@ -1,3 +1,31 @@
+## 2026-10-16 19:33:00 — Scripture Word Inspector Lexicon & Modern Meaning (v00.01.22)
+
+- User Request & Diagnosis:
+  - User feedback:
+    1. *"Why are we calling 'interact' the 'study desk' when we already had a good and functioning name for it... This makes no sense"* (accompanied by screenshot pointing from `View Era in Study Desk →` to `Interact`).
+    2. *"Yes, and then also please fix the oddities of the 'word inspector' situation, The top area should absolutely show the word definition / name meaning. and also show the untranslated word or origin and it's modern meaning (and call it a modern meaning" not really a definition). I do not understand how this was such a missed opprotunity here."*
+  - Root Cause Diagnosis:
+    - The Word Inspector previously only checked Hitchcock's names directory or Webster 1828 for exact dictionary matches; for regular words (e.g. "without", "spirit", "created") or morphological forms, the top meaning card remained blank.
+    - Bridge callouts on `/bible`, `/map`, and `/` inconsistently used "Study Desk" instead of "Interact", creating navigational friction.
+- Decision Point & Implementation:
+  - **Scripture Lexicon Engine**: Created `src/data/scriptureLexicon.ts` and `src/data/scriptureLexiconData.ts` backed by `scripts/build-scripture-lexicon.js` which compiles Strong's Hebrew (8,674 entries) & Greek (5,523 entries) dictionaries with Hitchcock's 2,620 biblical names.
+  - **Structured 3-Section Card Layout**:
+    1. `WORD DEFINITION` or `NAME MEANING`: Comprehensive lexical definition or Hitchcock's name meaning.
+    2. `UNTRANSLATED WORD & ORIGIN`: Original Ancient Hebrew / Koine Greek lemma in original script (`תֹּהוּ`, `רוּחַ`, `אָדָם`, etc.), transliteration, phonetic pronunciation, derivation, Strong's Concordance ID badge (`Strong's H8414`, `H7307`), and English root.
+    3. `✦ MODERN MEANING`: Dedicated section communicating what the ancient term means in contemporary English today.
+  - **Navigation & Bridge Harmonization**: Renamed all bridge callout buttons to `Interact` (`Open in Interact →`, `View in Interact →`, `Explore in Interact →`) across `bible.html`, `map.html`, `index.html`, and `src/bibleReader.ts`, while preserving the sacred slogan quote intact.
+  - **CSS Design**: Added dark museum styling in `src/interact.css` for `.word-badge-row`, `.word-badge-strongs`, `.word-inspect-section`, `.untranslated-lemma-box`, `.untranslated-strongs-tag`, and `.word-section-modern`.
+- Sibling Scan (§1):
+  - Grepped for all occurrences of "Study Desk" across the codebase: confirmed navigation links and buttons strictly say "Interact"; preserved the sacred quote *"This is not a Bible website. This is the study desk where the Word and the historical record finally sit in the same room."* verbatim.
+  - Grepped for all companion panel tab triggers in `src/bibleReader.ts`: verified word inspector renders seamlessly alongside Passage & X-Refs, Chronology, and Map.
+- Verification (Cardinal Rule):
+  - Added written, executable Playwright regression test `tests/word-inspector.spec.ts` asserting definition rendering, Hebrew lemma, Strong's ID, and Modern Meaning badge for Genesis 1:2.
+  - Test passed (`ok 1 [chromium] › tests\word-inspector.spec.ts`).
+  - Captured visual screenshot proof at `test-results/word-inspector-proof.png`.
+  - All 45 Playwright tests passed green in 1.1m.
+  - Canonical KJV verification confirmed all 31,098 verses, 14,133 translator italics, 5,556 cased LORD.
+  - Production build completed in 740ms.
+
 ## 2026-10-16 19:08:00 — Minimalist Map Compass Indicator (v00.01.21)
 
 - User Feedback & Diagnosis:

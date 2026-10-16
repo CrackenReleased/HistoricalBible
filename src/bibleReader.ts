@@ -16,6 +16,7 @@ import {
   BIBLE_CHRONOLOGY
 } from './data/bibleChronology';
 import { AncientMapCanvas } from './engine/ancientMap';
+import { lookupScriptureLexicon } from './data/scriptureLexicon';
 
 interface BookMeta {
   osis: string;
@@ -530,7 +531,7 @@ class BibleReader {
 
       <div style="margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.76rem; color: var(--text-muted);">Explore with contemporary world history:</span>
-        <a href="/interact?ref=${encodeURIComponent(osis)}" class="secondary-link" style="font-size: 0.76rem; padding: 0.35rem 0.65rem;">Open Study Desk &rarr;</a>
+        <a href="/interact?ref=${encodeURIComponent(osis)}" class="secondary-link" style="font-size: 0.76rem; padding: 0.35rem 0.65rem;">Open in Interact &rarr;</a>
       </div>
     `;
   }
@@ -595,7 +596,7 @@ class BibleReader {
       <!-- 4. Bridge to Study Desk Timeline -->
       <div style="margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.76rem; color: var(--text-muted);">Explore with contemporary empires:</span>
-        <a href="/interact?era=${encodeURIComponent(chrono.eventEraId)}" class="secondary-link" style="font-size: 0.76rem; padding: 0.35rem 0.65rem;">View Era in Study Desk &rarr;</a>
+        <a href="/interact?era=${encodeURIComponent(chrono.eventEraId)}" class="secondary-link" style="font-size: 0.76rem; padding: 0.35rem 0.65rem;">View in Interact &rarr;</a>
       </div>
     `;
   }
@@ -603,25 +604,59 @@ class BibleReader {
   private renderWordInspector(word: string): void {
     if (!this.tabContentWord) return;
 
-    const reference = `${this.currentBookOsis}.${this.currentChapter}.${this.selectedVerseNum || 1}`;
-    const netName = localStore.getNameAtReference(word, reference);
-    const review = netName ? localStore.getNameReview(netName.name) : undefined;
-    const english = localStore.getNameReview(word)?.english;
     const searchRes = localStore.searchAll(word, 8);
+    const lexicon = lookupScriptureLexicon(
+      word,
+      this.currentBookOsis,
+      this.currentChapter,
+      this.selectedVerseNum || 1
+    );
 
-    const titleCase = word.charAt(0).toUpperCase() + word.slice(1);
-    let meaningHtml = '';
-    if (netName && netName.meaning) {
-      meaningHtml = `
-        <div class="word-meaning-box">
-          <strong style="color: var(--gold-warm); display: block; margin-bottom: 0.2rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">Reviewed lexical note · distinct from Scripture:</strong>
-          ${review?.identity ? `<p>${review.identity.text}</p>` : ''}
-          <span>${netName.meaning}</span>
+    const titleCase = lexicon.word.toUpperCase();
+
+    // 1. Definition / Name Meaning Section
+    const defLabel = lexicon.nameMeaning ? 'NAME MEANING' : 'WORD DEFINITION';
+    const defContent = lexicon.nameMeaning || lexicon.definition;
+    const defHtml = `
+      <div class="word-inspect-section">
+        <div class="word-section-title">${defLabel}</div>
+        <div class="word-section-body">${defContent}</div>
+      </div>
+    `;
+
+    // 2. Untranslated Word & Linguistic Origin Section
+    const untranslated = lexicon.untranslated;
+    const hasLemma = untranslated.lemma && untranslated.lemma !== '—';
+    const strongsTag = untranslated.strongsId
+      ? `<span class="untranslated-strongs-tag">· Strong's ${untranslated.strongsId}</span>`
+      : '';
+    const originHtml = `
+      <div class="word-inspect-section">
+        <div class="word-section-title">UNTRANSLATED WORD &amp; ORIGIN</div>
+        <div class="word-section-body">
+          ${hasLemma ? `
+            <div class="untranslated-lemma-box">
+              <span class="untranslated-lemma-text">${untranslated.lemma}</span>
+              ${untranslated.transliteration ? `<span class="untranslated-xlit">(${untranslated.transliteration})</span>` : ''}
+              ${untranslated.pronunciation ? `<span class="untranslated-pron">· pronounced: ${untranslated.pronunciation}</span>` : ''}
+              ${strongsTag}
+            </div>
+          ` : (untranslated.strongsId ? `<div class="untranslated-lemma-box">${strongsTag}</div>` : '')}
+          <p class="untranslated-derivation">${untranslated.derivation}</p>
+          ${untranslated.etymology ? `<p class="untranslated-etymology"><strong>Root / Usage:</strong> ${untranslated.etymology}</p>` : ''}
         </div>
-      `;
-    } else if (english) {
-      meaningHtml = `<div class="word-meaning-box"><strong>Webster’s 1828 · ${english.partOfSpeech}</strong><p>${english.definition}</p><a href="${english.url}">Read the source entry →</a></div>`;
-    }
+      </div>
+    `;
+
+    // 3. Modern Meaning Section (Explicitly labeled "✦ MODERN MEANING")
+    const modernHtml = `
+      <div class="word-inspect-section word-section-modern">
+        <div class="word-section-title" style="color: var(--gold-bright);">✦ MODERN MEANING</div>
+        <div class="word-section-body modern-meaning-text">
+          ${lexicon.modernMeaning}
+        </div>
+      </div>
+    `;
 
     let concordanceHtml = '';
     if (searchRes.verses.length > 0) {
@@ -643,13 +678,19 @@ class BibleReader {
 
     this.tabContentWord.innerHTML = `
       <div class="word-inspect-card">
-        <span class="eyebrow">WORD INSPECTOR</span>
+        <span class="eyebrow">— SCRIPTURE WORD INSPECTOR</span>
         <h3 class="word-inspect-name">${titleCase}</h3>
-        <p class="word-inspect-meta">Interactive Scripture Concordance &amp; Dictionary</p>
-        ${meaningHtml}
+        <div class="word-badge-row">
+          <span class="word-badge">${lexicon.untranslated.language}</span>
+          ${lexicon.untranslated.strongsId ? `<span class="word-badge word-badge-strongs">${lexicon.untranslated.strongsId}</span>` : ''}
+        </div>
+
+        ${defHtml}
+        ${originHtml}
+        ${modernHtml}
       </div>
 
-      <div class="companion-section-title">
+      <div class="companion-section-title" style="margin-top: 1rem;">
         <span>Concordance Occurrences</span>
         <span style="font-size: 0.72rem; color: var(--gold-muted);">${searchRes.verses.length} sample results</span>
       </div>

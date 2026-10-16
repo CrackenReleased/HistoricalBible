@@ -1,6 +1,6 @@
 {
   "name": "historicalbible-cross-references",
-  "version": "00.01.21",
+  "version": "00.01.22",
   "type": "module",
   "description": "Interactive KJV Bible Cross-Reference Visualizer (Arcs, Threads, and Entity Loom)",
   "scripts": {

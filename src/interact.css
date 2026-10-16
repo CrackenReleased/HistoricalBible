@@ -3485,5 +3485,121 @@ footer {
   color: #ffffff;
 }
 
+/* Word Inspector Card & Lexicon Sections */
+.word-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.word-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--gold-warm);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.word-badge-strongs {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.word-inspect-section {
+  background: rgba(14, 18, 24, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: 5px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.word-section-title {
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--gold-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.word-section-body {
+  font-size: 0.88rem;
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+.untranslated-lemma-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  background: rgba(212, 175, 55, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 4px;
+  padding: 0.45rem 0.65rem;
+  margin-bottom: 0.55rem;
+}
+
+.untranslated-lemma-text {
+  font-family: 'Times New Roman', serif;
+  font-size: 1.35rem;
+  font-weight: bold;
+  color: #ffffff;
+  direction: rtl;
+}
+
+.untranslated-xlit {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--gold-warm);
+  font-size: 0.92rem;
+}
+
+.untranslated-pron {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.untranslated-strongs-tag {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #38bdf8;
+}
+
+.untranslated-derivation {
+  font-size: 0.82rem;
+  color: var(--text-body);
+  line-height: 1.45;
+  margin: 0.35rem 0;
+}
+
+.untranslated-etymology {
+  font-size: 0.8rem;
+  color: var(--gold-muted);
+  line-height: 1.4;
+  margin-top: 0.3rem;
+}
+
+.word-section-modern {
+  background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, rgba(14, 18, 24, 0.8) 100%);
+  border: 1px solid var(--border-gold);
+}
+
+.modern-meaning-text {
+  font-size: 0.92rem;
+  color: #f1f5f9;
+  line-height: 1.55;
+  font-style: normal;
+}
+
+
 
 

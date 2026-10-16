@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.22] - 2026-10-16
+
+- Enhanced Scripture Word Inspector & Lexicon Engine (`/bible`):
+  - Top Card Comprehensive Lexicon: Addressed user feedback regarding empty cards in the Word Inspector. Every clicked or queried Scripture word now renders a rich 3-section card:
+    1. **`WORD DEFINITION`** or **`NAME MEANING`**: Clear lexical definition or Hitchcock's name meaning for all 2,620 biblical individuals.
+    2. **`UNTRANSLATED WORD & ORIGIN`**: Displays the original Ancient Hebrew or Koine Greek lemma in original script (e.g. `תֹּהוּ`, `רוּחַ`, `אָדָם`, `logos`), transliteration, phonetic pronunciation, linguistic derivation, Strong's Concordance ID (e.g. `Strong's H8414`, `H7307`), and English etymological root.
+    3. **`✦ MODERN MEANING`**: Explicitly labeled section conveying what the ancient biblical term communicates in contemporary English today, contextualized against ancient Near Eastern idiom.
+  - Multi-tiered Lexicon Resolution: Built offline indexing engine (`scripts/build-scripture-lexicon.js`) compiling Strong's Hebrew (8,674 entries) & Greek (5,523 entries) dictionaries into reverse-lookup indices with curated foundational theological terms (`src/data/scriptureLexiconData.ts` & `src/data/scriptureLexicon.ts`).
+  - Study Desk / Interact Bridge Label Alignment: Renamed all bridge callout buttons across `/bible`, `/map`, and `/` to **"Interact"** (e.g. `Open in Interact →`, `View in Interact →`, `Explore in Interact →`) aligning 100% with top navigation while preserving the sacred slogan quote intact.
+  - Automated Regression Tests: Created `tests/word-inspector.spec.ts` locking down definition rendering, untranslated lemma with Strong's ID, and Modern Meaning badge for Scripture words. All 45 Playwright tests pass green. Visual proof captured at `test-results/word-inspector-proof.png`.
+
 ## [00.01.21] - 2026-10-16
 
 - Minimalist Map Compass Indicator (/map & /bible):

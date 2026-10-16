@@ -217,7 +217,7 @@ class HistoricalAtlasApp {
       if (city.figureIds && city.figureIds.length > 0) {
         studyDeskLink.hidden = false;
         studyDeskLink.href = `/interact?figure=${city.figureIds[0]}`;
-        studyDeskLink.textContent = `Explore in Study Desk →`;
+        studyDeskLink.textContent = `Explore in Interact →`;
       } else {
         studyDeskLink.hidden = true;
       }
