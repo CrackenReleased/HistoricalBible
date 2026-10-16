@@ -36,6 +36,15 @@ jobs:
       - name: Build Production Site
         run: npm run build
 
+      - name: Verify Pages serves the production workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api repos/${{ github.repository }}/pages --jq '.build_type')" = workflow || {
+            echo "Pages must use GitHub Actions; branch publishing overwrites dist and breaks public asset URLs."
+            exit 1
+          }
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 

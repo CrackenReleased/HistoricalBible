@@ -1,3 +1,10 @@
+## 2026-10-16 12:28:58 — Branding delivery correction (v00.01.08)
+
+- Live verification caught favicon/logo 404s despite successful deployments. Decision point: repository Pages build_type was legacy on master/root; its second deployment overwrote the custom workflow's dist output with raw source HTML. Root source referenced public assets at runtime URLs that branch hosting does not provide.
+- Set Pages build_type to workflow using the documented GitHub Pages API, preserving the custom domain and existing HTTPS setting. Added a deployment regression gate in .github/workflows/deploy.yml to fail if Pages reverts to branch publishing. The prior legacy state fails this gate; API verification now returns workflow. The existing build will redeploy the same branding version.
+- Sibling scan: both logo files, favicon and reader scripts depend on the same dist publishing decision; all use the existing production workflow. No duplicate root/public assets were created as a workaround. Source data and PDFs unchanged.
+- Artifact impact: existing workflow +9 lines and two release records updated; no dependencies, new files or persisted application data. Publication result is recorded in the workspace handoff after live checks. GitHub API reference: https://docs.github.com/en/rest/pages/pages#update-information-about-a-github-pages-site
+
 ## 2026-10-16 12:25:58 — Website branding (v00.01.08)
 
 - Prepared the user-supplied Downloads/HistoricalBible_ Timeless Atlas Logo-2.png artwork as three isolated brand assets using the built-in image editing tool: circular emblem, upper detailed logo, lower-right compact logo. Original artwork remains unchanged. Generated PNG masters remain in the tool's managed image folder; optimized website assets live in public/images/brand.

@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [00.01.08] - 2026-10-16
 
+- Corrected GitHub Pages to publish the production Actions build, preventing branch publishing from overwriting the built site and breaking logo/favicon URLs; added a deployment regression gate.
+
 - Branded Home with the detailed Bible/atlas logo and all main-page headers/footers with the compact logo, prepared from the supplied artwork.
 - Replaced the empty favicon with the circular emblem, including browser and Apple touch sizes, and applied icons across all HTML entry points.
 - Optimized transparent logo assets, responsive spacing, accessible image labels and dimensions; added route/image/favicon regression coverage. Build and desktop/mobile visual checks pass.
