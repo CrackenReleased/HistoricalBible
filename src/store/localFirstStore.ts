@@ -145,6 +145,8 @@ export class LocalFirstStore {
   private rankedNames: RankedBiblicalName[] = [];
   private synchrony: HistoricalSynchronyDataset | null = null;
   private isLoaded = false;
+  private indexedConnectionCount = 0;
+  private atlasPairs: Array<{ from: number; to: number }> = [];
   private initError: string | null = null;
 
   public async init(onProgress?: (msg: string, percent: number) => void): Promise<void> {
@@ -229,6 +231,9 @@ export class LocalFirstStore {
     this.verseByOsis.clear();
     this.chapterMap.clear();
     this.crossRefAdj.clear();
+    this.indexedConnectionCount = 0;
+    const bookOrder = new Map(Object.keys(OSIS_TO_BOOK).map((book, index) => [book, index]));
+    const bookPairs = new Map<string, { from: number; to: number }>();
 
     for (const v of this.verses) {
       const osisBook = BOOK_TO_OSIS[v.book] || v.book;
@@ -246,6 +251,13 @@ export class LocalFirstStore {
       const tgt = (link.t || link.to || '').trim();
       const votes = Number(link.v ?? link.votes ?? 1);
       if (!src || !tgt) continue;
+      this.indexedConnectionCount++;
+      const from = bookOrder.get(src.split('.')[0].toLowerCase());
+      const to = bookOrder.get(tgt.split('.')[0].toLowerCase());
+      if (from !== undefined && to !== undefined && from !== to) {
+        const pair = { from: Math.min(from, to), to: Math.max(from, to) };
+        bookPairs.set(`${pair.from}:${pair.to}`, pair);
+      }
 
       const sKey = src.toLowerCase();
       const tKey = tgt.toLowerCase();
@@ -260,6 +272,9 @@ export class LocalFirstStore {
     for (const [, list] of this.crossRefAdj) {
       list.sort((a, b) => b.votes - a.votes);
     }
+    // Evenly sample actual book pairs; never fabricate decorative connections.
+    const pairs = [...bookPairs.values()].sort((a, b) => a.from - b.from || a.to - b.to);
+    this.atlasPairs = pairs.filter((_, index) => index % Math.max(1, Math.ceil(pairs.length / 180)) === 0);
 
     // Build prominence-sorted Hitchcock names list
     const flagshipByHitchcock = new Map<string, HistoricalFigure>();
@@ -415,6 +430,17 @@ export class LocalFirstStore {
           n.meanings.some(m => m.toLowerCase().includes(q))
       )
       .slice(0, limit);
+  }
+
+  public getCollectionOverview() {
+    return {
+      connections: this.indexedConnectionCount,
+      verses: this.verses.length,
+      profiles: this.synchrony?.figures.length ?? 0,
+      empires: this.synchrony?.empires.length ?? 0,
+      books: Object.keys(OSIS_TO_BOOK).length,
+      pairs: this.atlasPairs,
+    };
   }
 
   public searchAll(query: string, maxVerses = 25): {

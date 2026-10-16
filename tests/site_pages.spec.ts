@@ -101,22 +101,26 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
     await page.screenshot({ path: 'test-results/live_bible.png', fullPage: true });
   });
 
-  test('Interact Study Desk opens directly at the Discovery Pair without duplicate front-door hero banner', async ({ page }) => {
+  test('Interact introduces its searchable collection without duplicating the Home welcome', async ({ page }) => {
     await page.goto('/interact', { waitUntil: 'domcontentloaded' });
     await expect(page).toHaveTitle(/HistoricalBible/);
     // No duplicate front-door hero or 3 curiosity doors on /interact
     await expect(page.locator('section.intro')).toHaveCount(0);
     await expect(page.locator('section.entry-section')).toHaveCount(0);
-    // Opens directly at #discovery
+    await expect(page.locator('#collection-title')).toContainText('Every passage');
+    // The original discovery reader remains available below the collection introduction.
     await expect(page.locator('#discovery')).toBeVisible();
     await page.screenshot({ path: 'test-results/live_interact.png', fullPage: true });
   });
 
-  test('No page contains any "hand-typed" or "hand typed" wording in HTML or visible text', async ({ page }) => {
+  test('No page contains any "hand-typed" or "hand typed" wording in HTML or visible text, and version stays on v00.01.xx beta sequence', async ({ page }) => {
     for (const route of ['/', '/bible', '/interact', '/contact']) {
       await page.goto(route, { waitUntil: 'domcontentloaded' });
       const html = await page.content();
       expect(html).not.toMatch(/hand-typed|hand typed|handtyped/i);
+      expect(html).not.toMatch(/Interact\s*·\s*v1\./i);
     }
+    await page.goto('/interact', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('footer')).toContainText(/Interact\s*·\s*v00\.01\.\d+/);
   });
 });

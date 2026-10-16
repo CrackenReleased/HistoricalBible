@@ -35,6 +35,46 @@
 
     <div id="error-banner" class="wrap" role="alert" hidden></div>
 
+    <section class="collection-intro" aria-labelledby="collection-title">
+      <div class="wrap">
+        <div class="collection-masthead"><span class="eyebrow">THE CONNECTED SCRIPTURES</span><span class="collection-edition">A living study collection · KJV</span></div>
+        <div class="collection-hero">
+          <div class="collection-copy">
+            <h1 id="collection-title">Every passage<br />opens <em>a world.</em></h1>
+            <p>Scripture connects to Scripture. People to places. Kingdoms to the history they left behind.</p>
+            <p class="collection-purpose">Explore linked passages, biblical people, ancient empires, and name meanings. We’ve brought them together so you can begin anywhere—and keep discovering.</p>
+            <a class="collection-jump" href="#discovery">Begin with a discovery <span aria-hidden="true">↗</span></a>
+          </div>
+          <figure class="connection-atlas" aria-labelledby="atlas-caption">
+            <div class="atlas-heading"><span class="eyebrow">ACROSS THE TESTAMENTS</span><span class="atlas-key"><i></i> Scripture cross-references</span></div>
+            <svg id="connection-atlas" viewBox="0 0 600 320" role="img" aria-label="A sample of indexed connections between books of the Bible">
+              <text x="300" y="160" text-anchor="middle" fill="#c5a059" font-size="14">Preparing the connections…</text>
+            </svg>
+            <div class="atlas-axis"><span>GENESIS</span><span>OLD TESTAMENT <b>·</b> NEW TESTAMENT</span><span>REVELATION</span></div>
+            <figcaption id="atlas-caption">Many books. A connected testimony.<small>Arcs sample the loaded cross-reference index; each joins two biblical books.</small></figcaption>
+          </figure>
+        </div>
+        <dl class="collection-stats" aria-label="Inside the loaded collection">
+          <div><dt>Indexed cross-references</dt><dd id="stat-connections">—</dd></div>
+          <div><dt>KJV verses to explore</dt><dd id="stat-verses">—</dd></div>
+          <div><dt>Historical profiles</dt><dd id="stat-profiles">—</dd></div>
+          <div><dt>World empires</dt><dd id="stat-empires">—</dd></div>
+        </dl>
+        <div class="collection-search" id="collection-search">
+          <div class="search-introduction"><span class="eyebrow">YOUR NEXT DISCOVERY</span><label for="search-input">Where will you begin?</label></div>
+          <form id="collection-search-form" role="search" aria-label="Search the Bible and its connections">
+            <div class="search-wrapper">
+              <div class="search-field"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="search-input" type="search" placeholder="A person, empire, phrase, or verse…" autocomplete="off" aria-describedby="search-help" aria-controls="search-results-list" disabled /><button class="search-submit" type="submit" disabled>Explore <span aria-hidden="true">→</span></button></div>
+              <div id="search-results-list" class="search-dropdown" role="region" aria-label="Search results"></div>
+            </div>
+          </form>
+          <div class="search-suggestions"><span id="search-help">Try a thread</span><button type="button" data-search="John 3:16" disabled>John 3:16 <span>↗</span></button><button type="button" data-search="Daniel" disabled>Daniel <span>↗</span></button><button type="button" data-search="Pilate" disabled>Pilate <span>↗</span></button><button type="button" data-search="In the beginning" disabled>In the beginning <span>↗</span></button></div>
+          <p id="search-status" class="search-status" role="status">Loading the collection for search…</p>
+        </div>
+        <p class="collection-provenance">Cross-reference index: OpenBible.info / Treasury of Scripture Knowledge · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Historical profiles are a curated starting point. Scripture, commentary, and external evidence remain distinct.</p>
+      </div>
+    </section>
+
     <!-- 1. DEDICATED STUDY DESK: STEP-BY-STEP DISCOVERY WALK -->
     <section id="discovery" class="wrap discovery" aria-labelledby="discovery-title" tabindex="-1">
       <div class="journey-bar">
@@ -47,7 +87,7 @@
 
       <div id="discovery-heading">
         <p class="eyebrow" id="discovery-setting">ROMAN JUDEA · 1ST CENTURY AD</p>
-        <h1 id="discovery-title">A name in the Gospel. A name carved in stone.</h1>
+        <h2 id="discovery-title">A name in the Gospel. A name carved in stone.</h2>
         <p id="discovery-lead">Luke names Pontius Pilate as governor of Judea. A surviving Roman inscription names him too. Start with that meeting of text and stone.</p>
       </div>
 
@@ -86,11 +126,7 @@
         <p>Explore any person, period, or passage without hurry.</p>
       </div>
 
-      <label for="search-input" class="search-label">Find a person, empire, phrase, or Bible reference</label>
-      <div class="search-wrapper">
-        <input id="search-input" type="search" placeholder="Try searching 'Pilate', 'Daniel', 'Rome', 'Abraham', or 'John 3:16'..." autocomplete="off" />
-        <div id="search-results-list" class="search-dropdown"></div>
-      </div>
+      <a class="research-search-link" href="#collection-search">↑ Search the collection</a>
 
       <details id="timeline-browser">
         <summary>Browse the people &amp; world empires</summary>
@@ -159,7 +195,7 @@
   <footer class="wrap">
     <div class="footer-brand">HISTORICAL BIBLE</div>
     <div>Keep asking. Keep reading. Follow the thread.</div>
-    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Interact · v1.5.0</div>
+    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Interact · v00.01.07</div>
   </footer>
 
   <noscript>

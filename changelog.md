@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.07] - 2026-10-16
+
+- Introduced a collection entrance with a book-connection arc map derived from the existing index, dynamic collection counts, and research attribution.
+- Moved global search near the top with suggested queries, a submit control, keyboard navigation, result announcements, and loading/failure states. Preserved the existing study desk and direct links to people.
+- Kept arcs touching the Old Testament gold throughout; New-Testament-only connections remain teal.
+- Added collection-data regression coverage and browser regression cases; reviewed four responsive widths. Release prepared for owner-authorized Git push.
+
 ## PDF publication [0.3.3] - 2026-10-16
 
 - Replaced the local and website Bible.pdf copies with the verified 1,163-page edition, including chapter bookmarks, matching page labels, clickable book-name headers, and the brief reading note.

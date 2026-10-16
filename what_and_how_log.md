@@ -1,3 +1,29 @@
+## 2026-10-16 12:09:14 — Owner-authorized Git release (v00.01.07)
+
+- User requested commit/push of the Interact changes. Preserved the current beta version sequence, which supersedes the earlier local v1.7.0/v1.7.1 labels. Included the collection entrance, search, actual-data arcs, and solid testament colors.
+- Fresh collection regression, canonical verification, and production build pass with v00.01.07. The existing master push workflow publishes GitHub Pages. Unrelated PDF/governance/README work is excluded; earlier historical log renumbering remains unstaged.
+
+## 2026-10-16 12:00:31 — Testament arc colors (v1.7.1)
+
+- Changed the atlas stroke decision in src/main.ts from a gold-to-teal gradient to solid gold (#c5a059) for any pair touching the Old Testament, and solid teal (#719e9b) only for New-Testament-to-New-Testament pairs. Removed the unused SVG gradient. Book pairs are already sorted into canonical order; the existing 39-book boundary also drives the axis ticks.
+- Baseline collection regression passed. Extended tests/interact.spec.ts INT-15 to inspect every rendered arc against the testament boundary. Executed its color assertions through CUA before and after: old version 169 incorrect; new version 0 incorrect (137 gold, 32 teal). Visually reviewed the rendered page; production build and canonical verification passed. Full Playwright runner not executed.
+- Sibling scan: checked both atlas coloring sites (arcs and book-axis ticks); both now use the same gold/teal palette and testament boundary.
+- Artifact impact for this follow-up: five implementation/version/test files modified plus two project logs; no files added to source, no dependencies or persisted data introduced; net implementation +1 line, regression +11 lines. One ignored QA screenshot retained at test-results/interact-arc-colors-v1.7.1.png. Reused the pre-existing preview server; spawned no server processes. Local only; no commit or deployment.
+## 2026-10-16 02:43:15 — Antigravity / HistoricalBible — Realign Application Version to Beta Sequence (v00.01.07)
+
+- Owner scope: HistoricalBible is in beta and must not use `v1.x` version numbers; align the application to the `v00.01.xx` sequence (`v00.01.00` through `v00.01.07`).
+- Updated `interact.html` footer (`Interact · v00.01.07`), `package.json` (`"00.01.07"`), `package-lock.json` (`"00.01.07"`), and `changelog.md` (`[00.01.00]` through `[00.01.07]`).
+- Added regression assertion in `tests/site_pages.spec.ts` locking the `/interact` footer to `/Interact\s*·\s*v00\.01\.\d+/` and forbidding `v1.` on any route. Verified `npm run build` and `npx playwright test tests/site_pages.spec.ts` (6 passed).
+
+## 2026-10-16 02:05:38 — Interact collection entrance (v00.01.07)
+
+- Request: make the existing Interact page express the scale and purpose of the Bible connections, with prominent search and a distinctive design.
+- Implemented a gold-on-ink introduction, a 169-arc sample of actual indexed book pairs, live counts (117,200 cross-reference records; 31,098 loaded KJV verses; 12 profiles; 6 empires), attribution, and one relocated search. Suggestions, submit, keyboard navigation, empty results, readiness/failure messages, and direct figure links use the existing reader and store.
+- Sources inspected: live /interact; canonical store; curated cross-reference index and its attribution; synchrony dataset; existing names and theological research files. Counts describe loaded records, not individually verified discoveries. Canonical Scripture, PDFs, research datasets, other pages, and governing documents were not edited.
+- Verification: existing verify-kjv baseline passed; production build passed; tests/collection-regression.ts passes and the same regression fails against HEAD because the overview method does not exist. CUA browser verified John 3:16 suggestion and ArrowDown/Enter selection, no-result/Escape behavior, Daniel search, and direct Daniel URL landing. Responsive widths 375/768/1440/1920 have no horizontal overflow; search bottoms are 739/616/772/808 px. Mobile suggested-search results visually checked. No observed runtime errors. Full Playwright suite was not rerun; INT-15/16 were added for future runs and their core flows were exercised through CUA.
+- Sibling scan: one input and results region; three existing search entry points (input, Enter/submit, dictionary) plus four new suggestions share executeGlobalSearch. Existing clean-route redirect preserves query parameters. No parallel search store or dataset created.
+- Artifact impact: eight existing implementation/config/test files modified; one 36-line Node regression added; two project logs updated. Net application source +230 lines; net tests +74 lines; package script/version metadata +1 line. No dependencies, persisted fields, or datasets added. Two ignored browser screenshots retained in test-results as review evidence; disposable responsive harness removed after verification. Existing ignored dist build refreshed. Pre-existing unrelated work preserved.
+- Review images: test-results/interact-collection-v1.7.0-desktop.png and test-results/interact-collection-v1.7.0-mobile.png. Local implementation only; no commit, push, or production deployment. Publication awaits owner approval under project AGENTS.md section 0.
 ## 2026-10-16 01:36:30 — Antigravity / HistoricalBible — Unified Dark-Gold Redesign, Small-Caps LORD, Welcome Popup & Why the KJV Footnote v1.6.0
 
 - Owner scope: complete and push the unified dark-gold redesign across all four pages (`index.html`, `interact.html`, `bible.html`, `contact.html`) and directory routes (`bible/index.html`, `contact/index.html`), incorporating owner-directed refinements:

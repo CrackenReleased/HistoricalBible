@@ -45,6 +45,13 @@ class HistoricalInteractApp {
       this.renderActiveFigureWorkspace();
       this.renderHitchcockDirectory('');
       this.bindEvents();
+      this.renderCollectionOverview();
+      document.querySelectorAll<HTMLInputElement | HTMLButtonElement>('#collection-search input, #collection-search button').forEach(control => { control.disabled = false; });
+      this.setSearchStatus('Search Scripture, historical profiles, empires, and biblical names.');
+      // Links from Home and shared discoveries still land on the requested person.
+      if (requestedFig && sync.figures.some(figure => figure.id === requestedFig)) {
+        document.getElementById('discovery')?.scrollIntoView({ behavior: 'instant', block: 'start' });
+      }
       const loading = document.getElementById('loading-status');
       if (loading) loading.hidden = true;
     } catch (err) {
@@ -55,6 +62,45 @@ class HistoricalInteractApp {
       }
       const loading = document.getElementById('loading-status');
       if (loading) loading.hidden = true;
+      this.setSearchStatus('Search is unavailable. Please reload to try again, or read the KJV PDF.');
+      const atlas = document.getElementById('connection-atlas');
+      if (atlas) atlas.textContent = '';
+    }
+  }
+
+  private setSearchStatus(message: string): void {
+    const status = document.getElementById('search-status');
+    if (status) status.textContent = message;
+  }
+
+  private renderCollectionOverview(): void {
+    const collection = localStore.getCollectionOverview();
+    for (const key of ['connections', 'verses', 'profiles', 'empires'] as const) {
+      const el = document.getElementById(`stat-${key}`);
+      if (el) el.textContent = collection[key].toLocaleString('en-US');
+    }
+    const atlas = document.getElementById('connection-atlas');
+    if (!atlas) return;
+    const x = (book: number) => 18 + book / (collection.books - 1) * 564;
+    atlas.replaceChildren();
+    for (const pair of collection.pairs) {
+      const start = x(pair.from), end = x(pair.to), radius = (end - start) / 2;
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', `M ${start} 298 A ${radius} ${radius} 0 0 1 ${end} 298`);
+      path.setAttribute('fill', 'none');
+      // Pairs are ordered by book: only NT-to-NT links start at index 39 or later.
+      path.setAttribute('stroke', pair.from < 39 ? '#c5a059' : '#719e9b');
+      path.setAttribute('stroke-opacity', pair.to - pair.from > 30 ? '.65' : '.32');
+      path.setAttribute('stroke-width', '.85');
+      atlas.appendChild(path);
+    }
+    for (let book = 0; book < collection.books; book++) {
+      const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      tick.setAttribute('x1', String(x(book))); tick.setAttribute('x2', String(x(book)));
+      tick.setAttribute('y1', '301'); tick.setAttribute('y2', '310');
+      tick.setAttribute('stroke', book < 39 ? '#c5a059' : '#719e9b');
+      tick.setAttribute('stroke-width', '3');
+      atlas.appendChild(tick);
     }
   }
 
@@ -590,10 +636,13 @@ class HistoricalInteractApp {
     if (!trimmed) {
       dropdown.classList.remove('active');
       dropdown.innerHTML = '';
+      this.setSearchStatus('Search Scripture, historical profiles, empires, and biblical names.');
       return;
     }
 
     const results = localStore.searchAll(trimmed, 15);
+    const count = results.figures.length + results.empires.length + results.verses.length + results.names.length;
+    this.setSearchStatus(count ? `Showing ${count} results for “${trimmed}”. Select a result to explore.` : `No results for “${trimmed}”. Try a name, phrase, or reference such as John 3:16.`);
     dropdown.innerHTML = '';
 
     if (
@@ -713,21 +762,49 @@ class HistoricalInteractApp {
     const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
     const dropdown = document.getElementById('search-results-list');
 
+    document.getElementById('collection-search-form')?.addEventListener('submit', event => {
+      event.preventDefault();
+      if (searchInput) this.executeGlobalSearch(searchInput.value);
+    });
+    document.querySelectorAll<HTMLButtonElement>('[data-search]').forEach(button => {
+      button.addEventListener('click', () => {
+        if (!searchInput) return;
+        searchInput.value = button.dataset.search!;
+        searchInput.focus({ preventScroll: true });
+        this.executeGlobalSearch(searchInput.value);
+      });
+    });
+
     if (searchInput) {
       searchInput.addEventListener('input', () => {
         this.executeGlobalSearch(searchInput.value);
       });
       searchInput.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') dropdown?.classList.remove('active');
-        if (e.key === 'Enter') {
-          this.executeGlobalSearch(searchInput.value);
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          dropdown?.querySelector<HTMLButtonElement>('button')?.focus();
         }
       });
     }
 
     document.addEventListener('click', (e) => {
-      if (dropdown && searchInput && !searchInput.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
+      if (dropdown && searchInput && !(e.target as Element).closest('#collection-search')) {
         dropdown.classList.remove('active');
+      }
+    });
+    dropdown?.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        dropdown.classList.remove('active');
+        searchInput?.focus({ preventScroll: true });
+      }
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        const buttons = [...dropdown.querySelectorAll<HTMLButtonElement>('button')];
+        const current = buttons.indexOf(document.activeElement as HTMLButtonElement);
+        const next = current + (event.key === 'ArrowDown' ? 1 : -1);
+        if (next < 0) searchInput?.focus();
+        else buttons[Math.min(next, buttons.length - 1)]?.focus();
       }
     });
 

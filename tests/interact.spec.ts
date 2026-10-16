@@ -1,5 +1,53 @@
 import { test, expect } from '@playwright/test';
 
+test('INT-15: Collection introduction exposes real counts and one prominent search', async ({ page }) => {
+  await page.goto('/interact');
+  await expect(page.locator('#stat-connections')).toHaveText('117,200');
+  await expect(page.locator('#stat-verses')).toHaveText('31,098');
+  await expect(page.locator('#stat-profiles')).toHaveText('12');
+  await expect(page.locator('#stat-empires')).toHaveText('6');
+  await expect(page.locator('#search-input')).toHaveCount(1);
+  await expect(page.locator('#collection-title')).toContainText('Every passage');
+  expect(await page.locator('#connection-atlas path').count()).toBeGreaterThan(0);
+  // Arcs use canonical book order: 39 OT books precede the 27 NT books.
+  // A link touching the OT remains gold across its entire path.
+  const arcColors = await page.locator('#connection-atlas path').evaluateAll(paths => paths.map(path => ({
+    start: Number(path.getAttribute('d')!.split(' ')[1]),
+    stroke: path.getAttribute('stroke'),
+  })));
+  const newTestamentStart = 18 + 39 / 65 * 564;
+  expect(arcColors.some(arc => arc.start >= newTestamentStart)).toBe(true);
+  for (const arc of arcColors) {
+    expect(arc.stroke).toBe(arc.start < newTestamentStart ? '#c5a059' : '#719e9b');
+  }
+  for (const width of [375, 768, 1440, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    const search = await page.locator('#search-input').boundingBox();
+    expect(search!.y + search!.height).toBeLessThan(900);
+  }
+});
+
+test('INT-16: Suggested search, keyboard selection, no results and dismissal work', async ({ page }) => {
+  await page.goto('/interact');
+  await page.getByRole('button', { name: 'John 3:16 ↗', exact: true }).click();
+  await expect(page.locator('#search-results-list')).toContainText('JOHN {3:16}');
+  await page.locator('#search-input').press('ArrowDown');
+  await expect(page.locator('#search-results-list button').first()).toBeFocused();
+  await page.locator('#search-results-list button').first().press('Enter');
+  await expect(page.locator('#scripture-anchors-list > article').first()).toContainText('JOHN {3:16}');
+  await page.getByRole('link', { name: '↑ Search the collection' }).click();
+  await page.locator('#search-input').fill('xyznonexistent987654');
+  await expect(page.locator('#search-status')).toContainText('No results');
+  await page.locator('#search-input').press('Escape');
+  await expect(page.locator('#search-results-list')).toBeHidden();
+  await page.locator('#search-input').fill('');
+  await expect(page.locator('#search-results-list')).toBeHidden();
+  await page.getByRole('button', { name: 'Daniel ↗', exact: true }).click();
+  await page.locator('#search-results-list button').filter({ hasText: /^Daniel —/ }).click();
+  await expect(page.locator('#discovery-title')).toContainText('Babylon');
+});
+
 test('INT-06: Front Door invites the reader into the dedicated Study Desk, where the discovery explains the connection and follows a question and return', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'The Bible happened in the real world.' })).toBeVisible();
