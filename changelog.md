@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.09] - 2026-10-16
+
+- Keep searched names such as Gideon beside the search field, with their dictionary meaning and exact-name Scripture passages, instead of jumping to the bottom directory.
+- Prevent result buttons from submitting search a second time; keep connected passages in their current reader.
+- Added three-name scroll/navigation regression coverage and checked desktop/mobile rendering plus existing figure, empire and verse flows.
+
 ## [00.01.08] - 2026-10-16
 
 - Corrected GitHub Pages to publish the production Actions build, preventing branch publishing from overwriting the built site and breaking logo/favicon URLs; added a deployment regression gate.

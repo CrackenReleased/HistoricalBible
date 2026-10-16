@@ -592,6 +592,14 @@ h3 {
 .search-status { font-size: 11px; color: var(--text-muted); min-height: 18px; margin-top: 10px; }
 .collection-provenance { color: var(--text-muted); font-size: 10px; line-height: 1.8; max-width: 920px; margin-top: 14px; }
 .research-search-link { display: inline-block; margin-bottom: 22px; font-size: 12px; }
+.name-search-detail { margin-top: 14px; padding: 22px; border: 1px solid var(--border-gold); border-radius: 6px; background: var(--bg-surface); scroll-margin-top: 180px; }
+.name-search-heading { display: flex; align-items: start; justify-content: space-between; gap: 20px; }
+.name-search-heading > div { min-width: 0; }
+.name-search-heading h3 { font-size: 30px; line-height: 1.2; margin: 5px 0 12px; overflow-wrap: anywhere; }
+.name-search-heading .text-button { flex-shrink: 0; }
+.name-search-heading .eyebrow { font-size: 10px; }
+#name-search-meaning { margin-bottom: 12px; color: var(--text-main); }
+#name-search-passages { display: grid; gap: 12px; margin-top: 14px; }
 @media (min-width: 1600px) { .collection-intro > .wrap { max-width: 1400px; } .collection-hero { gap: 80px; } }
 @media (max-width: 820px) {
   .collection-intro > .wrap { display: flex; flex-direction: column; }

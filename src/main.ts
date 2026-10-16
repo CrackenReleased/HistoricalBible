@@ -6,7 +6,8 @@
 import {
   localStore,
   HistoricalFigure,
-  KjvVerseData
+  KjvVerseData,
+  RankedBiblicalName
 } from './store/localFirstStore';
 import { discoveries } from './discoveries';
 
@@ -575,7 +576,7 @@ class HistoricalInteractApp {
             xrefDrawer.querySelectorAll<HTMLButtonElement>('.btn-follow-ref').forEach(button => {
               button.addEventListener('click', () => {
                 const ref = crossRefs[Number(button.dataset.refIndex)];
-                const reader = document.getElementById('scripture-anchors-list');
+                const reader = card.parentElement;
                 if (!reader || !ref) return;
                 const next = this.buildScriptureCard(ref.verse, localStore.formatDisplayRef(ref.verse), localStore.toOsisRef(ref.verse), `Followed from ${displayRef}. A cross-reference connects passages; it is not an independent historical source.`);
                 reader.prepend(next);
@@ -617,20 +618,44 @@ class HistoricalInteractApp {
         if (item.flagshipId) {
           this.selectFigureById(item.flagshipId);
         } else {
-          const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
-          if (searchInput) {
-            searchInput.value = item.name;
-            this.executeGlobalSearch(item.name);
-          }
+          this.openNameSearchResult(item, true);
         }
       });
       container.appendChild(div);
     }
   }
 
+  private openNameSearchResult(name: RankedBiblicalName, reveal = false): void {
+    const panel = document.getElementById('name-search-detail');
+    const passages = document.getElementById('name-search-passages');
+    const search = document.getElementById('search-input') as HTMLInputElement | null;
+    if (!panel || !passages) return;
+    document.getElementById('name-search-title')!.textContent = name.name;
+    document.getElementById('name-search-meaning')!.textContent = name.meanings.join('; ');
+    if (search) search.value = name.name;
+    passages.replaceChildren();
+    // Gideon must open Gideon passages, rather than earlier substring matches for Gideoni.
+    const escaped = name.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const exactName = new RegExp(`\\b${escaped}\\b`, 'i');
+    const verses = localStore.searchAll(name.name, Infinity).verses
+      .filter(verse => exactName.test(verse.text)).slice(0, 3);
+    for (const verse of verses) {
+      passages.appendChild(this.buildScriptureCard(verse, localStore.formatDisplayRef(verse),
+        localStore.toOsisRef(verse), 'Found by the selected name in the KJV text.'));
+    }
+    if (!verses.length) passages.textContent = 'No exact occurrence found in the loaded KJV text. Try a spelling variant in search.';
+    document.getElementById('search-results-list')?.classList.remove('active');
+    panel.hidden = false;
+    this.setSearchStatus(`Selected ${name.name}. Name meaning and Scripture passages are below the search.`);
+    if (reveal) panel.scrollIntoView({ behavior: 'instant', block: 'start' });
+    panel.focus({ preventScroll: true });
+  }
+
   private executeGlobalSearch(query: string): void {
     const dropdown = document.getElementById('search-results-list');
     if (!dropdown) return;
+    const nameDetail = document.getElementById('name-search-detail');
+    if (nameDetail) nameDetail.hidden = true;
 
     const trimmed = query.trim();
     if (!trimmed) {
@@ -665,6 +690,7 @@ class HistoricalInteractApp {
       for (const fig of results.figures) {
         const btn = document.createElement('button');
         btn.className = 'search-result-item';
+        btn.type = 'button';
         btn.innerHTML = `<strong>${fig.name}</strong> <span style="color: var(--text-secondary);">— ${fig.dateRangeLabel}</span>`;
         btn.addEventListener('click', () => {
           this.selectFigureById(fig.id);
@@ -677,6 +703,7 @@ class HistoricalInteractApp {
     for (const empire of results.empires) {
       const button = document.createElement('button');
       button.className = 'search-result-item';
+      button.type = 'button';
       button.textContent = `${empire.name} — Explore people in this empire`;
       button.addEventListener('click', () => {
         this.selectedEraId = 'all';
@@ -698,17 +725,12 @@ class HistoricalInteractApp {
     for (const name of results.names) {
       const button = document.createElement('button');
       button.className = 'search-result-item';
+      button.type = 'button';
       button.textContent = `${name.name} — ${name.meanings.join('; ')}`;
       button.addEventListener('click', () => {
         if (name.flagshipId) this.selectFigureById(name.flagshipId);
         else {
-          const directory = document.getElementById('names-directory') as HTMLDetailsElement;
-          directory.open = true;
-          const input = document.getElementById('hitchcock-input') as HTMLInputElement;
-          input.value = name.name;
-          this.renderHitchcockDirectory(name.name);
-          directory.scrollIntoView({ behavior: 'instant', block: 'start' });
-          input.focus({ preventScroll: true });
+          this.openNameSearchResult(name);
         }
         dropdown.classList.remove('active');
       });
@@ -724,6 +746,7 @@ class HistoricalInteractApp {
       for (const v of results.verses) {
         const btn = document.createElement('button');
         btn.className = 'search-result-item';
+        btn.type = 'button';
         const disp = localStore.formatDisplayRef(v);
         btn.innerHTML = `<strong style="color: var(--gold-bright);">${disp}</strong> <span>${localStore.formatCanonicalKjvHtml(v.text)}</span>`;
         btn.addEventListener('click', () => {
@@ -761,6 +784,12 @@ class HistoricalInteractApp {
     document.getElementById('journey-back')?.addEventListener('click', () => this.returnToTrail(this.trail.length - 2));
     const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
     const dropdown = document.getElementById('search-results-list');
+
+    document.getElementById('name-search-close')?.addEventListener('click', () => {
+      document.getElementById('name-search-detail')!.hidden = true;
+      searchInput?.focus({ preventScroll: true });
+      this.setSearchStatus('Search Scripture, historical profiles, empires, and biblical names.');
+    });
 
     document.getElementById('collection-search-form')?.addEventListener('submit', event => {
       event.preventDefault();

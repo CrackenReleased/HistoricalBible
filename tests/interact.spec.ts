@@ -1,5 +1,37 @@
 import { test, expect } from '@playwright/test';
 
+test('INT-17: Dictionary names open beside search without jumping to the bottom', async ({ page }) => {
+  await page.goto('/interact');
+  for (const name of ['Gideon', 'Aaron', 'Joshua']) {
+    await page.locator('#search-input').scrollIntoViewIfNeeded();
+    await page.locator('#search-input').fill(name);
+    const before = await page.evaluate(() => scrollY);
+    await page.locator('#search-results-list button').filter({ hasText: new RegExp(`^${name} —`) }).click();
+    await expect(page.locator('#name-search-detail')).toBeVisible();
+    await expect(page.locator('#name-search-title')).toHaveText(name);
+    expect(Math.abs(await page.evaluate(() => scrollY) - before)).toBeLessThan(80);
+    await expect(page.locator('#search-results-list')).toBeHidden();
+    await expect(page.locator('#names-directory')).not.toHaveAttribute('open');
+    await expect(page.locator('#name-search-detail .kjv-verse-text').first()).toContainText(new RegExp(`\\b${name}\\b`));
+    if (name === 'Gideon') {
+      await expect(page.locator('#name-search-detail .scripture-ref').first()).toHaveText('JUDGES {6:11}');
+      await expect(page.locator('#name-search-detail')).not.toContainText('Gideoni');
+      const card = page.locator('#name-search-passages > article').first();
+      await card.getByRole('button', { name: 'Read in context', exact: true }).click();
+      await expect(card.locator('.drawer-chapter')).toHaveClass(/open/);
+      await card.getByRole('button', { name: /Connected passages/ }).click();
+      const next = await card.locator('.drawer-xrefs .crossref-item strong').first().innerText();
+      await card.getByRole('button', { name: 'Read this passage →' }).first().click();
+      await expect(page.locator('#name-search-passages > article').first().locator('.scripture-ref')).toHaveText(next);
+    }
+  }
+  await page.locator('#search-input').fill('Daniel');
+  await expect(page.locator('#name-search-detail')).toBeHidden();
+  await page.locator('#search-results-list button').filter({ hasText: /^Daniel —/ }).first().click();
+  await expect(page.locator('#discovery-title')).toContainText('Babylon');
+  await expect(page.locator('#search-results-list')).toBeHidden();
+});
+
 test('INT-15: Collection introduction exposes real counts and one prominent search', async ({ page }) => {
   await page.goto('/interact');
   await expect(page.locator('#stat-connections')).toHaveText('117,200');
@@ -36,6 +68,7 @@ test('INT-16: Suggested search, keyboard selection, no results and dismissal wor
   await expect(page.locator('#search-results-list button').first()).toBeFocused();
   await page.locator('#search-results-list button').first().press('Enter');
   await expect(page.locator('#scripture-anchors-list > article').first()).toContainText('JOHN {3:16}');
+  await expect(page.locator('#search-results-list')).toBeHidden();
   await page.getByRole('link', { name: '↑ Search the collection' }).click();
   await page.locator('#search-input').fill('xyznonexistent987654');
   await expect(page.locator('#search-status')).toContainText('No results');
@@ -44,7 +77,7 @@ test('INT-16: Suggested search, keyboard selection, no results and dismissal wor
   await page.locator('#search-input').fill('');
   await expect(page.locator('#search-results-list')).toBeHidden();
   await page.getByRole('button', { name: 'Daniel ↗', exact: true }).click();
-  await page.locator('#search-results-list button').filter({ hasText: /^Daniel —/ }).click();
+  await page.locator('#search-results-list button').filter({ hasText: /^Daniel —/ }).first().click();
   await expect(page.locator('#discovery-title')).toContainText('Babylon');
 });
 
@@ -77,6 +110,7 @@ test('INT-08: Empire search and connected-person navigation keep filters and rea
   await page.goto('/interact.html');
   await page.locator('#search-input').fill('Rome');
   await page.getByRole('button', { name: /Roman Empire.*Explore people/ }).click();
+  await expect(page.locator('#search-results-list')).toBeHidden();
   await expect(page.locator('#timeline-browser')).toHaveAttribute('open', '');
   await page.locator('#personal-network-list button').filter({ hasText: 'King David' }).click();
   await expect(page.locator('.figure-hero-name')).toHaveText('King David');
