@@ -544,5 +544,11 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
     await page.locator('#ancient-map-container').scrollIntoViewIfNeeded();
     await page.waitForTimeout(500);
     await page.screenshot({ path: 'test-results/live_study_desk_map_tab.png', fullPage: false });
+
+    // 5. United Monarchy with high-resolution kingdom boundaries, solid hairlines, and authentic water rendering
+    await page.goto('/map?era=united_monarchy');
+    await page.locator('.atlas-canvas-card').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(800);
+    await page.screenshot({ path: 'test-results/live_atlas_united_monarchy_boundaries.png', fullPage: false });
   });
 });
