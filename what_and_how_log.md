@@ -1,3 +1,29 @@
+## 2026-10-17 16:12:00 — Atlas Canvas Width Calibration & Balanced Side Margin Breathing Room (v00.01.44)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested:
+    "Okay, finally, lol, a little too wide. lets make it a little bit less wide... not a lot, but a little more space on the sides."
+  - Root Cause & Diagnosis:
+    In v00.01.43, `.atlas-main-container` was padded at 16px, making the map canvas span 1888px across a 1920px screen (~98.3% of the viewport). While panoramic, having only 16px of gutter caused the card border to hug the browser scrollbar and window borders too tightly.
+  - Decision Point:
+    Calibrate side margin spacing to ~70px (about 3.5% of viewport) by setting `.atlas-main-container` padding to `clamp(24px, 3.2vw, 64px)` and `.atlas-canvas-card` to `max-width: 1780px; margin: 0 auto;`. This provides comfortable breathing room around the map card while maintaining a significantly wider panoramic display compared to the 1240px interface controls.
+
+- Decision Point & Implementation:
+  1. **Balanced Container Padding (`src/interact.css`)**:
+     - Updated `.atlas-main-container`:
+       `padding-left: clamp(24px, 3.2vw, 64px); padding-right: clamp(24px, 3.2vw, 64px);`.
+  2. **Card Max-Width Boundary (`src/interact.css`)**:
+     - Set `max-width: 1780px; margin: 0 auto;` on `.atlas-canvas-card`.
+     - On 1920px viewports, the map spans 1780px with ~70px of comfortable side margin, eliminating border cramping without shrinking the map excessively.
+     - Interface controls remain centered at `max-width: 1240px; margin: 0 auto;`.
+
+- Regression Verification & Proof:
+  - Updated Playwright regression test in `tests/map.spec.ts`:
+    - Asserts `layout1920.mapWidth` is between 1750px and 1795px (measures 1780px).
+    - Asserts `layout1920.mapLeft` is between 50px and 90px (measures 70px side margin).
+    - Asserts map remains wider than interfaces (`mapWidth > chronoWidth + 500px`).
+  - Captured visual proof screenshot: `widescreen_adjusted_padding_proof.png`. All tests pass.
+
 ## 2026-10-17 16:00:00 — Edge-to-Edge Widescreen Map Canvas Expansion with Decoupled Constrained Interface Controls (v00.01.43)
 
 - User Request & Direct Root-Cause Diagnosis:

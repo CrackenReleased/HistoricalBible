@@ -793,8 +793,8 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
     expect(layout1400.mapBottom).toBeLessThanOrEqual(layout1400.legendTop);
     expect(layout1400.legendBottom).toBeLessThanOrEqual(layout1400.granularTop);
 
-    // 2. Map is wider than interfaces (expanding out towards viewport edges)
-    expect(layout1400.mapWidth).toBeGreaterThan(1300); // 1400 - 32 = 1368px
+    // 2. Map is wider than interfaces (expanding out with balanced side spacing)
+    expect(layout1400.mapWidth).toBeGreaterThan(1280); // ~1310px
     expect(layout1400.granularWidth).toBeLessThanOrEqual(1240);
     expect(layout1400.legendWidth).toBeLessThanOrEqual(1240);
     expect(layout1400.chronoWidth).toBeLessThanOrEqual(1240);
@@ -819,12 +819,17 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
       return {
         docWidth,
         mapWidth: mapRect?.width ?? 0,
+        mapLeft: mapRect?.left ?? 0,
         granularWidth: granularRect?.width ?? 0,
         chronoWidth: chronoRect?.width ?? 0
       };
     });
 
-    expect(layout1920.mapWidth).toBeGreaterThan(1800); // 1920 - 32 = 1888px
+    // 1780px max-width provides a generous panoramic view while leaving ~70px of comfortable side margins
+    expect(layout1920.mapWidth).toBeGreaterThanOrEqual(1750);
+    expect(layout1920.mapWidth).toBeLessThanOrEqual(1795);
+    expect(layout1920.mapLeft).toBeGreaterThanOrEqual(50);
+    expect(layout1920.mapLeft).toBeLessThanOrEqual(90);
     expect(layout1920.granularWidth).toBeLessThanOrEqual(1240);
     expect(layout1920.chronoWidth).toBeLessThanOrEqual(1240);
     expect(layout1920.mapWidth).toBeGreaterThan(layout1920.chronoWidth + 500);

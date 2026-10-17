@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.44] - 2026-10-17
+
+- **Atlas Canvas Width Calibration & Balanced Side Margin Breathing Room**:
+  - Calibrated widescreen map margins by setting `.atlas-main-container` side padding to `clamp(24px, 3.2vw, 64px)` and capping `.atlas-canvas-card` at `max-width: 1780px; margin: 0 auto;`.
+  - On 1920px viewports, the map spans 1780px wide with ~70px of comfortable side margin, eliminating tight window/scrollbar borders while keeping the map expansive and wider than the 1240px interface controls.
+  - Updated Playwright regression test asserting calibrated width and side margins. All tests PASS.
+
 ## [00.01.43] - 2026-10-17
 
 - **Edge-to-Edge Widescreen Map Canvas Expansion with Decoupled Constrained Interface Controls**:

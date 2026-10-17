@@ -2797,15 +2797,15 @@ footer {
 .atlas-main-container {
   width: 100%;
   max-width: 100%;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: clamp(24px, 3.2vw, 64px);
+  padding-right: clamp(24px, 3.2vw, 64px);
   box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
   .atlas-main-container {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 }
 
@@ -2934,7 +2934,8 @@ footer {
 
 .atlas-canvas-card {
   width: 100%;
-  max-width: 100%;
+  max-width: 1780px;
+  margin: 0 auto;
   box-sizing: border-box;
   background: #080c11;
   border: 1px solid var(--border-subtle);
