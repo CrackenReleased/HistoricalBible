@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.25] - 2026-10-16
+
+- Map Color Key & Ancient Factions Integration (`/bible` & `/map`):
+  - Companion Map Key: Added dedicated Kingdoms & Factions color map key directly below `Open Full-Screen Atlas →` in the Bible side panel, matching user specification:
+    - 🟡 **Kingdom of Judah**: `#eab308` (Jerusalem · Royal Davidic Line)
+    - 🟢 **Kingdom of Israel**: `#22c55e` (Samaria · Northern 10 Tribes)
+    - 🔴 **Hostile Empires & Enemies**: `#ef4444` (Philistia, Aram, Assyria, Babylon, Edom, Moab)
+    - 🔵 **Friendly & Allied Regions**: `#38bdf8` (Tyre & Phoenicia · Hiram's Alliance)
+    - ✨ **Archaeological Discoveries**: `#ffd700` (Surviving Inscriptions & Artifacts)
+  - Cartographic Territory Rendering: Added geodetic territorial polygons for the Kingdom of Judah, Kingdom of Israel (Samaria), and Phoenician maritime allies to `WORLD_EMPIRES_GEO` and linked them to `united_monarchy`, `assyrian_siege`, and `babylonian_exile` in `CHRONOLOGICAL_ERAS`.
+  - Harmonized Atlas Legend: Added the matching Kingdoms and Factions swatches into the footer legend of `/map`.
+  - Tuned map container height to 320px in the companion panel for balanced side-panel proportions.
+  - Automated Regression Tests: Updated `tests/bible-side-by-side-map.spec.ts` asserting map key presence, color dots, and 2 Kings 1 Assyrian siege rendering. All 48 tests pass. Visual proof captured at `test-results/bible-map-key-2kings-proof.png`.
+
 ## [00.01.24] - 2026-10-16
 
 - Companion Tab Button Reordering (`/bible`):

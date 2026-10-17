@@ -285,7 +285,10 @@ export class AncientMapCanvas {
     if (this.layers.empires) {
       const targetEmpires = isAll
         ? WORLD_EMPIRES_GEO
-        : WORLD_EMPIRES_GEO.filter(emp => emp.id === this.activeEra.rulingEmpireId);
+        : WORLD_EMPIRES_GEO.filter(emp =>
+            emp.id === this.activeEra.rulingEmpireId ||
+            (this.activeEra.additionalRegionIds && this.activeEra.additionalRegionIds.includes(emp.id))
+          );
 
       for (const empire of targetEmpires) {
         const latLngs = empire.approximateBounds.map(b => [b.lat, b.lng] as L.LatLngTuple);

@@ -1,3 +1,33 @@
+## 2026-10-16 20:19:00 — Map Color Key & Ancient Factions Integration (v00.01.25)
+
+- User Request & Visual Guidance:
+  - User asked: *"Can we add the color map key you referred to earlier at the bottom of the side panel?"*
+  - Accompanied by:
+    1. Screenshot (`media_1792195891687_80d4f992.png`) showing the Map tab with handwritten yellow annotation `Map key` and 4 color dots: red, orange/gold, cyan/blue, green.
+    2. Screenshot (`media_1792195934145_61dd3f1f.png`) showing the proposed faction color-coding:
+       - 🟡 Kingdom of Judah (Jerusalem)
+       - 🟢 Kingdom of Israel (Samaria)
+       - 🔴 Hostile empires / enemies (Philistia, Aram-Damascus, Assyria, Babylon, Edom, Moab)
+       - 🔵 Friendly / allied regions (Tyre/Phoenicia during Hiram's treaty)
+- Decision Point & Implementation:
+  - Added `#bible-map-key-card` inside `.bible-map-companion-card` in `bible.html` and `bible/index.html` featuring:
+    - 🟡 **Kingdom of Judah**: (Jerusalem · Royal Davidic Line)
+    - 🟢 **Kingdom of Israel**: (Samaria · Northern 10 Tribes)
+    - 🔴 **Hostile Empires & Enemies**: (Philistia, Aram, Assyria, Babylon, Edom, Moab)
+    - 🔵 **Friendly & Allied Regions**: (Tyre & Phoenicia · Hiram's Alliance)
+    - ✨ **Archaeological Discoveries**: (Surviving Inscriptions & Excavated Artifacts)
+  - Styled with illuminated glowing aura dots (`box-shadow: 0 0 6px ...`) matching the dark museum aesthetic in `src/interact.css`.
+  - Tuned `.bible-companion-map-container` height from 380px to 320px for optimal side-panel proportion and visibility.
+  - Sibling Harmonization:
+    - Added geodetic territorial boundary polygons for the Kingdom of Judah, Kingdom of Israel, and Phoenicia in `src/data/ancientMapData.ts` and enabled dynamic rendering alongside ruling empires during the United Monarchy, Assyrian Siege, and Babylonian Exile in `src/engine/ancientMap.ts`.
+    - Added the Kingdoms & Factions swatches into the footer legend of the full-screen atlas (`map.html`).
+- Verification (Cardinal Rule):
+  - Updated `tests/bible-side-by-side-map.spec.ts` asserting map key card visibility, dot indicators, and dedicated 2 Kings 1 Assyrian siege rendering.
+  - Captured visual proof screenshot `test-results/bible-map-key-2kings-proof.png`.
+  - All 48 Playwright tests passed green in 1.3m.
+  - Canonical KJV verification confirmed all 31,098 verses, 14,133 translator italics, 5,556 cased LORD.
+  - Production build completed in 731ms.
+
 ## 2026-10-16 19:54:00 — Companion Tab Button Reordering (v00.01.24)
 
 - User Request & Visual Feedback:

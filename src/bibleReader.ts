@@ -230,8 +230,12 @@ class BibleReader {
     if (refParam) {
       const parts = refParam.split('.');
       if (parts[0]) {
+        const normRef = parts[0].toLowerCase().replace(/[\s_]+/g, '');
         const matched = this.books.find(
-          (b) => b.osis.toLowerCase() === parts[0].toLowerCase() || b.name.toLowerCase() === parts[0].toLowerCase()
+          (b) =>
+            b.osis.toLowerCase() === parts[0].toLowerCase() ||
+            b.name.toLowerCase() === parts[0].toLowerCase() ||
+            b.name.toLowerCase().replace(/[\s_]+/g, '') === normRef
         );
         if (matched) this.currentBookOsis = matched.osis;
       }
@@ -244,8 +248,12 @@ class BibleReader {
         if (!isNaN(v) && v >= 1) this.selectedVerseNum = v;
       }
     } else if (bookParam) {
+      const normBook = bookParam.toLowerCase().replace(/[\s_]+/g, '');
       const matched = this.books.find(
-        (b) => b.osis.toLowerCase() === bookParam.toLowerCase() || b.name.toLowerCase() === bookParam.toLowerCase()
+        (b) =>
+          b.osis.toLowerCase() === bookParam.toLowerCase() ||
+          b.name.toLowerCase() === bookParam.toLowerCase() ||
+          b.name.toLowerCase().replace(/[\s_]+/g, '') === normBook
       );
       if (matched) this.currentBookOsis = matched.osis;
       if (chapterParam) {

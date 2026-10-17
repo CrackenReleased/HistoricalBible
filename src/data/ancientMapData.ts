@@ -792,6 +792,45 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
       { lat: 38.0, lng: 11.0 }, { lat: 44.0, lng: 11.0 }
     ],
     biblicalIntersection: 'The fullness of time: census of Augustus, crucifixion under Pilate, proclamation across Roman roads.'
+  },
+  {
+    id: 'judah',
+    name: 'Kingdom of Judah (Jerusalem)',
+    color: '#eab308',
+    fillColor: 'rgba(234, 179, 8, 0.22)',
+    dateRange: 'c. 930 – 586 BC',
+    capital: { name: 'Jerusalem', coords: { lat: 31.768, lng: 35.213 } },
+    approximateBounds: [
+      { lat: 31.95, lng: 34.85 }, { lat: 31.95, lng: 35.50 }, { lat: 31.10, lng: 35.40 },
+      { lat: 31.05, lng: 34.70 }, { lat: 31.60, lng: 34.65 }, { lat: 31.95, lng: 34.85 }
+    ],
+    biblicalIntersection: 'The Davidic royal line ruling from Mount Zion; temple worship in Jerusalem until the Babylonian captivity.'
+  },
+  {
+    id: 'israel_kingdom',
+    name: 'Kingdom of Israel (Samaria)',
+    color: '#22c55e',
+    fillColor: 'rgba(34, 197, 94, 0.20)',
+    dateRange: 'c. 930 – 722 BC',
+    capital: { name: 'Samaria', coords: { lat: 32.277, lng: 35.190 } },
+    approximateBounds: [
+      { lat: 33.30, lng: 35.10 }, { lat: 33.30, lng: 35.85 }, { lat: 31.95, lng: 35.50 },
+      { lat: 31.95, lng: 34.85 }, { lat: 32.70, lng: 34.95 }, { lat: 33.30, lng: 35.10 }
+    ],
+    biblicalIntersection: 'The northern ten tribes established under Jeroboam; capital at Samaria until exile by Assyria in 722 BC.'
+  },
+  {
+    id: 'phoenicia',
+    name: 'Phoenicia (Allied Maritime Ports)',
+    color: '#38bdf8',
+    fillColor: 'rgba(56, 189, 248, 0.18)',
+    dateRange: 'c. 1200 – 332 BC',
+    capital: { name: 'Tyre & Sidon', coords: { lat: 33.270, lng: 35.196 } },
+    approximateBounds: [
+      { lat: 34.60, lng: 35.80 }, { lat: 34.60, lng: 36.15 }, { lat: 33.10, lng: 35.35 },
+      { lat: 33.10, lng: 35.10 }, { lat: 34.60, lng: 35.80 }
+    ],
+    biblicalIntersection: 'Maritime alliance with King David and Solomon; supplied cedar and master craftsmen for the Temple.'
   }
 ];
 
@@ -802,6 +841,7 @@ export interface ChronologicalEra {
   startYear: number;
   endYear: number;
   rulingEmpireId?: string;
+  additionalRegionIds?: string[];
   focusCenter: GeoCoordinate;
   focusZoom: number;
   headline: string;
@@ -848,6 +888,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     yearLabel: 'c. 1050 – 930 BC',
     startYear: -1050,
     endYear: -930,
+    additionalRegionIds: ['judah', 'israel_kingdom', 'phoenicia'],
     focusCenter: { lat: 31.8, lng: 35.3 },
     focusZoom: 7,
     headline: "The Davidic Kingdom · Solomon's Temple & Jerusalem",
@@ -863,6 +904,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     startYear: -722,
     endYear: -701,
     rulingEmpireId: 'assyria',
+    additionalRegionIds: ['judah', 'israel_kingdom', 'phoenicia'],
     focusCenter: { lat: 34.0, lng: 39.0 },
     focusZoom: 6,
     headline: "The Assyrian Invasion · Sennacherib's Siege of Jerusalem",
@@ -878,6 +920,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     startYear: -605,
     endYear: -539,
     rulingEmpireId: 'babylon',
+    additionalRegionIds: ['judah'],
     focusCenter: { lat: 32.5, lng: 44.4 },
     focusZoom: 6,
     headline: 'The Fall of Jerusalem · Daniel in Babylon',
