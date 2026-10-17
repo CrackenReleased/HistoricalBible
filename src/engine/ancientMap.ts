@@ -271,17 +271,20 @@ export class AncientMapCanvas {
     });
 
     // 3. Dedicated Z-Ordered Map Panes so Routes & Stops strictly sit above Empire Polygons, and Tooltips sit on top of everything
-    const createManagedPane = (name: string, zIndex: number): HTMLElement => {
+    const createManagedPane = (name: string, zIndex: number, extraClass?: string): HTMLElement => {
       const pane = this.map.getPane(name) || this.map.createPane(name);
       pane.style.zIndex = String(zIndex);
+      if (extraClass) pane.classList.add(extraClass);
       return pane;
     };
-    createManagedPane('waterPane', 380);
-    createManagedPane('empirePane', 400);
-    createManagedPane('routePane', 480);
-    createManagedPane('routeStopPane', 560);
-    createManagedPane('tooltipPane', 680);
-    createManagedPane('popupPane', 700);
+    createManagedPane('waterPane', 380, 'leaflet-water-pane');
+    createManagedPane('empirePane', 400, 'leaflet-empire-pane');
+    createManagedPane('cityPane', 440, 'leaflet-city-pane');
+    createManagedPane('routePane', 480, 'leaflet-route-pane');
+    createManagedPane('sitePane', 540, 'leaflet-site-pane');
+    createManagedPane('routeStopPane', 620, 'leaflet-routeStop-pane');
+    createManagedPane('tooltipPane', 750, 'leaflet-tooltip-pane');
+    createManagedPane('popupPane', 800, 'leaflet-popup-pane');
 
     // 4. Layer Groups
     this.waterLayerGroup = L.layerGroup().addTo(this.map);
@@ -1283,6 +1286,7 @@ export class AncientMapCanvas {
             iconAnchor: [6, 6]
           });
           const capMarker = L.marker([empire.capital.coords.lat, empire.capital.coords.lng], {
+            pane: 'sitePane',
             icon: capIcon,
             zIndexOffset: capZIndex
           });
@@ -1336,7 +1340,30 @@ export class AncientMapCanvas {
         'paul-voyage-rome': { lat: 36.10, lng: 16.50 },
         'john-seven-churches-patmos': { lat: 38.80, lng: 29.80 },
         'thomas-parthia-india': { lat: 24.50, lng: 62.50 },
-        'andrew-mark-missions': { lat: 44.20, lng: 33.50 }
+        'andrew-mark-missions': { lat: 44.20, lng: 33.50 },
+        'job-land-of-uz': { lat: 30.20, lng: 36.80 },
+        'gideon-judges': { lat: 32.70, lng: 35.40 },
+        'samson-judges': { lat: 31.60, lng: 34.75 },
+        'ruth-boaz': { lat: 31.55, lng: 35.50 },
+        'samuel-circuit': { lat: 32.10, lng: 34.90 },
+        'saul-reign': { lat: 32.30, lng: 35.35 },
+        'solomon-glory': { lat: 30.50, lng: 35.10 },
+        'elijah-prophet': { lat: 32.85, lng: 35.45 },
+        'elisha-ministry': { lat: 32.50, lng: 35.48 },
+        'amos-prophet': { lat: 31.25, lng: 35.10 },
+        'hosea-prophet': { lat: 32.65, lng: 35.25 },
+        'jonah-prophet': { lat: 34.80, lng: 36.50 },
+        'isaiah-ministry': { lat: 31.45, lng: 34.65 },
+        'jeremiah-ministry': { lat: 31.40, lng: 34.70 },
+        'daniel-exile': { lat: 32.80, lng: 43.80 },
+        'ezekiel-exile': { lat: 32.00, lng: 45.10 },
+        'esther-mordecai': { lat: 32.22, lng: 48.20 },
+        'ezra-journey': { lat: 34.20, lng: 43.20 },
+        'nehemiah-walls': { lat: 33.10, lng: 45.50 },
+        'stephen-philip-deacons': { lat: 31.35, lng: 34.45 },
+        'paul-conversion-early': { lat: 34.50, lng: 35.80 },
+        'barnabas-mark': { lat: 35.50, lng: 33.50 },
+
       };
 
       const selectRouteStopHandler = (route: BiblicalRoute, stop?: BiblicalRouteStop, stopIndex?: number): void => {
@@ -1484,7 +1511,7 @@ export class AncientMapCanvas {
           iconAnchor: [115, 12]
         });
         const badgeMarker = L.marker([bannerPos.lat, bannerPos.lng], {
-          pane: 'routeStopPane',
+          pane: 'routePane',
           icon: badgeIcon,
           zIndexOffset: 1380,
           bubblingMouseEvents: false
@@ -1604,6 +1631,7 @@ export class AncientMapCanvas {
         });
 
         const marker = L.marker([city.coords.lat, city.coords.lng], {
+          pane: 'cityPane',
           icon: cityIcon,
           zIndexOffset: 500
         });
@@ -1693,6 +1721,7 @@ export class AncientMapCanvas {
         });
 
         const marker = L.marker([item.displayCoords.lat, item.displayCoords.lng], {
+          pane: 'sitePane',
           icon: goldIcon,
           zIndexOffset: 1600
         });

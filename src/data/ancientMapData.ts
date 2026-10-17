@@ -2276,7 +2276,1298 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
         note: '"I John, who also am your brother, and companion in tribulation... was in the isle that is called Patmos, for the word of God, and for the testimony of Jesus Christ. I was in the Spirit on the Lord\'s day." Receives the apocalypse of the reigning Lamb and New Jerusalem.'
       }
     ]
-  }
+  },
+  // --- EXPANDED ALL-CHARACTER CANONICAL ROUTES ---
+  {
+    id: 'job-land-of-uz',
+    name: "Job: Patriarchal Trials & Restoration in the Land of Uz",
+    shortBanner: "🏜️ JOB: TRIALS & RESTORATION IN UZ (c. 1900 BC)",
+    travelerName: "Job of Uz",
+    figureId: 'abraham',
+    color: '#d97706',
+    dateRange: 'c. 2000 – 1800 BC (Patriarchal Age)',
+    scriptureRef: 'JOB {1:1}–{42:17}, EZEKIEL {14:14}, JAMES {5:11}',
+    scriptureOsis: 'JOB.1.1',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Living in the Land of Uz on the Arabian-Edomite border, upright Job endures the catastrophic loss of his ten children and wealth through Sabean and Chaldean raids, disputes with Eliphaz of Teman, Bildad of Shuah, and Zophar of Naamath, and hears the LORD speak out of the whirlwind with double restoration.',
+    stops: [
+      {
+        name: 'Land of Uz (Edom / Northern Arabian Margins)',
+        coords: { lat: 30.50, lng: 36.20 },
+        dateLabel: 'c. 1900 BC',
+        scriptureRef: 'JOB {1:1}–{1:5}, LAMENTATIONS {4:21}',
+        scriptureOsis: 'JOB.1.1',
+        note: 'Upright and perfect Job fears God and eschews evil in Uz, offering regular burnt offerings for his seven sons and three daughters according to the number of them all.'
+      },
+      {
+        name: 'Southern Desert Border (The Sabean Raid)',
+        coords: { lat: 28.50, lng: 37.50 },
+        dateLabel: 'Day of Trial, c. 1900 BC',
+        scriptureRef: 'JOB {1:14}–{1:15}',
+        scriptureOsis: 'JOB.1.15',
+        note: 'Sabean desert raiders fall upon Job\'s 500 yoke of oxen and 500 she asses and slay the servants with the edge of the sword; only one escapes to report.'
+      },
+      {
+        name: 'Eastern Desert Border (The Chaldean Incursion)',
+        coords: { lat: 31.80, lng: 38.90 },
+        dateLabel: 'Day of Trial, c. 1900 BC',
+        scriptureRef: 'JOB {1:17}',
+        scriptureOsis: 'JOB.1.17',
+        note: 'Three bands of Chaldeans carry away Job\'s 3,000 camels and slay the servants; a great wind from the wilderness strikes the four corners of his eldest son\'s house.'
+      },
+      {
+        name: 'Teman (Highlands of Edom — Eliphaz arrives)',
+        coords: { lat: 30.70, lng: 35.60 },
+        dateLabel: 'Days of Mourning, c. 1900 BC',
+        scriptureRef: 'JOB {2:11}, {4:1}',
+        scriptureOsis: 'JOB.2.11',
+        note: 'Eliphaz the Temanite journeys from the famed Edomite wisdom city of Teman (Jeremiah 49:7) to mourn with and comfort smitten Job.'
+      },
+      {
+        name: 'Shuah & Naamath (Eastern Margins — Bildad & Zophar)',
+        coords: { lat: 31.30, lng: 36.60 },
+        dateLabel: 'Days of Mourning, c. 1900 BC',
+        scriptureRef: 'JOB {2:11}–{2:13}',
+        scriptureOsis: 'JOB.2.11',
+        note: 'Bildad the Shuhite (descendant of Abraham and Keturah, Genesis 25:2) and Zophar the Naamathite sit seven days and seven nights in silence seeing his grief.'
+      },
+      {
+        name: 'The Ash Heap of Uz (The Whirlwind & Double Blessing)',
+        coords: { lat: 30.50, lng: 36.20 },
+        dateLabel: 'Restoration, c. 1880 BC',
+        scriptureRef: 'JOB {38:1}–{38:4}, {42:10}–{42:17}',
+        scriptureOsis: 'JOB.42.10',
+        note: 'The LORD answers Job out of the whirlwind: "Where wast thou when I laid the foundations of the earth?" Job repents in dust and ashes; God accepts his prayer for his friends and gives Job twice as much as he had before: 14,000 sheep, 6,000 camels, 1,000 yoke of oxen, 1,000 she asses, and seven sons and three daughters.'
+      }
+    ]
+  },
+  {
+    id: 'gideon-judges',
+    name: "Gideon: Ophrah, the Harod Spring & Route of the 300",
+    shortBanner: "⚔️ GIDEON: HAROD SPRING & MIDIAN ROUT (c. 1191 BC)",
+    travelerName: "Gideon (Jerubbaal)",
+    figureId: 'moses',
+    color: '#38bdf8',
+    dateRange: 'c. 1191 – 1151 BC (Judges Era)',
+    scriptureRef: 'JUDGES {6:1}–{8:35}, HEBREWS {11:32}',
+    scriptureOsis: 'JDG.6.11',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Called while threshing wheat by the winepress in Ophrah to hide from Midian, Gideon casts down Baal\'s altar, tests the fleece, reduces his army to 300 men who lap water at the Spring of Harod, routes the Midianite camp at the Hill of Moreh with trumpets and torches in pitchers, and pursues kings Zebah and Zalmunna across the Jordan.',
+    stops: [
+      {
+        name: 'Ophrah of the Abiezrites (Manasseh)',
+        coords: { lat: 32.380, lng: 35.250 },
+        dateLabel: 'c. 1191 BC',
+        scriptureRef: 'JUDGES {6:11}–{6:40}',
+        scriptureOsis: 'JDG.6.11',
+        note: 'The Angel of the LORD sits under an oak in Ophrah: "The LORD is with thee, thou mighty man of valour." Gideon offers a kid, destroys the altar of Baal, and tests the fleece with dew on dry ground.'
+      },
+      {
+        name: 'Spring / Well of Harod (Base of Mount Gilboa)',
+        coords: { lat: 32.548, lng: 35.358 },
+        dateLabel: 'Night Before the Battle, c. 1191 BC',
+        scriptureRef: 'JUDGES {7:1}–{7:8}',
+        scriptureOsis: 'JDG.7.1',
+        note: 'From 32,000 men, 22,000 fearful depart; of the remaining 10,000, only the 300 who lap water putting their hand to their mouth are chosen so Israel cannot boast: "Mine own hand hath saved me."'
+      },
+      {
+        name: 'Camp of Midian (Hill of Moreh / Valley of Jezreel)',
+        coords: { lat: 32.595, lng: 35.340 },
+        dateLabel: 'Midnight Watch, c. 1191 BC',
+        scriptureRef: 'JUDGES {7:9}–{7:22}',
+        scriptureOsis: 'JDG.7.18',
+        note: 'Divided into three companies with trumpets, empty pitchers, and lamps inside, the 300 shout, "The sword of the LORD, and of Gideon!" The LORD sets every man\'s sword against his fellow throughout all the host.'
+      },
+      {
+        name: 'Beth-barah & Fords of the Jordan',
+        coords: { lat: 32.180, lng: 35.540 },
+        dateLabel: 'Morning of Victory, c. 1191 BC',
+        scriptureRef: 'JUDGES {7:24}–{7:25}',
+        scriptureOsis: 'JDG.7.24',
+        note: 'Men of Ephraim take the waters of the Jordan and slay Midianite princes Oreb ("Raven") at the rock of Oreb and Zeeb ("Wolf") at the winepress of Zeeb.'
+      },
+      {
+        name: 'Succoth & Penuel (Gilead / Jabbok Valley)',
+        coords: { lat: 32.190, lng: 35.700 },
+        dateLabel: 'Pursuit Beyond Jordan, c. 1191 BC',
+        scriptureRef: 'JUDGES {8:4}–{8:9}',
+        scriptureOsis: 'JDG.8.4',
+        note: 'Faint yet pursuing, Gideon\'s 300 request bread; the princes of Succoth and Penuel mock him, refusing food until Zebah and Zalmunna are taken.'
+      },
+      {
+        name: 'Karkor (Eastern Syrian Desert Border)',
+        coords: { lat: 31.600, lng: 36.800 },
+        dateLabel: 'Final Rout of Midian, c. 1191 BC',
+        scriptureRef: 'JUDGES {8:10}–{8:12}',
+        scriptureOsis: 'JDG.8.10',
+        note: 'Gideon smites the secure host of 15,000 remaining Midianites at Karkor, captures kings Zebah and Zalmunna, and returns victorious through the ascent of Heres.'
+      },
+      {
+        name: 'Ophrah (Forty Years of Quietness)',
+        coords: { lat: 32.380, lng: 35.250 },
+        dateLabel: 'c. 1191 – 1151 BC',
+        scriptureRef: 'JUDGES {8:22}–{8:32}',
+        scriptureOsis: 'JDG.8.23',
+        note: 'Israel asks Gideon to rule over them; he refuses: "I will not rule over you, neither shall my son rule over you: the LORD shall rule over you." Dies in a good old age and is buried in Ophrah.'
+      }
+    ]
+  },
+  {
+    id: 'samson-judges',
+    name: "Samson: Zorah, Timnath, Lehi & the Overthrow at Gaza",
+    shortBanner: "🦁 SAMSON: TIMNATH, LEHI & GAZA GATES (c. 1085 BC)",
+    travelerName: "Samson the Danite Judge",
+    figureId: 'moses',
+    color: '#ea580c',
+    dateRange: 'c. 1095 – 1075 BC',
+    scriptureRef: 'JUDGES {13:1}–{16:31}, HEBREWS {11:32}',
+    scriptureOsis: 'JDG.13.24',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Dedicated as a Nazarite from the womb, Samson tears a young lion at Timnath, slays 1,000 Philistines with the jawbone of an ass at Ramath-lehi, carries away the bronze gates of Gaza to the hill before Hebron, and brings down Dagon\'s temple in death.',
+    stops: [
+      {
+        name: 'Zorah & Eshtaol (Foothills of Dan)',
+        coords: { lat: 31.775, lng: 34.985 },
+        dateLabel: 'c. 1095 BC',
+        scriptureRef: 'JUDGES {13:1}–{13:25}',
+        scriptureOsis: 'JDG.13.2',
+        note: 'The Angel of the LORD whose name is Secret ascends in the flame of Manoah\'s altar; Samson is born and the Spirit of the LORD begins to move him at times in the camp of Dan.'
+      },
+      {
+        name: 'Timnath (Vineyards of the Philistines)',
+        coords: { lat: 31.780, lng: 34.908 },
+        dateLabel: 'c. 1085 BC',
+        scriptureRef: 'JUDGES {14:1}–{14:19}',
+        scriptureOsis: 'JDG.14.5',
+        note: 'The Spirit of the LORD comes mightily upon him; tears a roaring young lion as he would have rent a kid; later propounds the riddle: "Out of the eater came forth meat, and out of the strong came forth sweetness."'
+      },
+      {
+        name: 'Ashkelon (Philistine Coastal Fortress)',
+        coords: { lat: 31.668, lng: 34.555 },
+        dateLabel: 'c. 1085 BC',
+        scriptureRef: 'JUDGES {14:19}',
+        scriptureOsis: 'JDG.14.19',
+        note: 'Slays thirty Philistines of Ashkelon, takes their spoil, and gives change of garments unto them which expounded the riddle.'
+      },
+      {
+        name: 'Rock of Etam & Ramath-lehi',
+        coords: { lat: 31.720, lng: 34.970 },
+        dateLabel: 'c. 1080 BC',
+        scriptureRef: 'JUDGES {15:8}–{15:19}',
+        scriptureOsis: 'JDG.15.15',
+        note: 'Bound by 3,000 men of Judah with two new cords, the cords melt like flax from his arms; with a fresh jawbone of an ass he smites 1,000 men; God cleaves a hollow place at Lehi (En-hakkore spring).'
+      },
+      {
+        name: 'Gaza (Gates Carried to Hebron)',
+        coords: { lat: 31.500, lng: 34.460 },
+        dateLabel: 'c. 1077 BC',
+        scriptureRef: 'JUDGES {16:1}–{16:3}',
+        scriptureOsis: 'JDG.16.3',
+        note: 'Surrounded by enemies at Gaza, Samson arises at midnight, tears up the doors of the gate of the city with the two posts and bar, and carries them ~40 miles uphill toward Hebron.'
+      },
+      {
+        name: 'Valley of Sorek (Delilah)',
+        coords: { lat: 31.770, lng: 34.920 },
+        dateLabel: 'c. 1075 BC',
+        scriptureRef: 'JUDGES {16:4}–{16:21}',
+        scriptureOsis: 'JDG.16.4',
+        note: 'Enticed by Delilah with Philistine silver, Samson reveals his Nazarite vow; his seven locks are shorn while sleeping; the Philistines gouge out his eyes and bind him with fetters of brass in Gaza.'
+      },
+      {
+        name: 'Gaza: Temple of Dagon (Final Triumph in Death)',
+        coords: { lat: 31.500, lng: 34.460 },
+        dateLabel: 'c. 1075 BC',
+        scriptureRef: 'JUDGES {16:23}–{16:31}',
+        scriptureOsis: 'JDG.16.28',
+        note: 'Brought to make sport before 3,000 Philistines on the roof, Samson prays: "O Lord GOD, remember me, I pray thee, and strengthen me... only this once." Bowing with all his might between the two middle pillars, the house falls upon the lords and all the people.'
+      }
+    ]
+  },
+  {
+    id: 'ruth-boaz',
+    name: "Ruth: Plains of Moab to Bethlehem's Threshing Floor",
+    shortBanner: "🌾 RUTH: MOAB TO BETHLEHEM (c. 1100 BC)",
+    travelerName: "Ruth the Moabitess & Naomi",
+    figureId: 'moses',
+    color: '#ec4899',
+    dateRange: 'c. 1120 – 1100 BC',
+    scriptureRef: 'RUTH {1:1}–{4:22}, MATTHEW {1:5}',
+    scriptureOsis: 'RUT.1.16',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Ruth forsakes the gods of Moab to cling to Naomi ("Thy people shall be my people, and thy God my God"), gleans in the barley fields of Boaz at Bethlehem, is redeemed at the city gate, and gives birth to Obed, grandfather of King David.',
+    stops: [
+      {
+        name: 'Country of Moab ("Whither thou goest, I will go")',
+        coords: { lat: 31.500, lng: 35.750 },
+        dateLabel: 'c. 1110 BC',
+        scriptureRef: 'RUTH {1:1}–{1:19}',
+        scriptureOsis: 'RUT.1.16',
+        note: 'After the deaths of Elimelech, Mahlon, and Chilion, Ruth refuses to turn back: "Intreat me not to leave thee... where thou diest, will I die, and there will I be buried: the LORD do so to me, and more also, if ought but death part thee and me."'
+      },
+      {
+        name: 'Bethlehem-judah (Beginning of Barley Harvest)',
+        coords: { lat: 31.705, lng: 35.204 },
+        dateLabel: 'Passover / Spring, c. 1105 BC',
+        scriptureRef: 'RUTH {1:22}–{2:3}',
+        scriptureOsis: 'RUT.1.22',
+        note: 'Naomi and Ruth arrive in Bethlehem as all the city is moved; Ruth haply lights on a part of the field belonging unto Boaz, of the kindred of Elimelech.'
+      },
+      {
+        name: 'Fields of Boaz (Gleaning Behind the Reapers)',
+        coords: { lat: 31.708, lng: 35.210 },
+        dateLabel: 'Spring–Summer, c. 1105 BC',
+        scriptureRef: 'RUTH {2:4}–{2:23}',
+        scriptureOsis: 'RUT.2.12',
+        note: 'Boaz blesses Ruth: "The LORD recompense thy work, and a full reward be given thee of the LORD God of Israel, under whose wings thou art come to trust." Ruth gleans until evening and beats out an ephah of barley.'
+      },
+      {
+        name: 'Threshingfloor of Boaz (The Kinsman Redeemer)',
+        coords: { lat: 31.709, lng: 35.212 },
+        dateLabel: 'End of Wheat Harvest, c. 1105 BC',
+        scriptureRef: 'RUTH {3:1}–{3:18}',
+        scriptureOsis: 'RUT.3.9',
+        note: 'At midnight at the threshingfloor, Ruth asks Boaz: "Spread therefore thy skirt over thine handmaid; for thou art a near kinsman." Boaz promises to perform the part of a kinsman.'
+      },
+      {
+        name: 'Gate of Bethlehem (Redemption & Lineage of David)',
+        coords: { lat: 31.704, lng: 35.203 },
+        dateLabel: 'c. 1104 BC',
+        scriptureRef: 'RUTH {4:1}–{4:22}',
+        scriptureOsis: 'RUT.4.17',
+        note: 'Before ten elders at the gate, Boaz buys the inheritance and takes Ruth to wife; bears Obed, who begat Jesse, who begat David—directly into the Messianic line of Christ.'
+      }
+    ]
+  },
+  {
+    id: 'samuel-circuit',
+    name: "Samuel: Shiloh, Ebenezer & the Circuit of Israel",
+    shortBanner: "📜 SAMUEL: SHILOH & CIRCUIT OF ISRAEL (c. 1050 BC)",
+    travelerName: "Prophet Samuel",
+    figureId: 'david',
+    color: '#8b5cf6',
+    dateRange: 'c. 1090 – 1015 BC',
+    scriptureRef: '1 SAMUEL {1:1}–{25:1}, ACTS {3:24}, {13:20}',
+    scriptureOsis: '1SA.3.19',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Dedicated by Hannah at Shiloh where God calls him as a boy, Samuel establishes the prophetic office, delivers Israel from the Philistines at Ebenezer, judges Israel in an annual circuit of Bethel, Gilgal, and Mizpah from Ramah, and anoints Saul and David.',
+    stops: [
+      {
+        name: 'Ramathaim-zophim / Ramah (Birth to Hannah)',
+        coords: { lat: 31.815, lng: 35.210 },
+        dateLabel: 'c. 1090 BC',
+        scriptureRef: '1 SAMUEL {1:1}–{1:28}',
+        scriptureOsis: '1SA.1.20',
+        note: 'Born in response to Hannah\'s prayer of tears; she names him Samuel ("Asked of God") and vows to lend him unto the LORD all the days of his life.'
+      },
+      {
+        name: 'Shiloh (Tabernacle: "Speak, LORD; for thy servant heareth")',
+        coords: { lat: 32.055, lng: 35.289 },
+        dateLabel: 'c. 1078 BC',
+        scriptureRef: '1 SAMUEL {3:1}–{3:21}',
+        scriptureOsis: '1SA.3.10',
+        note: 'While the lamp of God is burning in the Temple of the LORD where the Ark is, God calls Samuel three times; Eli perceives it is the LORD; all Israel from Dan even to Beersheba knows Samuel is established to be a prophet.'
+      },
+      {
+        name: 'Mizpah of Benjamin (The Ebenezer Stone)',
+        coords: { lat: 31.835, lng: 35.180 },
+        dateLabel: 'c. 1060 BC',
+        scriptureRef: '1 SAMUEL {7:5}–{7:12}',
+        scriptureOsis: '1SA.7.12',
+        note: 'Samuel gathers Israel to fast and pour out water before the LORD; when Philistines attack, God thunders with a great thunder; Samuel sets up a memorial stone between Mizpah and Shen: "Hitherto hath the LORD helped us" (Ebenezer).'
+      },
+      {
+        name: 'Annual Judicial Circuit: Bethel, Gilgal & Mizpah',
+        coords: { lat: 31.930, lng: 35.221 },
+        dateLabel: 'c. 1060 – 1025 BC',
+        scriptureRef: '1 SAMUEL {7:15}–{7:17}',
+        scriptureOsis: '1SA.7.16',
+        note: 'Samuel judges Israel all the days of his life, going from year to year in circuit to Bethel, Gilgal, and Mizpah, and returning to his house at Ramah where he builds an altar unto the LORD.'
+      },
+      {
+        name: 'Gibeah of Benjamin (Anointing King Saul)',
+        coords: { lat: 31.823, lng: 35.230 },
+        dateLabel: 'c. 1050 BC',
+        scriptureRef: '1 SAMUEL {10:1}–{10:26}',
+        scriptureOsis: '1SA.10.1',
+        note: 'Pours a vial of oil upon Saul\'s head: "Is it not because the LORD hath anointed thee to be captain over his inheritance?"'
+      },
+      {
+        name: 'Bethlehem (Anointing Young David with Horn of Oil)',
+        coords: { lat: 31.705, lng: 35.204 },
+        dateLabel: 'c. 1025 BC',
+        scriptureRef: '1 SAMUEL {16:1}–{16:13}',
+        scriptureOsis: '1SA.16.7',
+        note: 'Sent to Jesse\'s house; hearing the famous divine principle: "For the LORD seeth not as man seeth; for man looketh on the outward appearance, but the LORD looketh on the heart." Anoints young David in the midst of his brethren.'
+      }
+    ]
+  },
+  {
+    id: 'saul-reign',
+    name: "King Saul: Gibeah Fortress, Michmash & Mount Gilboa",
+    shortBanner: "👑 SAUL: GIBEAH, MICHMASH & GILBOA (c. 1050–1010 BC)",
+    travelerName: "King Saul",
+    figureId: 'david',
+    color: '#9333ea',
+    dateRange: 'c. 1050 – 1010 BC',
+    scriptureRef: '1 SAMUEL {9:1}–{31:13}, 1 CHRONICLES {10:1}–{10:14}',
+    scriptureOsis: '1SA.10.24',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'First king of Israel, reigning from his fortress at Gibeah of Benjamin, Saul relieves Jabesh-gilead and defeats Philistines at Michmash, but disobeys at Gilgal and Amalek, hunts fugitive David in the Judean wilderness, and falls on Mount Gilboa.',
+    stops: [
+      {
+        name: 'Gibeah of Saul (Tell el-Ful Fortress Capital)',
+        coords: { lat: 31.823, lng: 35.230 },
+        dateLabel: 'c. 1050 – 1010 BC',
+        scriptureRef: '1 SAMUEL {10:26}, {15:34}, {22:6}',
+        scriptureOsis: '1SA.10.26',
+        note: 'Saul\'s fortified royal seat overlooking the central plateau of Benjamin (confirmed archaeologically at Tell el-Ful with 11th-century BC rustic stone fortress towers).'
+      },
+      {
+        name: 'Jabesh-gilead (Relief from Nahash the Ammonite)',
+        coords: { lat: 32.400, lng: 35.650 },
+        dateLabel: 'c. 1049 BC',
+        scriptureRef: '1 SAMUEL {11:1}–{11:11}',
+        scriptureOsis: '1SA.11.11',
+        note: 'Saul hews a yoke of oxen into pieces and sends them throughout Israel; gathers 330,000 men at Bezek, crosses the Jordan, and routes the Ammonites in the morning watch.'
+      },
+      {
+        name: 'Gilgal (Unlawful Sacrifice & Kingdom Rejected)',
+        coords: { lat: 31.855, lng: 35.535 },
+        dateLabel: 'c. 1045 BC',
+        scriptureRef: '1 SAMUEL {13:8}–{13:14}',
+        scriptureOsis: '1SA.13.13',
+        note: 'Fearing the scattering people before the Philistine threat, Saul unlawfully offers the burnt offering; Samuel announces: "Thy kingdom shall not continue: the LORD hath sought him a man after his own heart."'
+      },
+      {
+        name: 'Pass of Michmash (Bozez & Seneh Crags)',
+        coords: { lat: 31.875, lng: 35.265 },
+        dateLabel: 'c. 1042 BC',
+        scriptureRef: '1 SAMUEL {14:1}–{14:23}',
+        scriptureOsis: '1SA.14.6',
+        note: 'Jonathan and his armor-bearer climb the steep gorge between Bozez and Seneh; the earth quakes and Philistines melt away in panic as Saul joins the pursuit.'
+      },
+      {
+        name: 'Endor (The Medium with a Familiar Spirit)',
+        coords: { lat: 32.617, lng: 35.382 },
+        dateLabel: 'Night Before the Battle of Gilboa, c. 1010 BC',
+        scriptureRef: '1 SAMUEL {28:7}–{28:25}',
+        scriptureOsis: '1SA.28.7',
+        note: 'Terrified by the Philistine army at Shunem and unanswered by the LORD through dreams, Urim, or prophets, Saul disguises himself to consult a medium at Endor; receives prophecy of death.'
+      },
+      {
+        name: 'Mount Gilboa (Death of Saul and Jonathan)',
+        coords: { lat: 32.502, lng: 35.419 },
+        dateLabel: 'c. 1010 BC',
+        scriptureRef: '1 SAMUEL {31:1}–{31:13}, 2 SAMUEL {1:17}–{1:27}',
+        scriptureOsis: '1SA.31.4',
+        note: 'Sore wounded by Philistine archers, Saul falls upon his own sword; men of Jabesh-gilead courageously march all night to Beth-shan to rescue the bodies of Saul and his sons.'
+      }
+    ]
+  },
+  {
+    id: 'solomon-glory',
+    name: "King Solomon: Temple, Red Sea Fleet & Golden Age",
+    shortBanner: "🏛️ SOLOMON: TEMPLE, NAVY & EMPIRE (c. 970–931 BC)",
+    travelerName: "King Solomon",
+    figureId: 'solomon',
+    color: '#b45309',
+    dateRange: 'c. 970 – 931 BC',
+    scriptureRef: '1 KINGS {1:1}–{11:43}, 2 CHRONICLES {1:1}–{9:31}',
+    scriptureOsis: '1KI.3.12',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Blessed with unparalleled divine wisdom, Solomon builds the First Temple on Mount Moriah, establishes an ocean-going fleet with Hiram of Tyre at Ezion-geber on the Red Sea, fortifies royal chariot cities across Israel, and receives the Queen of Sheba.',
+    stops: [
+      {
+        name: 'Gibeon (The Great High Place — Vision for Wisdom)',
+        coords: { lat: 31.848, lng: 35.185 },
+        dateLabel: 'c. 970 BC',
+        scriptureRef: '1 KINGS {3:4}–{3:15}',
+        scriptureOsis: '1KI.3.9',
+        note: 'Solomon offers 1,000 burnt offerings at Gibeon where Moses\' Tabernacle resides; asks in a dream: "Give therefore thy servant an understanding heart to judge thy people." God gives wisdom, riches, and honor.'
+      },
+      {
+        name: 'Jerusalem: Mount Moriah (First Temple Dedicated)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'Ethanim / Autumn, c. 959 BC',
+        scriptureRef: '1 KINGS {6:1}–{8:66}, 2 CHRONICLES {5:1}–{7:3}',
+        scriptureOsis: '1KI.8.10',
+        note: 'Built in seven years with Phoenician cedar and stone quarried off-site; the priests bring the Ark into the Holy of Holies; the cloud of glory fills the house of the LORD so priests cannot stand to minister.'
+      },
+      {
+        name: 'Ezion-geber / Elath (Red Sea Fleet to Ophir)',
+        coords: { lat: 29.540, lng: 34.960 },
+        dateLabel: 'c. 950 BC',
+        scriptureRef: '1 KINGS {9:26}–{9:28}, {10:22}',
+        scriptureOsis: '1KI.9.26',
+        note: 'Solomon builds a navy of ships at Ezion-geber beside Eloth on the shore of the Red Sea in the land of Edom; ships of Tarshish sail with Hiram\'s shipmen to Ophir, bringing 420 talents of gold.'
+      },
+      {
+        name: 'Megiddo, Hazor & Gezer (Royal Chariot Gates)',
+        coords: { lat: 32.585, lng: 35.184 },
+        dateLabel: 'c. 950 – 940 BC',
+        scriptureRef: '1 KINGS {9:15}–{9:19}',
+        scriptureOsis: '1KI.9.15',
+        note: 'Royal administrative and chariot cities fortified with monumental identical six-chambered stone gates and stables (corroborated by 10th-century BC archaeological discoveries at all three sites).'
+      },
+      {
+        name: 'Tadmor in the Wilderness (Palmyra Caravan Link)',
+        coords: { lat: 34.560, lng: 38.280 },
+        dateLabel: 'c. 940 BC',
+        scriptureRef: '1 KINGS {9:18}, 2 CHRONICLES {8:4}',
+        scriptureOsis: '1KI.9.18',
+        note: 'Solomon builds Tadmor in the Syrian wilderness and store cities in Hamath to secure the desert caravan trade from the Euphrates to the Mediterranean.'
+      },
+      {
+        name: 'Jerusalem (Visit of the Queen of Sheba)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'c. 935 BC',
+        scriptureRef: '1 KINGS {10:1}–{10:13}',
+        scriptureOsis: '1KI.10.1',
+        note: 'The Queen of Sheba arrives from southern Arabia with a very great train of camels bearing spices, gold, and precious stones; proclaims: "The half was not told me: thy wisdom and prosperity exceedeth the fame which I heard."'
+      }
+    ]
+  },
+  {
+    id: 'elijah-prophet',
+    name: "Prophet Elijah: Tishbe, Cherith, Carmel & Jordan Whirlwind",
+    shortBanner: "🔥 ELIJAH: TISHBE, CARMEL & JORDAN WHIRLWIND (c. 865–851 BC)",
+    travelerName: "Prophet Elijah the Tishbite",
+    figureId: 'hezekiah',
+    color: '#f97316',
+    dateRange: 'c. 865 – 851 BC',
+    scriptureRef: '1 KINGS {17:1}–2 KINGS {2:12}',
+    scriptureOsis: '1KI.18.38',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Confronting the Baal apostasy of King Ahab and Jezebel, Elijah announces drought, is fed by ravens at Cherith, raises the widow\'s son at Zarephath, calls down fire on Mount Carmel, hears the still small voice at Mount Horeb, and ascends to heaven in a chariot of fire.',
+    stops: [
+      {
+        name: 'Tishbe in Gilead (Confronting King Ahab)',
+        coords: { lat: 32.390, lng: 35.730 },
+        dateLabel: 'c. 865 BC',
+        scriptureRef: '1 KINGS {17:1}',
+        scriptureOsis: '1KI.17.1',
+        note: 'Elijah the Tishbite declares unto Ahab: "As the LORD God of Israel liveth, before whom I stand, there shall not be dew nor rain these years, but according to my word."'
+      },
+      {
+        name: 'Brook Cherith (East of Jordan)',
+        coords: { lat: 32.350, lng: 35.680 },
+        dateLabel: 'c. 865 – 863 BC',
+        scriptureRef: '1 KINGS {17:2}–{17:7}',
+        scriptureOsis: '1KI.17.3',
+        note: 'Hiding by the brook; ravens bring him bread and flesh in the morning and evening, and he drinks of the brook until it dries up because there has been no rain.'
+      },
+      {
+        name: 'Zarephath in Sidon (The Widow\'s Barrel & Cruse)',
+        coords: { lat: 33.447, lng: 35.298 },
+        dateLabel: 'c. 863 – 861 BC',
+        scriptureRef: '1 KINGS {17:8}–{17:24}',
+        scriptureOsis: '1KI.17.9',
+        note: 'In the heart of Phoenician Baal territory, the widow\'s barrel of meal wastes not and the cruse of oil does not fail; Elijah raises her son from death through prayer.'
+      },
+      {
+        name: 'Mount Carmel (Fire from Heaven Consumes the Sacrifice)',
+        coords: { lat: 32.648, lng: 35.078 },
+        dateLabel: 'c. 860 BC',
+        scriptureRef: '1 KINGS {18:17}–{18:40}',
+        scriptureOsis: '1KI.18.38',
+        note: 'Before 450 prophets of Baal, Elijah prays; fire of the LORD falls and consumes the burnt sacrifice, wood, stones, and dust, and licks up the water in the trench. All Israel cries: "The LORD, he is the God!"'
+      },
+      {
+        name: 'Mount Horeb / Sinai (The Still Small Voice)',
+        coords: { lat: 28.539, lng: 33.975 },
+        dateLabel: 'c. 860 BC',
+        scriptureRef: '1 KINGS {19:8}–{19:18}',
+        scriptureOsis: '1KI.19.12',
+        note: 'Strengthened for 40 days by angel-baked cake, Elijah comes to the cave at Horeb; the LORD passes by not in the strong wind, earthquake, or fire, but in a still small voice.'
+      },
+      {
+        name: 'Jezreel & Samaria (Naboth\'s Vineyard Rebuked)',
+        coords: { lat: 32.550, lng: 35.320 },
+        dateLabel: 'c. 853 BC',
+        scriptureRef: '1 KINGS {21:17}–{21:29}',
+        scriptureOsis: '1KI.21.19',
+        note: 'Confronts Ahab after Jezebel has Naboth stoned: "In the place where dogs licked the blood of Naboth shall dogs lick thy blood, even thine."'
+      },
+      {
+        name: 'Jordan River / Jericho Fords (Whirlwind Ascension)',
+        coords: { lat: 31.855, lng: 35.535 },
+        dateLabel: 'c. 851 BC',
+        scriptureRef: '2 KINGS {2:1}–{2:12}',
+        scriptureOsis: '2KI.2.11',
+        note: 'Smite the Jordan with his mantle and they cross on dry ground; a chariot of fire and horses of fire appear, and Elijah goes up by a whirlwind into heaven.'
+      }
+    ]
+  },
+  {
+    id: 'elisha-ministry',
+    name: "Prophet Elisha: Double Portion, Shunem & Chariots of Fire",
+    shortBanner: "💧 ELISHA: DOUBLE PORTION & DOTHAN CHARIOTS (c. 851–798 BC)",
+    travelerName: "Prophet Elisha",
+    figureId: 'hezekiah',
+    color: '#22c55e',
+    dateRange: 'c. 851 – 798 BC',
+    scriptureRef: '1 KINGS {19:19}–2 KINGS {13:21}',
+    scriptureOsis: '2KI.2.9',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Inheriting Elijah\'s mantle with a double portion of his spirit, Elisha heals Jericho\'s bitter waters, raises the Shunammite\'s dead son, heals Naaman the Syrian leper, and reveals the invisible fiery armies of God surrounding Dothan.',
+    stops: [
+      {
+        name: 'Abel-meholah (Plowing with 12 Yoke of Oxen)',
+        coords: { lat: 32.360, lng: 35.550 },
+        dateLabel: 'c. 855 BC',
+        scriptureRef: '1 KINGS {19:19}–{19:21}',
+        scriptureOsis: '1KI.19.19',
+        note: 'Elijah passes by and casts his mantle upon Elisha as he plows; Elisha slays a yoke of oxen, boils their flesh with the instruments, feeds the people, and follows Elijah.'
+      },
+      {
+        name: 'Jericho (Healing the Spring Waters with Salt)',
+        coords: { lat: 31.871, lng: 35.444 },
+        dateLabel: 'c. 851 BC',
+        scriptureRef: '2 KINGS {2:19}–{2:22}',
+        scriptureOsis: '2KI.2.21',
+        note: 'Casts salt from a new cruse into the spring of Jericho: "Thus saith the LORD, I have healed these waters; there shall not be from thence any more death or barren land."'
+      },
+      {
+        name: 'Shunem (Raising the Shunammite\'s Son)',
+        coords: { lat: 32.603, lng: 35.334 },
+        dateLabel: 'c. 848 BC',
+        scriptureRef: '2 KINGS {4:8}–{4:37}',
+        scriptureOsis: '2KI.4.35',
+        note: 'The notable woman of Shunem builds a little chamber on the wall with bed, table, stool, and candlestick; Elisha stretches himself upon her dead child until he sneezes seven times and opens his eyes.'
+      },
+      {
+        name: 'Samaria (Healing Naaman the Syrian Leper)',
+        coords: { lat: 32.277, lng: 35.190 },
+        dateLabel: 'c. 845 BC',
+        scriptureRef: '2 KINGS {5:1}–{5:27}',
+        scriptureOsis: '2KI.5.14',
+        note: 'Naaman dips seven times in the Jordan and his flesh comes again like the flesh of a little child; confesses: "Now I know that there is no God in all the earth, but in Israel."'
+      },
+      {
+        name: 'Dothan (Horses and Chariots of Fire Round About)',
+        coords: { lat: 32.417, lng: 35.241 },
+        dateLabel: 'c. 842 BC',
+        scriptureRef: '2 KINGS {6:8}–{6:23}',
+        scriptureOsis: '2KI.6.17',
+        note: 'When the Syrian army compasses Dothan, Elisha prays: "LORD, I pray thee, open his eyes, that he may see." The mountain is full of horses and chariots of fire round about Elisha.'
+      },
+      {
+        name: 'Damascus (Hazael & Ben-hadad Anointings)',
+        coords: { lat: 33.513, lng: 36.292 },
+        dateLabel: 'c. 841 BC',
+        scriptureRef: '2 KINGS {8:7}–{8:15}',
+        scriptureOsis: '2KI.8.13',
+        note: 'Elisha travels to Damascus; Ben-hadad sends Hazael with 40 camels burden of every good thing; Elisha weeps foreseeing the evil Hazael will do to Israel.'
+      }
+    ]
+  },
+  {
+    id: 'amos-prophet',
+    name: "Prophet Amos: Tekoa Herdsman to Bethel's Royal Altar",
+    shortBanner: "🐑 AMOS: TEKOA HERDSMAN TO BETHEL ALTAR (c. 760 BC)",
+    travelerName: "Prophet Amos of Tekoa",
+    figureId: 'hezekiah',
+    color: '#84cc16',
+    dateRange: 'c. 760 – 755 BC (Reign of Jeroboam II)',
+    scriptureRef: 'AMOS {1:1}–{9:15}, ACTS {7:42}–{7:43}, {15:16}–{15:17}',
+    scriptureOsis: 'AMO.7.14',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'A simple herdsman and gatherer of sycomore fruit from Tekoa in Judah, Amos is sent north to the golden calf sanctuary of Bethel, confronts high priest Amaziah, denounces the injustice and luxurious ease of Samaria, and prophesies the raising up of the fallen tabernacle of David.',
+    stops: [
+      {
+        name: 'Tekoa (Wilderness of Judah)',
+        coords: { lat: 31.652, lng: 35.215 },
+        dateLabel: 'c. 760 BC (Two Years Before the Earthquake)',
+        scriptureRef: 'AMOS {1:1}, {7:14}–{7:15}',
+        scriptureOsis: 'AMO.1.1',
+        note: '"I was no prophet, neither was I a prophet\'s son; but I was an herdman, and a gatherer of sycomore fruit: and the LORD took me as I followed the flock, and the LORD said unto me, Go, prophesy unto my people Israel."'
+      },
+      {
+        name: 'Bethel (Royal Sanctuary of King Jeroboam II)',
+        coords: { lat: 31.930, lng: 35.221 },
+        dateLabel: 'c. 760 BC',
+        scriptureRef: 'AMOS {7:10}–{7:17}',
+        scriptureOsis: 'AMO.7.10',
+        note: 'Amaziah priest of Bethel warns King Jeroboam II: "Amos hath conspired against thee in the midst of the house of Israel." Amos replies with the vision of the plumbline and the desolation of the high places of Isaac.'
+      },
+      {
+        name: 'Samaria (Rebuking the Ivory Palaces & Ease in Zion)',
+        coords: { lat: 32.277, lng: 35.190 },
+        dateLabel: 'c. 760 BC',
+        scriptureRef: 'AMOS {3:15}, {4:1}, {6:1}–{6:6}, {9:11}',
+        scriptureOsis: 'AMO.9.11',
+        note: 'Denounces those who "lie upon beds of ivory, and stretch themselves upon their couches... but they are not grieved for the affliction of Joseph." Closes with the Messianic promise: "In that day will I raise up the tabernacle of David that is fallen" (cited by James at the Jerusalem Council in Acts 15:16).'
+      }
+    ]
+  },
+  {
+    id: 'hosea-prophet',
+    name: "Prophet Hosea: Unfailing Covenant Love in Samaria",
+    shortBanner: "❤️ HOSEA: UNFAILING LOVE IN SAMARIA (c. 755–715 BC)",
+    travelerName: "Prophet Hosea",
+    figureId: 'hezekiah',
+    color: '#e11d48',
+    dateRange: 'c. 755 – 715 BC',
+    scriptureRef: 'HOSEA {1:1}–{14:9}, MATTHEW {2:15}, ROMANS {9:25}–{9:26}',
+    scriptureOsis: 'HOS.1.2',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Prophesying to the northern ten tribes during their final turbulent decades before Assyrian exile, Hosea\'s marriage to Gomer reflects God\'s broken yet relentless covenant love, promising future restoration where "in the place where it was said unto them, Ye are not my people, there it shall be said unto them, Ye are the sons of the living God."',
+    stops: [
+      {
+        name: 'Samaria & Northern Highlands',
+        coords: { lat: 32.277, lng: 35.190 },
+        dateLabel: 'c. 755 BC',
+        scriptureRef: 'HOSEA {1:1}–{3:5}',
+        scriptureOsis: 'HOS.1.2',
+        note: 'God instructs Hosea to take a wife of whoredoms; redeems unfaithful Gomer for fifteen pieces of silver and an homer and an half of barley as a picture of Israel\'s redemption.'
+      },
+      {
+        name: 'Valley of Jezreel (Prophecy of the Bow Broken)',
+        coords: { lat: 32.580, lng: 35.320 },
+        dateLabel: 'c. 750 BC',
+        scriptureRef: 'HOSEA {1:4}–{1:9}',
+        scriptureOsis: 'HOS.1.4',
+        note: 'Names his children Jezreel, Lo-ruhamah ("Not Pitied"), and Lo-ammi ("Not My People"), foretelling the end of the dynasty of Jehu.'
+      },
+      {
+        name: 'Mizpah of Gilead & Mount Tabor',
+        coords: { lat: 32.686, lng: 35.389 },
+        dateLabel: 'c. 735 BC',
+        scriptureRef: 'HOSEA {5:1}–{5:2}',
+        scriptureOsis: 'HOS.5.1',
+        note: 'Rebukes the priests and princes for setting snare traps of idolatry across the high places of Mizpah and Tabor.'
+      },
+      {
+        name: 'Samaria (Final Fall & Sovereign Restoration)',
+        coords: { lat: 32.277, lng: 35.190 },
+        dateLabel: 'c. 722 BC',
+        scriptureRef: 'HOSEA {13:14}–{14:9}',
+        scriptureOsis: 'HOS.14.4',
+        note: 'Foresees Samaria\'s fall to Assyria, yet proclaims God\'s sovereign triumph: "I will ransom them from the power of the grave; I will redeem them from death... I will be as the dew unto Israel: he shall grow as the lily, and cast forth his roots as Lebanon."'
+      }
+    ]
+  },
+  {
+    id: 'jonah-prophet',
+    name: "Prophet Jonah: Joppa, the Deep & the Great City of Nineveh",
+    shortBanner: "🐋 JONAH: JOPPA, THE DEEP & NINEVEH (c. 760 BC)",
+    travelerName: "Prophet Jonah Son of Amittai",
+    figureId: 'hezekiah',
+    color: '#0ea5e9',
+    dateRange: 'c. 782 – 753 BC (Reign of Jeroboam II)',
+    scriptureRef: 'JONAH {1:1}–{4:11}, 2 KINGS {14:25}, MATTHEW {12:39}–{12:41}',
+    scriptureOsis: 'JON.1.1',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Fleeing from the presence of the LORD from Joppa toward Tarshish, Jonah is cast into the raging Mediterranean, preserved three days and three nights in the great fish, preaches repentance to 120,000 souls in Nineveh, and learns God\'s universal mercy through the withered gourd.',
+    stops: [
+      {
+        name: 'Gath-hepher in Galilee (Zebulun)',
+        coords: { lat: 32.741, lng: 35.328 },
+        dateLabel: 'c. 765 BC',
+        scriptureRef: 'JONAH {1:1}–{1:2}, 2 KINGS {14:25}',
+        scriptureOsis: 'JON.1.1',
+        note: 'Jonah son of Amittai from Gath-hepher (Galilee) receives the divine commission: "Arise, go to Nineveh, that great city, and cry against it; for their wickedness is come up before me."'
+      },
+      {
+        name: 'Joppa (Mediterranean Port)',
+        coords: { lat: 32.054, lng: 34.752 },
+        dateLabel: 'c. 760 BC',
+        scriptureRef: 'JONAH {1:3}',
+        scriptureOsis: 'JON.1.3',
+        note: 'Jonah goes down to Joppa, pays the fare of a ship going to Tarshish (Spain), and sails to flee from the presence of the LORD.'
+      },
+      {
+        name: 'The Deep (Eastern Mediterranean Sea)',
+        coords: { lat: 33.500, lng: 33.000 },
+        dateLabel: 'c. 760 BC',
+        scriptureRef: 'JONAH {1:4}–{2:10}, MATTHEW {12:40}',
+        scriptureOsis: 'JON.2.1',
+        note: 'A mighty tempest strikes; lots fall upon Jonah; cast into the sea which ceases from raging; swallowed by a prepared great fish; prays from the belly of hell; vomited upon dry land after three days and three nights (the sign of Jonah).'
+      },
+      {
+        name: 'Nineveh (The Great Assyrian Capital)',
+        coords: { lat: 36.360, lng: 43.150 },
+        dateLabel: 'c. 760 BC',
+        scriptureRef: 'JONAH {3:1}–{3:10}',
+        scriptureOsis: 'JON.3.4',
+        note: 'Enters a city of three days\' journey; preaches: "Yet forty days, and Nineveh shall be overthrown!" The king of Nineveh arises from his throne, covers himself with sackcloth, and sits in ashes; all people and cattle fast; God repents of the evil.'
+      },
+      {
+        name: 'East of Nineveh (The Gourd & Vehement East Wind)',
+        coords: { lat: 36.380, lng: 43.250 },
+        dateLabel: 'c. 760 BC',
+        scriptureRef: 'JONAH {4:1}–{4:11}',
+        scriptureOsis: 'JON.4.11',
+        note: 'Sits in a booth on the east side of the city; God prepares a gourd for shade, then a worm and an east wind; teaches Jonah divine compassion for more than sixscore thousand persons that cannot discern between their right hand and left.'
+      }
+    ]
+  },
+  {
+    id: 'isaiah-ministry',
+    name: "Prophet Isaiah: Temple Vision, Immanuel & Deliverance of Zion",
+    shortBanner: "🕊️ ISAIAH: VISION OF HOLY ONE & ZION (c. 740–681 BC)",
+    travelerName: "Prophet Isaiah Son of Amoz",
+    figureId: 'isaiah',
+    color: '#6366f1',
+    dateRange: 'c. 740 – 681 BC',
+    scriptureRef: 'ISAIAH {1:1}–{66:24}, 2 KINGS {18:1}–{20:21}',
+    scriptureOsis: 'ISA.6.1',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Called in the Temple in the year King Uzziah died seeing the Holy One of Israel high and lifted up, Isaiah announces the virgin birth of Immanuel to King Ahaz, ministers beside King Hezekiah through the Assyrian siege where 185,000 soldiers fall, and pens the supreme prophecies of the Suffering Servant and New Jerusalem.',
+    stops: [
+      {
+        name: 'Jerusalem Temple (The Throne Vision & Holy, Holy, Holy)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'c. 740 BC (Year King Uzziah Died)',
+        scriptureRef: 'ISAIAH {6:1}–{6:13}',
+        scriptureOsis: 'ISA.6.1',
+        note: 'Sees the Lord sitting upon a throne, high and lifted up, and His train filled the Temple; seraphim cry: "Holy, holy, holy, is the LORD of hosts: the whole earth is full of his glory." Seraph touches his lips with a live coal from the altar.'
+      },
+      {
+        name: 'Conduit of the Upper Pool (Highway of the Fuller\'s Field)',
+        coords: { lat: 31.774, lng: 35.230 },
+        dateLabel: 'c. 734 BC (Syro-Ephraimite War)',
+        scriptureRef: 'ISAIAH {7:1}–{7:16}',
+        scriptureOsis: 'ISA.7.14',
+        note: 'Meets King Ahaz with son Shear-jashub; delivers the immortal prophecy: "Therefore the Lord himself shall give you a sign; Behold, a virgin shall conceive, and bear a son, and shall call his name Immanuel."'
+      },
+      {
+        name: 'Royal Palace of Mount Zion (Sennacherib Defeated)',
+        coords: { lat: 31.772, lng: 35.234 },
+        dateLabel: '701 BC',
+        scriptureRef: 'ISAIAH {36:1}–{38:22}',
+        scriptureOsis: 'ISA.37.36',
+        note: 'Rabshakeh blasphemes outside Jerusalem; Hezekiah spreads the letter before the LORD; Isaiah prophesies Sennacherib shall not shoot an arrow here; the angel of the LORD smites 185,000 Assyrians in one night.'
+      },
+      {
+        name: 'Broad Wall of Jerusalem (The Suffering Servant & New Creation)',
+        coords: { lat: 31.775, lng: 35.231 },
+        dateLabel: 'c. 690 – 681 BC',
+        scriptureRef: 'ISAIAH {40:1}–{40:11}, {53:1}–{53:12}, {65:17}',
+        scriptureOsis: 'ISA.53.5',
+        note: '"He was wounded for our transgressions, he was bruised for our iniquities: the chastisement of our peace was upon him; and with his stripes we are healed." Prophesies Cyrus by name (44:28) and the new heavens and new earth.'
+      }
+    ]
+  },
+  {
+    id: 'jeremiah-ministry',
+    name: "Prophet Jeremiah: Anathoth, Temple Gate, Cistern & Egypt",
+    shortBanner: "📜 JEREMIAH: ANATHOTH, TEMPLE GATE & CISTERN (627–580 BC)",
+    travelerName: "Prophet Jeremiah (The Weeping Prophet)",
+    figureId: 'jeremiah',
+    color: '#a855f7',
+    dateRange: '627 – 580 BC',
+    scriptureRef: 'JEREMIAH {1:1}–{52:34}',
+    scriptureOsis: 'JER.1.5',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Ordained a prophet to the nations before birth, Jeremiah preaches unheeded in the Temple gate, breaks the potter\'s bottle in Hinnom, survives the miry cistern dungeon of Malchiah, witnesses the burning of Jerusalem, and is taken into Egypt.',
+    stops: [
+      {
+        name: 'Anathoth in Benjamin (Priestly Hometown & Call)',
+        coords: { lat: 31.815, lng: 35.260 },
+        dateLabel: '627 BC (13th Year of Josiah)',
+        scriptureRef: 'JEREMIAH {1:1}–{1:19}',
+        scriptureOsis: 'JER.1.5',
+        note: '"Before I formed thee in the belly I knew thee; and before thou camest forth out of the womb I sanctified thee, and I ordained thee a prophet unto the nations." Sees the almond rod and seething pot facing north.'
+      },
+      {
+        name: 'Jerusalem Temple Gate (The Famous Temple Sermon)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: '609 BC (Beginning of Jehoiakim)',
+        scriptureRef: 'JEREMIAH {7:1}–{7:15}, {26:1}–{26:24}',
+        scriptureOsis: 'JER.7.4',
+        note: 'Stands in the gate of the LORD\'s house: "Trust ye not in lying words, saying, The temple of the LORD, The temple of the LORD... Amend your ways." Arrested by priests and threatened with death.'
+      },
+      {
+        name: 'Valley of the Son of Hinnom (The Broken Earthen Bottle)',
+        coords: { lat: 31.768, lng: 35.230 },
+        dateLabel: 'c. 605 BC',
+        scriptureRef: 'JEREMIAH {19:1}–{19:15}',
+        scriptureOsis: 'JER.19.10',
+        note: 'Takes ancients of the people and priests to Tophet; breaks the potter\'s bottle: "Even so will I break this people and this city, as one breaketh a potter\'s vessel, that cannot be made whole again."'
+      },
+      {
+        name: 'Dungeon of Malchiah (The Cistern Mire & Ebed-melech)',
+        coords: { lat: 31.774, lng: 35.235 },
+        dateLabel: '588 BC (During the Final Siege)',
+        scriptureRef: 'JEREMIAH {38:1}–{38:13}',
+        scriptureOsis: 'JER.38.6',
+        note: 'Cast with cords into the miry dungeon of prince Malchiah where there was no water, but mire; Ethiopian eunuch Ebed-melech petitions King Zedekiah and draws him out with old cast clouts and rotten rags.'
+      },
+      {
+        name: 'Mizpah of Benjamin (With Governor Gedaliah)',
+        coords: { lat: 31.835, lng: 35.180 },
+        dateLabel: '586 BC',
+        scriptureRef: 'JEREMIAH {40:1}–{40:6}',
+        scriptureOsis: 'JER.40.6',
+        note: 'Nebuzar-adan frees Jeremiah at Ramah with victuals and a reward; Jeremiah goes unto Gedaliah at Mizpah and dwells among the remaining remnant.'
+      },
+      {
+        name: 'Tahpanhes in Egypt (Buried Stones at Pharaoh\'s Palace)',
+        coords: { lat: 30.860, lng: 32.180 },
+        dateLabel: 'c. 582 BC',
+        scriptureRef: 'JEREMIAH {43:8}–{43:13}',
+        scriptureOsis: 'JER.43.9',
+        note: 'Forcibly carried into Egypt by Johanan; hides great stones in the clay of the brickkiln at Pharaoh\'s house in Tahpanhes prophesying Nebuchadnezzar shall spread his royal pavilion over them.'
+      }
+    ]
+  },
+  {
+    id: 'daniel-exile',
+    name: "Daniel: Babylon, the Fiery Furnace, Lions' Den & Susa",
+    shortBanner: "🦁 DANIEL: BABYLON, FURNACE, LIONS & SUSA (605–536 BC)",
+    travelerName: "Daniel the Prophet (Belteshazzar)",
+    figureId: 'daniel',
+    color: '#f43f5e',
+    dateRange: '605 – 536 BC',
+    scriptureRef: 'DANIEL {1:1}–{12:13}, EZEKIEL {14:14}, {28:3}, MATTHEW {24:15}',
+    scriptureOsis: 'DAN.1.1',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Taken captive from Jerusalem as a royal youth in 605 BC, Daniel serves in the imperial court of Babylon under Nebuchadnezzar, Belshazzar, Darius the Mede, and Cyrus the Persian, survives the den of lions, and receives panoramic apocalypses of world history and the coming everlasting Kingdom of the Son of Man.',
+    stops: [
+      {
+        name: 'Jerusalem (Deportation by Nebuchadnezzar)',
+        coords: { lat: 31.768, lng: 35.213 },
+        dateLabel: '605 BC (3rd Year of Jehoiakim)',
+        scriptureRef: 'DANIEL {1:1}–{1:6}',
+        scriptureOsis: 'DAN.1.1',
+        note: 'Selected among children of the king\'s seed in whom was no blemish, well favoured, and skilful in all wisdom, to be educated three years in the tongue of the Chaldeans.'
+      },
+      {
+        name: 'Babylon (Palace School & Colossal Statue Dream)',
+        coords: { lat: 32.536, lng: 44.421 },
+        dateLabel: '603 BC (2nd Year of Nebuchadnezzar)',
+        scriptureRef: 'DANIEL {1:8}–{1:21}, {2:1}–{2:49}',
+        scriptureOsis: 'DAN.2.31',
+        note: 'Purposes in his heart not to defile himself with the king\'s meat; interprets Nebuchadnezzar\'s forgotten dream of the image of gold, silver, brass, iron, and clay, and the Stone cut without hands that fills the whole earth.'
+      },
+      {
+        name: 'Plain of Dura in Babylon (The Burning Fiery Furnace)',
+        coords: { lat: 32.420, lng: 44.520 },
+        dateLabel: 'c. 594 BC',
+        scriptureRef: 'DANIEL {3:1}–{3:30}',
+        scriptureOsis: 'DAN.3.25',
+        note: 'Shadrach, Meshach, and Abednego refuse to bow to the golden image 60 cubits high; cast into the furnace heated seven times hotter; king sees four men loose, and the form of the fourth is like the Son of God.'
+      },
+      {
+        name: 'Babylon: Banquet Hall (Belshazzar\'s Feast)',
+        coords: { lat: 32.536, lng: 44.421 },
+        dateLabel: 'Night of 12 October, 539 BC',
+        scriptureRef: 'DANIEL {5:1}–{5:31}',
+        scriptureOsis: 'DAN.5.25',
+        note: 'Drinking wine out of the golden vessels of Solomon\'s Temple; fingers of a man\'s hand write on the plaster: MENE, MENE, TEKEL, UPHARSIN. Daniel reads the judgment; that night Belshazzar is slain and Darius the Median takes the kingdom.'
+      },
+      {
+        name: 'Babylon (The Den of Lions under Darius the Mede)',
+        coords: { lat: 32.536, lng: 44.421 },
+        dateLabel: 'c. 538 BC',
+        scriptureRef: 'DANIEL {6:1}–{6:28}',
+        scriptureOsis: 'DAN.6.22',
+        note: 'Praying toward Jerusalem three times a day despite royal decree; cast into the lions\' den; God sends His angel and shuts the lions\' mouths because innocency was found in him.'
+      },
+      {
+        name: 'Shushan / Susa (Palace by the River Ulai)',
+        coords: { lat: 32.190, lng: 48.243 },
+        dateLabel: 'c. 551 BC (3rd Year of Belshazzar)',
+        scriptureRef: 'DANIEL {8:1}–{8:27}',
+        scriptureOsis: 'DAN.8.2',
+        note: 'In vision at Shushan the palace in the province of Elam by the river of Ulai, Daniel sees the Ram (Medo-Persia) and the He-Goat with the notable horn (Alexander the Great of Greece).'
+      },
+      {
+        name: 'River Hiddekel / Tigris (The Final Apocalypse of Weeks)',
+        coords: { lat: 32.800, lng: 44.950 },
+        dateLabel: 'c. 536 BC (3rd Year of Cyrus)',
+        scriptureRef: 'DANIEL {10:1}–{12:13}',
+        scriptureOsis: 'DAN.12.2',
+        note: 'After a 21-day fast by the great river Hiddekel, sees a man clothed in linen with belt of fine gold of Uphaz; receives the revelation of the Seventy Weeks and the resurrection: "many of them that sleep in the dust of the earth shall awake."'
+      }
+    ]
+  },
+  {
+    id: 'ezekiel-exile',
+    name: "Prophet Ezekiel: Chebar Chariot Throne & Valley of Dry Bones",
+    shortBanner: "⚡ EZEKIEL: CHEBAR CHARIOT & DRY BONES (593–571 BC)",
+    travelerName: "Prophet Ezekiel Son of Buzi",
+    figureId: 'daniel',
+    color: '#06b6d4',
+    dateRange: '593 – 571 BC',
+    scriptureRef: 'EZEKIEL {1:1}–{48:35}',
+    scriptureOsis: 'EZK.1.1',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'A priest deported with King Jehoiachin in 597 BC, Ezekiel witnesses the cosmic chariot-throne of God by the River Chebar in Babylonia, enacts the siege of Jerusalem with a tile and iron pan, prophesies life to the dry bones, and diagrams the Millennial Temple.',
+    stops: [
+      {
+        name: 'Jerusalem Temple (Priestly Lineage Before 597 BC Exile)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: '622 – 597 BC',
+        scriptureRef: 'EZEKIEL {1:3}',
+        scriptureOsis: 'EZK.1.3',
+        note: 'Son of Buzi of the priestly line of Zadok in Jerusalem before deportation under Nebuchadnezzar\'s second wave alongside King Jehoiachin.'
+      },
+      {
+        name: 'Tel-abib by the River Chebar (The Chariot Throne Vision)',
+        coords: { lat: 32.200, lng: 44.800 },
+        dateLabel: '5 Tammuz, 593 BC (5th Year of Jehoiachin\'s Captivity)',
+        scriptureRef: 'EZEKIEL {1:1}–{3:27}',
+        scriptureOsis: 'EZK.1.1',
+        note: 'Among the captives by the grand canal of Chebar; the heavens open; sees a whirlwind from the north, a great cloud and fire infolding, four living creatures with wheels full of eyes, and the likeness of a throne above the firmament.'
+      },
+      {
+        name: 'Valley of Dry Bones (Babylonian Plain)',
+        coords: { lat: 32.300, lng: 44.700 },
+        dateLabel: 'c. 586 BC',
+        scriptureRef: 'EZEKIEL {37:1}–{37:14}',
+        scriptureOsis: 'EZK.37.3',
+        note: 'Carried out in the Spirit into the midst of the valley full of dry bones; prophesies: "O ye dry bones, hear the word of the LORD." Noise and shaking; sinews and flesh come upon them; breath enters them and they stand upon their feet an exceeding great army.'
+      },
+      {
+        name: 'The Very High Mountain (The Millennial Temple Vision)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: '10 Nisan, 573 BC (25th Year of Captivity)',
+        scriptureRef: 'EZEKIEL {40:1}–{48:35}',
+        scriptureOsis: 'EZK.48.35',
+        note: 'Brought in visions of God to the land of Israel; a man whose appearance was like brass with a measuring reed measures the holy city and temple; water flows from under the threshold eastward into the Dead Sea healing all it touches. City name: The LORD is There (Jehovah-Shammah).'
+      }
+    ]
+  },
+  {
+    id: 'esther-mordecai',
+    name: "Esther & Mordecai: Susa Citadel, King's Gate & Purim",
+    shortBanner: "👑 ESTHER & MORDECAI: SUSA CITADEL & PURIM (483–473 BC)",
+    travelerName: "Queen Esther & Mordecai the Jew",
+    figureId: 'ezra-nehemiah',
+    color: '#e879f9',
+    dateRange: 'c. 483 – 473 BC (Reign of Ahasuerus / Xerxes I)',
+    scriptureRef: 'ESTHER {1:1}–{10:3}',
+    scriptureOsis: 'EST.4.14',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Set in the winter capital of Shushan (Susa) of the Persian Empire, orphaned Hadassah (Esther) is crowned Queen, Mordecai uncovers palace treason, Haman plots Jewish extermination, Esther risks her life entering unsummoned, Haman is hanged on his own 50-cubit gallows, and the Feast of Purim is established across 127 provinces.',
+    stops: [
+      {
+        name: 'Susa / Shushan the Palace (House of the Women & Coronation)',
+        coords: { lat: 32.190, lng: 48.243 },
+        dateLabel: 'Tebeth, 479 BC (7th Year of Ahasuerus)',
+        scriptureRef: 'ESTHER {2:1}–{2:18}',
+        scriptureOsis: 'EST.2.17',
+        note: 'After Queen Vashti is deposed, Esther is preferred above all women; King Ahasuerus sets the royal crown upon her head and makes a great feast to all his princes.'
+      },
+      {
+        name: 'The King\'s Gate at Shushan (Mordecai Sits in the Gate)',
+        coords: { lat: 32.191, lng: 48.242 },
+        dateLabel: '474 BC',
+        scriptureRef: 'ESTHER {2:19}–{3:6}',
+        scriptureOsis: 'EST.3.2',
+        note: 'Mordecai discovers the assassination plot of Bigthan and Teresh; refuses to bow or revere Haman the Agagite; Haman casts Pur (lots) to destroy all Jews throughout the kingdom on the 13th of Adar.'
+      },
+      {
+        name: 'Inner Court of the Royal Palace ("If I perish, I perish")',
+        coords: { lat: 32.190, lng: 48.245 },
+        dateLabel: 'Nisan, 474 BC',
+        scriptureRef: 'ESTHER {4:1}–{5:8}',
+        scriptureOsis: 'EST.4.14',
+        note: 'Mordecai\'s message: "Who knoweth whether thou art come to the kingdom for such a time as this?" After a three-day fast with her maidens, Esther stands in the inner court; the king holds out the golden sceptre.'
+      },
+      {
+        name: 'Royal Banquet Hall (Haman\'s Exposure & Hanging)',
+        coords: { lat: 32.189, lng: 48.244 },
+        dateLabel: 'Nisan, 474 BC',
+        scriptureRef: 'ESTHER {7:1}–{7:10}',
+        scriptureOsis: 'EST.7.6',
+        note: 'At the second banquet of wine, Esther petitions for her people: "The adversary and enemy is this wicked Haman." Harbonah points out the 50-cubit gallows Haman made for Mordecai; they hang Haman thereon.'
+      },
+      {
+        name: 'The Citadel of Shushan (Decree Across 127 Provinces & Purim)',
+        coords: { lat: 32.190, lng: 48.243 },
+        dateLabel: 'Adar, 473 BC',
+        scriptureRef: 'ESTHER {8:1}–{9:32}',
+        scriptureOsis: 'EST.9.22',
+        note: 'Mordecai receives the royal signet ring; letters sent by posts on mules and young dromedaries grant the Jews permission to defend their lives; Feast of Purim established as days of feasting and joy.'
+      }
+    ]
+  },
+  {
+    id: 'ezra-journey',
+    name: "Ezra the Scribe: Babylon to Jerusalem Temple Assembly",
+    shortBanner: "📖 EZRA: AHAVA FAST TO JERUSALEM (458 BC)",
+    travelerName: "Ezra the Priest & Scribe",
+    figureId: 'ezra-nehemiah',
+    color: '#10b981',
+    dateRange: '458 BC (7th Year of Artaxerxes I)',
+    scriptureRef: 'EZRA {7:1}–{10:44}',
+    scriptureOsis: 'EZR.7.10',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'A ready scribe in the Law of Moses whose heart was prepared to seek the Law of the LORD, to do it, and to teach in Israel statutes and judgments, Ezra leads the second return from Babylon, proclaims a fast at the River Ahava without royal troops, and leads a great national spiritual reformation in Jerusalem.',
+    stops: [
+      {
+        name: 'Babylon (Royal Decree of Artaxerxes I)',
+        coords: { lat: 32.536, lng: 44.421 },
+        dateLabel: '1 Nisan, 458 BC',
+        scriptureRef: 'EZRA {7:1}–{7:28}',
+        scriptureOsis: 'EZR.7.10',
+        note: 'Ezra departs Babylon with a royal firman from Artaxerxes I Longimanus granting free passage, gold and silver from the king\'s treasury, and exemption from toll for temple ministers.'
+      },
+      {
+        name: 'River Ahava (Fasting for Divine Journey Protection)',
+        coords: { lat: 33.350, lng: 43.780 },
+        dateLabel: '9–12 Nisan, 458 BC',
+        scriptureRef: 'EZRA {8:15}–{8:31}',
+        scriptureOsis: 'EZR.8.22',
+        note: 'Encamping three days by the River of Ahava, Ezra finds no Levites and enlists ministers; proclaims a fast: "For I was ashamed to require of the king a band of soldiers and horsemen to help us against the enemy in the way: because we had spoken unto the king, saying, The hand of our God is upon all them for good that seek him."'
+      },
+      {
+        name: 'Overland Route Along the Euphrates Arc',
+        coords: { lat: 35.500, lng: 39.500 },
+        dateLabel: 'Nisan – Ab, 458 BC (4 Months)',
+        scriptureRef: 'EZRA {8:31}–{8:32}',
+        scriptureOsis: 'EZR.8.31',
+        note: 'Carrying 650 talents of silver and 100 talents of gold; God\'s hand protects the 1,500 returning families from ambush in the way.'
+      },
+      {
+        name: 'Jerusalem Temple Courts (Weighing Vessels & National Repentance)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: '1 Ab, 458 BC',
+        scriptureRef: 'EZRA {8:33}–{10:17}',
+        scriptureOsis: 'EZR.9.5',
+        note: 'Arrives the first day of the fifth month; sacred vessels weighed in the house of God; hearing of compromise with neighboring idolatries, Ezra plucks off his hair and mantle, falls on his knees, and weeps in the temple court in heavy rain as the congregation repents.'
+      }
+    ]
+  },
+  {
+    id: 'nehemiah-walls',
+    name: "Nehemiah: Susa Palace to the 52-Day Jerusalem Wall Circuit",
+    shortBanner: "🧱 NEHEMIAH: SUSA TO 52-DAY JERUSALEM WALL CIRCUIT (445 BC)",
+    travelerName: "Nehemiah the Cupbearer & Governor",
+    figureId: 'ezra-nehemiah',
+    color: '#059669',
+    dateRange: '445 – 432 BC (20th Year of Artaxerxes I)',
+    scriptureRef: 'NEHEMIAH {1:1}–{13:31}',
+    scriptureOsis: 'NEH.2.17',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Serving as cupbearer to King Artaxerxes I in Susa, Nehemiah mourns over Jerusalem\'s broken walls, receives royal letters and cavalry escort, performs a secret night inspection of the ruins, organizes all families to rebuild the ten gates with a trowel in one hand and sword in the other in 52 days, and leads the wall dedication.',
+    stops: [
+      {
+        name: 'Shushan the Palace (Cupbearer to Artaxerxes I)',
+        coords: { lat: 32.190, lng: 48.243 },
+        dateLabel: 'Chisleu – Nisan, 445 BC (20th Year of Artaxerxes)',
+        scriptureRef: 'NEHEMIAH {1:1}–{2:8}',
+        scriptureOsis: 'NEH.1.1',
+        note: 'Hanani reports: "The wall of Jerusalem also is broken down, and the gates thereof are burned with fire." Nehemiah fasts and prays; serves wine before the king with sad countenance; Artaxerxes sends him as governor.'
+      },
+      {
+        name: 'Euphrates River Crossing (Governors Beyond the River)',
+        coords: { lat: 34.000, lng: 44.000 },
+        dateLabel: 'Spring, 445 BC',
+        scriptureRef: 'NEHEMIAH {2:7}–{2:9}',
+        scriptureOsis: 'NEH.2.9',
+        note: 'Travels with letters to governors beyond the river and Asaph keeper of the king\'s forest, accompanied by captains of the army and horsemen.'
+      },
+      {
+        name: 'Jerusalem: Secret Night Inspection of Ruined Walls',
+        coords: { lat: 31.775, lng: 35.235 },
+        dateLabel: 'Third Night in Jerusalem, 445 BC',
+        scriptureRef: 'NEHEMIAH {2:11}–{2:16}',
+        scriptureOsis: 'NEH.2.13',
+        note: 'Rides out by night by the Valley Gate, Dragon Well, and Dung Gate to view the broken walls; at the Fountain Gate and King\'s Pool there was no place for his beast to pass.'
+      },
+      {
+        name: 'Jerusalem: 10 Gates Rebuilding Circuit (52 Days)',
+        coords: { lat: 31.777, lng: 35.236 },
+        dateLabel: 'Elul, 445 BC (Completed in 52 Days)',
+        scriptureRef: 'NEHEMIAH {3:1}–{4:23}, {6:15}',
+        scriptureOsis: 'NEH.6.15',
+        note: 'High priest Eliashib and all guilds work side-by-side; Sanballat and Tobiah conspire to attack; Nehemiah arms builders: "half of my servants wrought in the work, and the other half held the spears." The wall finished in fifty and two days.'
+      },
+      {
+        name: 'Jerusalem: Water Gate Law Reading & Wall Dedication',
+        coords: { lat: 31.776, lng: 35.234 },
+        dateLabel: '1 Tisri / Feast of Tabernacles, 445 BC',
+        scriptureRef: 'NEHEMIAH {8:1}–{8:18}, {12:27}–{12:43}',
+        scriptureOsis: 'NEH.8.1',
+        note: 'Ezra reads from dawn to midday on a wooden pulpit at the Water Gate; all the people weep; Nehemiah proclaims: "the joy of the LORD is your strength." Two great companies march in opposite directions atop the new walls and meet with trumpets at the Temple.'
+      }
+    ]
+  },
+  {
+    id: 'stephen-philip-deacons',
+    name: "Stephen & Philip: Jerusalem Deacons, Samaria & Gaza Road",
+    shortBanner: "⚡ STEPHEN & PHILIP: JERUSALEM, SAMARIA & GAZA (AD 34–37)",
+    travelerName: "Stephen the Protomartyr & Philip the Evangelist",
+    figureId: 'peter',
+    color: '#f59e0b',
+    dateRange: 'c. AD 34 – 37',
+    scriptureRef: 'ACTS {6:1}–{8:40}, {21:8}',
+    scriptureOsis: 'ACT.6.5',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Chosen among the seven deacons full of faith and the Holy Ghost, Stephen preaches before the Sanhedrin seeing the Son of Man standing at God\'s right hand and is stoned outside Jerusalem, while Philip carries the Gospel to the city of Samaria and baptizes the Ethiopian royal treasurer on the desert road to Gaza.',
+    stops: [
+      {
+        name: 'Jerusalem (Seven Deacons & Stephen\'s Martyrdom)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'c. AD 34 – 35',
+        scriptureRef: 'ACTS {6:1}–{7:60}',
+        scriptureOsis: 'ACT.7.55',
+        note: 'Stephen\'s face shines as an angel; recounts redemptive history from Abraham to Solomon; cries: "Behold, I see the heavens opened, and the Son of man standing on the right hand of God." Stoned outside the city as Saul guards the clothes.'
+      },
+      {
+        name: 'City of Samaria (Philip Preaches Christ with Signs)',
+        coords: { lat: 32.277, lng: 35.190 },
+        dateLabel: 'c. AD 35',
+        scriptureRef: 'ACTS {8:5}–{8:25}',
+        scriptureOsis: 'ACT.8.5',
+        note: 'Scattered believers go everywhere preaching; Philip preaches Christ in Samaria with unclean spirits cast out and paralytics healed; great joy in the city; Peter and John come down and impart the Holy Ghost.'
+      },
+      {
+        name: 'Gaza Desert Road (The Ethiopian Royal Treasurer)',
+        coords: { lat: 31.450, lng: 34.600 },
+        dateLabel: 'c. AD 36',
+        scriptureRef: 'ACTS {8:26}–{8:39}',
+        scriptureOsis: 'ACT.8.35',
+        note: 'Angel tells Philip: "Arise, and go toward the south unto the way that goeth down from Jerusalem unto Gaza, which is desert." Joins the chariot of the treasurer of Queen Candace reading Isaiah 53; preaches unto him Jesus and baptizes him in water.'
+      },
+      {
+        name: 'Azotus (Ashdod) to Caesarea Maritima',
+        coords: { lat: 32.500, lng: 34.890 },
+        dateLabel: 'c. AD 36 – 57',
+        scriptureRef: 'ACTS {8:40}, {21:8}–{21:9}',
+        scriptureOsis: 'ACT.8.40',
+        note: 'The Spirit catches away Philip; found at Azotus (coastal Ashdod); preaches through all cities till he comes to Caesarea Maritima, where twenty years later his house with four prophesying daughters hosts Paul.'
+      }
+    ]
+  },
+  {
+    id: 'paul-conversion-early',
+    name: "Paul's Conversion & Early Ministry: Tarsus, Damascus & Arabia",
+    shortBanner: "⚡ PAUL: TARSUS, DAMASCUS & ARABIA (AD 33–46)",
+    travelerName: "Apostle Paul (Saul of Tarsus)",
+    figureId: 'paul',
+    color: '#ec4899',
+    dateRange: 'c. AD 33 – 46',
+    scriptureRef: 'ACTS {9:1}–{9:30}, {11:25}–{11:26}, GALATIANS {1:11}–{1:24}',
+    scriptureOsis: 'ACT.9.3',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'From his birth in Tarsus and rabbinic training under Gamaliel in Jerusalem to his dramatic conversion by the risen Christ on the road to Damascus, retreat into the Nabataean desert of Arabia, midnight basket escape from Damascus, and return to Antioch with Barnabas.',
+    stops: [
+      {
+        name: 'Tarsus in Cilicia (Birthplace & Roman Citizen)',
+        coords: { lat: 36.916, lng: 34.895 },
+        dateLabel: 'c. AD 5',
+        scriptureRef: 'ACTS {21:39}, {22:3}',
+        scriptureOsis: 'ACT.22.3',
+        note: '"I am verily a man which am a Jew, born in Tarsus, a city in Cilicia, yet brought up in this city at the feet of Gamaliel, and taught according to the perfect manner of the law of the fathers."'
+      },
+      {
+        name: 'Jerusalem (Sanhedrin & Persecution of the Church)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'c. AD 33 – 34',
+        scriptureRef: 'ACTS {8:1}–{8:3}, {9:1}–{9:2}',
+        scriptureOsis: 'ACT.9.1',
+        note: 'Consenting unto Stephen\'s death; breathing out threatenings and slaughter against the disciples; goes unto the high priest for letters to Damascus to bind any of the Way.'
+      },
+      {
+        name: 'Road to Damascus (The Heavenly Midday Light)',
+        coords: { lat: 33.300, lng: 36.100 },
+        dateLabel: 'c. AD 34',
+        scriptureRef: 'ACTS {9:3}–{9:9}, {26:13}–{26:18}',
+        scriptureOsis: 'ACT.9.3',
+        note: 'At midday a light from heaven above the brightness of the sun shines round about him; hears a voice: "Saul, Saul, why persecutest thou me?... I am Jesus whom thou persecutest." Blinded, he is led by the hand into Damascus.'
+      },
+      {
+        name: 'Straight Street, Damascus (House of Judas & Ananias)',
+        coords: { lat: 33.510, lng: 36.315 },
+        dateLabel: 'c. AD 34',
+        scriptureRef: 'ACTS {9:10}–{9:22}',
+        scriptureOsis: 'ACT.9.11',
+        note: 'Ananias sent to the street called Straight; lays hands on Saul: "Brother Saul, the Lord, even Jesus, that appeared unto thee... hath sent me." Scales fall from his eyes; baptized; preaches Christ in the synagogues that He is the Son of God.'
+      },
+      {
+        name: 'Arabia (Nabataean Desert Revelation)',
+        coords: { lat: 30.320, lng: 35.480 },
+        dateLabel: 'c. AD 34 – 37 (Three Years)',
+        scriptureRef: 'GALATIANS {1:15}–{1:18}',
+        scriptureOsis: 'GAL.1.17',
+        note: '"Immediately I conferred not with flesh and blood: neither went I up to Jerusalem to them which were apostles before me; but I went into Arabia, and returned again unto Damascus." Receives the Gospel directly by revelation of Jesus Christ.'
+      },
+      {
+        name: 'Damascus (Escape in a Basket Over the Wall)',
+        coords: { lat: 33.512, lng: 36.310 },
+        dateLabel: 'c. AD 37',
+        scriptureRef: 'ACTS {9:23}–{9:25}, 2 CORINTHIANS {11:32}–{11:33}',
+        scriptureOsis: '2CO.11.32',
+        note: 'The governor under King Aretas IV of the Nabataeans keeps the city of the Damascenes with a garrison to apprehend him; disciples take him by night and let him down through the wall in a basket.'
+      },
+      {
+        name: 'Jerusalem & Tarsus (Received by Barnabas)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'c. AD 37 – 44',
+        scriptureRef: 'ACTS {9:26}–{9:30}',
+        scriptureOsis: 'ACT.9.27',
+        note: 'Disciples at Jerusalem are afraid of him until Barnabas brings him to Peter and James (Galatians 1:18–19); Hellenists attempt to slay him; brethren bring him to Caesarea and send him home to Tarsus.'
+      },
+      {
+        name: 'Syrian Antioch (Barnabas Fetches Saul)',
+        coords: { lat: 36.202, lng: 36.160 },
+        dateLabel: 'c. AD 44 – 46',
+        scriptureRef: 'ACTS {11:25}–{11:26}',
+        scriptureOsis: 'ACT.11.26',
+        note: 'Barnabas departs to Tarsus to seek Saul; brings him to Antioch where for a whole year they assemble with the church and teach much people; disciples are called Christians first in Antioch.'
+      }
+    ]
+  },
+  {
+    id: 'barnabas-mark',
+    name: "Barnabas & Mark: Jerusalem, Syrian Antioch & Cyprus Mission",
+    shortBanner: "⛵ BARNABAS & MARK: CYPRUS & ANTIOCH (AD 45–52)",
+    travelerName: "Barnabas & John Mark",
+    figureId: 'paul',
+    color: '#14b8a6',
+    dateRange: 'c. AD 45 – 52',
+    scriptureRef: 'ACTS {4:36}–{4:37}, {11:22}–{11:26}, {13:1}–{13:13}, {15:36}–{15:39}, 2 TIMOTHY {4:11}',
+    scriptureOsis: 'ACT.11.24',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Joseph Barnabas ("Son of Consolation"), a Levite of Cyprus, sells his land for the early church, brings Saul into the apostolic circle, mentors his nephew John Mark through Antioch and Cyprus, and after a temporary parting, sees Mark fully restored as profitable for Paul\'s ministry.',
+    stops: [
+      {
+        name: 'Jerusalem (Selling Land at the Apostles\' Feet)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'c. AD 33',
+        scriptureRef: 'ACTS {4:36}–{4:37}',
+        scriptureOsis: 'ACT.4.36',
+        note: 'Joses, by the apostles surnamed Barnabas (which is, being interpreted, The son of consolation), a Levite of the country of Cyprus, having land, sells it, and brings the money to the apostles.'
+      },
+      {
+        name: 'Syrian Antioch (A Good Man, Full of the Holy Ghost)',
+        coords: { lat: 36.202, lng: 36.160 },
+        dateLabel: 'c. AD 44',
+        scriptureRef: 'ACTS {11:22}–{11:24}',
+        scriptureOsis: 'ACT.11.24',
+        note: 'Sent from Jerusalem to Antioch; sees the grace of God and is glad; exhorts them all that with purpose of heart they would cleave unto the Lord: "for he was a good man, and full of the Holy Ghost and of faith."'
+      },
+      {
+        name: 'Salamis & Paphos in Cyprus (With John Mark as Minister)',
+        coords: { lat: 34.750, lng: 32.420 },
+        dateLabel: 'c. AD 46',
+        scriptureRef: 'ACTS {13:4}–{13:12}',
+        scriptureOsis: 'ACT.13.5',
+        note: 'Set apart by the Holy Ghost with Saul; takes young cousin John Mark as their minister; preaches through the synagogues from Salamis to Paphos where Proconsul Sergius Paulus believes.'
+      },
+      {
+        name: 'Perga in Pamphylia (John Mark Departs)',
+        coords: { lat: 36.960, lng: 30.550 },
+        dateLabel: 'c. AD 47',
+        scriptureRef: 'ACTS {13:13}',
+        scriptureOsis: 'ACT.13.13',
+        note: 'John Mark departs from Paul and Barnabas at Perga and returns to Jerusalem; later the occasion of sharp contention before their second journey.'
+      },
+      {
+        name: 'Second Cyprus Voyage (Barnabas & Mark Return to Cyprus)',
+        coords: { lat: 35.150, lng: 33.850 },
+        dateLabel: 'c. AD 49 – 52',
+        scriptureRef: 'ACTS {15:39}, COLOSSIANS {4:10}, 2 TIMOTHY {4:11}',
+        scriptureOsis: 'ACT.15.39',
+        note: 'Barnabas insists on giving Mark a second chance, sailing with him to strengthen Cyprus, while Paul chooses Silas. Later completely vindicated when Paul writes from Roman custody: "Take Mark, and bring him with thee: for he is profitable to me for the ministry."'
+      }
+    ]
+  },
 ];
 
 // World Empires Territories & Centers (Global Ancient World)
@@ -2734,7 +4025,29 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 5,
     headline: 'The Call of Abraham · Jacob & Joseph in Egypt',
     historicalSummary: 'God calls Abram out of Ur of the Chaldees, through Haran, into Canaan, and preserves Israel through Jacob and Joseph in Egypt. The Middle Kingdom of Egypt and Old Babylon rule the wider ancient world.',
-    activeRouteIds: ['abraham-call', 'jacob-joseph-egypt'],
+    activeRouteIds: [
+      'gideon-judges',
+      'samson-judges',
+      'ruth-boaz',
+      'samuel-circuit',
+      'saul-reign',
+      'solomon-glory',
+      'elijah-prophet',
+      'elisha-ministry',
+      'amos-prophet',
+      'hosea-prophet',
+      'jonah-prophet',
+      'isaiah-ministry',
+      'jeremiah-ministry',
+      'daniel-exile',
+      'ezekiel-exile',
+      'esther-mordecai',
+      'ezra-journey',
+      'nehemiah-walls',
+      'stephen-philip-deacons',
+      'paul-conversion-early',
+      'barnabas-mark',
+      'job-land-of-uz','abraham-call', 'jacob-joseph-egypt'],
     activeSiteIds: ['nabonidus-cylinder'],
     activeFigureIds: ['abraham']
   },
@@ -2750,7 +4063,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 6,
     headline: 'The Deliverance from Egypt · Mount Sinai & Conquest of Canaan',
     historicalSummary: "The LORD judges Egypt's gods with 10 plagues, delivers Israel through the Red Sea, gives His Holy Law at Mount Sinai, and brings Israel across the Jordan under Joshua.",
-    activeRouteIds: ['exodus-route', 'joshua-conquest'],
+    activeRouteIds: [
+      'gideon-judges',
+      'samson-judges',
+      'ruth-boaz','exodus-route', 'joshua-conquest'],
     activeSiteIds: ['merneptah-stele'],
     activeFigureIds: ['moses']
   },
@@ -2769,7 +4085,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 7,
     headline: "The Davidic Kingdom · Solomon's Temple & Jerusalem",
     historicalSummary: "David establishes Jerusalem as the royal capital; Solomon builds the First Temple. Attested by the Tel Dan Stele ('House of David') and visited by the Queen of Sheba.",
-    activeRouteIds: ['david-exile-throne'],
+    activeRouteIds: [
+      'samuel-circuit',
+      'saul-reign',
+      'solomon-glory','david-exile-throne'],
     activeSiteIds: ['tel-dan-stele', 'mesha-stele'],
     activeFigureIds: ['david', 'solomon']
   },
@@ -2788,7 +4107,13 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 7,
     headline: "The Divided Monarchy · Moabite Rebellion & Elijah's Ministry",
     historicalSummary: "Following Ahab's death, Moab rebels against Israel (Mesha Stele, 2 Kings 1:1, 3:4). Ahaziah falls sick and seeks Baal-zebub at Ekron; Elijah prophesies judgment. Attested by the Mesha Stele, Tel Dan Stele, and Black Obelisk.",
-    activeRouteIds: ['elijah-elisha-ministry'],
+    activeRouteIds: [
+      'elijah-prophet',
+      'elisha-ministry',
+      'amos-prophet',
+      'hosea-prophet',
+      'jonah-prophet',
+      'isaiah-ministry','elijah-elisha-ministry'],
     activeSiteIds: ['mesha-stele', 'tel-dan-stele', 'black-obelisk'],
     activeFigureIds: ['david', 'hezekiah']
   },
@@ -2807,7 +4132,11 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 6,
     headline: "Jehu's Coup & Assyrian Hegemony Under Tiglath-Pileser III",
     historicalSummary: "Jehu executes Ahab's line and pays tribute to Shalmaneser III. Assyria expands westward, exacting tribute from Israel until Tiglath-Pileser III begins deportations. Discovered: The Black Obelisk of Shalmaneser III and Tel Dan Stele.",
-    activeRouteIds: ['elijah-elisha-ministry'],
+    activeRouteIds: [
+      'elijah-prophet',
+      'elisha-ministry',
+      'amos-prophet',
+      'jonah-prophet','elijah-elisha-ministry'],
     activeSiteIds: ['black-obelisk', 'tel-dan-stele'],
     activeFigureIds: ['hezekiah']
   },
@@ -2845,7 +4174,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 6,
     headline: "The Assyrian Invasion · Sennacherib's Siege of Jerusalem",
     historicalSummary: "The Neo-Assyrian Empire conquers Samaria (722 BC) and besieges Hezekiah in Jerusalem in 701 BC. Discovered: The Taylor Prism of Sennacherib & Siloam Tunnel Inscription.",
-    activeRouteIds: [],
+    activeRouteIds: [
+      'isaiah-ministry',
+      'hosea-prophet'
+    ],
     activeSiteIds: ['taylor-prism', 'siloam-inscription', 'ketef-hinnom-scrolls'],
     activeFigureIds: ['hezekiah', 'isaiah']
   },
@@ -2864,7 +4196,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 6,
     headline: 'The Fall of Jerusalem · Daniel in Babylon',
     historicalSummary: 'Nebuchadnezzar captures Jerusalem, burns the Temple in 586 BC, and carries Judah into 70 years of exile. Daniel testifies to the Most High in the courts of Babylon. Discovered: Nabonidus Cylinder naming Belshazzar.',
-    activeRouteIds: ['babylonian-deportation-daniel'],
+    activeRouteIds: [
+      'jeremiah-ministry',
+      'daniel-exile',
+      'ezekiel-exile','babylonian-deportation-daniel'],
     activeSiteIds: ['nabonidus-cylinder', 'ketef-hinnom-scrolls', 'lachish-ostraca', 'jehoiachin-ration-tablets'],
     activeFigureIds: ['daniel', 'jeremiah']
   },
@@ -2883,7 +4218,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 5,
     headline: 'The Decree of Cyrus · Rebuilding the Temple & Walls',
     historicalSummary: 'Cyrus the Great conquers Babylon in 539 BC and decrees the Jewish return. Nehemiah and Ezra rebuild the walls and worship in Jerusalem under Artaxerxes. Discovered: The Cyrus Cylinder.',
-    activeRouteIds: ['ezra-nehemiah-return'],
+    activeRouteIds: [
+      'esther-mordecai',
+      'ezra-journey',
+      'nehemiah-walls','ezra-nehemiah-return'],
     activeSiteIds: ['cyrus-cylinder'],
     activeFigureIds: ['ezra-nehemiah', 'daniel']
   },
@@ -2903,6 +4241,9 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     headline: 'The Fullness of Time · John the Baptist & Earthly Life of Jesus Christ',
     historicalSummary: 'In Roman Judea and Galilee, John the Baptist prepares the way at the Jordan and Aenon; Jesus Christ is born in Bethlehem, sheltered in Egypt, raised in Nazareth, ministers across Galilee, Samaria, and Judea, is crucified under Pontius Pilate, rises bodily on the third day, and ascends from Olivet.',
     activeRouteIds: [
+      'stephen-philip-deacons',
+      'paul-conversion-early',
+      'barnabas-mark',
       'john-baptist-ministry',
       'jesus-nativity-youth',
       'jesus-early-ministry',
@@ -2928,6 +4269,9 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     headline: 'The Gospel to the Nations · Apostles from Rome to Parthia & India',
     historicalSummary: 'From Pentecost in Jerusalem, Peter and Philip carry the Gospel through Samaria, Gaza, and Caesarea to Rome; Paul completes three missionary journeys and his voyage to Rome; John shepherds the Seven Churches and receives Revelation on Patmos; and early patristic history attests Andrew in Scythia, Mark in Alexandria, and Thomas across Parthia to India.',
     activeRouteIds: [
+      'stephen-philip-deacons',
+      'paul-conversion-early',
+      'barnabas-mark',
       'peter-philip-missions',
       'paul-first-journey',
       'paul-second-journey',
@@ -2952,19 +4296,41 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     historicalSummary: 'All surviving archaeological discoveries, imperial extents, and biblical routes across the known ancient world from the Atlantic to China.',
     activeRouteIds: [
       'abraham-call',
+      'job-land-of-uz',
       'jacob-joseph-egypt',
       'exodus-route',
       'joshua-conquest',
+      'gideon-judges',
+      'samson-judges',
+      'ruth-boaz',
+      'samuel-circuit',
+      'saul-reign',
       'david-exile-throne',
+      'solomon-glory',
+      'elijah-prophet',
+      'elisha-ministry',
+      'amos-prophet',
+      'hosea-prophet',
+      'jonah-prophet',
+      'isaiah-ministry',
       'elijah-elisha-ministry',
+      'jeremiah-ministry',
+      'daniel-exile',
+      'ezekiel-exile',
       'babylonian-deportation-daniel',
+      'esther-mordecai',
+      'ezra-journey',
+      'nehemiah-walls',
       'ezra-nehemiah-return',
       'john-baptist-ministry',
       'jesus-nativity-youth',
       'jesus-early-ministry',
       'jesus-galilean-ministry',
       'jesus-passion-resurrection',
+      'stephen-philip-deacons',
       'peter-philip-missions',
+      'paul-conversion-early',
+      'barnabas-mark',
       'paul-first-journey',
       'paul-second-journey',
       'paul-third-journey',
@@ -3288,7 +4654,273 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     focusZoom: 5,
     evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
     summary: 'Canonical ministry in Jerusalem and Cyprus followed by early patristic attestation (Origen & Eusebius Hist. Eccl. 2.16, 3.1) of John Mark founding the church in Alexandria and Andrew preaching along the Black Sea in Scythia and Patras in Achaia.'
-  }
+  },
+  // --- EXPANDED CHARACTER TIMELINE FILTERS ---
+  {
+    id: 'filter-job-uz',
+    eraIds: ['patriarchs', 'all'],
+    categoryLabel: 'Patriarchs',
+    label: '🏜️ Job: Trials, Comforters & Whirlwind in Uz',
+    dateLabel: 'c. 1900 BC',
+    routeIds: ['job-land-of-uz'],
+    focusCenter: { lat: 30.6, lng: 36.5 },
+    focusZoom: 6,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Follow Job\'s upright life in the land of Uz, catastrophic Sabean and Chaldean raids, disputes with his three comforters, and God\'s majestic whirlwind speech bringing double restoration.'
+  },
+  {
+    id: 'filter-gideon-judges',
+    eraIds: ['exodus', 'all'],
+    categoryLabel: 'Judges Era',
+    label: '⚔️ Gideon: Harod Spring & 300 Midian Rout',
+    dateLabel: 'c. 1191 BC',
+    routeIds: ['gideon-judges'],
+    focusCenter: { lat: 32.4, lng: 35.5 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Trace Gideon from the oak in Ophrah to the water lapping test at Harod Spring, the midnight attack with trumpets and pitchers at Moreh, and the pursuit to Karkor.'
+  },
+  {
+    id: 'filter-samson-judges',
+    eraIds: ['exodus', 'all'],
+    categoryLabel: 'Judges Era',
+    label: '🦁 Samson: Timnath, Lehi & Gaza Gates',
+    dateLabel: 'c. 1085 BC',
+    routeIds: ['samson-judges'],
+    focusCenter: { lat: 31.65, lng: 34.8 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Samson\'s Nazarite exploits from Zorah and Timnath to the jawbone victory at Lehi, the midnight carrying of the gates of Gaza, and the final overthrow of Dagon\'s temple.'
+  },
+  {
+    id: 'filter-ruth-boaz',
+    eraIds: ['exodus', 'all'],
+    categoryLabel: 'Judges Era',
+    label: '🌾 Ruth & Naomi: Moab to Bethlehem',
+    dateLabel: 'c. 1100 BC',
+    routeIds: ['ruth-boaz'],
+    focusCenter: { lat: 31.6, lng: 35.4 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Ruth\'s faithful journey from the plains of Moab to the barley fields and threshingfloor of Boaz at Bethlehem, bringing Obed into the royal ancestry of David.'
+  },
+  {
+    id: 'filter-samuel-circuit',
+    eraIds: ['united_monarchy', 'all'],
+    categoryLabel: 'Prophets & Judges',
+    label: '📜 Samuel: Circuit Judge & Anointings',
+    dateLabel: 'c. 1050 BC',
+    routeIds: ['samuel-circuit'],
+    focusCenter: { lat: 31.9, lng: 35.2 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Samuel\'s lifelong prophetic ministry from childhood at Shiloh to the Ebenezer stone at Mizpah, the annual judicial circuit (Bethel, Gilgal, Mizpah), and the anointings of Saul and David.'
+  },
+  {
+    id: 'filter-saul-reign',
+    eraIds: ['united_monarchy', 'all'],
+    categoryLabel: 'Monarchy',
+    label: '👑 Saul: Gibeah, Michmash & Gilboa',
+    dateLabel: 'c. 1050–1010 BC',
+    routeIds: ['saul-reign'],
+    focusCenter: { lat: 32.1, lng: 35.3 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'First king of Israel: reigning from Gibeah fortress, defeating Philistines at Michmash Pass, consulting the medium at Endor, and falling on Mount Gilboa.'
+  },
+  {
+    id: 'filter-solomon-glory',
+    eraIds: ['united_monarchy', 'all'],
+    categoryLabel: 'Monarchy',
+    label: '🏛️ Solomon: Temple, Red Sea Fleet & Glory',
+    dateLabel: 'c. 970–931 BC',
+    routeIds: ['solomon-glory'],
+    focusCenter: { lat: 31.8, lng: 35.4 },
+    focusZoom: 7,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Solomon\'s golden age: the dream at Gibeon, dedicating the First Temple in Jerusalem, building the Red Sea fleet to Ophir at Ezion-geber, fortifying chariot cities, and greeting the Queen of Sheba.'
+  },
+  {
+    id: 'filter-elijah-prophet-only',
+    eraIds: ['divided_monarchy_prophets', '2kings_jehu', 'all'],
+    categoryLabel: 'Prophets',
+    label: '🔥 Elijah: Tishbe, Cherith, Carmel & Whirlwind',
+    dateLabel: 'c. 865–851 BC',
+    routeIds: ['elijah-prophet'],
+    focusCenter: { lat: 32.1, lng: 35.4 },
+    focusZoom: 7,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Prophet Elijah\'s complete personal route: confronting Ahab at Tishbe, ravens at Cherith, widow\'s meal at Zarephath, fire on Mount Carmel, still small voice at Horeb, and ascension in chariot of fire by the Jordan.'
+  },
+  {
+    id: 'filter-elisha-prophet-only',
+    eraIds: ['divided_monarchy_prophets', '2kings_jehu', 'all'],
+    categoryLabel: 'Prophets',
+    label: '💧 Elisha: Jordan Parting, Shunem & Dothan',
+    dateLabel: 'c. 851–798 BC',
+    routeIds: ['elisha-ministry'],
+    focusCenter: { lat: 32.4, lng: 35.3 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Prophet Elisha\'s miraculous ministry: parting the Jordan, healing Jericho\'s waters, raising the Shunammite\'s son, cleansing Naaman, and revealing chariots of fire at Dothan.'
+  },
+  {
+    id: 'filter-amos-prophet',
+    eraIds: ['divided_monarchy_prophets', '2kings_jehu', 'all'],
+    categoryLabel: 'Prophets',
+    label: '🐑 Amos: Tekoa Herdsman to Bethel Altar',
+    dateLabel: 'c. 760 BC',
+    routeIds: ['amos-prophet'],
+    focusCenter: { lat: 31.95, lng: 35.2 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Tekoa herdsman Amos sent north to the royal golden calf sanctuary at Bethel, confronting high priest Amaziah and denouncing the luxurious ease of Samaria.'
+  },
+  {
+    id: 'filter-hosea-prophet',
+    eraIds: ['divided_monarchy_prophets', 'assyrian_siege', 'all'],
+    categoryLabel: 'Prophets',
+    label: '❤️ Hosea: Unfailing Love in Samaria',
+    dateLabel: 'c. 755–715 BC',
+    routeIds: ['hosea-prophet'],
+    focusCenter: { lat: 32.4, lng: 35.3 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Prophet Hosea\'s living parable of redeeming unfaithful Gomer to mirror God\'s unwavering covenant love for Israel in the twilight of the Northern Kingdom.'
+  },
+  {
+    id: 'filter-jonah-prophet',
+    eraIds: ['divided_monarchy_prophets', '2kings_jehu', 'all'],
+    categoryLabel: 'Prophets',
+    label: '🐋 Jonah: Joppa to Nineveh & Gourd',
+    dateLabel: 'c. 760 BC',
+    routeIds: ['jonah-prophet'],
+    focusCenter: { lat: 34.5, lng: 38.5 },
+    focusZoom: 5,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Jonah\'s journey from Galilee to Joppa, the raging Mediterranean sea and great fish, the repentance of 120,000 souls in Nineveh, and the lesson of the withered gourd.'
+  },
+  {
+    id: 'filter-isaiah-ministry',
+    eraIds: ['divided_monarchy_prophets', 'assyrian_siege', 'all'],
+    categoryLabel: 'Prophets',
+    label: '🕊️ Isaiah: Temple Vision, Immanuel & Zion',
+    dateLabel: 'c. 740–681 BC',
+    routeIds: ['isaiah-ministry'],
+    focusCenter: { lat: 31.78, lng: 35.23 },
+    focusZoom: 10,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Isaiah\'s throne vision in the Temple, Immanuel prophecy to King Ahaz at the Upper Pool, deliverance of Jerusalem from Sennacherib, and the Suffering Servant songs.'
+  },
+  {
+    id: 'filter-jeremiah-ministry',
+    eraIds: ['babylonian_exile', 'all'],
+    categoryLabel: 'Exile & Return',
+    label: '📜 Jeremiah: Anathoth, Tophet, Cistern & Egypt',
+    dateLabel: '627–580 BC',
+    routeIds: ['jeremiah-ministry'],
+    focusCenter: { lat: 31.5, lng: 34.5 },
+    focusZoom: 7,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Jeremiah\'s call at Anathoth, the Temple Gate sermon, the shattered bottle in Hinnom, the miry cistern dungeon, and the final prophecy at Tahpanhes in Egypt.'
+  },
+  {
+    id: 'filter-daniel-exile-only',
+    eraIds: ['babylonian_exile', 'all'],
+    categoryLabel: 'Exile & Return',
+    label: '🦁 Daniel: Babylon, Furnace, Lions & Susa',
+    dateLabel: '605–536 BC',
+    routeIds: ['daniel-exile'],
+    focusCenter: { lat: 32.5, lng: 44.5 },
+    focusZoom: 6,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Daniel\'s 70-year witness from captive youth in Jerusalem to the colossal statue dream, the fiery furnace, Belshazzar\'s feast, the lions\' den, and apocalypses at Susa and the Tigris.'
+  },
+  {
+    id: 'filter-ezekiel-exile',
+    eraIds: ['babylonian_exile', 'all'],
+    categoryLabel: 'Exile & Return',
+    label: '⚡ Ezekiel: Chebar Chariot & Dry Bones',
+    dateLabel: '593–571 BC',
+    routeIds: ['ezekiel-exile'],
+    focusCenter: { lat: 32.2, lng: 44.8 },
+    focusZoom: 6,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Ezekiel\'s visions among the exiles: the chariot throne with burning coals and wheels full of eyes by the River Chebar, the valley of dry bones raised to life, and the Millennial Temple.'
+  },
+  {
+    id: 'filter-esther-mordecai',
+    eraIds: ['persian_restoration', 'all'],
+    categoryLabel: 'Exile & Return',
+    label: '👑 Esther & Mordecai: Susa Citadel & Purim',
+    dateLabel: '483–473 BC',
+    routeIds: ['esther-mordecai'],
+    focusCenter: { lat: 32.19, lng: 48.24 },
+    focusZoom: 9,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'The providential deliverance of the Jewish people in the Persian winter capital of Shushan: Esther crowned queen, Mordecai in the King\'s Gate, Haman\'s defeat on his own gallows, and Purim.'
+  },
+  {
+    id: 'filter-ezra-journey',
+    eraIds: ['persian_restoration', 'all'],
+    categoryLabel: 'Exile & Return',
+    label: '📖 Ezra: Ahava Fast to Jerusalem Assembly',
+    dateLabel: '458 BC',
+    routeIds: ['ezra-journey'],
+    focusCenter: { lat: 33.5, lng: 41.5 },
+    focusZoom: 6,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Ezra the ready scribe leading 1,500 families from Babylon, fasting at the River Ahava without royal soldiers, and arriving in Jerusalem to restore the Law of God.'
+  },
+  {
+    id: 'filter-nehemiah-walls',
+    eraIds: ['persian_restoration', 'all'],
+    categoryLabel: 'Exile & Return',
+    label: '🧱 Nehemiah: Susa to 52-Day Wall Circuit',
+    dateLabel: '445 BC',
+    routeIds: ['nehemiah-walls'],
+    focusCenter: { lat: 31.78, lng: 35.23 },
+    focusZoom: 9,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Nehemiah cupbearer to Artaxerxes arriving from Susa with cavalry, inspecting the ruins by night, organizing builders with sword and trowel, and finishing the walls in 52 days.'
+  },
+  {
+    id: 'filter-stephen-philip',
+    eraIds: ['roman_christ', 'apostolic_church', 'all'],
+    categoryLabel: 'Deacons & Evangelists',
+    label: '⚡ Stephen & Philip: Jerusalem, Samaria & Gaza',
+    dateLabel: 'AD 34–37',
+    routeIds: ['stephen-philip-deacons'],
+    focusCenter: { lat: 31.8, lng: 34.8 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Stephen\'s angelic witness and martyrdom outside Jerusalem, Philip\'s revival in Samaria, and the baptism of the Ethiopian royal treasurer on the desert road to Gaza.'
+  },
+  {
+    id: 'filter-paul-conversion',
+    eraIds: ['roman_christ', 'apostolic_church', 'all'],
+    categoryLabel: 'Apostolic Age',
+    label: '⚡ Paul: Tarsus, Damascus & Arabia',
+    dateLabel: 'AD 33–46',
+    routeIds: ['paul-conversion-early'],
+    focusCenter: { lat: 33.5, lng: 35.5 },
+    focusZoom: 6,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Paul\'s dramatic Damascus road conversion by the risen Christ, Ananias on Straight Street, three years of revelation in Arabia, midnight basket escape, and return to Antioch.'
+  },
+  {
+    id: 'filter-barnabas-mark',
+    eraIds: ['roman_christ', 'apostolic_church', 'all'],
+    categoryLabel: 'Apostolic Age',
+    label: '⛵ Barnabas & Mark: Cyprus & Antioch',
+    dateLabel: 'AD 45–52',
+    routeIds: ['barnabas-mark'],
+    focusCenter: { lat: 35.5, lng: 34.0 },
+    focusZoom: 7,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Barnabas the son of consolation mentoring young John Mark through Antioch and Cyprus, standing by Mark through departure, and seeing him restored as profitable for ministry.'
+  },
+
 ];
 
 export interface BiblicalGeographicEntity {

@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.34] - 2026-10-17
+
+- Complete Biblical Character Mapping (41 Canonical Routes across Genesis to Revelation) & 8-Tier Managed Panes Architecture:
+  - **41 Canonical Biblical Character Routes (`src/data/ancientMapData.ts`)**:
+    - Expanded character coverage across all eras from Genesis to Revelation, adding 22 new character routes: Job (`job-land-of-uz`), Gideon (`gideon-judges`), Samson (`samson-judges`), Ruth (`ruth-boaz`), Samuel (`samuel-circuit`), Saul (`saul-reign`), Solomon (`solomon-glory`), Elijah (`elijah-prophet`), Elisha (`elisha-ministry`), Amos (`amos-prophet`), Hosea (`hosea-prophet`), Jonah (`jonah-prophet`), Isaiah (`isaiah-ministry`), Jeremiah (`jeremiah-ministry`), Daniel (`daniel-exile`), Ezekiel (`ezekiel-exile`), Esther (`esther-mordecai`), Ezra (`ezra-journey`), Nehemiah (`nehemiah-walls`), Stephen & Philip (`stephen-philip-deacons`), Paul's Early Ministry (`paul-conversion-early`), and Barnabas & Mark (`barnabas-mark`).
+    - Every route contains numbered, dated, interactive stops with Scripture citations and historical commentary.
+    - Updated macro-era active route arrays (`patriarchs`, `exodus`, `united_monarchy`, `divided_monarchy_prophets`, `2kings_jehu`, `assyrian_siege`, `babylonian_exile`, `persian_restoration`, `roman_christ`, `apostolic_church`, and `all`).
+    - Added dedicated granular sub-era filter chips into `GRANULAR_TIMELINE_FILTERS`.
+  - **8-Tier Managed Map Panes & Zero-Collision Stacking (`src/engine/ancientMap.ts`)**:
+    - Created explicit `cityPane` (`440`) and `sitePane` (`540`), elevating `routeStopPane` to `620` so that city marker dots never intercept pointer events when hovering or clicking numbered waypoint stops.
+    - Assigned imperial capital markers to `sitePane` (`540`) and route banners to `routePane` (`480`), ensuring route banners never block interactive capital pins or archaeological discoveries.
+    - Re-positioned banner coordinates in Judah and Samaria to maintain clear margins around royal capitals.
+  - **Verification (`tests/map.spec.ts`)**:
+    - All 9 Playwright end-to-end tests PASS in 34.7s; all 7 data integrity selfcheck tests PASS.
+
 ## [00.01.33] - 2026-10-17
 
 - Granular Sub-Era Map Timeline, 19 Biblical & Apostolic Journeys (130+ Dated Stops), John the Baptist & Jesus Parallel Synchrony, Thomas to Parthia & India & Interactive Waypoint Stepper:

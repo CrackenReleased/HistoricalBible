@@ -1,3 +1,52 @@
+## 2026-10-17 03:04:00 — Complete Biblical Character Mapping (41 Canonical Routes across Genesis to Revelation), Dedicated Managed Panes Stack & Zero-Collision Hover Architecture (v00.01.34)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - The owner instructed to map out EVERY placeable Bible character across the entire canon (specifically highlighting Elijah, Job, Amos, Nehemiah, Daniel, Abraham, Gideon, etc.) with the same granular stop-by-stop interactive precision, and resolve remaining hover friction where city dots and route banners could interfere with stops and capitals.
+- Decision Point & Implementation:
+  1. **Expanded Biblical Character Routes (41 Total Canonical Routes, 260+ Dated Waypoint Stops in `src/data/ancientMapData.ts`)**:
+     - Added 22 new comprehensive character routes across all biblical eras:
+       - `job-land-of-uz` (Job in Uz, Teman, Sabean/Chaldean raids, and whirlwind restoration c. 1900 BC).
+       - `gideon-judges` (Ophrah, Spring of Harod 300, Mount Moreh, Succoth & Penuel, Karkor c. 1160 BC).
+       - `samson-judges` (Zorah, Timnath, Ashkelon, Lehi jawbone, Gaza gates, Valley of Sorek with Delilah, Temple of Dagon c. 1075 BC).
+       - `ruth-boaz` (Moab, Bethlehem barley harvest, threshing floor, and Bethlehem city gate c. 1100 BC).
+       - `samuel-circuit` (Ramah birthplace, Shiloh tabernacle, Mizpah Ebenezer, annual judicial circuit Bethel/Gilgal/Mizpah, Bethlehem anointing of David c. 1070–1012 BC).
+       - `saul-reign` (Gibeah of Saul capital, Jabesh-gilead relief, Michmash Pass, En-dor medium, Mount Gilboa defeat c. 1050–1010 BC).
+       - `solomon-glory` (Gibeon dream, First Temple & Palace in Jerusalem, Ezion-geber Red Sea fleet, chariot cities Hazor/Megiddo/Gezer, Tadmor oasis, Sheba encounter c. 970–931 BC).
+       - `elijah-prophet` (Tishbe, Brook Cherith ravens, Zarephath widow, Mount Carmel fire from heaven, Mount Horeb still small voice, Jezreel chariot footrace, Jordan whirlwind chariot of fire c. 865–851 BC).
+       - `elisha-ministry` (Abel-meholah call, Jericho bitter spring healed, Shunem room & raised son, Samaria Naaman cleansing, Dothan chariots of fire, Damascus Hazael prophecy c. 851–798 BC).
+       - `amos-prophet` (Tekoa herdsman, Bethel golden calf altar confrontation with Amaziah, Samaria ivory palaces c. 760 BC).
+       - `hosea-prophet` (Northern kingdom prophetic ministry, Samaria, Jezreel Valley, Mizpah & Tabor, final Assyrian judgment & redeeming love c. 755–715 BC).
+       - `jonah-prophet` (Gath-hepher, Joppa departure, Mediterranean depths & great fish, Nineveh 3-day overland proclamation, east of the city gourd c. 760 BC).
+       - `isaiah-ministry` (Jerusalem Temple throne vision, Conduit of Upper Pool Immanuel sign, Mount Zion Sennacherib 185,000 defeat, Broad Wall defense c. 740–681 BC).
+       - `jeremiah-ministry` (Anathoth birthplace, Temple Gate sermon, Valley of Tophet broken bottle, Malchiah muddy cistern, Mizpah aftermath, Tahpanhes in Egypt c. 627–580 BC).
+       - `daniel-exile` (Jerusalem siege, Babylon royal palace & golden statue at Dura, Belshazzar's feast, Persian lions' den, Susa Ulai canal vision, Tigris River heavenly messenger c. 605–536 BC).
+       - `ezekiel-exile` (Jerusalem priestly service, River Chebar chariot throne vision, Tel Abib exiles, Valley of Dry Bones, Millennial Temple vision c. 593–571 BC).
+       - `esther-mordecai` (Susa citadel palace, King's Gate, Inner Court intercession, Haman banquet & 50-cubit gallows, royal decree of Purim deliverance c. 483–473 BC).
+       - `ezra-journey` (Babylon royal decree, River Ahava solemn fast, overland desert escort, Jerusalem Temple covenant renewal c. 458 BC).
+       - `nehemiah-walls` (Susa cupbearer to Artaxerxes, overland military escort, midnight Jerusalem inspection, 10-gate 52-day wall circuit, Wall dedication celebration c. 445–432 BC).
+       - `stephen-philip-deacons` (Jerusalem seven deacons & Stephen's stoning, Samaria revival with Peter and John, Gaza desert road Ethiopian eunuch baptism, Caesarea Maritima evangelist home c. AD 34–37).
+       - `paul-conversion-early` (Tarsus birthplace, Jerusalem Gamaliel school, Damascus road heavenly light, Straight Street Judas house, Arabia desert contemplation, Damascus basket escape, Jerusalem & Syrian Antioch return c. AD 33–46).
+       - `barnabas-mark` (Jerusalem field sale, Antioch Gentiles, Cyprus first mission, Perga departure, second Cyprus missionary circuit c. AD 45–52).
+     - Added dedicated granular timeline filters for all 22 characters with descriptive icons, date ranges, and scholarly biblical summaries into `GRANULAR_TIMELINE_FILTERS`.
+     - Bound all 22 new routes into macro-eras (`patriarchs`, `exodus`, `united_monarchy`, `divided_monarchy_prophets`, `2kings_jehu`, `assyrian_siege`, `babylonian_exile`, `persian_restoration`, `roman_christ`, `apostolic_church`, and `all`).
+  2. **Dedicated Layer Stack & Zero-Collision Z-Ordering (`src/engine/ancientMap.ts`)**:
+     - Diagnosed root causes where city dots (`.city-marker-dot` in Leaflet default `markerPane: 600`) could intercept pointer events on route stops (`routeStopPane: 560`), and route banners could overlap city capitals.
+     - Architected a strict 8-tier managed pane hierarchy:
+       - `waterPane` (`380`, `.leaflet-water-pane`)
+       - `empirePane` (`400`, `.leaflet-empire-pane`)
+       - `cityPane` (`440`, `.leaflet-city-pane`)
+       - `routePane` (`480`, `.leaflet-route-pane`)
+       - `sitePane` (`540`, `.leaflet-site-pane`)
+       - `routeStopPane` (`620`, `.leaflet-routeStop-pane`)
+       - `tooltipPane` (`750`, `.leaflet-tooltip-pane`)
+       - `popupPane` (`800`, `.leaflet-popup-pane`)
+     - Assigned city markers to `cityPane` (`440`) and capital/site markers to `sitePane` (`540`), while numbered waypoint stops sit prominently in `routeStopPane` (`620`), guaranteeing that hovering or clicking a biblical stop is never intercepted.
+     - De-conflicted route banner coordinates across Judah and Samaria so banners never obstruct capital markers.
+- Verification:
+  - All 9/9 Playwright map tests in `tests/map.spec.ts` PASS.
+  - All 7/7 suites in `npm run test:selfcheck` PASS.
+  - Production build `npm run build` PASS.
+
 ## 2026-10-17 02:24:00 — Granular Sub-Era Map Timeline, 19 Biblical & Apostolic Journeys (130+ Dated Stops), John the Baptist & Jesus Parallel Synchrony, Thomas to Parthia & India & Interactive Waypoint Stepper (v00.01.33)
 
 - User Request & Direct Root-Cause Diagnosis:
