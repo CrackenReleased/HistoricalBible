@@ -193,6 +193,63 @@ test('ancientMapData has valid foreign keys, WGS84 coordinates, figure links, an
   for (const [key, geo] of Object.entries(BIBLICAL_GEOGRAPHIC_ENTITIES)) {
     assert.ok(geo.coords.lat >= -90 && geo.coords.lat <= 90 && geo.coords.lng >= -180 && geo.coords.lng <= 180, `Invalid coords for ${key}`);
   }
+
+  // Regression: Non-maritime route segments and empire boundaries must not cut across Sea of Galilee
+  const galileePoly = [
+    { lat: 32.905, lng: 35.568 }, { lat: 32.898, lng: 35.602 }, { lat: 32.885, lng: 35.632 },
+    { lat: 32.860, lng: 35.648 }, { lat: 32.825, lng: 35.645 }, { lat: 32.795, lng: 35.633 },
+    { lat: 32.765, lng: 35.610 }, { lat: 32.730, lng: 35.588 }, { lat: 32.708, lng: 35.575 },
+    { lat: 32.715, lng: 35.558 }, { lat: 32.735, lng: 35.542 }, { lat: 32.768, lng: 35.530 },
+    { lat: 32.805, lng: 35.524 }, { lat: 32.845, lng: 35.520 }, { lat: 32.870, lng: 35.532 },
+    { lat: 32.885, lng: 35.555 }, { lat: 32.905, lng: 35.568 }
+  ];
+
+  function ptInPoly(pt: { lat: number; lng: number }, poly: Array<{ lat: number; lng: number }>) {
+    let inside = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const xi = poly[i].lng, yi = poly[i].lat;
+      const xj = poly[j].lng, yj = poly[j].lat;
+      if (((yi > pt.lat) !== (yj > pt.lat)) && (pt.lng < (xj - xi) * (pt.lat - yi) / (yj - yi) + xi)) {
+        inside = !inside;
+      }
+    }
+    return inside;
+  }
+
+  function segmentCrossesPoly(p1: { lat: number; lng: number }, p2: { lat: number; lng: number }, poly: Array<{ lat: number; lng: number }>) {
+    for (let step = 1; step < 50; step++) {
+      const t = step / 50;
+      const lat = p1.lat + (p2.lat - p1.lat) * t;
+      const lng = p1.lng + (p2.lng - p1.lng) * t;
+      if (ptInPoly({ lat, lng }, poly)) return true;
+    }
+    return false;
+  }
+
+  for (const route of BIBLICAL_ROUTES) {
+    const pts = (route.path && route.path.length > 0) ? route.path : route.stops.map(s => s.coords);
+    for (let i = 0; i < pts.length - 1; i++) {
+      if (route.id === 'jesus-galilean-ministry' && i >= 15 && i <= 18) continue; // Intentional Gospel boat crossing
+      assert.strictEqual(
+        segmentCrossesPoly(pts[i], pts[i + 1], galileePoly),
+        false,
+        `Route ${route.id} segment ${i} unintended Sea of Galilee crossing`
+      );
+    }
+  }
+
+  for (const emp of WORLD_EMPIRES_GEO) {
+    const pts = emp.approximateBounds;
+    for (let i = 0; i < pts.length; i++) {
+      const p1 = pts[i];
+      const p2 = pts[(i + 1) % pts.length];
+      assert.strictEqual(
+        segmentCrossesPoly(p1, p2, galileePoly),
+        false,
+        `Empire ${emp.id} boundary segment ${i} cuts Sea of Galilee`
+      );
+    }
+  }
 });
 
 test('historical_synchrony.v1.json figures all have matching discoveries, valid evidence categories, and valid KJV verse anchors', () => {

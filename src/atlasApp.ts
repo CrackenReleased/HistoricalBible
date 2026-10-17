@@ -588,11 +588,20 @@ class HistoricalAtlasApp {
     if (drawer) drawer.hidden = true;
     this.selectedSite = null;
   }
+
+  public getCanvas(): AncientMapCanvas | null {
+    return this.mapCanvas;
+  }
+
+  public getActiveEra(): ChronologicalEra | null {
+    return this.mapCanvas ? this.mapCanvas.activeEra : null;
+  }
 }
 
 // Bootstrap on DOM ready
 if (typeof document !== 'undefined') {
   const app = new HistoricalAtlasApp();
+  (window as any).ancientAtlasApp = app;
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => app.init());
   } else {

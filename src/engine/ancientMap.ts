@@ -302,7 +302,10 @@ export class AncientMapCanvas {
     this.map.on('movestart', () => this.closeActiveTooltip());
     this.map.on('zoomstart', () => this.closeActiveTooltip());
     this.map.on('click', () => this.closeActiveTooltip());
-    this.map.on('zoomend moveend viewreset', () => this.scheduleLabelDeconfliction());
+    this.map.on('zoomend moveend viewreset', () => {
+      this.syncZoomClasses();
+      this.scheduleLabelDeconfliction();
+    });
     this.map.on('tooltipopen', (e: L.TooltipEvent) => {
       this.constrainTooltipToViewport(e.tooltip);
     });
@@ -316,6 +319,11 @@ export class AncientMapCanvas {
       this.map.invalidateSize();
       this.scheduleLabelDeconfliction();
     }, 200);
+  }
+
+  private syncZoomClasses(): void {
+    const isDetailed = this.map ? this.map.getZoom() >= 8 : false;
+    this.container.classList.toggle('map-zoom-detailed', isDetailed);
   }
 
   // Singleton Active Tooltip Tracking across all layers
@@ -1110,6 +1118,7 @@ export class AncientMapCanvas {
    */
   public renderActiveEra(): void {
     this.closeActiveTooltip();
+    this.syncZoomClasses();
     this.empireLayerGroup.clearLayers();
     this.waterLayerGroup.clearLayers();
     this.routeLayerGroup.clearLayers();
@@ -1122,10 +1131,10 @@ export class AncientMapCanvas {
         const latLngs = sea.polygon.map(pt => [pt.lat, pt.lng] as L.LatLngTuple);
         const seaPoly = L.polygon(latLngs, {
           pane: 'waterPane',
-          color: 'rgba(56, 189, 248, 0.50)',
-          fillColor: 'rgba(14, 116, 144, 0.22)',
-          fillOpacity: 0.22,
-          weight: 1.4,
+          color: 'rgba(56, 189, 248, 0.35)',
+          fillColor: 'rgba(14, 116, 144, 0.12)',
+          fillOpacity: 0.12,
+          weight: 0.8,
           dashArray: undefined
         });
         const biblicalSubtitle = sea.biblicalLabel || 'Biblical Water Body';
@@ -1142,8 +1151,8 @@ export class AncientMapCanvas {
         const riverLine = L.polyline(path, {
           pane: 'waterPane',
           color: '#38bdf8',
-          weight: 2.0,
-          opacity: 0.75
+          weight: 1.3,
+          opacity: 0.50
         });
         const scriptureSub = river.scriptureAnchor ? `<br/><span style="font-size: 0.70rem; color: #38bdf8; font-family: var(--font-mono, monospace);">${river.scriptureAnchor}</span>` : '';
         this.bindManagedTooltip(
@@ -1230,16 +1239,18 @@ export class AncientMapCanvas {
           pane: 'empirePane',
           color: empire.color,
           fillColor: empire.fillColor || empire.color,
-          fillOpacity: 0.14,
-          weight: 1.6,
+          fillOpacity: 0.12,
+          weight: 1.2,
+          opacity: 0.65,
           dashArray: undefined
         };
         const hoverStyle: L.PathOptions = {
           pane: 'empirePane',
           color: empire.color,
           fillColor: empire.fillColor || empire.color,
-          fillOpacity: 0.26,
-          weight: 2.4,
+          fillOpacity: 0.24,
+          weight: 2.2,
+          opacity: 0.95,
           dashArray: undefined
         };
 
@@ -1458,7 +1469,9 @@ export class AncientMapCanvas {
       };
 
       for (const route of routesToRender) {
-        const path = route.stops.map(s => [s.coords.lat, s.coords.lng] as L.LatLngTuple);
+        const path = (route.path && route.path.length > 0)
+          ? route.path.map(p => [p.lat, p.lng] as L.LatLngTuple)
+          : route.stops.map(s => [s.coords.lat, s.coords.lng] as L.LatLngTuple);
         const isPatristicRoute = route.evidenceClass === 'EXTERNAL_HISTORICAL_ATTESTATION';
         const evidenceBadgeText = isPatristicRoute
           ? 'SCRIPTURE + PATRISTIC / HISTORICAL ATTESTATION'

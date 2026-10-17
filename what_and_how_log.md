@@ -1,3 +1,44 @@
+## 2026-10-17 11:50:00 — Zero-Collision Water Body Geometry, Geodetic Route Road Corridors, SVG Focus Outline Reset & Cartographic Boundary Overhaul (v00.01.36)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User reported persistent border collisions, lines cutting across water bodies, and boundary anomalies, providing screenshot proof focused directly on the Sea of Galilee during `EPOCH: BABYLONIAN EXILE` (`605 – 539 BC`):
+    "We're still WAY off on our border colissions and even just the lines we are picking to represent the boundaries of things. Look at the sea of galilee. Like there are so many borders that are off I'm not even reading the details of what is presented yet."
+  - Audited root causes:
+    1. **Vector Straight-Line Route Traversal Across Water**: Straight point-to-point connections between distant stops (e.g., `babylonian-deportation-daniel` from Lachish to Riblah) cut right across the Sea of Galilee.
+    2. **Hydrological River Slicing**: The single continuous Jordan River polyline ran straight through the vertical center of the Sea of Galilee.
+    3. **Chromium SVG Focus Ring**: When clicking or focusing interactive SVG `<path>` elements, Chromium rendered a rectangular white bounding box around the lake (`outline: auto 5px`).
+    4. **Double-Stamped Water Labels**: Static water typography labels rendered over the dark raster tiles at detailed zoom levels (zoom >= 8).
+    5. **Divided Kingdom vs United Monarchy Collision**: Saul, David, and Solomon's `united_monarchy` era was rendering both `judah` and `israel_kingdom` as separate overlapping territories rather than a single unified kingdom (`united_israel`).
+    6. **Frontier & Coastal Collisions**: Territory boundaries for `nabataea` cut across the southern Dead Sea and Gulf of Aqaba; `persia`, `egypt`, `saite_egypt`, and `ptolemaic_egypt` had diagonal chords cutting across the Gulf of Suez and eastern Mediterranean Sea; `greece_seleucid` cut across the Gulf of Iskenderun.
+
+- Decision Point & Implementation:
+  1. **Geodetic Path Architecture for Biblical Routes (`src/data/ancientMapData.ts` & `src/engine/ancientMap.ts`)**:
+     - Added `path?: GeoCoordinate[]` property to `BiblicalRoute`.
+     - When present, the route line renders along the high-resolution ancient highway corridor while keeping numbered stops intact.
+     - Added road corridor for `babylonian-deportation-daniel` (26 waypoints along the Great North Road, west of the Sea of Galilee).
+     - Audited all 43 routes: verified 0 unintended water crossings across Sea of Galilee and Dead Sea (reserving water crossings exclusively for intentional Gospel boat journeys across Galilee).
+  2. **Hydrological River Realignment (`src/data/ancientMapData.ts`)**:
+     - Split Jordan River into `Upper Course` (Dan/Hermon to northern inlet delta) and `Lower Course` (southern outlet to Dead Sea), leaving the Sea of Galilee 100% free of artificial river vector lines.
+  3. **Chromium SVG Focus Outline Reset (`src/interact.css`)**:
+     - Added `path:focus, svg path:focus, .leaflet-interactive:focus, .leaflet-container:focus { outline: none !important; }` to permanently eradicate rectangular white focus boxes in Chromium browsers.
+  4. **Detailed Zoom Label Suppression (`src/interact.css` & `src/engine/ancientMap.ts`)**:
+     - Implemented dynamic `.map-zoom-detailed` class when `zoom >= 8`, hiding vector water labels to allow the sub-meter raster GIS tiles to render cleanly without text collisions.
+  5. **United Kingdom Realm (`src/data/ancientMapData.ts`)**:
+     - Created `united_israel` (`color: '#d4af37'`), tracing the full unified realm from Ladder of Tyre to Dan, Hermon, Golan, Ramoth-gilead, Arnon, Akrabbim, Beersheba, and Dor.
+     - Assigned `united_israel` to `united_monarchy` era and removed divided `israel_kingdom`.
+  6. **Complete Continental Frontier & Coastal Boundary Realignment (`src/data/ancientMapData.ts`)**:
+     - Realigned `nabataea` south of Dead Sea and east of Gulf of Aqaba.
+     - Realigned `persia`, `ptolemaic_egypt`, `egypt`, and `saite_egypt` along the Nile valley and Levant coastline, eliminating all chords cutting through Gulf of Suez and the Mediterranean Sea.
+     - Realigned `greece_seleucid` around the Gulf of Iskenderun.
+     - Restored solid cartographic hairlines (`dashArray: undefined`, `weight: 1.2`, `opacity: 0.65`).
+
+- Regression Verification & Proof:
+  - Added geometric point-in-polygon collision check in `tests/data-integrity-selfcheck.ts`: verifies 0 unintended route crossings and 0 empire boundary crossings over the Sea of Galilee.
+  - Added regression assertions and visual screenshot capture in `tests/map.spec.ts`: verified SVG focus outline is `none`, detailed zoom suppresses water labels, and United Monarchy contains `united_israel`.
+  - All 11 Playwright tests PASS (11 passed, 0 failed, 41.9s).
+  - All 7 Data Integrity Self-Check tests PASS.
+  - High-resolution visual proof captured and verified: `test-results/live_atlas_galilee_babylonian_exile.png`.
+
 ## 2026-10-17 03:26:00 — High-Resolution Topographic Kingdom Boundaries, Authentic Biblical Hydrology, On-Water Antique Typography & Solid Cartographic Hairlines (v00.01.35)
 
 - User Request & Direct Root-Cause Diagnosis:

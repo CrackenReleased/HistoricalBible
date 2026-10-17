@@ -551,4 +551,50 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
     await page.waitForTimeout(800);
     await page.screenshot({ path: 'test-results/live_atlas_united_monarchy_boundaries.png', fullPage: false });
   });
+
+  test('Regression: Natural water bodies and boundaries have zero geometric collisions, outline boxes, or lake cuts', async ({ page }) => {
+    await page.goto('/map?era=babylonian_exile');
+    await page.waitForTimeout(1500);
+
+    // 1. Verify Chromium SVG path focus outline reset
+    const outlineReset = await page.evaluate(() => {
+      const paths = document.querySelectorAll('path, svg path, .leaflet-interactive');
+      for (const p of Array.from(paths)) {
+        (p as HTMLElement).focus();
+        const style = window.getComputedStyle(p);
+        if (style.outline && style.outline !== 'none' && !style.outline.includes('0px') && !style.outline.includes('none')) {
+          return { element: p.tagName, outline: style.outline };
+        }
+      }
+      return { element: null, outline: 'none' };
+    });
+    expect(outlineReset.outline).toBe('none');
+
+    // 2. Verify zoom >= 8 detailed class hides water labels to prevent double-stamping over raster tiles
+    await page.evaluate(() => {
+      const map = (window as any).ancientAtlasApp?.getCanvas()?.map;
+      if (map) map.setView([32.815, 35.58], 11, { animate: false });
+    });
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: 'test-results/live_atlas_galilee_babylonian_exile.png', fullPage: false });
+
+    const waterLabelOpacity = await page.evaluate(() => {
+      const label = document.querySelector('.leaflet-water-label');
+      if (!label) return '0';
+      return window.getComputedStyle(label).opacity;
+    });
+    expect(waterLabelOpacity).toBe('0');
+
+    // 3. Verify United Monarchy uses unified Israel rather than conflicting divided kingdom boundaries
+    await page.goto('/map?era=united_monarchy');
+    await page.waitForTimeout(1500);
+    const unitedRegions = await page.evaluate(() => {
+      const app = (window as any).ancientAtlasApp;
+      const era = app?.getActiveEra ? app.getActiveEra() : null;
+      return era?.additionalRegionIds || [];
+    });
+    expect(unitedRegions).toContain('united_israel');
+    expect(unitedRegions).not.toContain('israel_kingdom');
+  });
 });
+

@@ -68,6 +68,7 @@ export interface BiblicalRoute {
   summary: string;
   evidenceClass?: RouteEvidenceClass;
   attestationSource?: string;
+  path?: GeoCoordinate[];
   stops: BiblicalRouteStop[];
 }
 
@@ -144,16 +145,19 @@ export const REGION_PRESETS: MapRegionPreset[] = [
 ];
 
 // Physical Water Bodies & Rivers (Geodetic Polylines for Canvas Rendering)
+// Note: Seas & Lakes (Mediterranean, Red Sea, Sea of Galilee, Dead Sea) are rendered directly by the
+// Esri World Dark Gray Base map's sub-meter raster GIS tiles. We deliberately omit crude vector polygons
+// Physical Water Bodies & Rivers (Geodetic Polylines and Shoreline Polygons)
 export const WATER_FEATURES: {
   seas: Array<{ name: string; polygon: GeoCoordinate[]; biblicalLabel?: string }>;
   rivers: Array<{ name: string; path: GeoCoordinate[]; scriptureAnchor?: string }>;
 } = {
   seas: [
     {
-      name: 'Sea of Galilee (Chinnereth)',
-      biblicalLabel: 'Sea of Chinnereth · Lake of Gennesaret · Sea of Tiberias',
+      name: 'Sea of Galilee (Sea of Chinnereth / Lake of Gennesaret)',
+      biblicalLabel: 'NUMBERS {34:11}, MATTHEW {4:18}, JOHN {6:1}',
       polygon: [
-        { lat: 32.905, lng: 35.568 }, // North mouth at Jordan River inlet
+        { lat: 32.905, lng: 35.568 },
         { lat: 32.898, lng: 35.602 },
         { lat: 32.885, lng: 35.632 },
         { lat: 32.860, lng: 35.648 },
@@ -161,56 +165,54 @@ export const WATER_FEATURES: {
         { lat: 32.795, lng: 35.633 },
         { lat: 32.765, lng: 35.610 },
         { lat: 32.730, lng: 35.588 },
-        { lat: 32.708, lng: 35.575 }, // South exit at Jordan outlet
+        { lat: 32.708, lng: 35.575 },
         { lat: 32.715, lng: 35.558 },
         { lat: 32.735, lng: 35.542 },
-        { lat: 32.768, lng: 35.528 }, // Tiberias shoreline
-        { lat: 32.805, lng: 35.522 }, // Magdala
-        { lat: 32.845, lng: 35.518 }, // Plain of Gennesaret
-        { lat: 32.875, lng: 35.528 }, // Tabgha / Capernaum
-        { lat: 32.895, lng: 35.548 },
+        { lat: 32.768, lng: 35.530 },
+        { lat: 32.805, lng: 35.524 },
+        { lat: 32.845, lng: 35.520 },
+        { lat: 32.870, lng: 35.532 },
+        { lat: 32.885, lng: 35.555 },
         { lat: 32.905, lng: 35.568 }
       ]
     },
     {
-      name: 'Dead Sea (The Salt Sea)',
-      biblicalLabel: 'The Salt Sea · Sea of the Arabah · East Sea',
+      name: 'Dead Sea (Salt Sea / Sea of the Plain)',
+      biblicalLabel: 'GENESIS {14:3}, JOSHUA {3:16}, EZEKIEL {47:8}',
       polygon: [
-        { lat: 31.782, lng: 35.545 }, // Jordan River mouth
-        { lat: 31.750, lng: 35.558 },
-        { lat: 31.670, lng: 35.570 },
-        { lat: 31.590, lng: 35.580 }, // Near Callirrhoe
-        { lat: 31.520, lng: 35.575 }, // Opposite Ein Gedi
-        { lat: 31.470, lng: 35.570 }, // Arnon canyon mouth
-        { lat: 31.370, lng: 35.550 },
-        { lat: 31.310, lng: 35.510 }, // Lisan Peninsula tip
-        { lat: 31.250, lng: 35.535 }, // Lisan eastern bay
-        { lat: 31.180, lng: 35.530 }, // Bab edh-Dhra
-        { lat: 31.060, lng: 35.495 }, // Southeast corner / Zoar
-        { lat: 31.020, lng: 35.440 }, // Southern pool terminus / Brook Zered mouth
-        { lat: 31.035, lng: 35.370 }, // Southwest corner / Mount Sodom
-        { lat: 31.100, lng: 35.385 },
-        { lat: 31.180, lng: 35.390 }, // Masada western shore
-        { lat: 31.280, lng: 35.405 },
-        { lat: 31.455, lng: 35.395 }, // Ein Gedi spring
-        { lat: 31.560, lng: 35.418 },
-        { lat: 31.660, lng: 35.445 },
-        { lat: 31.725, lng: 35.465 }, // Qumran / Ras Feshkha
+        { lat: 31.782, lng: 35.545 },
+        { lat: 31.740, lng: 35.565 },
+        { lat: 31.650, lng: 35.570 },
+        { lat: 31.500, lng: 35.560 },
+        { lat: 31.350, lng: 35.550 },
+        { lat: 31.200, lng: 35.520 },
+        { lat: 31.060, lng: 35.480 },
+        { lat: 31.020, lng: 35.400 },
+        { lat: 31.250, lng: 35.370 },
+        { lat: 31.450, lng: 35.385 },
+        { lat: 31.600, lng: 35.420 },
+        { lat: 31.750, lng: 35.500 },
         { lat: 31.782, lng: 35.545 }
       ]
     }
   ],
   rivers: [
     {
-      name: 'Jordan River',
+      name: 'Jordan River (Upper Course · Mount Hermon to Sea of Galilee)',
       scriptureAnchor: 'JOSHUA {3:17}, MATTHEW {3:13}',
       path: [
         { lat: 33.250, lng: 35.652 }, // Banias / Caesarea Philippi source
         { lat: 33.210, lng: 35.618 }, // Tel Dan confluent
         { lat: 33.120, lng: 35.615 }, // Hula Valley
         { lat: 33.020, lng: 35.625 }, // Jordan gorge
-        { lat: 32.905, lng: 35.568 }, // Enters Sea of Galilee
-        { lat: 32.708, lng: 35.575 }, // Exits Sea of Galilee
+        { lat: 32.905, lng: 35.568 }  // Northern shore of Sea of Galilee (Inlet delta)
+      ]
+    },
+    {
+      name: 'Jordan River (Lower Course · Sea of Galilee to Dead Sea)',
+      scriptureAnchor: 'JOSHUA {3:17}, 2 KINGS {2:8}, MATTHEW {3:13}',
+      path: [
+        { lat: 32.708, lng: 35.575 }, // Southern outlet of Sea of Galilee
         { lat: 32.645, lng: 35.560 }, // Yarmouk confluence
         { lat: 32.502, lng: 35.552 }, // Beth-shan ford
         { lat: 32.380, lng: 35.565 }, // Aenon near Salim
@@ -1199,6 +1201,23 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     scriptureOsis: 'JOS.3.14',
     evidenceClass: 'SCRIPTURE_TEXT',
     summary: 'After Moses views the Promised Land from Mount Nebo, Joshua leads Israel across the parted Jordan River to Gilgal, conquers Jericho and Ai, defends Gibeon in the southern campaign, and defeats Hazor in the north.',
+    path: [
+      { lat: 31.767, lng: 35.725 }, // Plains of Moab & Mount Nebo
+      { lat: 31.855, lng: 35.535 }, // Jordan River Crossing & Gilgal
+      { lat: 31.871, lng: 35.444 }, // Jericho
+      { lat: 32.213, lng: 35.281 }, // Ai & Mount Ebal / Shechem
+      { lat: 31.846, lng: 35.184 }, // Gibeon & Valley of Ajalon
+      { lat: 32.213, lng: 35.281 }, // Shechem pass northward
+      { lat: 32.410, lng: 35.240 }, // Dothan Valley
+      { lat: 32.502, lng: 35.500 }, // Beth-shan gap into Jordan trough
+      { lat: 32.780, lng: 35.510 }, // Western Galilee foothills around Sea of Galilee
+      { lat: 32.880, lng: 35.500 }, // Plain of Gennesaret western bypass
+      { lat: 33.017, lng: 35.568 }, // Hazor (Upper Galilee)
+      { lat: 32.880, lng: 35.500 }, // Return via western foothills
+      { lat: 32.502, lng: 35.500 }, // Beth-shan
+      { lat: 32.213, lng: 35.281 }, // Shechem
+      { lat: 32.055, lng: 35.289 }  // Shiloh
+    ],
     stops: [
       {
         name: 'Plains of Moab & Mount Nebo',
@@ -1270,6 +1289,18 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     scriptureOsis: '1SA.16.13',
     evidenceClass: 'SCRIPTURE_TEXT',
     summary: 'Anointed by Samuel at Bethlehem, David defeats Goliath in the Valley of Elah, endures years as a fugitive from Saul in Adullam and En-gedi, reigns seven years in Hebron, and establishes Jerusalem (Mount Zion) as Israel\'s united capital.',
+    path: [
+      { lat: 31.705, lng: 35.204 }, // Bethlehem Ephratah
+      { lat: 31.690, lng: 34.955 }, // Valley of Elah
+      { lat: 31.649, lng: 34.996 }, // Cave of Adullam
+      { lat: 31.615, lng: 35.005 }, // Keilah
+      { lat: 31.480, lng: 35.130 }, // Wilderness of Ziph
+      { lat: 31.420, lng: 35.160 }, // Maon / Carmel in Judah
+      { lat: 31.465, lng: 35.388 }, // En-gedi cliffs
+      { lat: 31.480, lng: 35.180 }, // Ascent of Ziz westward into Judean hills
+      { lat: 31.524, lng: 35.108 }, // Hebron
+      { lat: 31.768, lng: 35.213 }  // Jerusalem (City of David / Mount Zion)
+    ],
     stops: [
       {
         name: 'Bethlehem Ephratah',
@@ -1325,6 +1356,24 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     scriptureOsis: '1KI.18.38',
     evidenceClass: 'SCRIPTURE_TEXT',
     summary: 'During the apostasy of Ahab, Jezebel, and Ahaziah, Elijah confronts Baal on Mount Carmel, hears the still small voice at Horeb, prophesies against Ahaziah (2 Kings 1), and ascends in a whirlwind across the Jordan as Elisha receives a double portion.',
+    path: [
+      { lat: 32.350, lng: 35.680 }, // Brook Cherith (East of Jordan / Gilead)
+      { lat: 32.502, lng: 35.500 }, // Beth-shan ford into Jezreel Valley
+      { lat: 32.600, lng: 35.250 }, // Jezreel plain
+      { lat: 32.648, lng: 35.078 }, // Mount Carmel
+      { lat: 32.850, lng: 35.080 }, // Plain of Acre
+      { lat: 33.090, lng: 35.100 }, // Ladder of Tyre (coastal pass)
+      { lat: 33.270, lng: 35.196 }, // Tyre
+      { lat: 33.447, lng: 35.298 }, // Zarephath (Phoenicia)
+      { lat: 33.090, lng: 35.100 }, // Return via Phoenician coast
+      { lat: 32.648, lng: 35.078 }, // Mount Carmel
+      { lat: 31.768, lng: 35.213 }, // South to Beersheba
+      { lat: 31.245, lng: 34.790 }, // Beersheba
+      { lat: 28.539, lng: 33.975 }, // Mount Horeb (Sinai)
+      { lat: 31.245, lng: 34.790 }, // Return through Negev
+      { lat: 32.277, lng: 35.190 }, // Samaria & Ekron
+      { lat: 31.855, lng: 35.535 }  // Jericho & Jordan River (Ascension)
+    ],
     stops: [
       {
         name: 'Brook Cherith (East of Jordan)',
@@ -1388,6 +1437,34 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     scriptureOsis: 'DAN.1.1',
     evidenceClass: 'SCRIPTURE_TEXT',
     summary: 'In three waves (605, 597, and 586 BC), Nebuchadnezzar II marches from Babylon up the Euphrates through Carchemish and Riblah to besiege Jerusalem, carrying Daniel, Ezekiel, King Jehoiachin, and Judah into 70 years of Babylonian captivity.',
+    path: [
+      { lat: 31.768, lng: 35.213 }, // Stop 1: Jerusalem
+      { lat: 31.680, lng: 34.980 }, // Valley of Elah / Beit Guvrin road
+      { lat: 31.565, lng: 34.849 }, // Stop 2: Lachish
+      { lat: 31.700, lng: 34.930 }, // Azekah
+      { lat: 31.768, lng: 35.213 }, // Way of the Patriarchs back through Jerusalem
+      { lat: 31.930, lng: 35.220 }, // Bethel
+      { lat: 32.214, lng: 35.261 }, // Shechem / Tirzah pass
+      { lat: 32.410, lng: 35.240 }, // Dothan Valley
+      { lat: 32.502, lng: 35.500 }, // Beth-shan gap into Jordan trough
+      { lat: 32.650, lng: 35.520 }, // Jordan valley south of Galilee
+      { lat: 32.780, lng: 35.510 }, // Western foothills around Sea of Galilee (Tiberias ridge)
+      { lat: 32.880, lng: 35.500 }, // Plain of Gennesaret western bypass
+      { lat: 33.017, lng: 35.568 }, // Hazor gateway (Great North Road)
+      { lat: 33.250, lng: 35.652 }, // Caesarea Philippi / Dan (Lebanon pass)
+      { lat: 33.513, lng: 36.292 }, // Damascus royal oasis
+      { lat: 33.850, lng: 36.100 }, // Bekaa Valley highway
+      { lat: 34.455, lng: 36.578 }, // Stop 3: Riblah on the Orontes
+      { lat: 35.300, lng: 36.750 }, // Hamath
+      { lat: 36.200, lng: 37.150 }, // Aleppo (Halab)
+      { lat: 36.829, lng: 38.015 }, // Stop 4: Carchemish on Euphrates
+      { lat: 36.000, lng: 38.900 }, // Emar / Middle Euphrates
+      { lat: 35.330, lng: 40.150 }, // Deir ez-Zor
+      { lat: 34.450, lng: 40.900 }, // Mari (Euphrates caravan corridor)
+      { lat: 33.600, lng: 42.800 }, // Hit (bitumen springs)
+      { lat: 32.126, lng: 45.231 }, // Stop 5: River Chebar / Nippur (Tel-abib)
+      { lat: 32.542, lng: 44.421 }  // Stop 6: Babylon (Ishtar Gate & Southern Palace)
+    ],
     stops: [
       {
         name: 'Jerusalem (Siege & Deportations)',
@@ -1687,6 +1764,33 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     scriptureOsis: 'MAT.4.13',
     evidenceClass: 'SCRIPTURE_TEXT',
     summary: 'Making Capernaum His headquarters by the Sea of Galilee, Jesus calls the Twelve, preaches the Sermon on the Mount, calms the storm, raises the dead at Nain and Capernaum, feeds the 5,000 near Bethsaida, ministers in Tyre and Sidon, and is transfigured in glory near Caesarea Philippi.',
+    path: [
+      { lat: 32.701, lng: 35.303 }, // Nazareth
+      { lat: 32.750, lng: 35.340 }, // Cana
+      { lat: 32.820, lng: 35.490 }, // Horns of Hattin / Arbel pass
+      { lat: 32.860, lng: 35.505 }, // Plain of Gennesaret
+      { lat: 32.872, lng: 35.525 }, // Tabgha road
+      { lat: 32.895, lng: 35.545 }, // Mount of Beatitudes
+      { lat: 32.902, lng: 35.565 }, // Capernaum (Northwest Shore hillside road)
+      { lat: 32.895, lng: 35.545 }, // Mount of Beatitudes
+      { lat: 32.872, lng: 35.525 }, // Tabgha road
+      { lat: 32.845, lng: 35.505 }, // Gennesaret shoreline road
+      { lat: 32.805, lng: 35.505 }, // Magdala
+      { lat: 32.768, lng: 35.510 }, // Tiberias
+      { lat: 32.680, lng: 35.380 }, // Mount Tabor foothills
+      { lat: 32.632, lng: 35.347 }, // Nain (Hill of Moreh)
+      { lat: 32.680, lng: 35.380 }, // Return via Tabor
+      { lat: 32.768, lng: 35.510 }, // Tiberias embarkation
+      { lat: 32.785, lng: 35.647 }, // Country of the Gadarenes (Gospel boat crossing)
+      { lat: 32.840, lng: 35.645 }, // Gergesa eastern shore boat landing
+      { lat: 32.910, lng: 35.630 }, // Bethsaida Julias (North shore boat landing)
+      { lat: 32.902, lng: 35.565 }, // Return by boat to Capernaum
+      { lat: 32.895, lng: 35.545 },
+      { lat: 32.920, lng: 35.530 }, // Great North Road ascent
+      { lat: 33.000, lng: 35.350 }, // Upper Galilee highway
+      { lat: 33.270, lng: 35.196 }, // Coasts of Tyre & Sidon
+      { lat: 33.248, lng: 35.694 }  // Caesarea Philippi & Mount Hermon
+    ],
     stops: [
       {
         name: 'Nazareth Synagogue (Isaiah 61 Scroll)',
@@ -1766,6 +1870,28 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     scriptureOsis: 'MAT.28.6',
     evidenceClass: 'SCRIPTURE_TEXT',
     summary: 'Setting His face steadfastly toward Jerusalem, Jesus ministers in Perea, raises Lazarus at Bethany, passes through Jericho, enters Jerusalem in triumph, suffers and dies on Golgotha for our sins, rises bodily from the tomb on the third day, appears in Emmaus, Jerusalem, and Galilee, and ascends from the Mount of Olives.',
+    path: [
+      { lat: 31.880, lng: 35.600 }, // Perea Beyond Jordan
+      { lat: 31.771, lng: 35.261 }, // Bethany
+      { lat: 31.856, lng: 35.444 }, // Jericho
+      { lat: 31.778, lng: 35.230 }, // Jerusalem: Gethsemane, Gabbatha, Golgotha & Tomb
+      { lat: 31.839, lng: 34.989 }, // Emmaus
+      { lat: 31.850, lng: 35.180 }, // Return via Gibeon
+      { lat: 31.930, lng: 35.220 }, // Bethel
+      { lat: 32.214, lng: 35.261 }, // Shechem
+      { lat: 32.502, lng: 35.500 }, // Beth-shan into Jordan Valley
+      { lat: 32.780, lng: 35.500 }, // Western Galilee foothills around Sea of Galilee
+      { lat: 32.845, lng: 35.505 }, // Plain of Gennesaret western road
+      { lat: 32.870, lng: 35.515 }, // Tabgha approach
+      { lat: 32.890, lng: 35.545 }, // Mountain in Galilee / Mount of Beatitudes overlook
+      { lat: 32.870, lng: 35.515 }, // Return via Tabgha road
+      { lat: 32.845, lng: 35.505 }, // Gennesaret
+      { lat: 32.780, lng: 35.500 }, // Western foothills
+      { lat: 32.502, lng: 35.500 }, // Beth-shan
+      { lat: 31.930, lng: 35.525 }, // Jordan Valley south
+      { lat: 31.855, lng: 35.520 }, // Jericho
+      { lat: 31.778, lng: 35.245 }  // Mount of Olives / Bethany (The Ascension)
+    ],
     stops: [
       {
         name: 'Perea Beyond Jordan ("Where John at First Baptized")',
@@ -2623,6 +2749,18 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     scriptureOsis: 'RUT.1.16',
     evidenceClass: 'SCRIPTURE_TEXT',
     summary: 'Ruth forsakes the gods of Moab to cling to Naomi ("Thy people shall be my people, and thy God my God"), gleans in the barley fields of Boaz at Bethlehem, is redeemed at the city gate, and gives birth to Obed, grandfather of King David.',
+    path: [
+      { lat: 31.500, lng: 35.750 }, // Country of Moab
+      { lat: 31.750, lng: 35.720 }, // Plains of Moab (King's Highway north)
+      { lat: 31.820, lng: 35.650 }, // Opposite Jericho
+      { lat: 31.855, lng: 35.520 }, // Jordan River Ford (Bethabara ford)
+      { lat: 31.835, lng: 35.340 }, // Ascent of Adummim
+      { lat: 31.740, lng: 35.240 }, // Ridge approach south of Jerusalem
+      { lat: 31.705, lng: 35.204 }, // Bethlehem-judah
+      { lat: 31.708, lng: 35.210 }, // Fields of Boaz
+      { lat: 31.709, lng: 35.212 }, // Threshingfloor
+      { lat: 31.704, lng: 35.203 }  // Gate of Bethlehem
+    ],
     stops: [
       {
         name: 'Country of Moab ("Whither thou goest, I will go")',
@@ -2804,6 +2942,57 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     scriptureOsis: '1KI.3.12',
     evidenceClass: 'SCRIPTURE_TEXT',
     summary: 'Blessed with unparalleled divine wisdom, Solomon builds the First Temple on Mount Moriah, establishes an ocean-going fleet with Hiram of Tyre at Ezion-geber on the Red Sea, fortifies royal chariot cities across Israel, and receives the Queen of Sheba.',
+    path: [
+      { lat: 31.848, lng: 35.185 }, // Gibeon
+      { lat: 31.810, lng: 35.210 },
+      { lat: 31.778, lng: 35.235 }, // Jerusalem (Mount Moriah)
+      { lat: 31.705, lng: 35.204 }, // Bethlehem
+      { lat: 31.525, lng: 35.105 }, // Hebron
+      { lat: 31.245, lng: 34.790 }, // Beersheba
+      { lat: 30.980, lng: 35.280 }, // Ascent of Akrabbim
+      { lat: 30.620, lng: 35.320 }, // Arabah copper road (Punon)
+      { lat: 30.150, lng: 35.150 }, // Central Arabah
+      { lat: 29.800, lng: 35.050 }, // Southern Arabah
+      { lat: 29.540, lng: 34.960 }, // Ezion-geber / Elath (Red Sea fleet)
+      { lat: 29.800, lng: 35.050 }, // Return via Arabah
+      { lat: 30.150, lng: 35.150 },
+      { lat: 30.620, lng: 35.320 },
+      { lat: 30.980, lng: 35.280 },
+      { lat: 31.245, lng: 34.790 }, // Beersheba
+      { lat: 31.525, lng: 35.105 }, // Hebron
+      { lat: 31.705, lng: 35.204 }, // Bethlehem
+      { lat: 31.778, lng: 35.235 }, // Jerusalem
+      { lat: 31.860, lng: 34.920 }, // Gezer (Solomonic chariot city)
+      { lat: 32.100, lng: 34.950 }, // Aphek / Sharon plain
+      { lat: 32.300, lng: 35.020 }, // Via Maris corridor
+      { lat: 32.585, lng: 35.184 }, // Megiddo (Solomonic chariot city)
+      { lat: 32.560, lng: 35.320 }, // Jezreel Valley
+      { lat: 32.502, lng: 35.500 }, // Beth-shan gate to Jordan Valley
+      { lat: 32.700, lng: 35.480 }, // Western hills corridor bypassing Sea of Galilee
+      { lat: 32.800, lng: 35.480 }, // West of Tiberias & Magdala
+      { lat: 32.880, lng: 35.480 }, // West of Capernaum
+      { lat: 33.017, lng: 35.568 }, // Hazor (Solomonic fortified chariot city)
+      { lat: 33.150, lng: 35.620 }, // Hula Valley
+      { lat: 33.250, lng: 35.652 }, // Dan / Caesarea Philippi gateway
+      { lat: 33.320, lng: 35.780 }, // Mount Hermon southern pass
+      { lat: 33.513, lng: 36.292 }, // Damascus
+      { lat: 33.950, lng: 36.950 }, // Syrian caravan route
+      { lat: 34.300, lng: 37.600 },
+      { lat: 34.560, lng: 38.280 }, // Tadmor in the Wilderness (Palmyra)
+      { lat: 34.300, lng: 37.600 }, // Return from Tadmor via Damascus
+      { lat: 33.950, lng: 36.950 },
+      { lat: 33.513, lng: 36.292 }, // Damascus
+      { lat: 33.320, lng: 35.780 },
+      { lat: 33.250, lng: 35.652 }, // Dan
+      { lat: 33.017, lng: 35.568 }, // Hazor
+      { lat: 32.880, lng: 35.480 }, // Western Galilee bypass
+      { lat: 32.700, lng: 35.480 },
+      { lat: 32.502, lng: 35.500 }, // Beth-shan
+      { lat: 32.417, lng: 35.241 }, // Dothan pass
+      { lat: 32.214, lng: 35.261 }, // Shechem
+      { lat: 31.930, lng: 35.220 }, // Bethel
+      { lat: 31.778, lng: 35.235 }  // Jerusalem (Visit of Queen of Sheba)
+    ],
     stops: [
       {
         name: 'Gibeon (The Great High Place — Vision for Wisdom)',
@@ -2867,6 +3056,25 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     scriptureOsis: '1KI.18.38',
     evidenceClass: 'SCRIPTURE_TEXT',
     summary: 'Confronting the Baal apostasy of King Ahab and Jezebel, Elijah announces drought, is fed by ravens at Cherith, raises the widow\'s son at Zarephath, calls down fire on Mount Carmel, hears the still small voice at Mount Horeb, and ascends to heaven in a chariot of fire.',
+    path: [
+      { lat: 32.390, lng: 35.730 }, // Tishbe in Gilead
+      { lat: 32.350, lng: 35.680 }, // Brook Cherith
+      { lat: 32.502, lng: 35.500 }, // Beth-shan ford into Jezreel Valley
+      { lat: 32.600, lng: 35.250 }, // Jezreel plain
+      { lat: 32.648, lng: 35.078 }, // Mount Carmel
+      { lat: 32.850, lng: 35.080 }, // Plain of Acre
+      { lat: 33.090, lng: 35.100 }, // Ladder of Tyre (coastal pass)
+      { lat: 33.270, lng: 35.196 }, // Tyre
+      { lat: 33.447, lng: 35.298 }, // Zarephath in Sidon
+      { lat: 33.090, lng: 35.100 }, // Return via Phoenician coast
+      { lat: 32.648, lng: 35.078 }, // Mount Carmel
+      { lat: 31.768, lng: 35.213 }, // South to Beersheba
+      { lat: 31.245, lng: 34.790 }, // Beersheba
+      { lat: 28.539, lng: 33.975 }, // Mount Horeb / Sinai
+      { lat: 31.245, lng: 34.790 }, // Return through Negev
+      { lat: 32.550, lng: 35.320 }, // Jezreel & Samaria
+      { lat: 31.855, lng: 35.535 }  // Jordan River opposite Jericho (Whirlwind)
+    ],
     stops: [
       {
         name: 'Tishbe in Gilead (Confronting King Ahab)',
@@ -2938,6 +3146,20 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     scriptureOsis: '2KI.2.9',
     evidenceClass: 'SCRIPTURE_TEXT',
     summary: 'Inheriting Elijah\'s mantle with a double portion of his spirit, Elisha heals Jericho\'s bitter waters, raises the Shunammite\'s dead son, heals Naaman the Syrian leper, and reveals the invisible fiery armies of God surrounding Dothan.',
+    path: [
+      { lat: 32.360, lng: 35.550 }, // Abel-meholah
+      { lat: 31.871, lng: 35.444 }, // Jericho
+      { lat: 31.930, lng: 35.220 }, // Bethel
+      { lat: 32.603, lng: 35.334 }, // Shunem
+      { lat: 32.277, lng: 35.190 }, // Samaria
+      { lat: 32.417, lng: 35.241 }, // Dothan
+      { lat: 32.502, lng: 35.500 }, // Beth-shan pass to Jordan Valley
+      { lat: 32.780, lng: 35.490 }, // Western Galilee foothills around Sea of Galilee
+      { lat: 32.880, lng: 35.490 }, // Plain of Gennesaret western bypass
+      { lat: 33.017, lng: 35.568 }, // Hazor gateway (Great North Road)
+      { lat: 33.250, lng: 35.652 }, // Caesarea Philippi pass
+      { lat: 33.513, lng: 36.292 }  // Damascus (Hazael & Ben-hadad)
+    ],
     stops: [
       {
         name: 'Abel-meholah (Plowing with 12 Yoke of Oxen)',
@@ -3701,6 +3923,42 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
 // World Empires Territories & Centers (Global Ancient World)
 export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
   {
+    id: 'united_israel',
+    name: 'United Kingdom of Israel (Saul, David & Solomon)',
+    color: '#d4af37',
+    fillColor: 'rgba(212, 175, 55, 0.16)',
+    dateRange: 'c. 1050 – 930 BC',
+    capital: { name: 'Jerusalem (Zion)', coords: { lat: 31.778, lng: 35.235 } },
+    approximateBounds: [
+      { lat: 33.090, lng: 35.100 }, // Ladder of Tyre (Phoenician border)
+      { lat: 33.110, lng: 35.530 }, // Upper Galilee / Kedesh
+      { lat: 33.250, lng: 35.652 }, // Dan (northern boundary of Israel)
+      { lat: 33.320, lng: 35.780 }, // Mount Hermon slopes / Aram border
+      { lat: 33.000, lng: 35.850 }, // Golan heights / Bashan
+      { lat: 32.550, lng: 36.000 }, // Ramoth-gilead (Transjordan frontier)
+      { lat: 31.950, lng: 35.950 }, // Ammonite border
+      { lat: 31.800, lng: 35.750 }, // Plains of Moab / Medeba plateau
+      { lat: 31.468, lng: 35.620 }, // River Arnon canyon
+      { lat: 31.020, lng: 35.520 }, // Brook Zered (Edom border)
+      { lat: 30.980, lng: 35.280 }, // Ascent of Akrabbim (Scorpion Pass)
+      { lat: 31.245, lng: 34.790 }, // Beersheba (southern border: Dan to Beersheba)
+      { lat: 31.350, lng: 34.580 }, // Brook of Egypt / Gerar
+      { lat: 31.565, lng: 34.849 }, // Lachish
+      { lat: 31.700, lng: 34.930 }, // Azekah (Valley of Elah)
+      { lat: 31.750, lng: 34.980 }, // Beth-shemesh
+      { lat: 31.860, lng: 34.920 }, // Gezer (Solomonic chariot city)
+      { lat: 32.050, lng: 34.850 }, // Sharon plain / Joppa border
+      { lat: 32.610, lng: 34.920 }, // Dor / Carmel coast
+      { lat: 32.830, lng: 34.970 }, // Mount Carmel promontory
+      { lat: 32.850, lng: 35.080 }, // Bay of Acre
+      { lat: 33.090, lng: 35.100 }  // Back to Ladder of Tyre
+    ],
+    biblicalIntersection: 'The golden age of unified Israel under King David and King Solomon; First Temple built on Mount Moriah; empire extended from the Euphrates river to the border of Egypt (1 Kings 4:21).',
+    factionCategory: 'covenant',
+    populationEstimate: '~1,200,000 – 1,500,000',
+    approximateArea: '~40,000 km²'
+  },
+  {
     id: 'judah',
     name: 'Kingdom of Judah (Jerusalem)',
     color: '#eab308',
@@ -3708,9 +3966,9 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 930 – 586 BC',
     capital: { name: 'Jerusalem', coords: { lat: 31.768, lng: 35.213 } },
     approximateBounds: [
-      { lat: 31.860, lng: 35.480 }, // Jordan River crossing east of Jericho
+      { lat: 31.850, lng: 35.480 }, // Jordan River crossing east of Jericho
       { lat: 31.835, lng: 35.340 }, // Ascent of Adummim
-      { lat: 31.795, lng: 35.250 }, // Anathoth / Mount Scopus
+      { lat: 31.810, lng: 35.260 }, // Anathoth / Mount Scopus
       { lat: 31.785, lng: 35.213 }, // North ridge of Jerusalem / Valley of Hinnom
       { lat: 31.795, lng: 35.170 }, // Nephtoah spring
       { lat: 31.805, lng: 35.105 }, // Kiriath-jearim
@@ -3724,12 +3982,12 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
       { lat: 31.245, lng: 34.790 }, // Beersheba (southern border of Israel: Dan to Beersheba)
       { lat: 31.280, lng: 35.120 }, // Tel Arad (Judean fortress temple)
       { lat: 30.980, lng: 35.280 }, // Ascent of Akrabbim (Scorpion Pass, Num 34:4)
-      { lat: 31.050, lng: 35.380 }, // Southern tip of the Dead Sea / Mount Sodom
-      { lat: 31.180, lng: 35.390 }, // Masada western plateau
-      { lat: 31.455, lng: 35.395 }, // Ein Gedi (Dead Sea cliffs & oasis)
-      { lat: 31.725, lng: 35.465 }, // Qumran / Ras Feshkha
-      { lat: 31.782, lng: 35.545 }, // Mouth of Jordan River
-      { lat: 31.860, lng: 35.480 }  // Back to Jericho border
+      { lat: 31.050, lng: 35.370 }, // Mount Sodom (west of Dead Sea southern basin)
+      { lat: 31.180, lng: 35.350 }, // Masada western plateau
+      { lat: 31.455, lng: 35.385 }, // Ein Gedi (Dead Sea cliffs & oasis - strictly on land)
+      { lat: 31.725, lng: 35.450 }, // Qumran / Ras Feshkha cliffs
+      { lat: 31.782, lng: 35.490 }, // Jordan River delta western bank
+      { lat: 31.850, lng: 35.480 }  // Back to Jordan crossing
     ],
     biblicalIntersection: 'The Davidic royal line ruling from Mount Zion; Solomon\'s Temple; outlasted the Northern Kingdom until the Babylonian exile in 586 BC.',
     factionCategory: 'covenant',
@@ -3744,16 +4002,6 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 930 – 722 BC',
     capital: { name: 'Samaria', coords: { lat: 32.277, lng: 35.190 } },
     approximateBounds: [
-      { lat: 31.840, lng: 34.980 }, // Valley of Aijalon (Judah border)
-      { lat: 31.880, lng: 35.120 }, // Beth-horon the nether
-      { lat: 31.850, lng: 35.210 }, // Ramah of Benjamin
-      { lat: 31.930, lng: 35.220 }, // Bethel (Jeroboam\'s golden calf sanctuary)
-      { lat: 31.880, lng: 35.520 }, // Jordan River border opposite Jericho
-      { lat: 32.050, lng: 34.850 }, // Sharon plain / Joppa border
-      { lat: 32.100, lng: 34.930 }, // Aphek / Antipatris
-      { lat: 32.610, lng: 34.920 }, // Dor / Carmel coast
-      { lat: 32.830, lng: 34.970 }, // Mount Carmel promontory (Elijah\'s contest)
-      { lat: 32.850, lng: 35.080 }, // Bay of Acre
       { lat: 33.090, lng: 35.100 }, // Ladder of Tyre (Phoenician border)
       { lat: 33.110, lng: 35.530 }, // Kedesh in Galilee
       { lat: 33.260, lng: 35.580 }, // Abel-beth-maachah
@@ -3766,7 +4014,16 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
       { lat: 32.220, lng: 35.750 }, // Mahanaim in Transjordan
       { lat: 32.150, lng: 35.545 }, // Jabbok River confluence with Jordan
       { lat: 31.880, lng: 35.520 }, // Jordan valley opposite Jericho
-      { lat: 31.840, lng: 34.980 }  // Back to Aijalon
+      { lat: 31.930, lng: 35.220 }, // Bethel (Jeroboam's golden calf sanctuary)
+      { lat: 31.850, lng: 35.210 }, // Ramah of Benjamin
+      { lat: 31.880, lng: 35.120 }, // Beth-horon the nether
+      { lat: 31.840, lng: 34.980 }, // Valley of Aijalon (Judah border)
+      { lat: 32.050, lng: 34.850 }, // Sharon plain / Joppa border
+      { lat: 32.100, lng: 34.930 }, // Aphek / Antipatris
+      { lat: 32.610, lng: 34.920 }, // Dor / Carmel coast
+      { lat: 32.830, lng: 34.970 }, // Mount Carmel promontory (Elijah's contest)
+      { lat: 32.850, lng: 35.080 }, // Bay of Acre
+      { lat: 33.090, lng: 35.100 }  // Back to Ladder of Tyre
     ],
     biblicalIntersection: 'The northern ten tribes established under Jeroboam; capital at Samaria until exile by Assyria in 722 BC.',
     factionCategory: 'israel',
@@ -3782,16 +4039,16 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     capital: { name: 'Tyre & Sidon', coords: { lat: 33.270, lng: 35.196 } },
     approximateBounds: [
       { lat: 32.950, lng: 35.080 }, // Plain of Acre southern limit
-      { lat: 33.090, lng: 35.100 }, // Ladder of Tyre
-      { lat: 33.270, lng: 35.180 }, // Island city of Tyre
-      { lat: 33.450, lng: 35.280 }, // Sarepta (Elijah and widow, 1 Kgs 17)
-      { lat: 33.560, lng: 35.365 }, // Sidon (great maritime mother city)
-      { lat: 33.890, lng: 35.480 }, // Berytus (Beirut)
-      { lat: 34.120, lng: 35.640 }, // Byblos (Gebal — Temple stonecutters, 1 Kgs 5:18)
-      { lat: 34.250, lng: 35.660 }, // Botrys (Batroun)
-      { lat: 34.430, lng: 35.820 }, // Tripolis
-      { lat: 34.880, lng: 35.860 }, // Arvad (Arwad island, Gen 10:18, Ezek 27:8)
-      { lat: 35.150, lng: 35.900 }, // Northern Phoenician littoral limit
+      { lat: 33.090, lng: 35.105 }, // Ladder of Tyre
+      { lat: 33.270, lng: 35.205 }, // Island city of Tyre
+      { lat: 33.450, lng: 35.295 }, // Sarepta (Elijah and widow, 1 Kgs 17)
+      { lat: 33.560, lng: 35.375 }, // Sidon (great maritime mother city)
+      { lat: 33.890, lng: 35.500 }, // Berytus (Beirut)
+      { lat: 34.120, lng: 35.650 }, // Byblos (Gebal — Temple stonecutters, 1 Kgs 5:18)
+      { lat: 34.250, lng: 35.670 }, // Botrys (Batroun)
+      { lat: 34.430, lng: 35.830 }, // Tripolis
+      { lat: 34.880, lng: 35.880 }, // Arvad (Arwad island, Gen 10:18, Ezek 27:8)
+      { lat: 35.150, lng: 35.910 }, // Northern Phoenician littoral limit
       { lat: 35.100, lng: 36.150 }, // Mount Lebanon crest (cedars of God)
       { lat: 34.400, lng: 36.100 }, // Kadisha gorge / Cedar groves
       { lat: 33.900, lng: 35.850 }, // Central Lebanon ridge
@@ -3812,21 +4069,21 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 1300 – 582 BC',
     capital: { name: 'Kir-Hareseth (Kerak)', coords: { lat: 31.18, lng: 35.70 } },
     approximateBounds: [
-      { lat: 31.782, lng: 35.545 }, // Dead Sea northeast shore / Beth-jeshimoth
-      { lat: 31.600, lng: 35.580 }, // Hot springs of Callirrhoe
-      { lat: 31.580, lng: 35.620 }, // Fortress ridge of Machaerus
-      { lat: 31.468, lng: 35.570 }, // Mouth of River Arnon canyon
-      { lat: 31.250, lng: 35.535 }, // Lisan Peninsula eastern bay
-      { lat: 31.180, lng: 35.530 }, // Bab edh-Dhra / Kir-Hareseth approach
-      { lat: 31.020, lng: 35.480 }, // Mouth of Brook Zered (southern Moab border)
-      { lat: 30.980, lng: 35.650 }, // Brook Zered (Wadi al-Hasa) canyon
-      { lat: 30.930, lng: 35.820 }, // Upper Zered gorge
-      { lat: 31.050, lng: 36.050 }, // Eastern desert fringe (King\'s Highway)
-      { lat: 31.350, lng: 36.120 }, // Desert margins east of Dibon
-      { lat: 31.650, lng: 36.150 }, // Jahaz border
-      { lat: 31.820, lng: 35.800 }, // Medeba / Mount Nebo plateau
       { lat: 31.820, lng: 35.650 }, // Plains of Moab opposite Jericho
-      { lat: 31.782, lng: 35.545 }  // Back to Dead Sea northeast shore
+      { lat: 31.820, lng: 35.800 }, // Medeba / Mount Nebo plateau
+      { lat: 31.650, lng: 36.150 }, // Jahaz border
+      { lat: 31.350, lng: 36.120 }, // Desert margins east of Dibon
+      { lat: 31.050, lng: 36.050 }, // Eastern desert fringe (King's Highway)
+      { lat: 30.930, lng: 35.820 }, // Upper Zered gorge
+      { lat: 30.980, lng: 35.650 }, // Brook Zered canyon (southern border with Edom)
+      { lat: 31.020, lng: 35.500 }, // Mouth of Brook Zered
+      { lat: 31.180, lng: 35.530 }, // Kir-Hareseth approach (strictly on eastern shore)
+      { lat: 31.250, lng: 35.545 }, // Lisan Peninsula eastern bay
+      { lat: 31.468, lng: 35.580 }, // Mouth of River Arnon canyon
+      { lat: 31.580, lng: 35.620 }, // Fortress ridge of Machaerus
+      { lat: 31.610, lng: 35.585 }, // Hot springs of Callirrhoe
+      { lat: 31.782, lng: 35.560 }, // Dead Sea northeast shore
+      { lat: 31.820, lng: 35.650 }  // Back to Plains of Moab
     ],
     biblicalIntersection: 'Rebelled against Israel following King Ahab\'s death (2 Kings 1:1, 3:4–27); recorded on the Mesha Stele.',
     factionCategory: 'hostile',
@@ -3868,13 +4125,13 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     capital: { name: 'Gath & Ashdod', coords: { lat: 31.70, lng: 34.85 } },
     approximateBounds: [
       { lat: 31.280, lng: 34.240 }, // Mediterranean coast south of Raphia
-      { lat: 31.500, lng: 34.440 }, // Gaza (royal city of Samson)
-      { lat: 31.670, lng: 34.540 }, // Ashkelon (ancient coastal seaport)
-      { lat: 31.800, lng: 34.630 }, // Ashdod (temple of Dagon, 1 Sam 5)
+      { lat: 31.500, lng: 34.450 }, // Gaza (royal city of Samson)
+      { lat: 31.670, lng: 34.550 }, // Ashkelon (ancient coastal seaport)
+      { lat: 31.800, lng: 34.640 }, // Ashdod (temple of Dagon, 1 Sam 5)
       { lat: 32.020, lng: 34.750 }, // Joppa southern boundary
       { lat: 31.850, lng: 34.820 }, // Timnah
       { lat: 31.780, lng: 34.850 }, // Ekron (Tel Miqne — Baal-zebub oracle, 2 Kgs 1)
-      { lat: 31.700, lng: 34.850 }, // Gath (Tel es-Safi — Goliath\'s home)
+      { lat: 31.700, lng: 34.850 }, // Gath (Tel es-Safi — Goliath's home)
       { lat: 31.540, lng: 34.780 }, // Shephelah foothills west of Lachish
       { lat: 31.360, lng: 34.600 }, // Gerar basin
       { lat: 31.280, lng: 34.350 }, // Brook Besor mouth
@@ -3893,19 +4150,19 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 1300 – 125 BC',
     capital: { name: 'Bozrah & Sela', coords: { lat: 30.74, lng: 35.60 } },
     approximateBounds: [
-      { lat: 31.020, lng: 35.480 }, // Mouth of Brook Zered (Moab border)
+      { lat: 31.020, lng: 35.500 }, // Mouth of Brook Zered (Moab border)
       { lat: 30.980, lng: 35.650 }, // Brook Zered canyon
       { lat: 30.930, lng: 35.820 }, // Upper Zered
       { lat: 30.740, lng: 35.750 }, // Bozrah of Edom (Gen 36:33, Isa 63:1)
-      { lat: 30.200, lng: 35.700 }, // Teman / Ma\'an (famous for wisdom, Jer 49:7)
+      { lat: 30.200, lng: 35.700 }, // Teman / Ma'an (famous for wisdom, Jer 49:7)
       { lat: 29.600, lng: 35.450 }, // Southern Mount Seir range
-      { lat: 29.530, lng: 35.150 }, // Head of Gulf of Aqaba
-      { lat: 29.530, lng: 34.980 }, // Ezion-geber / Elath (Solomon\'s port, 1 Kgs 9:26)
+      { lat: 29.550, lng: 35.000 }, // Head of Gulf of Aqaba (Elath / Aila north shore)
+      { lat: 29.550, lng: 34.970 }, // Ezion-geber / Elath (Solomon's port, 1 Kgs 9:26)
       { lat: 29.950, lng: 35.120 }, // Southern Arabah western cliff
       { lat: 30.330, lng: 35.440 }, // Petra / Sela (rose-red rock fortress, Obadiah 1:3)
       { lat: 30.620, lng: 35.380 }, // Punon / Feinan (copper mines of the Arabah)
       { lat: 30.950, lng: 35.350 }, // Arabah plain south of Dead Sea
-      { lat: 31.020, lng: 35.480 }  // Back to Brook Zered mouth
+      { lat: 31.020, lng: 35.500 }  // Back to Brook Zered mouth
     ],
     biblicalIntersection: 'Descendants of Esau in the southern highlands; allied with Judah and Israel during the campaign against Moab in 2 Kings 3.',
     factionCategory: 'hostile',
@@ -4020,10 +4277,35 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
       { lat: 25.00, lng: 67.00 }, // Arabian Sea coast
       { lat: 27.00, lng: 52.00 }, // Persian Gulf north coast
       { lat: 30.00, lng: 48.00 }, // Susa / Elam
-      { lat: 30.12, lng: 31.25 }, // Nile Delta / Egypt satrapy
-      { lat: 32.00, lng: 35.00 }, // Yehud Medinata (Judean return)
-      { lat: 36.00, lng: 36.00 }, // Syria
-      { lat: 38.50, lng: 27.00 }, // Sardis / Ionian coast
+      { lat: 31.00, lng: 45.00 }, // Babylonia
+      { lat: 33.50, lng: 36.30 }, // Damascus / Syria satrapy
+      { lat: 31.50, lng: 34.50 }, // Gaza / Philistine coast
+      { lat: 31.28, lng: 34.25 }, // Rafah
+      { lat: 31.13, lng: 33.80 }, // El-Arish
+      { lat: 31.05, lng: 32.55 }, // Pelusium
+      { lat: 30.12, lng: 31.25 }, // Apex of Nile Delta / Memphis
+      { lat: 24.08, lng: 32.90 }, // First Cataract at Aswan (southern Egypt satrapy)
+      { lat: 24.10, lng: 32.70 }, // West bank of Aswan
+      { lat: 29.85, lng: 31.15 }, // Memphis west bank
+      { lat: 31.20, lng: 29.90 }, // Alexandria / Delta west
+      { lat: 31.42, lng: 30.40 }, // Rosetta coast
+      { lat: 31.40, lng: 31.80 }, // Damietta mouth
+      { lat: 31.20, lng: 32.20 }, // Lake Manzala south coast
+      { lat: 31.05, lng: 32.55 }, // Pelusium / Sinai corridor
+      { lat: 31.13, lng: 33.80 }, // El-Arish
+      { lat: 31.28, lng: 34.25 }, // Rafah
+      { lat: 31.50, lng: 34.50 }, // Gaza / Philistine coast
+      { lat: 32.05, lng: 34.80 }, // Sharon / Joppa
+      { lat: 32.80, lng: 35.00 }, // Mount Carmel
+      { lat: 33.27, lng: 35.21 }, // Tyre
+      { lat: 33.56, lng: 35.38 }, // Sidon
+      { lat: 34.43, lng: 35.83 }, // Tripoli
+      { lat: 35.50, lng: 35.80 }, // Latakia
+      { lat: 35.85, lng: 35.90 }, // Mount Casius
+      { lat: 36.12, lng: 35.95 }, // Seleucia Pieria
+      { lat: 36.60, lng: 36.15 }, // Alexandretta
+      { lat: 36.80, lng: 35.80 }, // Cilicia / Issus
+      { lat: 38.50, lng: 27.00 }, // Sardis / Lydia / Ionian coast
       { lat: 41.50, lng: 27.50 }  // Back to Hellespont
     ],
     biblicalIntersection: 'Decree of Cyrus permitting the Jewish return (539 BC; Cyrus Cylinder); Nehemiah and Esther in Persian royal courts.',
@@ -4060,21 +4342,26 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 2100 – 1070 BC',
     capital: { name: 'Thebes & Memphis', coords: { lat: 25.718, lng: 32.657 } },
     approximateBounds: [
-      { lat: 31.20, lng: 29.90 }, // Alexandria / Canopic coast
-      { lat: 31.45, lng: 31.80 }, // Damietta mouth
-      { lat: 31.05, lng: 32.55 }, // Pelusium (Sin) on Mediterranean shore
-      { lat: 30.50, lng: 32.35 }, // Lake Timsah / Bitter Lakes
-      { lat: 29.95, lng: 32.50 }, // Head of Gulf of Suez
-      { lat: 27.50, lng: 33.50 }, // Red Sea west coast (Egyptian desert rim)
-      { lat: 25.72, lng: 32.70 }, // Thebes (Luxor / Karnak)
-      { lat: 24.08, lng: 32.90 }, // First Cataract at Aswan / Elephantine (border with Kush)
-      { lat: 24.10, lng: 32.70 }, // West bank of First Cataract
-      { lat: 26.18, lng: 31.85 }, // Abydos / western desert oases approach
-      { lat: 27.18, lng: 31.10 }, // Asyut west bank
-      { lat: 29.85, lng: 31.15 }, // Memphis / Saqqara pyramid plateau
-      { lat: 30.01, lng: 31.10 }, // Giza pyramid plateau
-      { lat: 30.40, lng: 30.30 }, // Wadi Natrun (western desert border)
-      { lat: 31.20, lng: 29.90 }  // Back to Alexandria
+      { lat: 31.200, lng: 29.900 }, // Alexandria / Canopic coast
+      { lat: 31.420, lng: 30.400 }, // Rosetta mouth
+      { lat: 31.400, lng: 31.800 }, // Damietta mouth
+      { lat: 31.200, lng: 32.200 }, // Lake Manzala south coast
+      { lat: 31.050, lng: 32.550 }, // Pelusium (Sin) on Mediterranean shore
+      { lat: 30.500, lng: 32.350 }, // Lake Timsah / Bitter Lakes
+      { lat: 29.970, lng: 32.500 }, // Suez isthmus
+      { lat: 29.800, lng: 32.300 }, // Ain Sokhna coast (west of Suez)
+      { lat: 29.500, lng: 32.350 }, // Zafarana coast
+      { lat: 28.500, lng: 32.850 }, // Ras Gharib (Egyptian desert coast)
+      { lat: 27.250, lng: 33.700 }, // Hurghada / Red Sea west coast
+      { lat: 25.720, lng: 32.700 }, // Thebes (Luxor / Karnak)
+      { lat: 24.080, lng: 32.900 }, // First Cataract at Aswan / Elephantine (border with Kush)
+      { lat: 24.100, lng: 32.700 }, // West bank of First Cataract
+      { lat: 26.180, lng: 31.850 }, // Abydos / western desert oases approach
+      { lat: 27.180, lng: 31.100 }, // Asyut west bank
+      { lat: 29.850, lng: 31.150 }, // Memphis / Saqqara pyramid plateau
+      { lat: 30.010, lng: 31.100 }, // Giza pyramid plateau
+      { lat: 30.400, lng: 30.300 }, // Wadi Natrun (western desert border)
+      { lat: 31.200, lng: 29.900 }  // Back to Alexandria
     ],
     biblicalIntersection: 'Shelter for Abraham and Jacob; slavery and 10 plagues of Exodus; Merneptah Stele (1208 BC) earliest extrabiblical mention of Israel.',
     factionCategory: 'hostile',
@@ -4089,17 +4376,21 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: '664 – 525 BC',
     capital: { name: 'Sais & Memphis', coords: { lat: 30.96, lng: 30.77 } },
     approximateBounds: [
-      { lat: 31.20, lng: 29.90 },
-      { lat: 31.45, lng: 31.80 },
-      { lat: 31.05, lng: 32.55 },
-      { lat: 29.95, lng: 32.50 },
-      { lat: 27.50, lng: 33.50 },
-      { lat: 24.08, lng: 32.90 },
-      { lat: 24.10, lng: 32.70 },
-      { lat: 27.18, lng: 31.10 },
-      { lat: 29.85, lng: 31.15 },
-      { lat: 30.40, lng: 30.30 },
-      { lat: 31.20, lng: 29.90 }
+      { lat: 31.200, lng: 29.900 },
+      { lat: 31.420, lng: 30.400 },
+      { lat: 31.400, lng: 31.800 },
+      { lat: 31.200, lng: 32.200 },
+      { lat: 31.050, lng: 32.550 },
+      { lat: 29.970, lng: 32.500 },
+      { lat: 29.800, lng: 32.300 },
+      { lat: 29.500, lng: 32.350 },
+      { lat: 27.250, lng: 33.700 },
+      { lat: 24.080, lng: 32.900 },
+      { lat: 24.100, lng: 32.700 },
+      { lat: 27.180, lng: 31.100 },
+      { lat: 29.850, lng: 31.150 },
+      { lat: 30.400, lng: 30.300 },
+      { lat: 31.200, lng: 29.900 }
     ],
     biblicalIntersection: 'Pharaoh Necho slew King Josiah at Megiddo (2 Kings 23:29); Jeremiah taken to Tahpanhes in Egypt.',
     factionCategory: 'hostile',
@@ -4115,12 +4406,17 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     capital: { name: 'Alexandria', coords: { lat: 31.20, lng: 29.91 } },
     approximateBounds: [
       { lat: 32.00, lng: 20.00 }, // Cyrenaica / Libya
-      { lat: 31.20, lng: 29.90 }, // Alexandria
-      { lat: 31.45, lng: 31.80 }, // Delta coast
-      { lat: 31.05, lng: 32.55 }, // Pelusium
-      { lat: 29.95, lng: 32.50 }, // Suez
-      { lat: 24.08, lng: 32.90 }, // Aswan
-      { lat: 24.10, lng: 32.70 },
+      { lat: 31.200, lng: 29.900 }, // Alexandria
+      { lat: 31.420, lng: 30.400 }, // Rosetta coast
+      { lat: 31.400, lng: 31.800 }, // Damietta mouth
+      { lat: 31.200, lng: 32.200 }, // Lake Manzala south coast
+      { lat: 31.050, lng: 32.550 }, // Pelusium
+      { lat: 29.970, lng: 32.500 }, // Suez isthmus
+      { lat: 29.850, lng: 31.250 }, // Memphis
+      { lat: 27.180, lng: 31.185 }, // Asyut
+      { lat: 25.720, lng: 32.650 }, // Thebes / Luxor
+      { lat: 24.080, lng: 32.900 }, // Aswan
+      { lat: 24.100, lng: 32.700 }, // Aswan west bank
       { lat: 29.00, lng: 25.00 }, // Siwa oasis
       { lat: 32.00, lng: 20.00 }
     ],
@@ -4248,9 +4544,20 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 312 BC – AD 106',
     capital: { name: 'Petra (Sela)', coords: { lat: 30.328, lng: 35.444 } },
     approximateBounds: [
-      { lat: 31.00, lng: 33.50 }, { lat: 31.30, lng: 35.50 }, { lat: 31.50, lng: 37.00 },
-      { lat: 29.50, lng: 38.50 }, { lat: 26.80, lng: 38.00 }, { lat: 26.50, lng: 36.50 },
-      { lat: 28.50, lng: 34.50 }, { lat: 31.00, lng: 33.50 }
+      { lat: 31.100, lng: 34.800 }, // Negev / Beersheba border
+      { lat: 30.600, lng: 35.250 }, // Central Arabah
+      { lat: 29.550, lng: 35.000 }, // Head of Gulf of Aqaba (Elath / Aila port)
+      { lat: 29.000, lng: 35.020 }, // Midian coast east of Gulf of Aqaba
+      { lat: 28.000, lng: 35.200 }, // Red Sea coast of Arabia
+      { lat: 26.800, lng: 36.500 }, // Red Sea coast west of Hegra
+      { lat: 26.800, lng: 38.000 }, // Hegra / Mada'in Salih
+      { lat: 27.600, lng: 38.500 }, // Tayma oasis route
+      { lat: 29.500, lng: 38.500 }, // Dumat al-Jandal / desert transit
+      { lat: 31.200, lng: 37.000 }, // Eastern desert fringe
+      { lat: 31.300, lng: 35.700 }, // Moab border
+      { lat: 31.000, lng: 35.550 }, // Arabah plain south of Dead Sea (Zin border)
+      { lat: 30.950, lng: 35.300 }, // Southern Arabah foothills
+      { lat: 31.100, lng: 34.800 }  // Back to Negev
     ],
     biblicalIntersection: '2 Corinthians 11:32 — Governor under King Aretas IV kept Damascus city; ancient incense trade hub carved in rose-red sandstone.',
     factionCategory: 'allied',
@@ -4265,9 +4572,18 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: '312 – 63 BC',
     capital: { name: 'Antioch & Seleucia', coords: { lat: 36.202, lng: 36.160 } },
     approximateBounds: [
-      { lat: 39.50, lng: 26.50 }, { lat: 40.00, lng: 48.00 }, { lat: 32.00, lng: 48.00 },
-      { lat: 33.20, lng: 36.80 }, { lat: 35.00, lng: 36.00 }, { lat: 38.00, lng: 27.00 },
-      { lat: 39.50, lng: 26.50 }
+      { lat: 39.50, lng: 26.50 }, // Hellespont / Troas
+      { lat: 40.00, lng: 48.00 }, // Caspian Sea
+      { lat: 32.00, lng: 48.00 }, // Babylonia / Seleucia on the Tigris
+      { lat: 33.20, lng: 36.80 }, // Damascus / Syria
+      { lat: 35.50, lng: 35.80 }, // Latakia / Syrian coast
+      { lat: 35.85, lng: 35.90 }, // Mount Casius / Ras al-Bassit
+      { lat: 36.12, lng: 35.95 }, // Seleucia Pieria / Antioch port
+      { lat: 36.60, lng: 36.15 }, // Alexandretta / Iskenderun
+      { lat: 36.80, lng: 35.80 }, // Cilicia / Issus
+      { lat: 37.87, lng: 32.50 }, // Iconium / Pisidia
+      { lat: 38.50, lng: 28.00 }, // Sardis / Lydia
+      { lat: 39.50, lng: 26.50 }  // Back to Troas
     ],
     biblicalIntersection: 'Daniel 8 & 11 ("King of the North"); Antiochus IV Epiphanes profaned the Temple with the abomination of desolation (167 BC).',
     factionCategory: 'hostile',
@@ -4282,21 +4598,28 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: '63 BC – AD 476',
     capital: { name: 'Rome', coords: { lat: 41.902, lng: 12.496 } },
     approximateBounds: [
-      { lat: 51.50, lng: 0.00 },   // Britannia (London)
-      { lat: 50.00, lng: 8.00 },   // Rhine frontier (Germania Superior)
-      { lat: 48.00, lng: 16.50 },  // Danube frontier (Vindobona / Carnuntum)
-      { lat: 44.50, lng: 28.50 },  // Moesia / Black Sea coast
-      { lat: 41.00, lng: 29.00 },  // Byzantium / Thrace
-      { lat: 38.00, lng: 37.00 },  // Cappadocia / Taurus mountains
-      { lat: 36.20, lng: 36.16 },  // Antioch (Syrian capital)
-      { lat: 31.78, lng: 35.21 },  // Judea / Jerusalem
-      { lat: 31.20, lng: 29.91 },  // Alexandria / Aegyptus
-      { lat: 30.50, lng: 18.00 },  // Cyrenaica / Tripolitania
-      { lat: 36.80, lng: 10.20 },  // Carthage (Africa Proconsularis)
+      { lat: 55.00, lng: -2.00 },  // Hadrian's Wall (Britannia northern frontier)
+      { lat: 51.50, lng: 1.00 },   // Dover / English Channel
+      { lat: 51.00, lng: 6.00 },   // Lower Rhine (Germania Inferior)
+      { lat: 49.00, lng: 8.50 },   // Upper Rhine / Agri Decumates
+      { lat: 48.00, lng: 16.50 },  // Danube frontier (Vindobona / Vienna)
+      { lat: 44.50, lng: 28.50 },  // Moesia / Black Sea mouth of Danube
+      { lat: 41.00, lng: 29.00 },  // Byzantium / Bosporus
+      { lat: 41.00, lng: 39.50 },  // Pontus / Trapezus
+      { lat: 38.00, lng: 40.00 },  // Armenia frontier
+      { lat: 34.50, lng: 41.00 },  // Euphrates frontier (Dura-Europos)
+      { lat: 33.50, lng: 36.30 },  // Damascus / Syria
+      { lat: 30.00, lng: 35.50 },  // Arabia Petraea (Nabataean limes)
+      { lat: 28.00, lng: 34.50 },  // Head of Red Sea / Sinai
+      { lat: 24.08, lng: 32.90 },  // First Cataract at Aswan (Egypt southern frontier)
+      { lat: 30.50, lng: 18.00 },  // Cyrenaica / Sahara desert limes
+      { lat: 32.50, lng: 10.00 },  // Africa Proconsularis (Carthage / Tripolitania)
+      { lat: 31.50, lng: -3.00 },  // Mauretania Tingitana (Atlas Mountains)
       { lat: 36.00, lng: -5.50 },  // Pillars of Hercules (Strait of Gibraltar)
-      { lat: 43.50, lng: -8.00 },  // Hispania (Finisterre)
-      { lat: 48.50, lng: -4.50 },  // Gallia Lugdunensis (Brittany)
-      { lat: 51.50, lng: 0.00 }   // Back to Britannia
+      { lat: 43.50, lng: -8.00 },  // Finisterre / Hispania Atlantic coast
+      { lat: 48.00, lng: -4.50 },  // Brittany (Armorica)
+      { lat: 50.50, lng: -4.00 },  // Cornwall (Britannia southwest)
+      { lat: 55.00, lng: -2.00 }   // Back to Hadrian's Wall
     ],
     biblicalIntersection: 'The fullness of time: census of Augustus (Luke 2:1), crucifixion under Pilate (Pilate Stone), proclamation across Roman roads.',
     factionCategory: 'hostile',
@@ -4387,8 +4710,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     startYear: -1050,
     endYear: -930,
     additionalRegionIds: [
-      'judah', 'israel_kingdom', 'phoenicia', 'aram_damascus', 'philistia',
-      'moab_kingdom', 'edom_kingdom', 'egypt', 'kush_nubia', 'kingdom_sheba',
+      'united_israel', 'phoenicia', 'philistia', 'egypt', 'kush_nubia', 'kingdom_sheba',
       'china_zhou', 'scythia_steppes'
     ],
     focusCenter: { lat: 31.8, lng: 35.3 },

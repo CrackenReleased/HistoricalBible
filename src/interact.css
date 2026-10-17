@@ -3593,8 +3593,26 @@ footer {
   box-shadow: 0 0 12px var(--route-color, #f472b6), 0 2px 8px rgba(0, 0, 0, 0.9);
 }
 
+/* Eradicate Chrome/WebKit bounding-box focus rectangles on SVG paths and Leaflet vector layers */
+path:focus,
+path:focus-visible,
+svg path:focus,
+svg path:focus-visible,
+.leaflet-interactive:focus,
+.leaflet-interactive:focus-visible,
+.leaflet-container:focus,
+.leaflet-container:focus-visible,
+.leaflet-marker-icon:focus,
+.leaflet-marker-icon:focus-visible {
+  outline: none !important;
+}
+
 /* Ancient Biblical Water Labels & On-Water Typography */
 .leaflet-water-label {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -3603,6 +3621,19 @@ footer {
   text-align: center !important;
   white-space: nowrap !important;
   user-select: none !important;
+  transition: opacity 0.25s ease;
+}
+
+.map-zoom-detailed .leaflet-water-label {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* At high detailed zoom (cities, shorelines, local topography), subdue macro empire boundary lines */
+.map-zoom-detailed .leaflet-pane.leaflet-empirePane-pane path {
+  stroke-width: 0.6px !important;
+  stroke-opacity: 0.20 !important;
+  stroke-dasharray: 4, 8 !important;
 }
 
 .water-label-title {

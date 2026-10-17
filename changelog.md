@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.36] - 2026-10-17
+
+- Zero-Collision Water Body Geometry, Geodetic Route Road Corridors, SVG Focus Outline Reset & Cartographic Boundary Overhaul:
+  - **Geodetic Route Architecture (`src/data/ancientMapData.ts`)**: Added `path?: GeoCoordinate[]` to route models so paths follow historical road corridors (e.g. Great North Road bypassing Sea of Galilee on the west) rather than cutting through lakes or deserts. Verified 0 unintended water crossings across all 43 canonical routes.
+  - **Hydrological River Separation (`src/data/ancientMapData.ts`)**: Split the Jordan River into Upper and Lower courses, eliminating the straight line slicing through the center of the Sea of Galilee.
+  - **Chromium SVG Focus Ring Reset (`src/interact.css`)**: Globally neutralized SVG outline styling so clicking water bodies or route lines never triggers white bounding box artifacts.
+  - **Detailed Zoom Water Label Management (`src/engine/ancientMap.ts`, `src/interact.css`)**: Automatically suppressed vector water labels at high zoom (`zoom >= 8`), preventing double-stamping over raster GIS lake names.
+  - **United Kingdom Realignment (`src/data/ancientMapData.ts`)**: Created unified kingdom polygon for `united_monarchy` era (`united_israel`), retiring overlapping divided kingdom borders during the United Monarchy.
+  - **Continental Frontiers & Coastline Integrity (`src/data/ancientMapData.ts`)**: Realigned empire boundaries for Nabataea, Persia, Ptolemaic Egypt, Saite Egypt, and Seleucid Empire to follow real coastlines and river valleys, eliminating all water-crossing chords across the Dead Sea, Red Sea (Gulf of Aqaba & Suez), and eastern Mediterranean Sea.
+  - **Regression Coverage (`tests/data-integrity-selfcheck.ts`, `tests/map.spec.ts`)**: Added automated geometric collision detection and Chromium visual regression assertions. 11/11 Playwright tests PASS; 7/7 data integrity tests PASS.
+
 ## [00.01.35] - 2026-10-17
 
 - High-Resolution Topographic Kingdom Boundaries, Authentic Biblical Hydrology, On-Water Antique Typography & Solid Cartographic Hairlines:
