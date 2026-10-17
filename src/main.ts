@@ -15,6 +15,8 @@ import { EgoGraphCanvas, type EgoGraphData, type EgoNode, type EgoEdge, type Ego
 import { AncientMapCanvas } from './engine/ancientMap';
 import { readUrlState, writeUrlState, onUrlStateChange, restoreUrlState, type InteractUrlState } from './store/urlStateRouter';
 import { StudySessionBar, getStudyMapTarget } from './studySession';
+import { findStudySubject } from './data/studySubjects';
+import { getIdentityRefs } from './data/nameIdentities';
 
 class HistoricalInteractApp {
   private selectedEraId: string = 'all';
@@ -65,11 +67,7 @@ class HistoricalInteractApp {
         (...args) => this.buildScriptureCard(...args),
         id => this.selectFigureById(id),
         name => this.openInGraph(name),
-        name => {
-          this.activeGraphTarget = name;
-          if (this.activeView === 'graph') this.renderEgoGraph(name);
-          if (this.activeView === 'map') this.switchConnectionView(getStudyMapTarget(readUrlState()) ? 'map' : 'list');
-        }
+        (name, compare) => this.renderNameWorkspace(name, compare)
       );
       this.bindEvents();
       this.renderCollectionOverview();
@@ -78,17 +76,7 @@ class HistoricalInteractApp {
 
       // Deep link handling
       this.explorer.restore(urlState);
-      if (urlState.ref) {
-        const verse = localStore.getVerseByOsis(urlState.ref);
-        if (verse) {
-          const scripList = document.getElementById('scripture-anchors-list');
-          if (scripList) {
-            const disp = localStore.formatDisplayRef(verse);
-            const card = this.buildScriptureCard(verse, disp, urlState.ref, 'Deep-linked from shared URL reference.');
-            scripList.prepend(card);
-          }
-        }
-      }
+      this.restoreStudy(urlState);
       restoreUrlState(() => this.switchConnectionView(this.activeView));
       this.studyBar = new StudySessionBar({
         onView: view => {
@@ -104,16 +92,14 @@ class HistoricalInteractApp {
 
       // Popstate handling for browser back/forward buttons
       onUrlStateChange((state) => {
-        const figureId = state.figure || 'jesus-christ';
-        if (figureId !== this.activeFigure?.id) this.selectFigureById(figureId, false);
         this.explorer?.restore(state);
-        this.activeGraphTarget = state.name || this.activeFigure;
+        this.restoreStudy(state);
         this.switchConnectionView(state.view || 'list');
         this.studyBar?.refresh(state);
       });
 
       // Links from Home and shared discoveries still land on the requested person.
-      if (requestedFig && sync.figures.some(figure => figure.id === requestedFig)) {
+      if (requestedFig && !urlState.name && !urlState.subject && !urlState.ref && sync.figures.some(figure => figure.id === requestedFig)) {
         document.getElementById('discovery')?.scrollIntoView({ behavior: 'instant', block: 'start' });
       }
       const loading = document.getElementById('loading-status');
@@ -230,16 +216,7 @@ class HistoricalInteractApp {
         <span class="empire-node-dates">${emp.dateRangeLabel}</span>
       `;
       btn.addEventListener('click', () => {
-        this.selectedEraId = 'all';
-        this.selectedEmpireId = this.selectedEmpireId === emp.id ? null : emp.id;
-        const matchingFig = sync.figures.find(f =>
-          f.secularContemporaries.some(c => c.empireId === emp.id)
-        );
-        if (matchingFig) {
-          this.selectFigureById(matchingFig.id, false);
-        }
-        this.renderEraFilterBar();
-        this.renderDualStreamSpine();
+        this.selectEmpire(emp.id, false);
       });
       empiresTrack.appendChild(btn);
     }
@@ -262,7 +239,7 @@ class HistoricalInteractApp {
       overview.className = 'empty-profiles';
       const empire = sync.empires.find(e => e.id === this.selectedEmpireId);
       const message = document.createElement('p');
-      message.textContent = `No curated person profiles are included for ${empire?.name || 'this combination'} yet. Your current discovery remains open.`;
+      message.textContent = `No curated person profiles are included for ${empire?.name || 'this combination'} yet.`;
       overview.appendChild(message);
       if (empire) {
         const context = document.createElement('p');
@@ -310,6 +287,9 @@ class HistoricalInteractApp {
     if (this.trail.at(-1) !== figureId) this.trail.push(figureId);
     if (this.trail.length > 12) this.trail.shift();
     writeUrlState({ figure: figureId, name: null, compare: null, identity: null, studyPage: 1 });
+    const input = document.getElementById('search-input') as HTMLInputElement | null;
+    if (input) input.value = target.name;
+    this.setWorkspaceLabels(target.name, true);
     this.activeGraphTarget = target;
     const namePanel = document.getElementById('name-search-detail');
     if (namePanel) namePanel.hidden = true;
@@ -427,6 +407,121 @@ class HistoricalInteractApp {
         netList.appendChild(btn);
       }
     }
+  }
+
+  private restoreStudy(state: InteractUrlState): void {
+    const subject = findStudySubject(state.subject || '');
+    if (state.subject?.startsWith('empire:')) this.selectEmpire(state.subject.slice(7), false);
+    else if (subject) this.selectPassageStudy(subject.name, subject.refs, subject.note, { subject: subject.id }, false);
+    else if (state.name) this.renderNameWorkspace(state.name, state.compare || undefined);
+    else if (state.ref && localStore.getVerseByOsis(state.ref)) this.selectVerse(state.ref, false);
+    else this.selectFigureById(state.figure || 'jesus-christ', false);
+  }
+
+  private renderNameWorkspace(name: string, compare?: string): void {
+    const state = readUrlState();
+    const figure = !compare && !state.identity && localStore.getSynchrony().figures.find(fig => fig.hitchcockKey.toLowerCase() === name.toLowerCase());
+    if (figure) {
+      this.activeFigure = figure;
+      this.activeGraphTarget = figure;
+      this.setWorkspaceLabels(figure.name, true);
+      this.renderActiveFigureWorkspace();
+    } else {
+      const entry = localStore.getNetworkName(name);
+      const refs = (compare ? localStore.getSharedRefs(name, compare) : getIdentityRefs(name, state.identity || 'all', entry?.refs || []))
+        .filter(ref => !state.occurrenceBook || ref.split('.')[0].toLowerCase() === state.occurrenceBook.toLowerCase());
+      const label = compare ? `${name} ↔ ${compare}` : name;
+      const note = compare ? 'Shared passage occurrences in the name index; these do not by themselves establish a personal relationship.' : localStore.getNameReview(name)?.identity?.text || '';
+      this.renderPassageWorkspace(label, refs.slice(0, 5), note);
+      this.activeGraphTarget = entry ? name : null;
+      const list = document.getElementById('personal-network-list');
+      if (list && entry && !compare) {
+        for (const neighbor of localStore.getConnectedNames(name).slice(0, 12)) {
+          const button = document.createElement('button');
+          button.className = 'network-card'; button.type = 'button';
+          button.textContent = `${neighbor.name} · ${neighbor.count} shared verse${neighbor.count === 1 ? '' : 's'} (name index)`;
+          button.addEventListener('click', () => this.explorer?.showName(neighbor.name, true));
+          list.append(button);
+        }
+      }
+      if (refs.length > 5) {
+        const more = document.createElement('button'); more.type = 'button'; more.className = 'btn-small';
+        more.textContent = `Explore all ${refs.length} indexed passages →`;
+        more.addEventListener('click', () => compare ? this.explorer?.showShared(name, compare) : this.explorer?.showName(name, true, true));
+        document.getElementById('scripture-anchors-list')?.append(more);
+      }
+    }
+    this.renderDualStreamSpine();
+    this.switchConnectionView(this.activeView);
+  }
+
+  private selectVerse(ref: string, reveal = true): void {
+    const verse = localStore.getVerseByOsis(ref);
+    if (!verse) return;
+    this.selectPassageStudy(localStore.formatDisplayRef(verse), [ref], '', { ref }, reveal);
+  }
+
+  private selectEmpire(id: string, reveal = true): void {
+    const sync = localStore.getSynchrony(), empire = sync.empires.find(empire => empire.id === id);
+    if (!empire) return;
+    this.selectPassageStudy(empire.name, [], empire.biblicalIntersection, { subject: `empire:${id}` }, reveal);
+    this.selectedEmpireId = id;
+    this.renderEraFilterBar(); this.renderDualStreamSpine();
+    for (const figure of sync.figures.filter(figure => figure.secularContemporaries.some(item => item.empireId === id))) {
+      const button = document.createElement('button'); button.type = 'button'; button.className = 'network-card';
+      button.textContent = `${figure.name} · Profile in this historical setting`;
+      button.addEventListener('click', () => this.selectFigureById(figure.id));
+      document.getElementById('personal-network-list')?.append(button);
+    }
+    const browser = document.getElementById('timeline-browser') as HTMLDetailsElement | null;
+    if (browser) browser.open = true;
+  }
+
+  private setWorkspaceLabels(label: string, person = false): void {
+    const heading = document.getElementById('research-title'); if (heading) heading.textContent = `${label} · Wider study`;
+    const context = document.querySelector('[aria-label="The person and their world"] h3');
+    if (context) context.textContent = person ? 'The person & their world' : 'The subject & its context';
+    const connections = document.querySelector('.connections-panel .panel-header h3');
+    if (connections) connections.textContent = person ? 'People connected to this story' : 'Connections in Scripture';
+    // Navigation prompts need real destinations; empty evidence cards remain in place.
+    const questions = document.querySelector<HTMLElement>('.next-section'); if (questions) questions.hidden = !person;
+    const note = document.getElementById('connection-note'); if (note) note.hidden = !person;
+    const era = document.getElementById('active-era-badge'); if (era) era.hidden = !person;
+  }
+
+  private selectPassageStudy(label: string, refs: string[], note: string, selection: Partial<InteractUrlState>, reveal = true): void {
+    writeUrlState({ ...selection, compare: null, identity: null, section: null, studyPage: 1 });
+    const panel = document.getElementById('name-search-detail'); if (panel) panel.hidden = true;
+    this.renderPassageWorkspace(label, refs, note);
+    this.switchConnectionView('list');
+    const input = document.getElementById('search-input') as HTMLInputElement | null;
+    if (input) input.value = label;
+    document.getElementById('search-results-list')?.classList.remove('active');
+    this.setSearchStatus(`Selected ${label}. Cards without supported information are empty.`);
+    if (reveal) document.getElementById('discovery')?.scrollIntoView({ behavior: 'instant', block: 'start' });
+  }
+
+  private renderPassageWorkspace(label: string, refs: string[], note: string): void {
+    this.activeFigure = null;
+    this.activeGraphTarget = null;
+    this.selectedEraId = 'all'; this.selectedEmpireId = null;
+    this.setWorkspaceLabels(label);
+    // Clear all subject-owned slots together so no prior biography, evidence or route survives.
+    for (const id of ['figure-hero-container', 'active-era-badge', 'secular-contemporaries-list', 'scripture-anchors-list', 'personal-network-list', 'discovery-scripture', 'discovery-evidence', 'connection-note', 'next-questions', 'journey-trail']) document.getElementById(id)?.replaceChildren();
+    const text = (id: string, value: string) => { const node = document.getElementById(id); if (node) node.textContent = value; };
+    text('discovery-title', label); text('discovery-setting', label); text('discovery-lead', note);
+    text('journey-trail', label);
+    const back = document.getElementById('journey-back'); if (back) back.hidden = true;
+    const heading = document.createElement('h3'); heading.className = 'figure-hero-name'; heading.textContent = label;
+    document.getElementById('figure-hero-container')?.append(heading);
+    if (note) { const description = document.createElement('p'); description.textContent = note; document.getElementById('figure-hero-container')?.append(description); }
+    for (const [index, ref] of refs.entries()) {
+      const verse = localStore.getVerseByOsis(ref); if (!verse) continue;
+      document.getElementById('scripture-anchors-list')?.append(this.buildScriptureCard(verse, localStore.formatDisplayRef(verse), ref, 'Passage from the selected study.'));
+      if (!index) document.getElementById('discovery-scripture')?.append(this.buildScriptureCard(verse, localStore.formatDisplayRef(verse), ref, 'Passage from the selected study.'));
+    }
+    this.renderDualStreamSpine();
+    this.renderEraFilterBar();
   }
 
   private renderDiscovery(fig: HistoricalFigure): void {
@@ -727,12 +822,13 @@ class HistoricalInteractApp {
     }
 
     const results = localStore.searchAll(trimmed, 15);
-    const count = results.figures.length + results.empires.length + results.verses.length + results.names.length;
+    const subject = findStudySubject(trimmed);
+    const count = results.figures.length + results.empires.length + results.verses.length + results.names.length + Number(Boolean(subject));
     this.setSearchStatus(count ? `Showing ${count} results for “${trimmed}”. Select a result to explore.` : `No results for “${trimmed}”. Try a name, phrase, or reference such as John 3:16.`);
     dropdown.innerHTML = '';
 
     if (
-      results.figures.length === 0 &&
+      !subject && results.figures.length === 0 &&
       results.empires.length === 0 &&
       results.verses.length === 0 &&
       results.names.length === 0
@@ -742,6 +838,12 @@ class HistoricalInteractApp {
       return;
     }
 
+    if (subject) {
+      const button = document.createElement('button'); button.type = 'button'; button.className = 'search-result-item';
+      button.textContent = `${subject.name} — Numbers 22:21–35 · KJV “ass”`;
+      button.addEventListener('click', () => this.selectPassageStudy(subject.name, subject.refs, subject.note, { subject: subject.id }));
+      dropdown.append(button);
+    }
     if (results.figures.length > 0) {
       const h = document.createElement('div');
       h.className = 'search-group-title';
@@ -752,6 +854,7 @@ class HistoricalInteractApp {
         const btn = document.createElement('button');
         btn.className = 'search-result-item';
         btn.type = 'button';
+        if ([fig.name, fig.hitchcockKey].some(name => name.toLowerCase() === trimmed.toLowerCase())) btn.dataset.exactMatch = 'true';
         btn.innerHTML = `<strong>${fig.name}</strong> <span style="color: var(--text-secondary);">— ${fig.dateRangeLabel}</span>`;
         btn.addEventListener('click', () => {
           this.selectFigureById(fig.id);
@@ -767,19 +870,7 @@ class HistoricalInteractApp {
       button.type = 'button';
       button.textContent = `${empire.name} — Explore people in this empire`;
       button.addEventListener('click', () => {
-        this.selectedEraId = 'all';
-        this.selectedEmpireId = empire.id;
-        const figure = localStore.getSynchrony().figures.find(f => f.secularContemporaries.some(c => c.empireId === empire.id));
-        if (figure) this.selectFigureById(figure.id);
-        else {
-          this.renderEraFilterBar();
-          this.renderDualStreamSpine();
-        }
-        const browser = document.getElementById('timeline-browser') as HTMLDetailsElement | null;
-        if (browser) {
-          browser.open = true;
-          browser.scrollIntoView({ behavior: 'instant', block: 'start' });
-        }
+        this.selectEmpire(empire.id);
         dropdown.classList.remove('active');
       });
       dropdown.appendChild(button);
@@ -790,6 +881,7 @@ class HistoricalInteractApp {
       button.className = 'search-result-item';
       button.type = 'button';
       button.textContent = `${name.name} — ${name.meanings.join('; ')}`;
+      if (name.name.toLowerCase() === trimmed.toLowerCase()) button.dataset.exactMatch = 'true';
       button.addEventListener('click', () => {
         if (name.flagshipId) this.selectFigureById(name.flagshipId);
         else {
@@ -811,22 +903,10 @@ class HistoricalInteractApp {
         btn.className = 'search-result-item';
         btn.type = 'button';
         const disp = localStore.formatDisplayRef(v);
+        if (localStore.getVerseByOsis(trimmed) === v) btn.dataset.exactMatch = 'true';
         btn.innerHTML = `<strong style="color: var(--gold-bright);">${disp}</strong> <span>${localStore.formatCanonicalKjvHtml(v.text)}</span>`;
         btn.addEventListener('click', () => {
-          const scripList = document.getElementById('scripture-anchors-list');
-          if (scripList) {
-            const osis = localStore.toOsisRef(v);
-            const card = this.buildScriptureCard(
-              v,
-              disp,
-              osis,
-              'Selected directly from canonical KJV search.'
-            );
-            scripList.prepend(card);
-            card.scrollIntoView({ behavior: 'instant', block: 'start' });
-            card.tabIndex = -1;
-            card.focus({ preventScroll: true });
-          }
+          this.selectVerse(localStore.toOsisRef(v));
           dropdown.classList.remove('active');
         });
         dropdown.appendChild(btn);
@@ -836,7 +916,7 @@ class HistoricalInteractApp {
     dropdown.classList.add('active');
     // Submission opens the same ranked result as selecting its suggestion.
     // Input events only populate suggestions; no-result searches stay visible.
-    if (openResult) dropdown.querySelector<HTMLButtonElement>('button')?.click();
+    if (openResult) (dropdown.querySelector<HTMLButtonElement>('[data-exact-match]') || dropdown.querySelector<HTMLButtonElement>('button'))?.click();
   }
 
   private bindEvents(): void {
@@ -856,11 +936,8 @@ class HistoricalInteractApp {
     document.getElementById('name-search-close')?.addEventListener('click', () => {
       const detail = document.getElementById('name-search-detail');
       if (detail) detail.hidden = true;
-      writeUrlState({ name: null, compare: null, identity: null, section: null, studyPage: 1 });
-      this.activeGraphTarget = this.activeFigure;
-      if (this.activeView === 'graph' && this.activeFigure) this.renderEgoGraph(this.activeFigure);
       searchInput?.focus({ preventScroll: true });
-      this.setSearchStatus('Search Scripture and the complete Obsidian name network. Every total below opens its records.');
+      this.setSearchStatus('Study details closed. Your selected subject remains in the wider study below.');
     });
 
     document.getElementById('collection-search-form')?.addEventListener('submit', event => {
@@ -930,14 +1007,16 @@ class HistoricalInteractApp {
   private switchConnectionView(view: 'list' | 'graph' | 'map'): void {
     const study = readUrlState();
     const mapTarget = getStudyMapTarget(study);
-    if (view === 'map' && study.name && !mapTarget) view = 'list';
+    const canGraph = Boolean(this.activeGraphTarget || this.activeFigure);
+    if (view === 'map' && !mapTarget || view === 'graph' && !canGraph) view = 'list';
     this.activeView = view;
     const listBtn = document.getElementById('btn-view-list') as HTMLButtonElement | null;
     const graphBtn = document.getElementById('btn-view-graph') as HTMLButtonElement | null;
     const mapBtn = document.getElementById('btn-view-map') as HTMLButtonElement | null;
     const graphContainer = document.getElementById('ego-graph-container');
     const mapContainer = document.getElementById('ancient-map-container');
-    if (mapBtn) { mapBtn.disabled = Boolean(study.name && !mapTarget); mapBtn.title = mapBtn.disabled ? 'No reviewed geographic location for this name.' : ''; }
+    if (mapBtn) { mapBtn.disabled = !mapTarget; mapBtn.title = mapBtn.disabled ? 'No reviewed geographic location for this study.' : ''; }
+    if (graphBtn) graphBtn.disabled = !canGraph;
     const listContainer = document.getElementById('personal-network-list');
     if (listContainer) listContainer.hidden = view !== 'list';
 

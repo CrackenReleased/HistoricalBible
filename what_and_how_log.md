@@ -1,4 +1,90 @@
+## 2026-10-17 15:20:00 — Atlas Page Layout Relocation (Granular Tracks Below Key) & ~8% Widescreen Responsive Margins (v00.01.42)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested:
+    "We need to move the overwhelming amount of information that is displayed on the map in button form above the map to below the map and even below the key that's below the map. We also need to work out the width of the map it should be padded about 8% on the left and right sides of the web page and not have as much black or blank space that we have on the left and right of the web pages. I would say ~8% for left and right padding of the map"
+  - Diagnosed UI bottlenecks:
+    1. **Overwhelming Above-Map Clutter**: `#chrono-granular-panel` (containing 43 journey tracks, apostle routes, and life-phase pills) was previously placed directly above the map inside `map-chronology-container`. This created an enormous 200px+ vertical wall of buttons that pushed the actual map canvas far down the viewport.
+    2. **Excessive Letterbox Black Space**: `#map-main` used `.wrap` (`max-width: 1240px; margin: 0 auto;`). On standard 1080p and 1440p displays, this constrained the atlas to 1240px, creating ~340px to 660px of dead black space on both sides (~18% to 25% empty margin each).
+
+- Decision Point & Implementation:
+  1. **DOM Order Relocation (`map.html`)**:
+     - Removed `#chrono-granular-panel` from `map-chronology-container` above the canvas card.
+     - Relocated `#chrono-granular-panel` directly below the cartographic key (`footer.atlas-legend`).
+     - New clean top-to-bottom layout:
+       1. `atlas-header`: Title & Biblical Geography narrative.
+       2. `atlas-toolbar`: Layer toggles & region camera jumps.
+       3. `map-chronology-container`: Compact Active Epoch HUD + 10 primary historical era tabs (clean ~85px height).
+       4. `atlas-canvas-card`: The prominent, unobstructed 60FPS interactive map canvas.
+       5. `atlas-legend`: The cartographic color key.
+       6. `chrono-granular-panel`: Dedicated card containing the granular figures, life phases, journeys, and waypoint stepper.
+  2. **Dedicated Card Treatment for Granular Tracks (`src/interact.css`)**:
+     - Styled `#chrono-granular-panel` with independent card background (`linear-gradient(180deg, rgba(14, 20, 29, 0.96) 0%, rgba(9, 13, 19, 0.96) 100%)`), border (`1px solid rgba(212, 175, 55, 0.35)`), border-radius (8px), padding (0.95rem 1.15rem), and shadow.
+  3. **Widescreen ~8% Padding & Responsive Width (`src/interact.css`)**:
+     - Tagged `map.html` body with `<body class="atlas-page">`.
+     - Styled `.atlas-page .wrap`:
+       `max-width: none; width: 100%; padding-left: 8%; padding-right: 8%; box-sizing: border-box;`
+     - Expands the map width to exactly **84% of the viewport width**, reducing dead black space and matching user specifications.
+     - Enhanced `.atlas-canvas-card` height to `clamp(520px, calc(100vh - 280px), 760px)` for a cinematic view.
+     - On mobile screens (≤768px), gracefully reduces padding to `1rem`.
+
+- Regression Verification & Proof:
+  - Added automated Playwright regression test in `tests/map.spec.ts`:
+    - Asserts vertical DOM ordering: `mapBottom <= legendTop` and `legendBottom <= granularTop`.
+    - Asserts horizontal left/right padding: strictly between 7.0% and 9.5% (measured 8.0% left, 8.0% right on 1920x1080).
+  - Captured high-resolution screenshot proofs:
+    - `layout_padding_widescreen_proof.png`: Shows clean top of page with compact HUD and spacious 84% width canvas.
+    - `layout_below_map_proof.png`: Shows key immediately below map, followed by granular journey tracks card with matching 8% padding.
+  - Test suite status: All 14/14 Playwright tests in `tests/map.spec.ts` PASS in 49.2s. Clean `npm.cmd run build` passes with 0 errors.
+
+## 2026-10-17 14:42:00 — Leaflet Custom Marker Coordinate Drift Fix & Absolute Layer Contract Realignment (v00.01.41)
+
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested: "Can you explain to me why the gold-dots / artifact finds are NOT aligned to their right locations? Replease research why, understand what a fix might entail and then work through all corrections. Then check the rest of the map for true alignment?"
+  - Root Cause Discovered:
+    1. **CSS Position Override on Marker Elements (`src/interact.css`)**:
+       - `.leaflet-gold-marker`, `.leaflet-capital-marker`, and `.leaflet-city-marker` were styled with `position: relative;`.
+       - In Leaflet, `.leaflet-marker-icon` is structurally specified as `position: absolute; left: 0; top: 0;`. Leaflet calculates the exact geographic coordinate of each marker and applies `transform: translate3d(x, y, 0px)` expecting the element to have an in-flow `offsetTop: 0` and `offsetLeft: 0`.
+       - Because `src/interact.css` overrode `position: absolute` with `position: relative`, each marker remained in normal document block flow within its Leaflet pane (`.leaflet-site-pane` and `.leaflet-city-pane`).
+       - Consequently, each marker occupied vertical space in the pane, causing every subsequent marker to acquire an accumulating `offsetTop` equal to the cumulative height of all preceding sibling markers in that pane.
+    2. **Multi-Era Marker Cascade**:
+       - In `.leaflet-site-pane`, 26 imperial capital markers were appended first, producing an initial downward shift of +142px before the first archaeological site marker even rendered.
+       - Each subsequent gold archaeological discovery marker added another +14px to +28px of downward drift.
+       - By the 20th archaeological site, the accumulated `offsetTop` exceeded +400px. At zoom level 4, this represented a 30° to 40° downward latitude error, dragging markers for Rome, Greece, the Levant, and Mesopotamia all the way south into the Sahara Desert, Sudan, Chad, South Sudan, and the Indian Ocean.
+    3. **Underlying Data Verified 100% Sound**:
+       - Audited all 20 archaeological discovery sites in `src/data/ancientMapData.ts`. All WGS84 coordinates were already completely accurate to historical ground truth (e.g. Arch of Titus `[41.891, 12.489]` in Rome, Delphi Inscription `[38.482, 22.501]` in Greece, Tel Dan Stele `[33.249, 35.652]` at Dan, Merneptah Stele `[25.718, 32.657]` at Thebes/Luxor, Pilate Stone `[32.500, 34.890]` at Caesarea, Cyrus Cylinder `[32.542, 44.421]` at Babylon).
+
+- Decision Point & Implementation:
+  1. **Strict Absolute Positioning on All Custom Leaflet Markers (`src/interact.css`)**:
+     - Enforced `position: absolute !important;` on `.leaflet-gold-marker`, `.leaflet-capital-marker`, and `.leaflet-city-marker`.
+     - Completely eradicates document-flow accumulation so that every marker has `offsetTop: -14` (centered strictly on its Leaflet `iconAnchor`), guaranteeing `(x, y)` visual screen coordinates match Leaflet's `translate3d(x, y, 0px)` with 0px drift.
+     - Child label elements (`.gold-coin-label`, `.capital-marker-label`, `.city-marker-label`) retain `position: absolute` relative to their parent marker box without disturbance.
+  2. **Dedicated Architectural Isolation for Imperial Capitals (`src/engine/ancientMap.ts`)**:
+     - Introduced `capitalPane` (`zIndex: 570`) separating imperial capital markers from archaeological discovery sites (`sitePane`, `zIndex: 580`), ensuring points maintain proper sub-tier isolation.
+  3. **Step-Back Ritual (Sibling Scan)**:
+     - Grepped and verified all six `L.divIcon` implementations across the codebase:
+       - `.leaflet-route-badge`: already flex/absolute, no drift.
+       - `.leaflet-route-stop-marker`: already flex/absolute, no drift.
+       - `.leaflet-water-label`: transparent/absolute, no drift.
+       - All marker classes now strictly conform to Leaflet's absolute coordinate positioning contract.
+
+- Regression Verification & Proof:
+  - Added automated Playwright regression test in `tests/map.spec.ts`:
+    - Asserts that all gold markers, capital markers, and city markers compute to `position: absolute`.
+    - Asserts that `offsetTop` is strictly uniform and identical for all markers in the pane (0 accumulation).
+    - Asserts ground-truth coordinates: Arch of Titus is strictly in Rome / Western Europe (`x < 250, y < 120`), Pilate Stone is strictly on the Levant coast (`y < 250`), Merneptah Stele is in Upper Egypt (`y < 350`), and Cyrus Cylinder is in Mesopotamia (`x > 450, y < 250`).
+  - Captured visual proofs across multiple epochs:
+    - `gold_markers_aligned_proof.png`: All-eras macro view showing Rome, Thebes, and Ur correctly anchored.
+    - `gold_markers_divided_monarchy_proof.png`: Tel Dan Stele at Dan; Mesha Stele at Dhiban / Moab.
+    - `gold_markers_babylonian_exile_proof.png`: Jehoiachin Tablets at Babylon; Nabonidus Cylinder at Ur; Ketef Hinnom and Lachish Letters in Judea.
+    - `gold_markers_persian_restoration_proof.png`: Cyrus Cylinder at Babylon.
+    - `gold_markers_roman_christ_proof.png`: Pilate Stone at Caesarea; Pool of Siloam and Caiaphas Ossuary at Jerusalem; Isaiah Scroll at Qumran.
+    - `gold_markers_apostolic_church_proof.png`: Arch of Titus in Rome; Delphi Inscription in Greece; Erastus Inscription in Corinth; Sergius Paulus Inscription in Pisidian Antioch.
+  - Test suite status: All 13/13 Playwright tests in `tests/map.spec.ts` PASS in 49.7s. Clean `npm.cmd run build` passes with 0 errors.
+
 ## 2026-10-17 12:58:00 — Strict 4-Tier Interactive Stacking Hierarchy & Equirectangular Geodesic Area Sorting (v00.01.38)
+
 
 - User Request & Direct Root-Cause Diagnosis:
   - User requested a complete, unambiguous architectural overhaul of the map canvas layering:
@@ -1139,3 +1225,13 @@
 - Baseline INT-16 PASS. Broader Interact run: 22/23 PASS; INT-17 existing scroll jump reproduced with submission behavior disabled (2286px vs <400). No adjacent fix attempted. Production build and canonical 31,102-verse validation PASS.
 - Sibling scan: four executeGlobalSearch call/definition sites and four result kinds (figures, empires, names, verses); shared form handles both Enter and Explore. Suggested threads and input keep preview behavior.
 - Artifact impact: no added/deleted files, dependencies, persisted data or retained generated artifacts. Only source, tests, release metadata and required logs changed. Unrelated map work preserved. No commit/push/deployment.
+
+## 2026-10-17 13:28:28 — Codex — v00.01.40 Unified Interact subjects
+- Root cause: named studies only updated their separate detail panel; figure-owned discovery, wider cards and map retained old selection. One exclusive figure/name/reference/subject selection now drives the whole workspace and survives legacy mixed URLs, refresh/history, comparisons and bookmarks.
+- Reuse: existing KJV corpus, indexed names, identity filters, shared-verse edges, curated profiles/empires and Scripture card builder. No canonical data edited. Missing facts remain empty; co-occurrence links are labeled as shared passages, not human relationships.
+- Search vocabulary: src/data/studySubjects.ts owns one public reviewed animal subject (16 canonical references; max 25 entries before review), aliases for Balaam/Balam donkey/ass, no biography duplication. Consumed by search and study headers/share links; retained with feature, updated only after passage review.
+- Reproducer INT-23 failed on v00.01.39 (Jonah left King Hezekiah in wider study). Now passes along with INT-24 animal aliases/blank cards and desktop/mobile, INT-25 passage selection, INT-26 mixed-link/exact-name/dismissal. Node regression validates alias references, exclusive subject routing and topic/reference bookmarks. Existing INT-17 scrolling failure remains documented from baseline.
+- Sibling scan: four result types, timeline empire selection, collection name/comparison callbacks, boot/popstate restoration, view/map gating, study label and bookmark acceptance/save guard. All use or respect the active subject; no unrelated map implementation changed.
+- Version v00.01.40; local work only, no commit/push/deployment for this request.
+- Final verification: 8/8 targeted browser checks PASS; animal desktop/mobile screenshot review PASS after hiding navigation prompts with no destinations. Node collection/router/bookmark checks 6/6 PASS. Broader Interact + study-controls 27/28 PASS (only pre-existing INT-17). Production build and canonical KJV validation PASS.
+- Artifact impact: one source file added (reviewed subject vocabulary); no files removed; 115 net test lines plus approximately 104 net source lines. No dependencies changed; new subject URL parameter reuses existing local bookmarks, no new storage/database. Only ignored test-run screenshot proof retained; generated dist remains ignored. Existing renderers and dataset consumers reused, stale parallel selection paths removed.

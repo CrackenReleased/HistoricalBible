@@ -1,5 +1,83 @@
 import { test, expect } from '@playwright/test';
 
+test('INT-23: every wider-study card follows a name and survives refresh and history', async ({ page }) => {
+  await page.goto('/interact?figure=hezekiah');
+  await page.locator('#search-input').fill('Jonah');
+  await page.locator('#search-input').press('Enter');
+  await expect(page.locator('.figure-hero-name')).toHaveText('Jonah');
+  await expect(page.locator('#discovery-setting')).toContainText('Jonah');
+  await expect(page.locator('#scripture-anchors-list')).toContainText('Jonah');
+  await expect(page.locator('#secular-contemporaries-list')).toBeEmpty();
+  await expect(page.locator('#discovery')).not.toContainText('Hezekiah');
+  await expect(page.locator('#personal-network-list')).not.toContainText('Counselled Hezekiah');
+  await expect(page).not.toHaveURL(/figure=hezekiah/);
+  await page.reload();
+  await expect(page.locator('.figure-hero-name')).toHaveText('Jonah');
+  await page.locator('#search-input').fill('Daniel');
+  await page.locator('#search-input').press('Enter');
+  await expect(page.locator('.figure-hero-name')).toContainText('Daniel');
+  await page.goBack();
+  await expect(page.locator('.figure-hero-name')).toHaveText('Jonah');
+  await expect(page.locator('#secular-contemporaries-list')).toBeEmpty();
+});
+
+test('INT-24: Balaam donkey aliases select an animal passage study without inherited human metadata', async ({ page }, testInfo) => {
+  await page.goto('/interact?figure=hezekiah&view=graph');
+  for (const query of ["Balam's donkey", 'Balaam’s donkey', "Balaam's ass"]) {
+    await page.locator('#search-input').fill(query);
+    await page.getByRole('button', { name: 'Explore', exact: true }).click();
+    await expect(page.locator('.figure-hero-name')).toHaveText('Balaam’s donkey');
+    await expect(page.locator('#scripture-anchors-list')).toContainText('NUMBERS {22:28}');
+    await expect(page.locator('#scripture-anchors-list')).toContainText('opened the mouth of the ass');
+    await expect(page.locator('#personal-network-list')).toBeEmpty();
+    await expect(page.locator('#secular-contemporaries-list')).toBeEmpty();
+    await expect(page.locator('#active-era-badge')).toBeEmpty();
+    await expect(page.locator('#ego-graph-container')).toBeHidden();
+    await expect(page.locator('#ancient-map-container')).toBeHidden();
+    await expect(page.locator('#btn-view-map')).toBeDisabled();
+    await expect(page.locator('#search-results-list')).toBeHidden();
+  }
+  await page.reload();
+  await expect(page.locator('.figure-hero-name')).toHaveText('Balaam’s donkey');
+  await expect(page.locator('#personal-network-list')).toBeEmpty();
+  await page.getByRole('button', { name: 'Save study', exact: true }).click();
+  await expect(page.locator('#study-session-bar')).toContainText('Study saved in this browser.');
+  await page.locator('#research-title').scrollIntoViewIfNeeded();
+  await page.screenshot({ path: testInfo.outputPath('donkey-wider-study-desktop.png') });
+  await page.setViewportSize({ width: 375, height: 812 });
+  await expect(page.locator('.figure-hero-name')).toHaveText('Balaam’s donkey');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  await page.locator('#research-title').scrollIntoViewIfNeeded();
+  await page.screenshot({ path: testInfo.outputPath('donkey-wider-study-mobile.png') });
+});
+
+test('INT-26: legacy mixed links and exact names keep a single subject throughout the page', async ({ page }) => {
+  await page.goto('/interact?figure=hezekiah&name=Jonah&section=verses');
+  await expect(page.locator('.figure-hero-name')).toHaveText('Jonah');
+  await expect(page.locator('#secular-contemporaries-list')).toBeEmpty();
+  await page.locator('#name-search-close').click();
+  await expect(page.locator('.figure-hero-name')).toHaveText('Jonah');
+  await expect(page).toHaveURL(/name=Jonah/);
+  await page.locator('#search-input').fill('Aaron');
+  await page.locator('#search-input').press('Enter');
+  await expect(page.locator('.figure-hero-name')).toHaveText('Aaron');
+  await expect(page.locator('#secular-contemporaries-list')).toBeEmpty();
+  await page.getByRole('button', { name: 'Save study', exact: true }).click();
+  await expect(page.locator('#study-session-bar')).toContainText('Study saved in this browser.');
+});
+
+test('INT-25: passage selection clears a previous persons wider-study cards', async ({ page }) => {
+  await page.goto('/interact?figure=hezekiah');
+  await page.locator('#search-input').fill('John 3:16');
+  await page.locator('#search-input').press('Enter');
+  await expect(page.locator('#scripture-anchors-list')).toContainText('JOHN {3:16}');
+  await expect(page.locator('#secular-contemporaries-list')).toBeEmpty();
+  await expect(page.locator('#personal-network-list')).toBeEmpty();
+  await expect(page.locator('#discovery')).not.toContainText('Hezekiah');
+  await page.reload();
+  await expect(page.locator('#scripture-anchors-list')).toContainText('JOHN {3:16}');
+});
+
 for (const action of ['Enter', 'Explore'] as const) {
   test(`INT-21: ${action} opens Jonah and dismisses suggestions`, async ({ page }) => {
     await page.goto('/interact?figure=hezekiah');
@@ -210,6 +288,8 @@ test('INT-08: Empire search and connected-person navigation keep filters and rea
   await page.getByRole('button', { name: /Roman Empire.*Explore people/ }).click();
   await expect(page.locator('#search-results-list')).toBeHidden();
   await expect(page.locator('#timeline-browser')).toHaveAttribute('open', '');
+  await expect(page.locator('.figure-hero-name')).toContainText('Roman Empire');
+  await page.locator('#personal-network-list button').filter({ hasText: 'Jesus' }).click();
   await page.locator('#personal-network-list button').filter({ hasText: 'King David' }).click();
   await expect(page.locator('.figure-hero-name')).toHaveText('King David');
   await expect(page.locator('.figure-node.active')).toContainText('King David');

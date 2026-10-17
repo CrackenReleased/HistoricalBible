@@ -1,4 +1,5 @@
 import { readUrlState, type InteractUrlState } from './store/urlStateRouter';
+import { findStudySubject } from './data/studySubjects';
 import { localStore } from './store/localFirstStore';
 import { ARCHAEOLOGICAL_SITES, BIBLICAL_GEOGRAPHIC_ENTITIES, type BiblicalGeographicEntity } from './data/ancientMapData';
 import { addStudyBookmark, MAX_STUDY_BOOKMARKS, readStudyBookmarks, writeStudyBookmarks, type StudyBookmark } from './store/studyBookmarks';
@@ -7,6 +8,7 @@ type StudyState = InteractUrlState & { compare?: string | null; identity?: strin
 export type StudyMapTarget = { kind: 'geography'; key: string; entity: BiblicalGeographicEntity } | { kind: 'figure'; figureId: string };
 
 export function getStudyMapTarget(state: StudyState): StudyMapTarget | null {
+  if (state.subject || state.ref) return null;
   if (state.name) {
     const key = state.name.toLowerCase().trim();
     const entity = Object.hasOwn(BIBLICAL_GEOGRAPHIC_ENTITIES, key) ? BIBLICAL_GEOGRAPHIC_ENTITIES[key] : null;
@@ -78,12 +80,13 @@ export class StudySessionBar {
 
   public refresh(state: StudyState): void {
     this.state = state;
-    this.element.hidden = !state.name && !state.figure;
+    this.element.hidden = !state.name && !state.figure && !state.subject && !state.ref;
     let figureName = state.figure || '';
     if (state.figure) {
       try { figureName = localStore.getSynchrony().figures.find(figure => figure.id === state.figure)?.name || figureName; } catch { /* Store may still be loading. */ }
     }
-    this.label.textContent = state.name ? (state.compare ? `${state.name} ↔ ${state.compare}` : state.name) : figureName;
+    const empire = state.subject?.startsWith('empire:') ? localStore.getSynchrony().empires.find(empire => empire.id === state.subject?.slice(7)) : null;
+    this.label.textContent = empire?.name || findStudySubject(state.subject || '')?.name || (state.name ? (state.compare ? `${state.name} ↔ ${state.compare}` : state.name) : state.ref || figureName);
     this.mapButton.hidden = !getStudyMapTarget(state);
     this.linkInput.value = window.location.href;
     this.linkInput.hidden = true;
@@ -105,7 +108,7 @@ export class StudySessionBar {
   }
 
   private save(): void {
-    if (!this.state.name && !this.state.figure) return;
+    if (!this.state.name && !this.state.figure && !this.state.subject && !this.state.ref) return;
     const href = `${window.location.pathname}${window.location.search}${window.location.hash}`;
     this.renderBookmarks();
     if (this.bookmarks.length >= MAX_STUDY_BOOKMARKS && !this.bookmarks.some(item => item.href === href)) {

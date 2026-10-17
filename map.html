@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./src/interact.css" />
 </head>
-<body>
+<body class="atlas-page">
   <a class="skip-link" href="#map-main">Skip to the map</a>
 
   <!-- SITE HEADER -->
@@ -136,16 +136,6 @@
             <span class="era-years">All History</span>
           </button>
         </div>
-
-        <!-- GRANULAR SUB-TIMELINE: FIGURES, LIFE PHASES, MISSIONARY JOURNEYS & WAYPOINT STEPPER -->
-        <div id="chrono-granular-panel" class="chrono-granular-panel" aria-label="Granular Timeline and Journey Controls">
-          <div class="chrono-granular-header">
-            <span class="chrono-granular-title">GRANULAR TIMELINE &amp; JOURNEY TRACKS:</span>
-            <span id="chrono-granular-status" class="chrono-granular-status">Select any life phase, prophet, or apostolic mission to trace stop-by-stop</span>
-          </div>
-          <div id="chrono-granular-bar" class="chrono-granular-bar" role="toolbar" aria-label="Granular Figures, Life Phases and Journeys"></div>
-          <div id="chrono-waypoint-stepper" class="chrono-waypoint-stepper" aria-label="Chronological Stop-by-Stop Waypoint Scrubber" hidden></div>
-        </div>
       </section>
 
       <!-- 3. MAIN INTERACTIVE CANVAS & DETAIL DRAWER -->
@@ -204,6 +194,16 @@
           <span>Biblical Journey (Abraham, Exodus, Paul)</span>
         </div>
       </footer>
+
+      <!-- 5. GRANULAR SUB-TIMELINE: FIGURES, LIFE PHASES, MISSIONARY JOURNEYS & WAYPOINT STEPPER -->
+      <section id="chrono-granular-panel" class="chrono-granular-panel" aria-label="Granular Timeline and Journey Controls">
+        <div class="chrono-granular-header">
+          <span class="chrono-granular-title">GRANULAR TIMELINE &amp; JOURNEY TRACKS:</span>
+          <span id="chrono-granular-status" class="chrono-granular-status">Select any life phase, prophet, or apostolic mission to trace stop-by-stop</span>
+        </div>
+        <div id="chrono-granular-bar" class="chrono-granular-bar" role="toolbar" aria-label="Granular Figures, Life Phases and Journeys"></div>
+        <div id="chrono-waypoint-stepper" class="chrono-waypoint-stepper" aria-label="Chronological Stop-by-Stop Waypoint Scrubber" hidden></div>
+      </section>
     </div>
   </main>
 

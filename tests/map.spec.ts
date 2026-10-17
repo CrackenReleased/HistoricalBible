@@ -669,5 +669,129 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
     await expect(routeTooltip).toBeVisible();
     await expect(routeTooltip).toContainText(/JOURNEY|Stop|JESUS/i);
   });
+
+  test('Regression: Archaeological sites & custom markers have absolute positioning with zero document-flow accumulation and true geographic alignment (v00.01.41)', async ({ page }) => {
+    await page.goto('/map?era=all');
+    await page.waitForTimeout(1000);
+
+    const audit = await page.evaluate(() => {
+      const getStyles = (selector: string) => {
+        const els = Array.from(document.querySelectorAll<HTMLElement>(selector));
+        return els.map(el => {
+          const style = window.getComputedStyle(el);
+          return {
+            label: el.innerText.trim(),
+            position: style.position,
+            offsetTop: el.offsetTop,
+            offsetLeft: el.offsetLeft,
+            transform: el.style.transform
+          };
+        });
+      };
+
+      const goldMarkers = getStyles('.leaflet-gold-marker');
+      const capitalMarkers = getStyles('.leaflet-capital-marker');
+      const cityMarkers = getStyles('.leaflet-city-marker');
+
+      return {
+        goldMarkers,
+        capitalMarkers,
+        cityMarkers
+      };
+    });
+
+    // 1. All markers MUST have position: absolute (Leaflet coordinate contract)
+    expect(audit.goldMarkers.length).toBeGreaterThan(0);
+    for (const marker of audit.goldMarkers) {
+      expect(marker.position).toBe('absolute');
+      // Uniform anchor offset, zero sibling flow accumulation
+      expect(marker.offsetTop).toBe(-14);
+      expect(marker.offsetLeft).toBe(-14);
+    }
+
+    for (const marker of audit.capitalMarkers) {
+      expect(marker.position).toBe('absolute');
+      expect(marker.offsetTop).toBe(-6);
+      expect(marker.offsetLeft).toBe(-6);
+    }
+
+    for (const marker of audit.cityMarkers) {
+      expect(marker.position).toBe('absolute');
+      expect(marker.offsetTop).toBe(-5);
+      expect(marker.offsetLeft).toBe(-5);
+    }
+
+    // 2. Geographic Ground-Truth Assertions: Markers MUST sit on their historical regions
+    const findMarker = (labelSnippet: string) => {
+      const found = audit.goldMarkers.find(m => m.label.toLowerCase().includes(labelSnippet.toLowerCase()));
+      if (!found) throw new Error(`Marker matching "${labelSnippet}" not found`);
+      const match = found.transform.match(/translate3d\(([-\d.]+)px,\s*([-\d.]+)px/);
+      if (!match) throw new Error(`Could not parse transform: ${found.transform}`);
+      return { label: found.label, x: parseFloat(match[1]), y: parseFloat(match[2]) };
+    };
+
+    // Arch of Titus (Rome): Must be in Western Europe, x < 250, y < 120 (NOT shifted down to Africa y > 200)
+    const archOfTitus = findMarker('Arch of Titus');
+    expect(archOfTitus.x).toBeLessThan(250);
+    expect(archOfTitus.y).toBeLessThan(120);
+
+    // Pilate Stone (Caesarea): Must be in the Levant, x ~ 340-420, y < 250 (NOT shifted down to Sudan y > 290)
+    const pilateStone = findMarker('Pilate Stone');
+    expect(pilateStone.x).toBeGreaterThan(300);
+    expect(pilateStone.x).toBeLessThan(450);
+    expect(pilateStone.y).toBeLessThan(250);
+
+    // Merneptah Stele (Thebes / Luxor): Must be in Upper Egypt, south of Levant but north of Sudan (y between 260 and 340)
+    const merneptah = findMarker('Merneptah');
+    expect(merneptah.y).toBeGreaterThan(pilateStone.y);
+    expect(merneptah.y).toBeLessThan(350);
+
+    // Cyrus Cylinder (Babylon): Must be in Mesopotamia, east of Levant (x > pilateStone.x, y < 250)
+    const cyrus = findMarker('Cyrus Cylinder');
+    expect(cyrus.x).toBeGreaterThan(pilateStone.x);
+    expect(cyrus.y).toBeLessThan(250);
+  });
+
+  test('Regression: Granular journey panel moved below key and map padded ~8% on left and right (v00.01.42)', async ({ page }) => {
+    await page.setViewportSize({ width: 1400, height: 900 });
+    await page.goto('/map');
+    await page.waitForTimeout(1000);
+
+    const layout = await page.evaluate(() => {
+      const docWidth = document.documentElement.clientWidth;
+      const mapCard = document.querySelector('.atlas-canvas-card');
+      const legend = document.querySelector('.atlas-legend');
+      const granular = document.querySelector('#chrono-granular-panel');
+
+      const mapRect = mapCard?.getBoundingClientRect();
+      const legendRect = legend?.getBoundingClientRect();
+      const granularRect = granular?.getBoundingClientRect();
+
+      return {
+        docWidth,
+        mapTop: mapRect?.top ?? 0,
+        mapBottom: mapRect?.bottom ?? 0,
+        mapLeft: mapRect?.left ?? 0,
+        mapRight: mapRect?.right ?? 0,
+        mapWidth: mapRect?.width ?? 0,
+        legendTop: legendRect?.top ?? 0,
+        legendBottom: legendRect?.bottom ?? 0,
+        granularTop: granularRect?.top ?? 0,
+        leftPaddingPct: mapRect ? (mapRect.left / docWidth) * 100 : 0,
+        rightPaddingPct: mapRect ? ((docWidth - mapRect.right) / docWidth) * 100 : 0
+      };
+    });
+
+    // 1. Vertical DOM Order: Map is above Legend, Legend is above Granular Panel
+    expect(layout.mapBottom).toBeLessThanOrEqual(layout.legendTop);
+    expect(layout.legendBottom).toBeLessThanOrEqual(layout.granularTop);
+
+    // 2. Padding: Map is padded ~8% on left and right sides of viewport
+    expect(layout.leftPaddingPct).toBeGreaterThanOrEqual(7.0);
+    expect(layout.leftPaddingPct).toBeLessThanOrEqual(9.5);
+    expect(layout.rightPaddingPct).toBeGreaterThanOrEqual(7.0);
+    expect(layout.rightPaddingPct).toBeLessThanOrEqual(9.5);
+  });
 });
+
 

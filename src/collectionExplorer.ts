@@ -186,7 +186,6 @@ export class CollectionExplorer {
     const name = localStore.getNetworkName(value); if (!name) return;
     const saved = readUrlState();
     if (!restoring) writeUrlState({ name: name.name, compare: null, identity: null, section: null, studyPage: 1, occurrenceBook: null, group: null });
-    this.onSelection?.(name.name);
     const panel = document.getElementById('name-search-detail');
     const passages = document.getElementById('name-search-passages');
     const titleEl = document.getElementById('name-search-title');
@@ -209,6 +208,7 @@ export class CollectionExplorer {
     if (!['all','unresolved', ...getNameIdentities(name.name).map(i => i.id)].includes(identity)) identity = 'all';
     const show = (section: 'verses' | 'neighbors', page = 0) => {
       writeUrlState({ section, studyPage: page + 1, identity: identity === 'all' ? null : identity, occurrenceBook: occurrenceBook || null, group: group || null, context });
+      this.onSelection?.(name.name);
       passages.replaceChildren(); const nav = el('div', '', 'explorer-nav');
       const verses = button(`${name.refs.length} verse links`, () => show('verses'));
       const connections = button(`${neighbors.length} connected names`, () => show('neighbors'));

@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.42] - 2026-10-17
+
+- **Atlas Page Layout Relocation & ~8% Widescreen Responsive Margins**:
+  - Relocated `#chrono-granular-panel` (the 43 journey tracks and apostle route buttons) from above the map canvas to sit cleanly below the map and below the cartographic key (`footer.atlas-legend`), eliminating the vertical button wall and immediately bringing the map into prime viewport view.
+  - Implemented responsive `padding-left: 8%` and `padding-right: 8%` on `.atlas-page .wrap`, expanding map canvas width to 84% of the viewport and eliminating excessive letterbox black space on widescreen desktop monitors.
+  - Added Playwright regression test verifying vertical DOM ordering (`map < legend < granular`) and left/right padding (8.0% on desktop). All 14/14 tests in `tests/map.spec.ts` PASS.
+
+## [00.01.41] - 2026-10-17
+
+- **Leaflet Custom Marker Coordinate Drift Fix**:
+  - Enforced `position: absolute !important;` on `.leaflet-gold-marker`, `.leaflet-capital-marker`, and `.leaflet-city-marker` in `src/interact.css`. Overriding Leaflet's native `position: absolute` with `position: relative` had caused marker elements to stay in normal document flow within their parent panes, causing each marker to accumulate the vertical heights of all preceding sibling markers (+14px to +28px per marker, compounding to over +400px of downward drift in all-eras view and placing European/Levantine/Mesopotamian artifacts in Sub-Saharan Africa).
+  - Introduced dedicated `capitalPane` (`zIndex: 570`) in `src/engine/ancientMap.ts` separating imperial capital markers from archaeological discovery sites (`sitePane`, `zIndex: 580`).
+  - Added Playwright regression test verifying all custom markers compute to `position: absolute`, have uniform non-accumulating offset, and sit on their true historical ground truth (Arch of Titus in Rome, Pilate Stone in Caesarea, Merneptah Stele in Thebes, Cyrus Cylinder in Babylon). All 13/13 tests PASS.
+
+## [00.01.40] - 2026-10-17
+
+- Unify Interact search, wider study, discovery, connections, graph/map availability and shared URLs around one selected subject. Unsupported historical evidence and relationship cards clear instead of retaining the previous person. Exact name/reference matches take precedence over incidental mentions.
+- Support Balaam/Balam donkey and KJV ass search aliases using Numbers 22:21-35 and 2 Peter 2:16; no invented human relationships, chronology, travel or external evidence.
+- Preserve single-subject selection through refresh, history, saved studies, legacy mixed links and name-detail dismissal. Regression coverage: INT-23 through INT-26, subject URL exclusivity, aliases, canonical citations and saved passage/topic links.
+
 ## [00.01.39] - 2026-10-17
 
 - Interact: Enter and Explore now open the top search suggestion and dismiss the dropdown. Name submissions bring the selected study into view; typing continues to preview suggestions. Empty and unmatched queries preserve the current selection.

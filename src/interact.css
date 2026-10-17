@@ -2793,6 +2793,22 @@ footer {
   padding-top: 0.25rem;
 }
 
+/* Dedicated Atlas Page Responsive Width & ~8% Left/Right Margin Padding */
+.atlas-page .wrap {
+  max-width: none;
+  width: 100%;
+  padding-left: 8%;
+  padding-right: 8%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .atlas-page .wrap {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
 /* Dedicated Atlas Page Layout (/map) */
 .atlas-page-layout {
   display: flex;
@@ -2908,7 +2924,7 @@ footer {
   border-radius: 8px;
   overflow: hidden;
   position: relative;
-  height: clamp(460px, calc(100vh - 260px), 660px);
+  height: clamp(520px, calc(100vh - 280px), 760px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
 }
 
@@ -3317,7 +3333,7 @@ footer {
 
 /* 5. Leaflet Custom Markers */
 .leaflet-gold-marker {
-  position: relative;
+  position: absolute !important;
   cursor: pointer;
 }
 
@@ -3409,7 +3425,7 @@ footer {
 
 /* Capital Markers */
 .leaflet-capital-marker {
-  position: relative;
+  position: absolute !important;
   cursor: pointer;
 }
 
@@ -3460,7 +3476,7 @@ footer {
 
 /* City Markers */
 .leaflet-city-marker {
-  position: relative;
+  position: absolute !important;
   cursor: pointer;
 }
 
@@ -4149,12 +4165,14 @@ svg path:focus-visible,
    ========================================================================== */
 
 .chrono-granular-panel {
-  margin-top: 0.7rem;
-  padding-top: 0.65rem;
-  border-top: 1px solid rgba(212, 175, 55, 0.22);
+  background: linear-gradient(180deg, rgba(14, 20, 29, 0.96) 0%, rgba(9, 13, 19, 0.96) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 8px;
+  padding: 0.95rem 1.15rem;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0.65rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65);
 }
 
 .chrono-granular-header {

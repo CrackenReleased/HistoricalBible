@@ -291,6 +291,7 @@ export class AncientMapCanvas {
     createManagedPane('riverPane', 460, 'leaflet-river-pane');
     createManagedPane('routePane', 480, 'leaflet-route-pane');
     createManagedPane('cityPane', 550, 'leaflet-city-pane');
+    createManagedPane('capitalPane', 570, 'leaflet-capital-pane');
     createManagedPane('sitePane', 580, 'leaflet-site-pane');
     createManagedPane('routeStopPane', 620, 'leaflet-routeStop-pane');
     createManagedPane('tooltipPane', 750, 'leaflet-tooltip-pane');
@@ -1370,7 +1371,7 @@ export class AncientMapCanvas {
             iconAnchor: [6, 6]
           });
           const capMarker = L.marker([empire.capital.coords.lat, empire.capital.coords.lng], {
-            pane: 'sitePane',
+            pane: 'capitalPane',
             icon: capIcon,
             zIndexOffset: capZIndex
           });

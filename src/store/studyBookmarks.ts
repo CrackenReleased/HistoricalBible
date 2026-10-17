@@ -13,7 +13,7 @@ function validBookmark(value: unknown): value is StudyBookmark {
   const url = new URL(item.href, 'https://historicalbible.com');
   return url.origin === 'https://historicalbible.com' &&
     ['/interact', '/interact/', '/interact.html'].includes(url.pathname) &&
-    Boolean(url.searchParams.get('name') || url.searchParams.get('figure')) &&
+    Boolean(url.searchParams.get('name') || url.searchParams.get('figure') || url.searchParams.get('subject') || url.searchParams.get('ref')) &&
     typeof item.savedAt === 'string' && Number.isFinite(Date.parse(item.savedAt));
 }
 

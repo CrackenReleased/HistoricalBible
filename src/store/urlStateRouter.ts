@@ -1,6 +1,6 @@
 /** Shareable Interact state. Restoration never pushes history entries. */
 export interface InteractUrlState {
-  figure?: string | null; name?: string | null; compare?: string | null; ref?: string | null;
+  figure?: string | null; name?: string | null; compare?: string | null; ref?: string | null; subject?: string | null;
   tab?: string | null; view?: 'list' | 'graph' | 'map' | null; hops?: 1 | 2;
   query?: string | null; book?: string | null; testament?: string | null;
   kind?: string | null; status?: string | null; sort?: string | null; page?: number;
@@ -10,7 +10,7 @@ export interface InteractUrlState {
   sourceBook?: string | null; targetBook?: string | null; votes?: string | null;
   readerBook?: string | null; chapter?: number;
 }
-const stringKeys = ['figure','name','compare','ref','tab','view','query','book','testament','kind','status','sort','identity','section','occurrenceBook','group','kinds','labels','sourceBook','targetBook','votes','readerBook'] as const;
+const stringKeys = ['figure','name','compare','ref','subject','tab','view','query','book','testament','kind','status','sort','identity','section','occurrenceBook','group','kinds','labels','sourceBook','targetBook','votes','readerBook'] as const;
 const numericDefaults = { page: 1, studyPage: 1, context: 0, hops: 2, maxNodes: 30, minShared: 1, chapter: 1 };
 let restoring = 0;
 export function restoreUrlState(run: () => void): void { restoring++; try { run(); } finally { restoring--; } }
@@ -19,6 +19,8 @@ export function readUrlState(): InteractUrlState {
   const params = new URLSearchParams(window.location.search);
   const state: Record<string, unknown> = {};
   for (const key of stringKeys) state[key] = params.get(key)?.slice(0, 200) || null;
+  const selected = (['subject', 'name', 'ref', 'figure'] as const).find(key => state[key]);
+  if (selected) for (const key of ['subject', 'name', 'ref', 'figure'] as const) if (key !== selected) state[key] = null;
   for (const [key, fallback] of Object.entries(numericDefaults)) {
     const raw = params.get(key); const n = raw === null ? fallback : Number(raw);
     state[key] = Number.isFinite(n) ? Math.min(10000, Math.max(key === 'context' ? 0 : 1, Math.floor(n))) : fallback;
@@ -34,6 +36,9 @@ export function writeUrlState(partial: Partial<InteractUrlState>, replace = fals
   if (typeof window === 'undefined') return {};
   if (restoring) return readUrlState();
   const next = { ...readUrlState(), ...partial };
+  // A study has one subject. Detail/view changes retain it; selecting another replaces it.
+  const selected = (['subject', 'name', 'ref', 'figure'] as const).find(key => partial[key]);
+  if (selected) for (const key of ['subject', 'name', 'ref', 'figure'] as const) if (key !== selected) next[key] = null;
   const params = new URLSearchParams();
   for (const key of stringKeys) if (next[key]) params.set(key, String(next[key]));
   for (const [key, fallback] of Object.entries(numericDefaults)) {

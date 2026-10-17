@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { findStudySubject, studySubjects } from '../src/data/studySubjects.ts';
 const { LocalFirstStore } = await import(process.env.STORE_UNDER_TEST || '../src/store/localFirstStore.ts');
 
 test('public documentation does not claim manual transcription of the Bible', async () => {
@@ -66,6 +67,17 @@ test('collection overview counts the loaded records and draws only real book con
     assert.ok(store.searchAll('Rome').empires.some(empire => empire.id === 'rome'));
     assert.ok(store.searchAll('In the beginning').verses.some(verse => verse.book === 'Genesis' && verse.chapter === 1 && verse.verse === 1));
     assert.equal(store.searchAll('xyznonexistent987654').verses.length, 0);
+    const animal = findStudySubject("Balam's donkey");
+    assert.ok(animal);
+    for (const alias of [animal.name, animal.id, ...animal.aliases, 'Balaam’s donkey']) assert.equal(findStudySubject(alias), animal);
+    assert.equal(findStudySubject('unknown animal'), undefined);
+    assert.ok(studySubjects.length <= 25);
+    for (const subject of studySubjects) {
+      assert.equal(new Set(subject.refs).size, subject.refs.length);
+      for (const ref of subject.refs) assert.ok(store.getVerseByOsis(ref), `subject source exists: ${ref}`);
+    }
+    assert.match(store.getVerseByOsis('Num.22.28').text, /opened the mouth of the ass/);
+    assert.match(store.getVerseByOsis('2Pet.2.16').text, /dumb ass speaking/);
   } finally {
     globalThis.fetch = originalFetch;
   }
