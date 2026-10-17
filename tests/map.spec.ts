@@ -63,6 +63,11 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
     await levantBtn.click();
     await expect(levantBtn).toHaveClass(/active/);
 
+    // Assert Legend includes Global World Civilizations
+    const globalLegend = page.locator('.atlas-legend-item', { hasText: 'Global World Civilizations' });
+    await expect(globalLegend).toBeVisible();
+    await expect(globalLegend.locator('.map-key-dot.dot-global')).toBeVisible();
+
     // Zoom controls
     const zoomIn = page.locator('#map-zoom-in');
     const zoomOut = page.locator('#map-zoom-out');

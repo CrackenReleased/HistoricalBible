@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.28] - 2026-10-16
+
+- Global Ancient Macro-Cartography & Contemporary Civilizations (`/map` & `/bible`):
+  - **Global Ancient World Civilizations in Every Era**:
+    - Expanded map projection boundaries (`MAP_BOUNDS`) from a localized Near-East rectangle (`[10.0, 24.5]` to `[54.0, 44.0]`) to a comprehensive global perspective (`[-10.0, 8.0]` to `[125.0, 56.0]`) spanning from the Atlantic and Rome across Africa, the Eurasian steppes, Persia, and India to the Pacific coast of China.
+    - Integrated major contemporary world civilizations across all eras:
+      - **Ancient China**: Western & Eastern Zhou Dynasties (`china_zhou`, c. 1046–256 BC; capitals Haojing & Luoyang; ~35M pop; ~3.4M km²) and Imperial Han Dynasty (`china_han`, 202 BC–AD 220; capitals Chang'an & Luoyang; ~57.6M pop; ~6.0M km²; terminus of Silk Road trade; biblically designated the "Land of Sinim" in Isaiah 49:12).
+      - **Northern Steppes / Russia / Scythia**: Scythians, Cimmerians & Sarmatians (`scythia_steppes`, c. 900 BC–AD 200; capital Neapolis Scythica; ~2M pop; ~3.2M km²; nomadic horsemen referenced in Ezekiel 38–39 as the far northern armies of Magog, Meshech, and Tubal, and Colossians 3:11).
+      - **Kingdom of Kush / Nubia / Ethiopia across All Ages**: Upper Nile empire (`kush_nubia`, c. 1070 BC–AD 350; capitals Napata & Meroë; ~2.5M pop; ~1.2M km²; realm of Pharaoh Tirhakah in 2 Kings 19:9 / Isaiah 37:9 and the royal official of Queen Candace in Acts 8:27).
+      - **Ancient India**: Maurya Empire and Kushan Realm (`india_maurya`, c. 322 BC–AD 230; capital Pataliputra; ~50M pop; ~5M km²; eastern border of Esther 1:1 and 8:9, "from India [Hoddu] even unto Ethiopia").
+      - **Arabian Kingdoms**: Kingdom of Saba (`kingdom_sheba`, c. 1200 BC–AD 275; capital Marib; ~1.5M pop; ~450k km²; Queen of Sheba in 1 Kings 10:1–13) and Nabataean Kingdom (`nabataea`, c. 312 BC–AD 106; capital Petra; ~1M pop; ~250k km²; 2 Corinthians 11:32).
+      - **Babylon across All Ages**: Old Babylonian & Kassite Kingdom (`old_babylon`, Tower of Babel / Ur of the Chaldees in Genesis 10–11) and Neo-Babylonian Empire (`babylon`, Nebuchadnezzar).
+      - **Egypt across All Ages**: Middle & New Kingdom Egypt (`egypt`, Exodus & Merneptah Stele), 26th Saite Dynasty (`saite_egypt`, Pharaoh Necho & Megiddo), and Ptolemaic Kingdom (`ptolemaic_egypt`, Alexandria & Septuagint translation).
+      - **Persia & Media**: Median Empire (`media`, Ecbatana), Achaemenid Empire (`persia`, Cyrus, Darius, Artaxerxes), and Parthian Empire (`parthia`, Ctesiphon; eastern Roman rival, Acts 2:9).
+      - **Levantine Neighbors**: Kingdom of Judah (`judah`), Kingdom of Israel (`israel_kingdom`), Phoenicia (`phoenicia`), Aram-Damascus (`aram_damascus`), Philistia (`philistia`), Moab (`moab_kingdom`), and Edom (`edom_kingdom`).
+  - **Five-Tier Geopolitical Faction System & Universal Map Key**:
+    - Classified every entity into 5 clear color-coded factions:
+      - 🟡 **Covenant Nation**: Kingdom of Judah / Royal Davidic Line (`#eab308`).
+      - 🟢 **Northern Kingdom**: Kingdom of Israel / Samaria (`#22c55e`).
+      - 🔴 **Hostile Empires & Enemies**: Assyria, Babylon, Philistia, Aram-Damascus, Moab, Edom, Seleucid Syria, Imperial Rome (`#ef4444`).
+      - 🔵 **Friendly & Allied Regions**: Phoenicia / Tyre & Sidon, Cyrus's Persia, Ptolemaic Egypt, Nabataea (`#38bdf8`).
+      - 🟣 **Global World Civilizations**: Ancient China, Scythia/Russia, Kush/Ethiopia, India, Sheba (`#c084fc`).
+    - Added `.map-key-dot.dot-global` and Global World Civilizations entry to the Kingdoms & Factions map key card in `bible.html`, `bible/index.html`, `map.html`, and `src/interact.css`.
+  - **Rich Demographic & Kingdom Metadata**:
+    - Displayed Imperial Capital, Estimated Population, Territorial Extent (km²), Faction Badge, Chapter Relevance, and Scripture Connection in every empire tooltip on hover/click.
+    - Added stylized Imperial Capital pins with custom labels (`leaflet-capital-marker`) on the map canvas for active kingdoms (Jerusalem, Samaria, Nineveh, Babylon, Susa, Rome, Haojing/Luoyang, Neapolis Scythica, Napata/Meroë, Marib, Pataliputra, Petra).
+  - **Macro-Cartographic Zoom & Preset Navigation**:
+    - Expanded map zoom limit to `minZoom: 2` so users can zoom out to view the entire Eastern Hemisphere at once without boundary clipping.
+    - Updated `all` region preset to zoom level 3 centered at `[31.0, 52.0]`, smoothly framing the Atlantic, Europe, Africa, the Middle East, India, and China in a single click.
+    - Added biblical geographic entities for `ethiopia`, `cush`, `sinim`, `china`, `sheba`, `scythia`, `india`, and `petra` to `BIBLICAL_GEOGRAPHIC_ENTITIES`.
+  - **Automated Verification**:
+    - Added regression test `Global Macro-Cartography: Multiple contemporary world empires and regional powers render with capitals, populations, and areas` in `tests/bible-side-by-side-map.spec.ts`.
+    - Added global legend assertions in `tests/map.spec.ts`.
+    - All 52 Playwright tests pass green; 4/4 collection tests pass; 100% canonical KJV 31,102 verses verified; zero errors in Vite production build.
+
 ## [00.01.27] - 2026-10-16
 
 - Canonical KJV 31,102 Verse Invariant Restoration:

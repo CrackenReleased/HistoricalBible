@@ -3764,6 +3764,12 @@ footer {
   border: 1px solid #ffffff;
 }
 
+.map-key-dot.dot-global {
+  background: #c084fc;
+  box-shadow: 0 0 6px rgba(192, 132, 252, 0.65);
+  border: 1px solid #9333ea;
+}
+
 .map-key-content {
   display: flex;
   flex-direction: column;

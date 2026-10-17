@@ -1,3 +1,44 @@
+## 2026-10-16 21:32:00 — Global Ancient Macro-Cartography & Contemporary Civilizations (v00.01.28)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested: *"Still dealing with the Map. I am really only seeing one or two sets of allies and enemies on the map at a time. Want a more global picture of what is happening around israel, and more of a clearer picture of who are her enemies and allies accross the known world... I mean include China and RUssia. Inglude ehteopia and babylon in all ages... And if they aren't actively and enemy or ally, atleast show the 'size of their general knigdom' and about the population of the regions and the capitals as best we can. I like where we are from whence we came from. But we have a LOT of maturation we can do, and there is no reason it is not done at this stage."*
+  - Diagnosis: The previous map engine restricted the projection bounding box (`MAP_BOUNDS`) to the immediate Near East from Rome to Persepolis (`[10.0, 24.5]` to `[54.0, 44.0]`), artificially cutting off the broader ancient world. Furthermore, eras only displayed 1 or 2 empires simultaneously, giving the false impression of an imperial vacuum outside Israel's borders rather than depicting the complex global tapestry of contemporary world civilizations (Zhou/Han China, Scythians of the Russian steppes, the Kingdom of Kush/Ethiopia, Maurya India, Sheba/Arabia, and Levantine neighbors).
+- Decision Point & Implementation:
+  - Global Projection Bounds: Expanded `MAP_BOUNDS` in `src/data/ancientMapData.ts` to `minLng: -10.0, maxLng: 125.0, minLat: 8.0, maxLat: 56.0` spanning from Atlantic Iberia and Rome across Africa, the Eurasian steppes, Persia, and India to the Pacific coast of China.
+  - Comprehensive Civilizational Roster in `WORLD_EMPIRES_GEO`:
+    - **China**: Zhou Dynasty (`china_zhou`, c. 1046–256 BC; capitals Haojing & Luoyang; ~35M pop; ~3.4M km²) and Imperial Han Dynasty (`china_han`, 202 BC–AD 220; capitals Chang'an & Luoyang; ~57.6M pop; ~6.0M km²; "Land of Sinim", Isaiah 49:12).
+    - **Northern Steppes / Russia / Scythia**: Scythians, Cimmerians & Sarmatians (`scythia_steppes`, c. 900 BC–AD 200; capital Neapolis Scythica; ~2M pop; ~3.2M km²; "Gog, Magog, Meshech, and Tubal", Ezekiel 38–39).
+    - **Kingdom of Kush / Nubia / Ethiopia across All Ages**: Upper Nile empire (`kush_nubia`, c. 1070 BC–AD 350; capitals Napata & Meroë; ~2.5M pop; ~1.2M km²; Pharaoh Tirhakah in 2 Kings 19:9 and Queen Candace in Acts 8:27).
+    - **Ancient India**: Maurya Empire and Kushan Realm (`india_maurya`, c. 322 BC–AD 230; capital Pataliputra; ~50M pop; ~5M km²; "Hoddu", Esther 1:1, 8:9).
+    - **Arabian Kingdoms**: Kingdom of Saba (`kingdom_sheba`, c. 1200 BC–AD 275; capital Marib; ~1.5M pop; ~450k km²; Queen of Sheba) and Nabataean Kingdom (`nabataea`, c. 312 BC–AD 106; capital Petra; ~1M pop; ~250k km²).
+    - **Babylon across All Ages**: Old Babylonian & Kassite Kingdom (`old_babylon`, Tower of Babel / Ur) and Neo-Babylonian Empire (`babylon`, Nebuchadnezzar).
+    - **Egypt across All Ages**: Middle & New Kingdom Egypt (`egypt`), 26th Saite Dynasty (`saite_egypt`), and Ptolemaic Kingdom (`ptolemaic_egypt`).
+    - **Persia & Media**: Median Empire (`media`), Achaemenid Empire (`persia`), and Parthian Empire (`parthia`, Ctesiphon).
+    - **Levantine Neighbors**: Kingdom of Judah (`judah`), Kingdom of Israel (`israel_kingdom`), Phoenicia (`phoenicia`), Aram-Damascus (`aram_damascus`), Philistia (`philistia`), Moab (`moab_kingdom`), and Edom (`edom_kingdom`).
+  - Five-Tier Geopolitical Factions:
+    - 🟡 **Covenant Nation**: Kingdom of Judah (`#eab308`)
+    - 🟢 **Northern Kingdom**: Kingdom of Israel (`#22c55e`)
+    - 🔴 **Hostile Enemies & Oppressors**: Assyria, Babylon, Philistia, Aram, Edom, Moab, Rome, Seleucids (`#ef4444`)
+    - 🔵 **Allies & Trading Partners**: Phoenicia, Cyrus's Persia, Ptolemaic Egypt, Nabataea (`#38bdf8`)
+    - 🟣 **Global World Civilizations**: Ancient China, Scythia/Russia, Kush/Ethiopia, India, Sheba (`#c084fc`)
+    - Added `.map-key-dot.dot-global` to `src/interact.css` and added Global World Civilizations to the Kingdoms & Factions map key card in `bible.html`, `bible/index.html`, and `map.html`.
+  - Demographics & Capital City Pins:
+    - In `src/engine/ancientMap.ts`, rendered prominent `leaflet-capital-marker` pins with custom labels for all active kingdoms (Jerusalem, Samaria, Nineveh, Babylon, Susa, Rome, Haojing/Luoyang, Neapolis Scythica, Napata/Meroë, Marib, Pataliputra, Petra).
+    - Every tooltip and popup renders Faction Badge, Capital, Estimated Population, Territorial Area, Chapter Relevance, and Scripture Connection.
+  - Multi-Empire Synchrony in `CHRONOLOGICAL_ERAS`:
+    - Updated each era's `additionalRegionIds` to render the full global constellation of civilizations contemporary with that biblical epoch (e.g., Divided Monarchy c. 853–841 BC renders Judah, Israel, Moab, Aram-Damascus, Philistia, Edom, Assyria, Phoenicia, Kush/Nubia, Sheba, Western Zhou China, and the Scythian steppes simultaneously).
+  - Navigation & Zoom:
+    - Expanded map zoom to `minZoom: 2` (was 3) so users can smoothly zoom out to see the entire hemisphere from Spain to China.
+    - Updated `all` region preset to zoom level 3 centered at `[31.0, 52.0]`.
+    - Added biblical geographic entities for `ethiopia`, `cush`, `sinim`, `china`, `sheba`, `scythia`, `india`, and `petra` in `BIBLICAL_GEOGRAPHIC_ENTITIES` so clicking these scripture words in the reader pans directly to them.
+- Verification (Cardinal Rule):
+  - Created regression test `Global Macro-Cartography: Multiple contemporary world empires and regional powers render with capitals, populations, and areas` in `tests/bible-side-by-side-map.spec.ts`.
+  - Added global legend assertions in `tests/map.spec.ts`.
+  - All 52 Playwright tests pass green in 1.4m.
+  - `npm run test:collection`: 4/4 passing.
+  - `npm run verify-kjv`: 31,102 verses verified; 14,137 translator italics; 5,556 cased LORD.
+  - Production Vite build compiled in 797ms.
+
 ## 2026-10-16 21:03:00 — Canonical KJV 31,102 Verse Invariant Restoration (v00.01.27)
 
 - User Request & Direct Root-Cause Diagnosis:

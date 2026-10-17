@@ -43,6 +43,7 @@ test.describe('Bible Side-by-Side Companion Map Tab', () => {
     await expect(mapKeyCard).toContainText('Hostile Empires & Enemies');
     await expect(mapKeyCard).toContainText('Friendly & Allied Regions');
     await expect(mapKeyCard).toContainText('Archaeological Discoveries');
+    await expect(mapKeyCard).toContainText('Global World Civilizations');
 
     // Assert color dots are rendered
     await expect(mapKeyCard.locator('.map-key-dot.dot-judah')).toBeVisible();
@@ -50,6 +51,7 @@ test.describe('Bible Side-by-Side Companion Map Tab', () => {
     await expect(mapKeyCard.locator('.map-key-dot.dot-hostile')).toBeVisible();
     await expect(mapKeyCard.locator('.map-key-dot.dot-allied')).toBeVisible();
     await expect(mapKeyCard.locator('.map-key-dot.dot-archaeology')).toBeVisible();
+    await expect(mapKeyCard.locator('.map-key-dot.dot-global')).toBeVisible();
 
     // 8. Capture visual proof screenshot
     await page.waitForTimeout(1000);
@@ -177,5 +179,28 @@ test.describe('Bible Side-by-Side Companion Map Tab', () => {
     // Assert map zoom button is still enabled and container is functional
     const mapContainer = page.locator('#bible-companion-map-container');
     await expect(mapContainer).toBeVisible();
+  });
+
+  test('Global Macro-Cartography: Multiple contemporary world empires and regional powers render with capitals, populations, and areas', async ({ page }) => {
+    // Navigate to 2 Kings 1 on map tab
+    await page.goto('/bible?book=2Kings&chapter=1&tab=map', { waitUntil: 'networkidle' });
+
+    // Assert capital markers exist across the world
+    const capitalMarkers = page.locator('.leaflet-capital-marker');
+    await expect(capitalMarkers.first()).toBeVisible({ timeout: 5000 });
+    const count = await capitalMarkers.count();
+    expect(count).toBeGreaterThanOrEqual(5);
+
+    // Assert specific contemporary capitals and regions are present for Divided Monarchy
+    await expect(page.locator('.capital-marker-label', { hasText: 'Jerusalem' })).toBeVisible();
+    await expect(page.locator('.capital-marker-label', { hasText: 'Samaria' })).toBeVisible();
+    await expect(page.locator('.capital-marker-label', { hasText: 'Nineveh' })).toBeVisible();
+    await expect(page.locator('.capital-marker-label', { hasText: 'Haojing & Luoyang' })).toBeVisible();
+    await expect(page.locator('.capital-marker-label', { hasText: 'Napata & Meroë' })).toBeVisible();
+    await expect(page.locator('.capital-marker-label', { hasText: 'Neapolis Scythica' })).toBeVisible();
+
+    // Capture visual proof of global macro-cartography
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: 'test-results/global-macro-cartography-proof.png' });
   });
 });

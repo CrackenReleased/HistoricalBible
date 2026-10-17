@@ -56,6 +56,8 @@ export interface BiblicalRoute {
   }>;
 }
 
+export type FactionType = 'covenant' | 'israel' | 'hostile' | 'allied' | 'global_power';
+
 export interface WorldEmpireRegion {
   id: string;
   name: string;
@@ -65,6 +67,10 @@ export interface WorldEmpireRegion {
   capital: { name: string; coords: GeoCoordinate };
   approximateBounds: GeoCoordinate[]; // Boundary polygon for territory representation
   biblicalIntersection: string;
+  factionCategory: FactionType;
+  populationEstimate: string;
+  approximateArea: string;
+  eraIds?: string[];
 }
 
 export interface MapRegionPreset {
@@ -75,22 +81,22 @@ export interface MapRegionPreset {
   description: string;
 }
 
-// Map Projection Bounds (Covering Ancient Near East from Rome to Persepolis)
+// Map Projection Bounds (Covering the Ancient World from Atlantic/Rome to Scythia/Russia, Kush/Ethiopia, India & China)
 export const MAP_BOUNDS = {
-  minLng: 10.0, // Italy / Rome
-  maxLng: 54.0, // Persian Gulf / Persepolis
-  minLat: 24.5, // Upper Egypt / Thebes
-  maxLat: 44.0, // Black Sea / Northern Balkans
+  minLng: -10.0, // Atlantic / Iberia & Rome
+  maxLng: 125.0, // Eastern China / Pacific Coast
+  minLat: 8.0,   // Horn of Africa / Kush / Indian Ocean
+  maxLat: 56.0,  // Scythian Steppes / Russian Plains
 };
 
 // Preset Cameras for Quick Navigation
 export const REGION_PRESETS: MapRegionPreset[] = [
   {
     id: 'all',
-    name: 'All Biblical World',
-    center: { lat: 33.5, lng: 35.5 },
+    name: 'All Biblical World (Atlantic to Pacific)',
+    center: { lat: 31.0, lng: 52.0 },
     zoom: 1.0,
-    description: 'The complete Ancient Near East from Rome to Persepolis'
+    description: 'The complete known world: Rome, Scythia/Russia, Kush/Ethiopia, Persia, India & China'
   },
   {
     id: 'levant',
@@ -772,21 +778,119 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
   }
 ];
 
-// World Empires Territories & Centers
+// World Empires Territories & Centers (Global Ancient World)
 export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
   {
-    id: 'egypt',
-    name: 'Ancient Egyptian Empire',
-    color: '#c99738',
-    fillColor: 'rgba(201, 151, 56, 0.12)',
-    dateRange: 'c. 2100 – 609 BC',
-    capital: { name: 'Thebes & Memphis', coords: { lat: 25.718, lng: 32.657 } },
+    id: 'judah',
+    name: 'Kingdom of Judah (Jerusalem)',
+    color: '#eab308',
+    fillColor: 'rgba(234, 179, 8, 0.22)',
+    dateRange: 'c. 930 – 586 BC',
+    capital: { name: 'Jerusalem', coords: { lat: 31.768, lng: 35.213 } },
     approximateBounds: [
-      { lat: 24.5, lng: 32.0 }, { lat: 27.0, lng: 31.0 }, { lat: 30.0, lng: 30.5 },
-      { lat: 31.5, lng: 30.0 }, { lat: 31.5, lng: 32.5 }, { lat: 31.0, lng: 34.5 },
-      { lat: 28.0, lng: 34.5 }, { lat: 24.5, lng: 33.5 }, { lat: 24.5, lng: 32.0 }
+      { lat: 31.95, lng: 34.85 }, { lat: 31.95, lng: 35.50 }, { lat: 31.10, lng: 35.40 },
+      { lat: 31.05, lng: 34.70 }, { lat: 31.60, lng: 34.65 }, { lat: 31.95, lng: 34.85 }
     ],
-    biblicalIntersection: 'Shelter for Abraham and Jacob; slavery and 10 plagues of Exodus; invaded Judah under Rehoboam.'
+    biblicalIntersection: 'The Davidic royal line ruling from Mount Zion; Solomon\'s Temple; outlasted the Northern Kingdom until the Babylonian exile in 586 BC.',
+    factionCategory: 'covenant',
+    populationEstimate: '~350,000 – 450,000',
+    approximateArea: '~15,000 km²'
+  },
+  {
+    id: 'israel_kingdom',
+    name: 'Kingdom of Israel (Samaria)',
+    color: '#22c55e',
+    fillColor: 'rgba(34, 197, 94, 0.20)',
+    dateRange: 'c. 930 – 722 BC',
+    capital: { name: 'Samaria', coords: { lat: 32.277, lng: 35.190 } },
+    approximateBounds: [
+      { lat: 33.30, lng: 35.10 }, { lat: 33.30, lng: 35.85 }, { lat: 31.95, lng: 35.50 },
+      { lat: 31.95, lng: 34.85 }, { lat: 32.70, lng: 34.95 }, { lat: 33.30, lng: 35.10 }
+    ],
+    biblicalIntersection: 'The northern ten tribes established under Jeroboam; capital at Samaria until exile by Assyria in 722 BC.',
+    factionCategory: 'israel',
+    populationEstimate: '~700,000 – 900,000',
+    approximateArea: '~24,000 km²'
+  },
+  {
+    id: 'phoenicia',
+    name: 'Phoenicia (Allied Maritime Ports)',
+    color: '#38bdf8',
+    fillColor: 'rgba(56, 189, 248, 0.18)',
+    dateRange: 'c. 1200 – 332 BC',
+    capital: { name: 'Tyre & Sidon', coords: { lat: 33.270, lng: 35.196 } },
+    approximateBounds: [
+      { lat: 34.60, lng: 35.80 }, { lat: 34.60, lng: 36.15 }, { lat: 33.10, lng: 35.35 },
+      { lat: 33.10, lng: 35.10 }, { lat: 34.60, lng: 35.80 }
+    ],
+    biblicalIntersection: 'Maritime alliance with King David and Solomon; supplied cedar of Lebanon and master craftsmen for the Temple.',
+    factionCategory: 'allied',
+    populationEstimate: '~400,000 – 600,000',
+    approximateArea: '~12,000 km²'
+  },
+  {
+    id: 'moab_kingdom',
+    name: 'Kingdom of Moab',
+    color: '#ef4444',
+    fillColor: 'rgba(239, 68, 68, 0.16)',
+    dateRange: 'c. 1300 – 582 BC',
+    capital: { name: 'Dibon & Kir-Hareseth', coords: { lat: 31.50, lng: 35.77 } },
+    approximateBounds: [
+      { lat: 31.85, lng: 35.65 }, { lat: 31.85, lng: 36.15 }, { lat: 31.05, lng: 36.00 },
+      { lat: 31.05, lng: 35.45 }, { lat: 31.85, lng: 35.65 }
+    ],
+    biblicalIntersection: 'Rebelled against Israel following King Ahab\'s death (2 Kings 1:1, 3:4–27); recorded on the Mesha Stele.',
+    factionCategory: 'hostile',
+    populationEstimate: '~150,000 – 250,000',
+    approximateArea: '~5,000 km²'
+  },
+  {
+    id: 'aram_damascus',
+    name: 'Aram-Damascus (Syrian Kingdom)',
+    color: '#ef4444',
+    fillColor: 'rgba(239, 68, 68, 0.16)',
+    dateRange: 'c. 1100 – 732 BC',
+    capital: { name: 'Damascus', coords: { lat: 33.513, lng: 36.292 } },
+    approximateBounds: [
+      { lat: 34.80, lng: 36.00 }, { lat: 34.80, lng: 37.50 }, { lat: 32.50, lng: 37.00 },
+      { lat: 32.50, lng: 35.80 }, { lat: 34.80, lng: 36.00 }
+    ],
+    biblicalIntersection: 'Aramean adversary of Israel under Ben-hadad and Hazael (1 Kings 20, 2 Kings 6–8, 16); crushed by Assyria in 732 BC.',
+    factionCategory: 'hostile',
+    populationEstimate: '~500,000 – 700,000',
+    approximateArea: '~45,000 km²'
+  },
+  {
+    id: 'philistia',
+    name: 'Philistine Pentapolis',
+    color: '#ef4444',
+    fillColor: 'rgba(239, 68, 68, 0.16)',
+    dateRange: 'c. 1175 – 604 BC',
+    capital: { name: 'Gath & Ashdod', coords: { lat: 31.70, lng: 34.85 } },
+    approximateBounds: [
+      { lat: 31.85, lng: 34.70 }, { lat: 31.85, lng: 34.90 }, { lat: 31.25, lng: 34.55 },
+      { lat: 31.25, lng: 34.25 }, { lat: 31.85, lng: 34.70 }
+    ],
+    biblicalIntersection: 'Five coastal royal cities (Gaza, Ashkelon, Ashdod, Gath, Ekron); cult of Baal-zebub at Ekron in 2 Kings 1:2.',
+    factionCategory: 'hostile',
+    populationEstimate: '~200,000 – 300,000',
+    approximateArea: '~3,500 km²'
+  },
+  {
+    id: 'edom_kingdom',
+    name: 'Kingdom of Edom (Idumea)',
+    color: '#ef4444',
+    fillColor: 'rgba(239, 68, 68, 0.16)',
+    dateRange: 'c. 1300 – 125 BC',
+    capital: { name: 'Bozrah & Sela', coords: { lat: 30.74, lng: 35.60 } },
+    approximateBounds: [
+      { lat: 31.10, lng: 35.25 }, { lat: 31.10, lng: 35.85 }, { lat: 29.50, lng: 35.50 },
+      { lat: 29.50, lng: 35.00 }, { lat: 31.10, lng: 35.25 }
+    ],
+    biblicalIntersection: 'Descendants of Esau in the southern highlands; allied with Judah and Israel during the campaign against Moab in 2 Kings 3.',
+    factionCategory: 'hostile',
+    populationEstimate: '~100,000 – 180,000',
+    approximateArea: '~8,000 km²'
   },
   {
     id: 'assyria',
@@ -800,7 +904,10 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
       { lat: 32.5, lng: 44.5 }, { lat: 31.5, lng: 35.0 }, { lat: 35.0, lng: 35.5 },
       { lat: 37.5, lng: 37.5 }, { lat: 38.5, lng: 40.0 }
     ],
-    biblicalIntersection: 'Exiled the Northern Kingdom (722 BC); invaded Judah and besieged Hezekiah in Jerusalem (701 BC).'
+    biblicalIntersection: 'Exiled the Northern Kingdom (722 BC); invaded Judah and besieged Hezekiah in Jerusalem (701 BC; Taylor Prism).',
+    factionCategory: 'hostile',
+    populationEstimate: '~15,000,000 – 20,000,000',
+    approximateArea: '~1,400,000 km²'
   },
   {
     id: 'babylon',
@@ -814,7 +921,44 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
       { lat: 30.0, lng: 48.0 }, { lat: 30.5, lng: 45.0 }, { lat: 31.5, lng: 35.0 },
       { lat: 34.5, lng: 36.0 }, { lat: 36.0, lng: 38.0 }
     ],
-    biblicalIntersection: 'Destroyed Solomon\'s Temple in 586 BC; 70-year captivity in Babylon; vindication of Daniel.'
+    biblicalIntersection: 'Destroyed Solomon\'s Temple in 586 BC; 70-year captivity in Babylon; vindication of Daniel (Nabonidus Cylinder).',
+    factionCategory: 'hostile',
+    populationEstimate: '~10,000,000 – 14,000,000',
+    approximateArea: '~1,200,000 km²'
+  },
+  {
+    id: 'old_babylon',
+    name: 'Old Babylonian & Kassite Kingdom',
+    color: '#5c768d',
+    fillColor: 'rgba(92, 118, 141, 0.15)',
+    dateRange: 'c. 1894 – 1155 BC',
+    capital: { name: 'Babylon & Ur', coords: { lat: 32.542, lng: 44.421 } },
+    approximateBounds: [
+      { lat: 35.0, lng: 41.5 }, { lat: 35.5, lng: 44.5 }, { lat: 33.0, lng: 47.0 },
+      { lat: 29.8, lng: 48.5 }, { lat: 30.5, lng: 46.0 }, { lat: 32.0, lng: 42.5 },
+      { lat: 35.0, lng: 41.5 }
+    ],
+    biblicalIntersection: 'Land of Shinar (Genesis 10–11); Tower of Babel; origin of Abram called out of Ur of the Chaldees.',
+    factionCategory: 'hostile',
+    populationEstimate: '~3,500,000 – 5,000,000',
+    approximateArea: '~450,000 km²'
+  },
+  {
+    id: 'media',
+    name: 'Median Empire',
+    color: '#854d0e',
+    fillColor: 'rgba(133, 77, 14, 0.15)',
+    dateRange: '678 – 549 BC',
+    capital: { name: 'Ecbatana', coords: { lat: 34.80, lng: 48.51 } },
+    approximateBounds: [
+      { lat: 40.5, lng: 45.0 }, { lat: 40.0, lng: 60.0 }, { lat: 32.0, lng: 60.0 },
+      { lat: 30.0, lng: 52.0 }, { lat: 32.5, lng: 45.5 }, { lat: 38.0, lng: 44.0 },
+      { lat: 40.5, lng: 45.0 }
+    ],
+    biblicalIntersection: 'Allied with Babylon to overthrow Nineveh (612 BC); Daniel 5:28, 6:8 ("the law of the Medes and Persians").',
+    factionCategory: 'hostile',
+    populationEstimate: '~5,000,000 – 7,500,000',
+    approximateArea: '~2,800,000 km²'
   },
   {
     id: 'persia',
@@ -824,64 +968,238 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: '539 – 331 BC',
     capital: { name: 'Susa & Persepolis', coords: { lat: 32.190, lng: 48.257 } },
     approximateBounds: [
-      { lat: 41.0, lng: 28.0 }, { lat: 40.0, lng: 52.0 }, { lat: 28.0, lng: 53.0 },
+      { lat: 41.0, lng: 28.0 }, { lat: 40.0, lng: 68.0 }, { lat: 25.0, lng: 68.0 },
       { lat: 28.0, lng: 48.0 }, { lat: 30.0, lng: 32.0 }, { lat: 34.0, lng: 34.0 },
       { lat: 38.0, lng: 27.0 }, { lat: 41.0, lng: 28.0 }
     ],
-    biblicalIntersection: 'Decree of Cyrus permitting the Jewish return (539 BC); Nehemiah and Esther in Persian courts.'
+    biblicalIntersection: 'Decree of Cyrus permitting the Jewish return (539 BC; Cyrus Cylinder); Nehemiah and Esther in Persian royal courts.',
+    factionCategory: 'allied',
+    populationEstimate: '~35,000,000 – 50,000,000',
+    approximateArea: '~5,500,000 km²'
+  },
+  {
+    id: 'parthia',
+    name: 'Parthian Empire (Arsacid Dynasty)',
+    color: '#c084fc',
+    fillColor: 'rgba(192, 132, 252, 0.18)',
+    dateRange: '247 BC – AD 224',
+    capital: { name: 'Ctesiphon', coords: { lat: 33.09, lng: 44.58 } },
+    approximateBounds: [
+      { lat: 39.0, lng: 44.0 }, { lat: 40.0, lng: 65.0 }, { lat: 28.0, lng: 65.0 },
+      { lat: 27.0, lng: 51.0 }, { lat: 30.0, lng: 46.0 }, { lat: 34.0, lng: 42.0 },
+      { lat: 39.0, lng: 44.0 }
+    ],
+    biblicalIntersection: 'Great eastern rival of the Roman Empire; pilgrims from Parthia heard the Gospel at Pentecost (Acts 2:9).',
+    factionCategory: 'global_power',
+    populationEstimate: '~15,000,000 – 18,000,000',
+    approximateArea: '~3,000,000 km²'
+  },
+  {
+    id: 'egypt',
+    name: 'Ancient Egyptian Empire',
+    color: '#c99738',
+    fillColor: 'rgba(201, 151, 56, 0.14)',
+    dateRange: 'c. 2100 – 1070 BC',
+    capital: { name: 'Thebes & Memphis', coords: { lat: 25.718, lng: 32.657 } },
+    approximateBounds: [
+      { lat: 24.5, lng: 32.0 }, { lat: 27.0, lng: 31.0 }, { lat: 30.0, lng: 30.5 },
+      { lat: 31.5, lng: 30.0 }, { lat: 31.5, lng: 32.5 }, { lat: 31.0, lng: 34.5 },
+      { lat: 28.0, lng: 34.5 }, { lat: 24.5, lng: 33.5 }, { lat: 24.5, lng: 32.0 }
+    ],
+    biblicalIntersection: 'Shelter for Abraham and Jacob; slavery and 10 plagues of Exodus; Merneptah Stele (1208 BC) earliest extrabiblical mention of Israel.',
+    factionCategory: 'hostile',
+    populationEstimate: '~4,500,000 – 6,000,000',
+    approximateArea: '~1,000,000 km²'
+  },
+  {
+    id: 'saite_egypt',
+    name: 'Late Dynastic Egypt (26th Saite Dynasty)',
+    color: '#d97706',
+    fillColor: 'rgba(217, 119, 6, 0.15)',
+    dateRange: '664 – 525 BC',
+    capital: { name: 'Sais & Memphis', coords: { lat: 30.96, lng: 30.77 } },
+    approximateBounds: [
+      { lat: 24.0, lng: 32.5 }, { lat: 29.5, lng: 30.5 }, { lat: 31.5, lng: 29.5 },
+      { lat: 31.5, lng: 33.0 }, { lat: 28.0, lng: 34.0 }, { lat: 24.0, lng: 33.5 },
+      { lat: 24.0, lng: 32.5 }
+    ],
+    biblicalIntersection: 'Pharaoh Necho slew King Josiah at Megiddo (2 Kings 23:29); Jeremiah taken to Tahpanhes in Egypt.',
+    factionCategory: 'hostile',
+    populationEstimate: '~3,800,000 – 5,000,000',
+    approximateArea: '~800,000 km²'
+  },
+  {
+    id: 'ptolemaic_egypt',
+    name: 'Ptolemaic Kingdom of Egypt',
+    color: '#38bdf8',
+    fillColor: 'rgba(56, 189, 248, 0.16)',
+    dateRange: '305 – 30 BC',
+    capital: { name: 'Alexandria', coords: { lat: 31.20, lng: 29.91 } },
+    approximateBounds: [
+      { lat: 23.5, lng: 32.5 }, { lat: 28.0, lng: 29.5 }, { lat: 31.5, lng: 25.0 },
+      { lat: 31.5, lng: 34.0 }, { lat: 27.5, lng: 34.5 }, { lat: 23.5, lng: 33.0 },
+      { lat: 23.5, lng: 32.5 }
+    ],
+    biblicalIntersection: 'Daniel 11 ("King of the South"); commissioned the Septuagint (LXX) translation of the Hebrew Scriptures into Greek.',
+    factionCategory: 'allied',
+    populationEstimate: '~7,000,000',
+    approximateArea: '~1,000,000 km²'
+  },
+  {
+    id: 'kush_nubia',
+    name: 'Kingdom of Kush & 25th Nubian Dynasty (Ethiopia / Upper Nile)',
+    color: '#c084fc',
+    fillColor: 'rgba(192, 132, 252, 0.18)',
+    dateRange: 'c. 1070 BC – AD 350',
+    capital: { name: 'Napata & Meroë', coords: { lat: 16.94, lng: 33.75 } },
+    approximateBounds: [
+      { lat: 24.0, lng: 32.9 }, { lat: 22.0, lng: 36.5 }, { lat: 16.0, lng: 39.0 },
+      { lat: 13.5, lng: 37.0 }, { lat: 12.0, lng: 33.0 }, { lat: 12.5, lng: 29.5 },
+      { lat: 18.0, lng: 28.5 }, { lat: 22.5, lng: 30.5 }, { lat: 24.0, lng: 32.9 }
+    ],
+    biblicalIntersection: 'Pharaoh Tirhakah (Taharqa) marched against Sennacherib (2 Kings 19:9, Isaiah 37:9); Queen Candace\'s treasurer baptized in Acts 8:27.',
+    factionCategory: 'global_power',
+    populationEstimate: '~2,000,000 – 3,500,000',
+    approximateArea: '~1,200,000 km²'
+  },
+  {
+    id: 'china_zhou',
+    name: 'Ancient China — Western & Eastern Zhou Dynasties',
+    color: '#c084fc',
+    fillColor: 'rgba(192, 132, 252, 0.18)',
+    dateRange: 'c. 1046 – 256 BC',
+    capital: { name: 'Haojing & Luoyang', coords: { lat: 34.62, lng: 112.45 } },
+    approximateBounds: [
+      { lat: 40.5, lng: 106.0 }, { lat: 40.8, lng: 117.5 }, { lat: 38.0, lng: 119.5 },
+      { lat: 35.5, lng: 120.0 }, { lat: 30.5, lng: 121.5 }, { lat: 28.0, lng: 113.0 },
+      { lat: 29.5, lng: 104.0 }, { lat: 34.5, lng: 104.5 }, { lat: 40.5, lng: 106.0 }
+    ],
+    biblicalIntersection: 'Contemporary eastern superpower during Israel\'s monarchy and exile; roots of the silk trade network known biblically as the Land of Sinim (Isaiah 49:12).',
+    factionCategory: 'global_power',
+    populationEstimate: '~35,000,000 – 40,000,000',
+    approximateArea: '~3,400,000 km²'
+  },
+  {
+    id: 'china_han',
+    name: 'Imperial China — Han Dynasty (Land of Sinim)',
+    color: '#c084fc',
+    fillColor: 'rgba(192, 132, 252, 0.18)',
+    dateRange: '202 BC – AD 220',
+    capital: { name: 'Chang\'an & Luoyang', coords: { lat: 34.26, lng: 108.94 } },
+    approximateBounds: [
+      { lat: 40.5, lng: 94.0 }, { lat: 40.0, lng: 100.0 }, { lat: 41.5, lng: 112.0 },
+      { lat: 41.5, lng: 123.0 }, { lat: 38.0, lng: 121.0 }, { lat: 32.0, lng: 121.5 },
+      { lat: 23.0, lng: 114.0 }, { lat: 22.0, lng: 108.0 }, { lat: 26.0, lng: 102.0 },
+      { lat: 31.0, lng: 103.0 }, { lat: 36.5, lng: 98.0 }, { lat: 40.5, lng: 94.0 }
+    ],
+    biblicalIntersection: 'Isaiah 49:12 — "Behold, these from the land of Sinim." Contemporary world empire during Christ and Apostolic Age; Silk Road terminus.',
+    factionCategory: 'global_power',
+    populationEstimate: '~57,600,000 (Census of AD 2)',
+    approximateArea: '~6,000,000 km²'
+  },
+  {
+    id: 'scythia_steppes',
+    name: 'Scythians, Cimmerians & Sarmatians (Northern Steppes / Russia)',
+    color: '#c084fc',
+    fillColor: 'rgba(192, 132, 252, 0.18)',
+    dateRange: 'c. 900 BC – AD 200',
+    capital: { name: 'Neapolis Scythica (Crimea / Steppes)', coords: { lat: 44.94, lng: 34.12 } },
+    approximateBounds: [
+      { lat: 46.0, lng: 28.5 }, { lat: 51.5, lng: 31.0 }, { lat: 53.0, lng: 40.0 },
+      { lat: 53.5, lng: 52.0 }, { lat: 50.0, lng: 60.0 }, { lat: 46.5, lng: 50.5 },
+      { lat: 43.5, lng: 43.0 }, { lat: 44.5, lng: 36.5 }, { lat: 44.4, lng: 33.8 },
+      { lat: 46.0, lng: 30.5 }, { lat: 46.0, lng: 28.5 }
+    ],
+    biblicalIntersection: 'Ezekiel 38:2–6, 39:1 ("Gog of the land of Magog, prince of Rosh, Meshech, and Tubal... of the north parts"); Colossians 3:11.',
+    factionCategory: 'global_power',
+    populationEstimate: '~1,800,000 – 2,800,000 horse archers & nomadic tribes',
+    approximateArea: '~3,200,000 km²'
+  },
+  {
+    id: 'india_maurya',
+    name: 'Maurya Empire & Kushan Realm (Ancient India / Hoddu)',
+    color: '#c084fc',
+    fillColor: 'rgba(192, 132, 252, 0.18)',
+    dateRange: 'c. 322 BC – AD 230',
+    capital: { name: 'Pataliputra (Patna)', coords: { lat: 25.61, lng: 85.14 } },
+    approximateBounds: [
+      { lat: 34.0, lng: 71.5 }, { lat: 31.0, lng: 78.0 }, { lat: 28.0, lng: 85.0 },
+      { lat: 24.0, lng: 90.0 }, { lat: 20.0, lng: 86.5 }, { lat: 13.0, lng: 80.5 },
+      { lat: 8.5, lng: 77.5 }, { lat: 15.0, lng: 74.0 }, { lat: 23.0, lng: 69.0 },
+      { lat: 28.0, lng: 66.0 }, { lat: 34.0, lng: 71.5 }
+    ],
+    biblicalIntersection: 'Esther 1:1, 8:9 — "From India [Hebrew: Hoddu] even unto Ethiopia, an hundred twenty and seven provinces." Connected via maritime spice trade.',
+    factionCategory: 'global_power',
+    populationEstimate: '~45,000,000 – 55,000,000',
+    approximateArea: '~5,000,000 km²'
+  },
+  {
+    id: 'kingdom_sheba',
+    name: 'Kingdom of Saba (Sheba / Southern Arabia)',
+    color: '#c084fc',
+    fillColor: 'rgba(192, 132, 252, 0.18)',
+    dateRange: 'c. 1200 BC – AD 275',
+    capital: { name: 'Marib', coords: { lat: 15.42, lng: 45.34 } },
+    approximateBounds: [
+      { lat: 17.5, lng: 42.5 }, { lat: 18.5, lng: 46.5 }, { lat: 17.5, lng: 53.5 },
+      { lat: 14.5, lng: 51.0 }, { lat: 12.8, lng: 45.0 }, { lat: 12.8, lng: 43.3 },
+      { lat: 15.0, lng: 42.8 }, { lat: 17.5, lng: 42.5 }
+    ],
+    biblicalIntersection: '1 Kings 10:1–13 — Queen of Sheba journeyed to Jerusalem with frankincense, gold, and gems to test Solomon with hard questions.',
+    factionCategory: 'global_power',
+    populationEstimate: '~1,200,000 – 2,000,000',
+    approximateArea: '~450,000 km²'
+  },
+  {
+    id: 'nabataea',
+    name: 'Nabataean Kingdom (Petra / Arabia Petraea)',
+    color: '#38bdf8',
+    fillColor: 'rgba(56, 189, 248, 0.16)',
+    dateRange: 'c. 312 BC – AD 106',
+    capital: { name: 'Petra (Sela)', coords: { lat: 30.328, lng: 35.444 } },
+    approximateBounds: [
+      { lat: 31.0, lng: 33.5 }, { lat: 31.3, lng: 35.5 }, { lat: 31.5, lng: 37.0 },
+      { lat: 29.5, lng: 38.5 }, { lat: 26.8, lng: 38.0 }, { lat: 26.5, lng: 36.5 },
+      { lat: 28.5, lng: 34.5 }, { lat: 31.0, lng: 33.5 }
+    ],
+    biblicalIntersection: '2 Corinthians 11:32 — Governor under King Aretas IV kept Damascus city; ancient incense trade hub carved in rose-red sandstone.',
+    factionCategory: 'allied',
+    populationEstimate: '~1,000,000',
+    approximateArea: '~250,000 km²'
+  },
+  {
+    id: 'greece_seleucid',
+    name: 'Seleucid Empire (Hellenistic Empire)',
+    color: '#ef4444',
+    fillColor: 'rgba(239, 68, 68, 0.16)',
+    dateRange: '312 – 63 BC',
+    capital: { name: 'Antioch & Seleucia', coords: { lat: 36.202, lng: 36.160 } },
+    approximateBounds: [
+      { lat: 39.5, lng: 26.5 }, { lat: 40.0, lng: 48.0 }, { lat: 32.0, lng: 48.0 },
+      { lat: 31.0, lng: 35.0 }, { lat: 35.0, lng: 35.5 }, { lat: 38.0, lng: 27.0 },
+      { lat: 39.5, lng: 26.5 }
+    ],
+    biblicalIntersection: 'Daniel 8 & 11 ("King of the North"); Antiochus IV Epiphanes profaned the Temple with the abomination of desolation (167 BC).',
+    factionCategory: 'hostile',
+    populationEstimate: '~18,000,000 – 25,000,000',
+    approximateArea: '~3,900,000 km²'
   },
   {
     id: 'rome',
     name: 'Roman Empire',
     color: '#b55938',
     fillColor: 'rgba(181, 89, 56, 0.15)',
-    dateRange: '63 BC – AD 100+',
+    dateRange: '63 BC – AD 476',
     capital: { name: 'Rome', coords: { lat: 41.902, lng: 12.496 } },
     approximateBounds: [
       { lat: 44.0, lng: 11.0 }, { lat: 42.0, lng: 25.0 }, { lat: 38.0, lng: 37.0 },
       { lat: 32.0, lng: 36.0 }, { lat: 31.0, lng: 30.0 }, { lat: 32.0, lng: 13.0 },
       { lat: 38.0, lng: 11.0 }, { lat: 44.0, lng: 11.0 }
     ],
-    biblicalIntersection: 'The fullness of time: census of Augustus, crucifixion under Pilate, proclamation across Roman roads.'
-  },
-  {
-    id: 'judah',
-    name: 'Kingdom of Judah (Jerusalem)',
-    color: '#eab308',
-    fillColor: 'rgba(234, 179, 8, 0.22)',
-    dateRange: 'c. 930 – 586 BC',
-    capital: { name: 'Jerusalem', coords: { lat: 31.768, lng: 35.213 } },
-    approximateBounds: [
-      { lat: 31.95, lng: 34.85 }, { lat: 31.95, lng: 35.50 }, { lat: 31.10, lng: 35.40 },
-      { lat: 31.05, lng: 34.70 }, { lat: 31.60, lng: 34.65 }, { lat: 31.95, lng: 34.85 }
-    ],
-    biblicalIntersection: 'The Davidic royal line ruling from Mount Zion; temple worship in Jerusalem until the Babylonian captivity.'
-  },
-  {
-    id: 'israel_kingdom',
-    name: 'Kingdom of Israel (Samaria)',
-    color: '#22c55e',
-    fillColor: 'rgba(34, 197, 94, 0.20)',
-    dateRange: 'c. 930 – 722 BC',
-    capital: { name: 'Samaria', coords: { lat: 32.277, lng: 35.190 } },
-    approximateBounds: [
-      { lat: 33.30, lng: 35.10 }, { lat: 33.30, lng: 35.85 }, { lat: 31.95, lng: 35.50 },
-      { lat: 31.95, lng: 34.85 }, { lat: 32.70, lng: 34.95 }, { lat: 33.30, lng: 35.10 }
-    ],
-    biblicalIntersection: 'The northern ten tribes established under Jeroboam; capital at Samaria until exile by Assyria in 722 BC.'
-  },
-  {
-    id: 'phoenicia',
-    name: 'Phoenicia (Allied Maritime Ports)',
-    color: '#38bdf8',
-    fillColor: 'rgba(56, 189, 248, 0.18)',
-    dateRange: 'c. 1200 – 332 BC',
-    capital: { name: 'Tyre & Sidon', coords: { lat: 33.270, lng: 35.196 } },
-    approximateBounds: [
-      { lat: 34.60, lng: 35.80 }, { lat: 34.60, lng: 36.15 }, { lat: 33.10, lng: 35.35 },
-      { lat: 33.10, lng: 35.10 }, { lat: 34.60, lng: 35.80 }
-    ],
-    biblicalIntersection: 'Maritime alliance with King David and Solomon; supplied cedar and master craftsmen for the Temple.'
+    biblicalIntersection: 'The fullness of time: census of Augustus (Luke 2:1), crucifixion under Pilate (Pilate Stone), proclamation across Roman roads.',
+    factionCategory: 'hostile',
+    populationEstimate: '~54,000,000 – 65,000,000',
+    approximateArea: '~5,000,000 km²'
   }
 ];
 
@@ -910,10 +1228,11 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     startYear: -2100,
     endYear: -1800,
     rulingEmpireId: 'egypt',
+    additionalRegionIds: ['old_babylon', 'kush_nubia', 'china_zhou', 'scythia_steppes', 'kingdom_sheba'],
     focusCenter: { lat: 33.0, lng: 42.0 },
     focusZoom: 5,
     headline: 'The Call of Abraham · Middle Kingdom Egypt & Ur III',
-    historicalSummary: 'God calls Abram out of Ur of the Chaldees, through Haran, into Canaan. The Middle Kingdom of Egypt and Ur III rule the wider ancient world.',
+    historicalSummary: 'God calls Abram out of Ur of the Chaldees, through Haran, into Canaan. The Middle Kingdom of Egypt and Ur III rule the wider ancient world alongside early civilizations in Nubia and the Far East.',
     activeRouteIds: ['abraham-call'],
     activeSiteIds: ['nabonidus-cylinder'],
     activeFigureIds: ['abraham']
@@ -925,6 +1244,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     startYear: -1446,
     endYear: -1406,
     rulingEmpireId: 'egypt',
+    additionalRegionIds: ['old_babylon', 'kush_nubia', 'china_zhou', 'scythia_steppes', 'kingdom_sheba'],
     focusCenter: { lat: 29.5, lng: 33.2 },
     focusZoom: 6,
     headline: 'The Deliverance from Egypt · Mount Sinai & Red Sea',
@@ -939,11 +1259,15 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     yearLabel: 'c. 1050 – 930 BC',
     startYear: -1050,
     endYear: -930,
-    additionalRegionIds: ['judah', 'israel_kingdom', 'phoenicia'],
+    additionalRegionIds: [
+      'judah', 'israel_kingdom', 'phoenicia', 'aram_damascus', 'philistia',
+      'moab_kingdom', 'edom_kingdom', 'egypt', 'kush_nubia', 'kingdom_sheba',
+      'china_zhou', 'scythia_steppes'
+    ],
     focusCenter: { lat: 31.8, lng: 35.3 },
     focusZoom: 7,
     headline: "The Davidic Kingdom · Solomon's Temple & Jerusalem",
-    historicalSummary: "David establishes Jerusalem as the royal capital; Solomon builds the First Temple. Attested by the Tel Dan Stele ('House of David') and Mesha Stele.",
+    historicalSummary: "David establishes Jerusalem as the royal capital; Solomon builds the First Temple. Attested by the Tel Dan Stele ('House of David') and visited by the Queen of Sheba.",
     activeRouteIds: [],
     activeSiteIds: ['tel-dan-stele', 'mesha-stele'],
     activeFigureIds: ['david', 'solomon']
@@ -954,11 +1278,15 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     yearLabel: 'c. 853 – 841 BC',
     startYear: -853,
     endYear: -841,
-    additionalRegionIds: ['judah', 'israel_kingdom', 'phoenicia'],
+    additionalRegionIds: [
+      'judah', 'israel_kingdom', 'phoenicia', 'moab_kingdom', 'aram_damascus',
+      'philistia', 'edom_kingdom', 'assyria', 'kush_nubia', 'kingdom_sheba',
+      'china_zhou', 'scythia_steppes'
+    ],
     focusCenter: { lat: 32.1, lng: 35.5 },
     focusZoom: 7,
     headline: "The Divided Monarchy · Moabite Rebellion & Elijah's Ministry",
-    historicalSummary: "Following Ahab's death, Moab rebels against Israel (Mesha Stele, 2 Kings 1:1, 3:4). Ahaziah falls sick and seeks Baal-zebub at Ekron; Elijah prophesies judgment. Elisha ministers with miracles across Israel and Judah. Attested by the Mesha Stele, Tel Dan Stele, and Black Obelisk.",
+    historicalSummary: "Following Ahab's death, Moab rebels against Israel (Mesha Stele, 2 Kings 1:1, 3:4). Ahaziah falls sick and seeks Baal-zebub at Ekron; Elijah prophesies judgment. Attested by the Mesha Stele, Tel Dan Stele, and Black Obelisk.",
     activeRouteIds: [],
     activeSiteIds: ['mesha-stele', 'tel-dan-stele', 'black-obelisk'],
     activeFigureIds: ['david', 'hezekiah']
@@ -970,7 +1298,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     startYear: -841,
     endYear: -732,
     rulingEmpireId: 'assyria',
-    additionalRegionIds: ['judah', 'israel_kingdom', 'phoenicia'],
+    additionalRegionIds: [
+      'judah', 'israel_kingdom', 'phoenicia', 'moab_kingdom', 'aram_damascus',
+      'kush_nubia', 'kingdom_sheba', 'china_zhou', 'scythia_steppes'
+    ],
     focusCenter: { lat: 33.5, lng: 37.0 },
     focusZoom: 6,
     headline: "Jehu's Coup & Assyrian Hegemony Under Tiglath-Pileser III",
@@ -986,7 +1317,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     startYear: -722,
     endYear: -722,
     rulingEmpireId: 'assyria',
-    additionalRegionIds: ['judah', 'phoenicia'],
+    additionalRegionIds: [
+      'judah', 'phoenicia', 'babylon', 'kush_nubia', 'kingdom_sheba',
+      'china_zhou', 'scythia_steppes'
+    ],
     focusCenter: { lat: 32.5, lng: 35.5 },
     focusZoom: 6,
     headline: "The Fall of Samaria · Assyrian Deportation of Israel",
@@ -1002,7 +1336,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     startYear: -722,
     endYear: -701,
     rulingEmpireId: 'assyria',
-    additionalRegionIds: ['judah', 'israel_kingdom', 'phoenicia'],
+    additionalRegionIds: [
+      'judah', 'israel_kingdom', 'phoenicia', 'babylon', 'kush_nubia',
+      'kingdom_sheba', 'china_zhou', 'scythia_steppes'
+    ],
     focusCenter: { lat: 34.0, lng: 39.0 },
     focusZoom: 6,
     headline: "The Assyrian Invasion · Sennacherib's Siege of Jerusalem",
@@ -1018,7 +1355,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     startYear: -605,
     endYear: -539,
     rulingEmpireId: 'babylon',
-    additionalRegionIds: ['judah'],
+    additionalRegionIds: [
+      'judah', 'media', 'saite_egypt', 'kush_nubia', 'scythia_steppes',
+      'china_zhou', 'kingdom_sheba'
+    ],
     focusCenter: { lat: 32.5, lng: 44.4 },
     focusZoom: 6,
     headline: 'The Fall of Jerusalem · Daniel in Babylon',
@@ -1034,6 +1374,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     startYear: -539,
     endYear: -331,
     rulingEmpireId: 'persia',
+    additionalRegionIds: [
+      'judah', 'greece_seleucid', 'kush_nubia', 'india_maurya',
+      'scythia_steppes', 'china_zhou', 'kingdom_sheba'
+    ],
     focusCenter: { lat: 33.0, lng: 46.0 },
     focusZoom: 5,
     headline: 'The Decree of Cyrus · Rebuilding the Temple & Walls',
@@ -1049,6 +1393,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     startYear: -4,
     endYear: 33,
     rulingEmpireId: 'rome',
+    additionalRegionIds: [
+      'judah', 'parthia', 'china_han', 'kush_nubia', 'nabataea',
+      'scythia_steppes', 'india_maurya'
+    ],
     focusCenter: { lat: 32.1, lng: 35.2 },
     focusZoom: 7,
     headline: 'The Fullness of Time · Ministry, Death & Resurrection of Christ',
@@ -1064,6 +1412,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     startYear: 33,
     endYear: 96,
     rulingEmpireId: 'rome',
+    additionalRegionIds: [
+      'judah', 'parthia', 'china_han', 'kush_nubia', 'nabataea',
+      'scythia_steppes', 'india_maurya'
+    ],
     focusCenter: { lat: 38.0, lng: 25.0 },
     focusZoom: 5,
     headline: 'The Gospel to the Nations · Roman Highways & Courts',
@@ -1078,10 +1430,10 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     yearLabel: 'c. 2100 BC – AD 100+',
     startYear: -2100,
     endYear: 100,
-    focusCenter: { lat: 33.5, lng: 35.5 },
-    focusZoom: 5,
+    focusCenter: { lat: 31.0, lng: 52.0 },
+    focusZoom: 4,
     headline: 'The Complete Biblical World in History',
-    historicalSummary: 'All surviving archaeological discoveries, imperial extents, and biblical routes across the Ancient Near East and Mediterranean.',
+    historicalSummary: 'All surviving archaeological discoveries, imperial extents, and biblical routes across the known ancient world from the Atlantic to China.',
     activeRouteIds: ['abraham-call', 'exodus-route', 'paul-second-journey'],
     activeSiteIds: [
       'pilate-stone', 'caiaphas-ossuary', 'taylor-prism', 'siloam-inscription',
@@ -1241,6 +1593,70 @@ export const BIBLICAL_GEOGRAPHIC_ENTITIES: Record<string, BiblicalGeographicEnti
     zoom: 8,
     note: 'The sacred river dividing the Promised Land; parted for Joshua, crossed by Elijah and Elisha, and healed Naaman the Syrian.',
     scriptureRef: 'JOSHUA 3:1, 2 KINGS 2:8, 5:10'
+  },
+  ethiopia: {
+    name: 'Kingdom of Kush (Ethiopia / Upper Nile)',
+    ancientRegion: 'Nubia / Upper Nile',
+    coords: { lat: 16.940, lng: 33.750 },
+    zoom: 6,
+    note: 'Ancient Nilotic empire of Cush; realm of Pharaoh Tirhakah (2 Kings 19:9) and the royal treasurer of Queen Candace (Acts 8:27).',
+    scriptureRef: '2 KINGS 19:9, ISAIAH 37:9, ACTS 8:27'
+  },
+  cush: {
+    name: 'Land of Cush (Kush / Ethiopia)',
+    ancientRegion: 'Nubia / Upper Nile',
+    coords: { lat: 16.940, lng: 33.750 },
+    zoom: 6,
+    note: 'Southern land founded by Cush son of Ham (Genesis 10:6); formidable archers and allies/enemies throughout biblical history.',
+    scriptureRef: 'GENESIS 10:6, PSALMS 68:31, ISAIAH 18:1'
+  },
+  sinim: {
+    name: 'Land of Sinim (Ancient China)',
+    ancientRegion: 'East Asia',
+    coords: { lat: 34.260, lng: 108.940 },
+    zoom: 5,
+    note: 'Isaiah 49:12 — "Behold, these shall come from far: and, lo, these from the north and from the west; and these from the land of Sinim." Terminus of the Silk Road.',
+    scriptureRef: 'ISAIAH 49:12'
+  },
+  china: {
+    name: 'Ancient China (Land of Sinim)',
+    ancientRegion: 'East Asia',
+    coords: { lat: 34.260, lng: 108.940 },
+    zoom: 5,
+    note: 'Vast East Asian civilization known in biblical prophecy as Sinim; center of classical silk culture connected to the Mediterranean.',
+    scriptureRef: 'ISAIAH 49:12'
+  },
+  sheba: {
+    name: 'Kingdom of Sheba (Saba)',
+    ancientRegion: 'Southern Arabia (Yemen)',
+    coords: { lat: 15.420, lng: 45.340 },
+    zoom: 6,
+    note: 'Ancient trading kingdom wealthy in gold and frankincense; Queen of Sheba visited Solomon to prove his wisdom (1 Kings 10:1–13).',
+    scriptureRef: '1 KINGS 10:1, 2 CHRONICLES 9:1, MATTHEW 12:42'
+  },
+  scythia: {
+    name: 'Scythia (Northern Steppes / Russia)',
+    ancientRegion: 'Eurasian Steppes',
+    coords: { lat: 44.940, lng: 34.120 },
+    zoom: 6,
+    note: 'Nomadic warrior confederacy of the far north; linked in Ezekiel 38–39 with Gog, Magog, Meshech, and Tubal; mentioned in Colossians 3:11.',
+    scriptureRef: 'EZEKIEL 38:2, COLOSSIANS 3:11'
+  },
+  india: {
+    name: 'India (Hoddu)',
+    ancientRegion: 'Indus & Ganges Basins',
+    coords: { lat: 25.610, lng: 85.140 },
+    zoom: 5,
+    note: 'Esther 1:1, 8:9 — The eastern boundary of the Persian Empire stretching "from India even unto Ethiopia, an hundred twenty and seven provinces."',
+    scriptureRef: 'ESTHER 1:1, 8:9'
+  },
+  petra: {
+    name: 'Petra (Sela / Nabataea)',
+    ancientRegion: 'Edom / Arabia Petraea',
+    coords: { lat: 30.328, lng: 35.444 },
+    zoom: 8,
+    note: 'Sandstone canyon fortress city and capital of the Nabataeans; King Aretas IV attempted to arrest Paul at Damascus (2 Cor 11:32).',
+    scriptureRef: '2 KINGS 14:7, ISAIAH 16:1, 2 CORINTHIANS 11:32'
   }
 };
 
