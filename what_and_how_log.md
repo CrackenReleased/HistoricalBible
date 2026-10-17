@@ -1,3 +1,34 @@
+## 2026-10-17 16:00:00 — Edge-to-Edge Widescreen Map Canvas Expansion with Decoupled Constrained Interface Controls (v00.01.43)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested:
+    "We need to take the map wider. The interfaces don't HAVE to be wider. But the map should be wider."
+    Accompanied by screenshot markup with red arrows indicating the map canvas (`.atlas-canvas-card`) should span edge-to-edge across the monitor towards the browser window borders, while interface controls (header, toolbar, timeline, legend, granular buttons) stay at a comfortable, readable width.
+  - Root Cause:
+    Previously, the entire `#map-main` container shared the same width rules (`.wrap`). Applying padding or width restrictions to the container constrained both the canvas and the controls together.
+
+- Decision Point & Implementation:
+  1. **Decoupled Container Architecture (`map.html` & `src/interact.css`)**:
+     - Converted `#map-main` from `.wrap` to `.atlas-main-container` with `width: 100%; max-width: 100%; padding-left: 16px; padding-right: 16px; box-sizing: border-box;`.
+     - Left the site header and footer using site-wide `.wrap` (`max-width: 1240px; margin: 0 auto;`).
+  2. **Constrained Interfaces (`src/interact.css`)**:
+     - Grouped all control interfaces:
+       `.atlas-header, .atlas-toolbar, .map-chronology-container, .atlas-legend, .chrono-granular-panel`
+       under `max-width: 1240px; width: 100%; margin-left: auto; margin-right: auto; box-sizing: border-box;`.
+     - Keeps buttons, timeline tabs, and texts compactly centered without spreading or scattering across ultrawide monitors.
+  3. **Full-Bleed Map Canvas (`src/interact.css`)**:
+     - Styled `.atlas-canvas-card` with `width: 100%; max-width: 100%; margin: 0 auto;` and responsive height `clamp(540px, calc(100vh - 250px), 800px)`.
+     - On 1400px viewports, the map spans 1368px (wider than interface elements). On 1920px viewports, the map spans 1888px (~98.3% of viewport), extending edge-to-edge with 16px border breathing room as requested.
+  4. **Dynamic Resizing with ResizeObserver (`src/engine/ancientMap.ts`)**:
+     - Attached a native `ResizeObserver` to the map container to automatically trigger `map.invalidateSize()` and label deconfliction on viewport and card dimension changes.
+
+- Regression Verification & Proof:
+  - Updated automated Playwright regression test in `tests/map.spec.ts`:
+    - Asserts vertical DOM ordering: map above legend, legend above granular panel.
+    - Asserts widescreen map breakout: on 1400px and 1920px viewports, `mapWidth` is significantly greater than interface controls (`mapWidth > 1800px`, `chronoWidth <= 1240px`, `mapWidth > chronoWidth + 500px`).
+  - Captured full-resolution visual proof: `widescreen_layout_1920_full.png` and `widescreen_map_proof.png`.
+  - All 14/14 tests in `tests/map.spec.ts` PASS. Clean `npm.cmd run build` passes with 0 errors.
+
 ## 2026-10-17 15:20:00 — Atlas Page Layout Relocation (Granular Tracks Below Key) & ~8% Widescreen Responsive Margins (v00.01.42)
 
 - User Request & Direct Root-Cause Diagnosis:

@@ -752,20 +752,25 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
     expect(cyrus.y).toBeLessThan(250);
   });
 
-  test('Regression: Granular journey panel moved below key and map padded ~8% on left and right (v00.01.42)', async ({ page }) => {
+  test('Regression: Granular journey panel moved below key and map expands wider while interfaces remain constrained (v00.01.43)', async ({ page }) => {
+    // 1. Test at 1400px viewport
     await page.setViewportSize({ width: 1400, height: 900 });
     await page.goto('/map');
     await page.waitForTimeout(1000);
 
-    const layout = await page.evaluate(() => {
+    const layout1400 = await page.evaluate(() => {
       const docWidth = document.documentElement.clientWidth;
       const mapCard = document.querySelector('.atlas-canvas-card');
       const legend = document.querySelector('.atlas-legend');
       const granular = document.querySelector('#chrono-granular-panel');
+      const chronology = document.querySelector('.map-chronology-container');
+      const header = document.querySelector('.atlas-header');
 
       const mapRect = mapCard?.getBoundingClientRect();
       const legendRect = legend?.getBoundingClientRect();
       const granularRect = granular?.getBoundingClientRect();
+      const chronoRect = chronology?.getBoundingClientRect();
+      const headerRect = header?.getBoundingClientRect();
 
       return {
         docWidth,
@@ -776,21 +781,55 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
         mapWidth: mapRect?.width ?? 0,
         legendTop: legendRect?.top ?? 0,
         legendBottom: legendRect?.bottom ?? 0,
+        legendWidth: legendRect?.width ?? 0,
         granularTop: granularRect?.top ?? 0,
-        leftPaddingPct: mapRect ? (mapRect.left / docWidth) * 100 : 0,
-        rightPaddingPct: mapRect ? ((docWidth - mapRect.right) / docWidth) * 100 : 0
+        granularWidth: granularRect?.width ?? 0,
+        chronoWidth: chronoRect?.width ?? 0,
+        headerWidth: headerRect?.width ?? 0
       };
     });
 
     // 1. Vertical DOM Order: Map is above Legend, Legend is above Granular Panel
-    expect(layout.mapBottom).toBeLessThanOrEqual(layout.legendTop);
-    expect(layout.legendBottom).toBeLessThanOrEqual(layout.granularTop);
+    expect(layout1400.mapBottom).toBeLessThanOrEqual(layout1400.legendTop);
+    expect(layout1400.legendBottom).toBeLessThanOrEqual(layout1400.granularTop);
 
-    // 2. Padding: Map is padded ~8% on left and right sides of viewport
-    expect(layout.leftPaddingPct).toBeGreaterThanOrEqual(7.0);
-    expect(layout.leftPaddingPct).toBeLessThanOrEqual(9.5);
-    expect(layout.rightPaddingPct).toBeGreaterThanOrEqual(7.0);
-    expect(layout.rightPaddingPct).toBeLessThanOrEqual(9.5);
+    // 2. Map is wider than interfaces (expanding out towards viewport edges)
+    expect(layout1400.mapWidth).toBeGreaterThan(1300); // 1400 - 32 = 1368px
+    expect(layout1400.granularWidth).toBeLessThanOrEqual(1240);
+    expect(layout1400.legendWidth).toBeLessThanOrEqual(1240);
+    expect(layout1400.chronoWidth).toBeLessThanOrEqual(1240);
+    expect(layout1400.headerWidth).toBeLessThanOrEqual(1240);
+    expect(layout1400.mapWidth).toBeGreaterThan(layout1400.chronoWidth);
+    expect(layout1400.mapWidth).toBeGreaterThan(layout1400.granularWidth);
+
+    // 3. Test at 1920px (Full HD / Ultrawide)
+    await page.setViewportSize({ width: 1920, height: 1080 });
+    await page.waitForTimeout(500);
+
+    const layout1920 = await page.evaluate(() => {
+      const docWidth = document.documentElement.clientWidth;
+      const mapCard = document.querySelector('.atlas-canvas-card');
+      const granular = document.querySelector('#chrono-granular-panel');
+      const chrono = document.querySelector('.map-chronology-container');
+
+      const mapRect = mapCard?.getBoundingClientRect();
+      const granularRect = granular?.getBoundingClientRect();
+      const chronoRect = chrono?.getBoundingClientRect();
+
+      return {
+        docWidth,
+        mapWidth: mapRect?.width ?? 0,
+        granularWidth: granularRect?.width ?? 0,
+        chronoWidth: chronoRect?.width ?? 0
+      };
+    });
+
+    expect(layout1920.mapWidth).toBeGreaterThan(1800); // 1920 - 32 = 1888px
+    expect(layout1920.granularWidth).toBeLessThanOrEqual(1240);
+    expect(layout1920.chronoWidth).toBeLessThanOrEqual(1240);
+    expect(layout1920.mapWidth).toBeGreaterThan(layout1920.chronoWidth + 500);
+
+    await page.screenshot({ path: 'test-results/widescreen_layout_1920_full.png', fullPage: true });
   });
 });
 

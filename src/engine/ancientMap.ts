@@ -330,6 +330,16 @@ export class AncientMapCanvas {
       this.map.invalidateSize();
       this.scheduleLabelDeconfliction();
     }, 200);
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(() => {
+        if (this.map) {
+          this.map.invalidateSize();
+          this.scheduleLabelDeconfliction();
+        }
+      });
+      resizeObserver.observe(this.container);
+    }
   }
 
   private syncZoomClasses(): void {

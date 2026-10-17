@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.43] - 2026-10-17
+
+- **Edge-to-Edge Widescreen Map Canvas Expansion with Decoupled Constrained Interface Controls**:
+  - Decoupled the map container width architecture so the interactive map canvas (`.atlas-canvas-card`) spans edge-to-edge across the monitor (1888px width on 1920 viewports with clean 16px side breathing room) while all interface controls (header, toolbar, chronology HUD, era buttons, legend, and granular journey tracks) remain comfortably constrained and centered (`max-width: 1240px; margin: 0 auto;`).
+  - Added native `ResizeObserver` on the Leaflet container to automatically trigger `map.invalidateSize()` and label deconfliction during viewport and card dimension changes.
+  - Added Playwright regression test verifying widescreen map breakout while interfaces remain constrained. All 14/14 tests in `tests/map.spec.ts` PASS.
+
 ## [00.01.42] - 2026-10-17
 
 - **Atlas Page Layout Relocation & ~8% Widescreen Responsive Margins**:
