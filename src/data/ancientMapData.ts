@@ -6488,3 +6488,30 @@ export const BIBLICAL_GEOGRAPHIC_ENTITIES: Record<string, BiblicalGeographicEnti
   }
 };
 
+/**
+ * Calculates planar equirectangular area (in square kilometers) of a geodesic polygon.
+ * Used to deterministically sort regions so that larger macro empires render in the
+ * background (DOM bottom) while smaller focal kingdoms and lakes render in the
+ * foreground (DOM top).
+ */
+export function calculatePolygonGeodesicArea(coords: Array<{ lat: number; lng: number }>): number {
+  if (!coords || coords.length < 3) return 0;
+  const n = coords.length;
+  let meanLat = 0;
+  for (let i = 0; i < n; i++) meanLat += coords[i].lat;
+  meanLat = (meanLat / n) * (Math.PI / 180);
+  const cosLat = Math.cos(meanLat);
+
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    const j = (i + 1) % n;
+    const xi = coords[i].lng * cosLat;
+    const yi = coords[i].lat;
+    const xj = coords[j].lng * cosLat;
+    const yj = coords[j].lat;
+    sum += xi * yj - xj * yi;
+  }
+  return (Math.abs(sum) / 2) * 111.32 * 110.574;
+}
+
+

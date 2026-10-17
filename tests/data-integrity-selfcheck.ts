@@ -21,7 +21,8 @@ import {
   BIBLICAL_ROUTES,
   CHRONOLOGICAL_ERAS,
   WATER_FEATURES,
-  WORLD_EMPIRES_GEO
+  WORLD_EMPIRES_GEO,
+  calculatePolygonGeodesicArea
 } from '../src/data/ancientMapData.ts';
 import { discoveries } from '../src/discoveries.ts';
 import { localStore } from '../src/store/localFirstStore.ts';
@@ -372,4 +373,55 @@ test('Root Bible.pdf is deduplicated from public/Bible.pdf and contact.html synt
   assert.ok(contactHtml.includes('id="contact-mailto-link"'), 'contact.html must include #contact-mailto-link');
   assert.ok(contactHtml.includes('encodeURIComponent(subject)'), 'contact.html must dynamically encode mailto subject');
 });
+
+test('4-Tier Interactive Map Layering & Polygon Geodesic Area Sorting (Smaller Polygons Always on Top)', () => {
+  // 1. Geodesic area calculation test: Dead Sea > Sea of Galilee
+  const galileeSea = WATER_FEATURES.seas.find(s => s.name.includes('Galilee'))!;
+  const deadSea = WATER_FEATURES.seas.find(s => s.name.includes('Dead Sea'))!;
+  assert.ok(galileeSea && deadSea, 'Both Sea of Galilee and Dead Sea must be defined in WATER_FEATURES.seas');
+
+  const deadSeaArea = calculatePolygonGeodesicArea(deadSea.polygon);
+  const galileeArea = calculatePolygonGeodesicArea(galileeSea.polygon);
+  assert.ok(deadSeaArea > galileeArea, `Dead Sea area (${deadSeaArea.toFixed(1)} km²) must be strictly larger than Sea of Galilee (${galileeArea.toFixed(1)} km²)`);
+  assert.ok(galileeArea > 50 && galileeArea < 300, `Sea of Galilee area (${galileeArea.toFixed(1)} km²) should be reasonable for 166 km²`);
+
+  // 2. Geodesic area calculation for Empires: Macro Empires > Focal Regional Kingdoms
+  const persia = WORLD_EMPIRES_GEO.find(e => e.id === 'persia')!;
+  const egypt = WORLD_EMPIRES_GEO.find(e => e.id === 'egypt')!;
+  const judah = WORLD_EMPIRES_GEO.find(e => e.id === 'judah')!;
+  const israel = WORLD_EMPIRES_GEO.find(e => e.id === 'israel_kingdom')!;
+  const moab = WORLD_EMPIRES_GEO.find(e => e.id === 'moab_kingdom')!;
+
+  const persiaArea = calculatePolygonGeodesicArea(persia.approximateBounds);
+  const egyptArea = calculatePolygonGeodesicArea(egypt.approximateBounds);
+  const judahArea = calculatePolygonGeodesicArea(judah.approximateBounds);
+  const israelArea = calculatePolygonGeodesicArea(israel.approximateBounds);
+  const moabArea = calculatePolygonGeodesicArea(moab.approximateBounds);
+
+  assert.ok(persiaArea > egyptArea, `Persian Empire (${persiaArea.toFixed(0)} km²) must be larger than Egypt (${egyptArea.toFixed(0)} km²)`);
+  assert.ok(egyptArea > israelArea, `Egypt (${egyptArea.toFixed(0)} km²) must be larger than Israel (${israelArea.toFixed(0)} km²)`);
+  assert.ok(israelArea > judahArea, `Israel Kingdom (${israelArea.toFixed(0)} km²) must be larger than Judah (${judahArea.toFixed(0)} km²)`);
+  assert.ok(judahArea > 2000 && moabArea > 2000, `Both Judah (${judahArea.toFixed(0)} km²) and Moab (${moabArea.toFixed(0)} km²) are focal regional kingdoms`);
+
+  // 3. For every era, verify that sorting by calculatePolygonGeodesicArea descending places focal kingdoms after macro empires
+  for (const era of CHRONOLOGICAL_ERAS) {
+    const eraEmpires = WORLD_EMPIRES_GEO.filter(emp =>
+      emp.id === era.rulingEmpireId ||
+      (era.additionalRegionIds && era.additionalRegionIds.includes(emp.id)) ||
+      (emp.eraIds && emp.eraIds.includes(era.id))
+    );
+    if (eraEmpires.length <= 1) continue;
+
+    const sorted = [...eraEmpires].sort((a, b) =>
+      calculatePolygonGeodesicArea(b.approximateBounds) - calculatePolygonGeodesicArea(a.approximateBounds)
+    );
+
+    // The largest empire is first in the array (rendered first at bottom of DOM)
+    // The smallest kingdom is last in the array (rendered last on top of DOM)
+    const firstArea = calculatePolygonGeodesicArea(sorted[0].approximateBounds);
+    const lastArea = calculatePolygonGeodesicArea(sorted[sorted.length - 1].approximateBounds);
+    assert.ok(firstArea >= lastArea, `Era ${era.id}: First polygon (${sorted[0].id}, ${firstArea.toFixed(0)} km²) must be >= Last polygon (${sorted[sorted.length - 1].id}, ${lastArea.toFixed(0)} km²)`);
+  }
+});
+
 

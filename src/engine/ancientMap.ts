@@ -23,6 +23,7 @@ import {
   GRANULAR_TIMELINE_FILTERS,
   REGION_PRESETS,
   WATER_FEATURES,
+  calculatePolygonGeodesicArea,
   type GeoCoordinate,
   type ArchaeologicalSite,
   type BiblicalCity,
@@ -194,6 +195,8 @@ function getEmpireRelevanceNote(empireId: string, eraId: string, empire: WorldEm
   return empire.biblicalIntersection;
 }
 
+export { calculatePolygonGeodesicArea };
+
 export class AncientMapCanvas {
   public map: L.Map;
   private container: HTMLElement;
@@ -270,18 +273,25 @@ export class AncientMapCanvas {
       }
     });
 
-    // 3. Dedicated Z-Ordered Map Panes so Routes & Stops strictly sit above Empire Polygons, and Tooltips sit on top of everything
+    // 3. Dedicated 4-Tier Interactive Z-Ordered Map Panes:
+    // Tier 1 (Topmost): Points & Items (Stops: 620, Sites & Capitals: 580, Cities: 550)
+    // Tier 2: Paths & Linear Features (Routes & Roads: 480, Rivers & Streams: 460)
+    // Tier 3: Smaller Regions & Inland Lakes (Lakes: 420)
+    // Tier 4 (Bottom-most): Macro Region Polygons (Empires & Kingdoms: 390, Ocean Typography: 370)
+    // Overlays: Tooltips (750), Popups (800)
     const createManagedPane = (name: string, zIndex: number, extraClass?: string): HTMLElement => {
       const pane = this.map.getPane(name) || this.map.createPane(name);
       pane.style.zIndex = String(zIndex);
       if (extraClass) pane.classList.add(extraClass);
       return pane;
     };
-    createManagedPane('waterPane', 380, 'leaflet-water-pane');
-    createManagedPane('empirePane', 400, 'leaflet-empire-pane');
-    createManagedPane('cityPane', 440, 'leaflet-city-pane');
+    createManagedPane('waterPane', 370, 'leaflet-water-pane');
+    createManagedPane('empirePane', 390, 'leaflet-empire-pane');
+    createManagedPane('lakePane', 420, 'leaflet-lake-pane');
+    createManagedPane('riverPane', 460, 'leaflet-river-pane');
     createManagedPane('routePane', 480, 'leaflet-route-pane');
-    createManagedPane('sitePane', 540, 'leaflet-site-pane');
+    createManagedPane('cityPane', 550, 'leaflet-city-pane');
+    createManagedPane('sitePane', 580, 'leaflet-site-pane');
     createManagedPane('routeStopPane', 620, 'leaflet-routeStop-pane');
     createManagedPane('tooltipPane', 750, 'leaflet-tooltip-pane');
     createManagedPane('popupPane', 800, 'leaflet-popup-pane');
@@ -1127,16 +1137,37 @@ export class AncientMapCanvas {
 
     // 0. Biblical Waterways (Seas & Major Rivers)
     if (this.layers.rivers) {
-      for (const sea of WATER_FEATURES.seas) {
+      // Sort inland lakes by geodesic area descending so smaller lakes render on top in DOM
+      const sortedSeas = [...WATER_FEATURES.seas].sort((a, b) => {
+        return calculatePolygonGeodesicArea(b.polygon) - calculatePolygonGeodesicArea(a.polygon);
+      });
+
+      for (const sea of sortedSeas) {
         const latLngs = sea.polygon.map(pt => [pt.lat, pt.lng] as L.LatLngTuple);
-        const seaPoly = L.polygon(latLngs, {
-          pane: 'waterPane',
-          color: 'rgba(56, 189, 248, 0.35)',
-          fillColor: 'rgba(14, 116, 144, 0.12)',
-          fillOpacity: 0.12,
-          weight: 0.8,
+        const defaultStyle: L.PathOptions = {
+          pane: 'lakePane',
+          color: 'rgba(56, 189, 248, 0.40)',
+          fillColor: 'rgba(14, 116, 144, 0.14)',
+          fillOpacity: 0.14,
+          weight: 1.0,
           dashArray: undefined
+        };
+        const hoverStyle: L.PathOptions = {
+          pane: 'lakePane',
+          color: 'rgba(56, 189, 248, 0.90)',
+          fillColor: 'rgba(14, 116, 144, 0.28)',
+          fillOpacity: 0.28,
+          weight: 1.8,
+          dashArray: undefined
+        };
+        const seaPoly = L.polygon(latLngs, defaultStyle);
+        seaPoly.on('mouseover', () => {
+          seaPoly.setStyle(hoverStyle);
         });
+        seaPoly.on('mouseout', () => {
+          seaPoly.setStyle(defaultStyle);
+        });
+
         const biblicalSubtitle = sea.biblicalLabel || 'Biblical Water Body';
         this.bindManagedTooltip(
           seaPoly,
@@ -1148,12 +1179,26 @@ export class AncientMapCanvas {
 
       for (const river of WATER_FEATURES.rivers) {
         const path = river.path.map(pt => [pt.lat, pt.lng] as L.LatLngTuple);
-        const riverLine = L.polyline(path, {
-          pane: 'waterPane',
+        const defaultStyle: L.PathOptions = {
+          pane: 'riverPane',
           color: '#38bdf8',
           weight: 1.3,
           opacity: 0.50
+        };
+        const hoverStyle: L.PathOptions = {
+          pane: 'riverPane',
+          color: '#7dd3fc',
+          weight: 2.2,
+          opacity: 0.95
+        };
+        const riverLine = L.polyline(path, defaultStyle);
+        riverLine.on('mouseover', () => {
+          riverLine.setStyle(hoverStyle);
         });
+        riverLine.on('mouseout', () => {
+          riverLine.setStyle(defaultStyle);
+        });
+
         const scriptureSub = river.scriptureAnchor ? `<br/><span style="font-size: 0.70rem; color: #38bdf8; font-family: var(--font-mono, monospace);">${river.scriptureAnchor}</span>` : '';
         this.bindManagedTooltip(
           riverLine,
@@ -1210,19 +1255,11 @@ export class AncientMapCanvas {
 
     // 1. World Empires & Global Civilizations (Filtered strictly by era so empires never clash!)
     if (this.layers.empires) {
-      // Z-Index ordering by area descending:
-      // Macro empires (millions of km²) render FIRST (in background).
+      // Deterministic Z-Index ordering by calculated geodesic area descending:
+      // Macro empires (millions of km²) render FIRST (in background at DOM bottom).
       // Smaller focal kingdoms (Judah, Israel, Phoenicia, Moab, etc.) render LAST (in foreground on top).
-      const parseArea = (areaStr?: string): number => {
-        if (!areaStr) return 0;
-        const num = parseFloat(areaStr.replace(/[^0-9.]/g, ''));
-        if (areaStr.includes('M') || areaStr.includes('million')) return num * 1_000_000;
-        if (areaStr.includes('k')) return num * 1_000;
-        return num || 0;
-      };
-
       const sortedEmpires = [...targetEmpires].sort((a, b) => {
-        return parseArea(b.approximateArea) - parseArea(a.approximateArea);
+        return calculatePolygonGeodesicArea(b.approximateBounds) - calculatePolygonGeodesicArea(a.approximateBounds);
       });
 
       const badgeMap: Record<FactionType, { text: string; bg: string; color: string; border: string }> = {

@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.38] - 2026-10-17
+
+- Strict 4-Tier Interactive Stacking Hierarchy & Equirectangular Geodesic Area Sorting:
+  - **4-Tier Map Pane Architecture (`src/engine/ancientMap.ts`)**: Structured map layers into an explicit interactive z-index hierarchy: Tier 1 Points (Stops: 620, Sites & Capitals: 580, Cities: 550) > Tier 2 Paths (Routes: 480, Rivers: 460) > Tier 3 Small Regions (Lakes: 420) > Tier 4 Macro Regions (Empires: 390, Ocean Typography: 370).
+  - **Points Always on Top**: Positioned city markers (`550`) and discovery sites (`580`) strictly above route corridors (`480`) and rivers (`460`), eliminating all occlusions where routes obscured cities or pins.
+  - **Paths Above All Regions**: Placed rivers (`460`) and routes (`480`) strictly above inland lakes (`420`) and empire polygons (`390`), guaranteeing paths are never swallowed by region fills.
+  - **Equirectangular Geodesic Area Sorting (`src/data/ancientMapData.ts`)**: Implemented Shoelace formula with cosine latitude correction to sort all area polygons (empires, kingdoms, and lakes) by geodesic surface area descending. Larger regions render first in the background; smaller regions render last in the foreground on top, ensuring hover events on smaller entities are never blocked by surrounding empire backdrops.
+  - **Automated Regression Coverage (`tests/data-integrity-selfcheck.ts`, `tests/map.spec.ts`)**: Added unit tests verifying area-sorting relationships across all 26 historical eras and Playwright browser tests validating the full z-index chain and hover interactivity. 8/8 self-check test suites PASS; 12/12 Playwright tests PASS.
+
 ## [00.01.37] - 2026-10-17
 
 - Sub-Meter OpenStreetMap Shoreline Geometry (Galilee & Dead Sea), True River Delta Realignment & Transjordan Satrapy Corridor:

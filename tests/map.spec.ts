@@ -91,15 +91,20 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
       expect(dash).toBeNull(); // Solid cartographic hairlines! No crude dashed '6, 6' borders
     }
 
-    // 2. Lake bodies (Dead Sea & Sea of Galilee) must also render as solid polygons with NO dashed array
-    const waterPaths = page.locator('.leaflet-water-pane svg path');
-    const waterPathCount = await waterPaths.count();
-    expect(waterPathCount).toBeGreaterThanOrEqual(5); // At least 2 lake polygons + rivers
+    // 2. Lake bodies (Dead Sea & Sea of Galilee) must also render as solid polygons with NO dashed array in lakePane
+    const lakePaths = page.locator('.leaflet-lake-pane svg path');
+    const lakePathCount = await lakePaths.count();
+    expect(lakePathCount).toBeGreaterThanOrEqual(2); // At least 2 lake polygons (Dead Sea & Galilee)
 
-    for (let i = 0; i < waterPathCount; i++) {
-      const dash = await waterPaths.nth(i).getAttribute('stroke-dasharray');
+    for (let i = 0; i < lakePathCount; i++) {
+      const dash = await lakePaths.nth(i).getAttribute('stroke-dasharray');
       expect(dash).toBeNull(); // No crude dashed '3, 5' borders!
     }
+
+    // 2b. Rivers must render into riverPane strictly above lakes and regions
+    const riverPaths = page.locator('.leaflet-river-pane svg path');
+    const riverPathCount = await riverPaths.count();
+    expect(riverPathCount).toBeGreaterThanOrEqual(3);
 
     // 3. Classical on-water typography markers must be rendered into waterPane
     const waterLabels = page.locator('.leaflet-water-pane .leaflet-water-label');
@@ -397,14 +402,19 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
       const cardRect = document.querySelector('.atlas-canvas-card')!.getBoundingClientRect();
       const drawerRect = document.getElementById('atlas-detail-drawer')!.getBoundingClientRect();
       const titleRect = document.getElementById('drawer-title')!.getBoundingClientRect();
+      const waterZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-water-pane')!).zIndex, 10);
       const empireZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-empire-pane')!).zIndex, 10);
+      const lakeZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-lake-pane')!).zIndex, 10);
+      const riverZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-river-pane')!).zIndex, 10);
       const routeZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-route-pane')!).zIndex, 10);
+      const cityZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-city-pane')!).zIndex, 10);
+      const siteZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-site-pane')!).zIndex, 10);
       const stopZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-routeStop-pane')!).zIndex, 10);
       const tooltipZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-tooltip-pane')!).zIndex, 10);
       return {
         drawerInsideTop: drawerRect.top >= cardRect.top + 8,
         titleVisible: titleRect.top >= drawerRect.top,
-        zOrderValid: empireZ < routeZ && routeZ < stopZ && stopZ < tooltipZ
+        zOrderValid: waterZ < empireZ && empireZ < lakeZ && lakeZ < riverZ && riverZ < routeZ && routeZ < cityZ && cityZ <= siteZ && siteZ < stopZ && stopZ < tooltipZ
       };
     });
     expect(drawerAndPaneCheck).toEqual({
@@ -595,6 +605,69 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
     });
     expect(unitedRegions).toContain('united_israel');
     expect(unitedRegions).not.toContain('israel_kingdom');
+  });
+
+  test('Strict 4-Tier Map Layering Hierarchy: Points > Paths > Small Polygons > Large Polygons (v00.01.38)', async ({ page }) => {
+    await page.goto('/map?era=roman_christ');
+    await page.waitForTimeout(1000);
+
+    // 1. Verify pane z-index hierarchy
+    const zIndexes = await page.evaluate(() => {
+      const getZ = (cls: string) => parseInt(window.getComputedStyle(document.querySelector(cls)!).zIndex, 10);
+      return {
+        water: getZ('.leaflet-water-pane'),
+        empire: getZ('.leaflet-empire-pane'),
+        lake: getZ('.leaflet-lake-pane'),
+        river: getZ('.leaflet-river-pane'),
+        route: getZ('.leaflet-route-pane'),
+        city: getZ('.leaflet-city-pane'),
+        site: getZ('.leaflet-site-pane'),
+        routeStop: getZ('.leaflet-routeStop-pane'),
+        tooltip: getZ('.leaflet-tooltip-pane')
+      };
+    });
+
+    // Tier 1 Points (city, site, routeStop) > Tier 2 Paths (route, river)
+    expect(zIndexes.routeStop).toBeGreaterThan(zIndexes.route);
+    expect(zIndexes.city).toBeGreaterThan(zIndexes.route);
+    expect(zIndexes.site).toBeGreaterThan(zIndexes.route);
+
+    // Tier 2 Paths (river, route) > Tier 3 Small Polygons (lake)
+    expect(zIndexes.route).toBeGreaterThan(zIndexes.river);
+    expect(zIndexes.river).toBeGreaterThan(zIndexes.lake);
+
+    // Tier 3 Small Polygons (lake) > Tier 4 Large Region Polygons (empire, water)
+    expect(zIndexes.lake).toBeGreaterThan(zIndexes.empire);
+    expect(zIndexes.empire).toBeGreaterThan(zIndexes.water);
+
+    // 2. Toggle routes off to test open water polygon hover accessibility
+    await page.click('.atlas-toggle-btn[data-layer="routes"]');
+    await page.waitForTimeout(400);
+
+    // Hover over Dead Sea (first in lakePane DOM because it's larger)
+    const deadSeaPolygon = page.locator('.leaflet-lake-pane svg path').first();
+    await deadSeaPolygon.hover({ force: true });
+    await page.waitForTimeout(300);
+    const activeTooltip = page.locator('.leaflet-tooltip-pane .leaflet-tooltip');
+    await expect(activeTooltip).toBeVisible();
+    await expect(activeTooltip).toContainText('Dead Sea');
+
+    // Hover over Sea of Galilee (last in lakePane DOM because it's smaller, rendered on top)
+    const galileePolygon = page.locator('.leaflet-lake-pane svg path').last();
+    await galileePolygon.hover({ force: true });
+    await page.waitForTimeout(300);
+    await expect(activeTooltip).toBeVisible();
+    await expect(activeTooltip).toContainText('Sea of Galilee');
+
+    // 3. Toggle routes back on and verify hovering route corridor intercepts region (Paths > Regions)
+    await page.click('.atlas-toggle-btn[data-layer="routes"]');
+    await page.waitForTimeout(400);
+    const routeCorridor = page.locator('.leaflet-route-pane svg path').first();
+    await routeCorridor.hover({ force: true });
+    await page.waitForTimeout(400);
+    const routeTooltip = page.locator('.leaflet-tooltip-pane .leaflet-tooltip');
+    await expect(routeTooltip).toBeVisible();
+    await expect(routeTooltip).toContainText(/JOURNEY|Stop|JESUS/i);
   });
 });
 

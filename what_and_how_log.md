@@ -1,3 +1,40 @@
+## 2026-10-17 12:58:00 — Strict 4-Tier Interactive Stacking Hierarchy & Equirectangular Geodesic Area Sorting (v00.01.38)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested a complete, unambiguous architectural overhaul of the map canvas layering:
+    "When a LARGE region or polygon intersects or covers a smaller polygon. THe smallerone should always be 'on top'. So that when hovering I can get to the smaller one. And when there is any path or 'point' or singular item: Path is above all region/area polygons; Points or items are always above paths. Please confirm how you understand this logic bfore taking action"
+  - Audited root causes:
+    1. **Inverted Pane Z-Index**: `waterPane` was set at `zIndex: 380` while `empirePane` was at `zIndex: 400`. Rivers and inland lakes rendered into `waterPane` were physically situated beneath the empire polygons, causing hover events over lakes or rivers to be swallowed by the macro empire backdrop.
+    2. **Paths Under Points Violation**: `cityPane` was set at `zIndex: 440` while `routePane` was set at `zIndex: 480`, meaning route lines were sitting on top of city markers.
+    3. **String-Based Area Parsing**: Region sorting relied on string parsing (`parseArea("c. 5.5M km²")`), which was fragile and didn't apply to water bodies.
+
+- Decision Point & Implementation:
+  1. **Strict 4-Tier Interactive Pane Hierarchy (`src/engine/ancientMap.ts`)**:
+     - **Tier 1 (Topmost) — Points & Singular Items (`550` – `620`)**:
+       - `routeStopPane` (`zIndex: 620`): Numbered interactive waypoint stops.
+       - `sitePane` (`zIndex: 580`): Archaeological discovery sites and imperial seat capitals.
+       - `cityPane` (`zIndex: 550`): Biblical city markers and labels.
+       - All points sit strictly above all paths, rivers, and region polygons.
+     - **Tier 2 — Paths & Linear Features (`460` – `480`)**:
+       - `routePane` (`zIndex: 480`): Biblical route polylines and ancient road corridors.
+       - `riverPane` (`zIndex: 460`): Biblical rivers and serpentine waterways.
+       - Paths sit strictly above all region polygons, and rivers sit below route corridors.
+     - **Tier 3 — Smaller Region Polygons & Inland Water Bodies (`420`)**:
+       - `lakePane` (`zIndex: 420`): Inland lakes (Sea of Galilee, Dead Sea) with responsive hover highlighting (`weight: 1.8`, `color: 'rgba(56, 189, 248, 0.90)'`).
+       - Sits strictly above all macro empire and kingdom polygons.
+     - **Tier 4 (Bottom-most) — Macro Region Polygons (`370` – `390`)**:
+       - `empirePane` (`zIndex: 390`): Empires and kingdoms sorted in DOM order by geodesic area descending.
+       - `waterPane` (`zIndex: 370`): Ocean typography watermarks.
+     - **Overlays (`750` – `800`)**:
+       - `tooltipPane` (`zIndex: 750`), `popupPane` (`zIndex: 800`).
+  2. **Planar Equirectangular Geodesic Area Calculation (`src/data/ancientMapData.ts`)**:
+     - Exported `calculatePolygonGeodesicArea(coords)` implementing the Shoelace formula corrected by mean latitude cosine factor.
+     - Used deterministically across both empires and inland lakes to sort polygons descending (largest rendered first in background DOM; smallest rendered last on top).
+
+- Regression Verification & Proof:
+  - Added unit test suite in `tests/data-integrity-selfcheck.ts`: verifies Dead Sea > Sea of Galilee, Persia > Egypt > Israel > Judah, and ensures for all 26 historical eras that largest empires precede smaller focal kingdoms. All 8/8 self-check test suites PASS.
+  - Added full automated browser regression test in `tests/map.spec.ts`: verifies complete z-index chain (`water < empire < lake < river < route < city <= site < routeStop < tooltip`), verifies hover over Dead Sea and Sea of Galilee opens lake tooltips (not empire backdrops), and verifies route path hover intercepts region underneath. All 12/12 Playwright tests PASS in 46.3s.
+
 ## 2026-10-17 12:28:00 — Sub-Meter OpenStreetMap Shoreline Geometry (Galilee & Dead Sea), True River Delta Realignment & Transjordan Satrapy Corridor (v00.01.37)
 
 - User Request & Direct Root-Cause Diagnosis:
