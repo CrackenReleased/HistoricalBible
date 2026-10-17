@@ -1,3 +1,24 @@
+## 2026-10-16 20:44:00 — Reader-to-Inspector Synchronization & Leaflet Map Resolution (v00.01.26)
+
+- Problem & User Diagnosis:
+  - User identified 5 critical UI/UX and data-binding bugs on `/bible?book=2+Kings&chapter=1`:
+    1. Forced Tab Hijacking: Clicking any KJV word while viewing `Map` or `Chronology` forcibly redirected the active tab to `Word Inspector`.
+    2. Chronology Bleed: 2 Kings 1 (c. 852 BC, Elijah & Moabite rebellion) erroneously resolved to Sennacherib's Siege (722–701 BC) and Taylor Prism due to book-level fallback.
+    3. Blank White-on-White Tooltips: Hovering over Leaflet territory polygons showed illegible light text on white rectangular backgrounds with no historical explanation.
+    4. Map Zoom Lock & Marker Stacking: Zoom controls locked at level 10, leaving multiple Jerusalem artifact markers stacked and unclickable.
+    5. Missing Artifact Connection: Highlighted artifact pins lacked explicit contextual explanation for why they connected to the chapter text.
+- Root Cause & Decision Point:
+  - Bug 1 Decision Point: In `src/bibleReader.ts`, `selectVerse` unconditionally called `switchTab('xrefs')` and `inspectWord` called `switchTab('word')`. Added `autoSwitchTab = false` on word clicks and guarded tab switching with `if (this.activeTab !== 'map' && this.activeTab !== 'chrono')`. Implemented `BIBLICAL_GEOGRAPHIC_ENTITIES` dictionary so clicking geographic words (`Tishbite` -> Tishbe, `Samaria`, `Ekron`, `Moab`, `Israel`) pans/highlights the Leaflet map and opens an in-map callout card. Reserved Word Inspector auto-switch for right-clicks or when already on word/xrefs tabs.
+  - Bug 2 Decision Point: In `src/data/bibleChronology.ts` and `src/bibleReader.ts`, chronology lookup lacked chapter granularity. Added `chapterBreakdown` across multi-era books (`1 Kings`, `2 Kings`, `2 Chronicles`) and added 3 granular epochs (`divided_monarchy_prophets` c. 853–841 BC, `2kings_jehu` c. 841–732 BC, `2kings_fall_samaria` 722 BC) to `src/data/ancientMapData.ts`. 2 Kings 1–8 now resolves to Divided Monarchy with Mesha Stele, Black Obelisk, and Tel Dan Stele.
+  - Bug 3 Decision Point: Leaflet default CSS styled outer `.leaflet-tooltip` and `.leaflet-popup-content-wrapper` with `#fff`. Added universal obsidian dark styling (`rgba(18, 20, 26, 0.96)`, gold border `rgba(212, 175, 55, 0.45)`, gold bold headings `#d4af37`, and silver dates `#a0aab8`) in `src/interact.css` and added `getEmpireRelevanceNote` rendering 1-line chapter relevance.
+  - Bug 4 Decision Point: In `src/engine/ancientMap.ts`, Leaflet map options were capped at `maxZoom: 12` / `maxNativeZoom: 10`. Increased `maxZoom: 15` on `L.map` and `maxNativeZoom: 13` on `L.tileLayer`. Implemented radial micro-jitter offset for markers within `< 0.12` degrees, and filtered markers to active chapter epoch with a `"✨"` toggle control.
+  - Bug 5 Decision Point: Populated `scriptureConnection` on all 12 archaeological sites in `src/data/ancientMapData.ts`, displayed connection badges on pins, and implemented `#bible-companion-artifact-drawer` in `bible.html` / `bible/index.html` displaying the full discovery card below the map on pin click.
+- Verification (Cardinal Rule):
+  - Created 5 Playwright regression tests in `tests/bible-side-by-side-map.spec.ts` asserting tab lock, geographic entity panning, 2 Kings 1 Divided Monarchy resolution, dark tooltip theme, zoom level 15, and artifact drawer presentation.
+  - Ran complete Playwright test suite: all 51 tests passed green in 1.4m.
+  - Ran canonical KJV validation: all 31,098 verses, 14,133 translator italics, and 5,556 cased LORD verified.
+  - Production Vite build compiled in 733ms.
+
 ## 2026-10-16 20:19:00 — Map Color Key & Ancient Factions Integration (v00.01.25)
 
 - User Request & Visual Guidance:

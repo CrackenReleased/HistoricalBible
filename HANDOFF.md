@@ -1,3 +1,13 @@
+## 2026-10-16 20:44:00 — Antigravity / HistoricalBible — Reader-to-Inspector Synchronization & Leaflet Map Resolution (v00.01.26)
+
+- Resolved 5 UI/UX & data-binding bugs on `/bible?book=2+Kings&chapter=1`:
+  1. **Tab Locking & Geographic Sync**: Word clicks update selected word state without hijacking away from active `Map` or `Chronology` companion tabs. Geographic words (`Tishbite` -> Tishbe in Gilead, `Samaria`, `Ekron`, `Moab`, `Israel`) pan/highlight directly on the Leaflet map with callout cards. Word Inspector auto-switch constrained to right-clicks or when already on inspector tabs.
+  2. **Chapter-Level Chronology Resolution**: Replaced single-book fallback with chapter-range lookup across multi-era books (`1 Kings`, `2 Kings`, `2 Chronicles`). 2 Kings 1–8 resolves to Divided Monarchy (Elijah/Elisha c. 853–841 BC) with Mesha Stele, Black Obelisk, and Tel Dan Stele instead of Sennacherib 701 BC.
+  3. **Dark Scholarly Tooltips**: Themed Leaflet tooltips and popups in obsidian dark/gold styling (`rgba(18, 20, 26, 0.96)`, gold border `#d4af37`), adding 1-line passage relevance context for all territorial polygons.
+  4. **Deep Zoom & Marker Collision Offset**: Set `maxZoom: 15` / `maxNativeZoom: 13` allowing granular exploration. Clustered markers `< 0.12` deg in Jerusalem receive deterministic radial jitter offset, and markers filter to active chapter epoch with `✨` All Era Artifacts toggle.
+  5. **Scripture Connection Badges & Discovery Drawer**: Added gold Scripture Connection badges to artifact tooltips and implemented interactive `#bible-companion-artifact-drawer` beneath the map canvas for full artifact details without losing place in Scripture reader.
+- Automated Verification: Added 5 Playwright tests in `tests/bible-side-by-side-map.spec.ts`. All 51 Playwright tests pass green. Canonical KJV invariants (31,098 verses, 14,133 translator italics, 5,556 cased LORD) confirmed. Production build compiles in 733ms.
+
 ## 2026-10-16 15:08:00 — Antigravity / HistoricalBible — Dual Chronology Engine & Hero Alignment (v00.01.13)
 
 - Updated `/bible` top gold hero text to: `— READ THE BIBLE WITH WORD-FOR-WORD INSPECTION` and main title to `The Holy Bible`. Moved download actions exclusively to the illuminated Archival Print Edition card at the bottom of the page (`#archival-pdf`).

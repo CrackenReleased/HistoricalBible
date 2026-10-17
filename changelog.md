@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.26] - 2026-10-16
+
+- Reader-to-Inspector Synchronization & Leaflet Map Resolution (`/bible`):
+  - **Bug 1: Stop Forced Tab Hijacking on Word Click**:
+    - Left-clicking a word in the Scripture reader updates the selected word and displays a subtle badge on the Word Inspector tab without overriding or switching away from the actively selected `Map` or `Chronology` companion tabs.
+    - Added biblical geographic entity & demonym dictionary (`BIBLICAL_GEOGRAPHIC_ENTITIES` in `src/data/ancientMapData.ts`); clicking words like "Tishbite", "Samaria", "Ekron", "Moab", or "Israel" while on the Map tab automatically pans and highlights the location on the Leaflet canvas with a contextual callout card.
+    - Word Inspector tab auto-switch is strictly constrained to right-clicks (contextmenu) or when the user is already actively viewing `Word Inspector` or `Passage & X-Refs`.
+  - **Bug 2: Chapter-Level Historical & Archaeological Resolution**:
+    - Refactored chronology resolution from whole-book fallback to granular chapter-range epochs across multi-era historical books (`1 Kings`, `2 Kings`, `2 Chronicles`).
+    - Fixed 2 Kings 1 chronology bleed: chapters 1–8 now correctly resolve to **c. 853–841 BC — Divided Monarchy: Moabite Rebellion & Ministry of Elijah and Elisha** with the *Mesha Stele (Moabite Stone)*, *Black Obelisk of Shalmaneser III*, and *Tel Dan Stele*, permanently replacing the erroneous Sennacherib 701 BC Assyrian siege bleed.
+  - **Bug 3: Dark Scholarly Leaflet Tooltip Theme**:
+    - Applied universal obsidian dark styling (`rgba(18, 20, 26, 0.96)`, gold border `rgba(212, 175, 55, 0.45)`, gold bold headings `#d4af37`, and silver dates `#a0aab8`) to Leaflet tooltips and popup wrappers.
+    - Added explicit chapter relevance notes (`getEmpireRelevanceNote`) explaining why regional powers and biblical kingdoms are highlighted for the active passage.
+  - **Bug 4: Map Zoom Expansion & Marker Collision Offset**:
+    - Expanded Leaflet map zoom range from lock at level 10 to `maxZoom: 15` (with `maxNativeZoom: 13` for smooth tile scaling).
+    - Added deterministic radial micro-jitter offset for markers within `< 0.12` degrees of each other, preventing Jerusalem pin stacking.
+    - Filtered displayed pins by default to active chapter epoch with a `"✨"` toggle control to view all regional era discoveries.
+  - **Bug 5: Scripture Connection Badges & In-Drawer Artifact Cards**:
+    - Added `"Scripture Connection"` badges to archaeological pin tooltips linking artifacts directly to chapter text.
+    - Clicking any artifact pin opens its full discovery summary card inside `#bible-companion-artifact-drawer` directly below the map canvas without leaving the Scripture reader.
+  - **Automated Regression Tests**:
+    - Added 5 comprehensive Playwright tests in `tests/bible-side-by-side-map.spec.ts` covering tab locking, geographic entity pans, chapter chronology resolution, dark tooltip themes, zoom level 15, and artifact drawer presentation. All 51 Playwright tests pass green.
+
 ## [00.01.25] - 2026-10-16
 
 - Map Color Key & Ancient Factions Integration (`/bible` & `/map`):

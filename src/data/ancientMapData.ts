@@ -24,6 +24,7 @@ export interface ArchaeologicalSite {
   empireId?: string;
   scriptureRef: string;
   scriptureOsis: string;
+  scriptureConnection: string;
   description: string;
   significance: string;
   externalUrl?: string;
@@ -238,7 +239,7 @@ export const WATER_FEATURES: {
   ]
 };
 
-// 12 Major Biblical Archaeological Synchronies with Physical Coordinates
+// Major Biblical Archaeological Synchronies with Physical Coordinates
 export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
   {
     id: 'pilate-stone',
@@ -254,6 +255,7 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'rome',
     scriptureRef: 'LUKE {3:1}, {23:1}–{23:25}',
     scriptureOsis: 'Luke.3.1',
+    scriptureConnection: 'Direct Synchrony: Luke 3:1 & Matthew 27:2 — Monumental Latin inscription confirming Pontius Pilate as Roman Prefect of Judea.',
     description: 'A limestone dedicatory block discovered in the Roman theatre at Caesarea bearing the Latin inscription: "[DIS AUGUSTI]S TIBERIEUM ... [PON]TIUS PILATUS ... [PRAEF]ECTUS IUDA[EAE]".',
     significance: 'Confirms Pontius Pilate\'s exact historical office as Roman Prefect of Judea, corroborating Luke\'s precise political synchrony in Luke 3:1.',
     externalUrl: 'https://www.imj.org.il/en/exhibitions/cradle-christianity'
@@ -272,6 +274,7 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'rome',
     scriptureRef: 'MATTHEW {26:57}, JOHN {11:49}, {18:14}',
     scriptureOsis: 'Matt.26.57',
+    scriptureConnection: 'Direct Synchrony: Matthew 26:57 & John 18:14 — Burial bone-box inscribed with Joseph son of Caiaphas, the High Priest.',
     description: 'An intricately carved limestone burial bone-box inscribed twice with the Aramaic name "Yehosef bar Qayafa" (Joseph son of Caiaphas), found in a family burial cave.',
     significance: 'Material attestation of the Jewish High Priest who presided over the Sanhedrin trial and condemned Jesus Christ.',
     externalUrl: 'https://www.imj.org.il/en/collections/371587-0'
@@ -290,6 +293,7 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'assyria',
     scriptureRef: '2 KINGS {18:13}–{19:37}, ISAIAH {36:1}–{37:38}',
     scriptureOsis: '2Kgs.18.13',
+    scriptureConnection: 'Direct Synchrony: 2 Kings 18:13–19:37 — Sennacherib records his siege of "Hezekiah the Judahite" in Jerusalem.',
     description: 'A six-sided hexagonal baked clay prism recording Sennacherib\'s eight military campaigns. It specifically boasts of besieging "Hezekiah the Judahite like a caged bird in Jerusalem his royal city".',
     significance: 'Direct imperial corroboration of the Assyrian invasion of Judah in 701 BC. Crucially, the prism boasts of tribute and capturing fortresses, but never claims to have taken Jerusalem—precisely matching Scripture\'s record of miraculous deliverance.',
     externalUrl: 'https://www.britishmuseum.org/collection/object/W_1855-1028-1'
@@ -308,6 +312,7 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'assyria',
     scriptureRef: '2 KINGS {20:20}, 2 CHRONICLES {32:30}',
     scriptureOsis: '2Kgs.20.20',
+    scriptureConnection: 'Direct Synchrony: 2 Kings 20:20 — Memorializes the cutting of Hezekiah\'s subterranean aqueduct into Jerusalem.',
     description: 'An ancient Paleo-Hebrew inscription carved into the bedrock wall inside Hezekiah\'s 1,750-foot subterranean water tunnel, recording the dramatic moment the two mining teams met face-to-face.',
     significance: 'Verifies the colossal engineering feat described in 2 Kings 20:20 ("he made a pool, and a conduit, and brought water into the city") to prepare Jerusalem for the Assyrian siege.',
     externalUrl: 'https://en.wikipedia.org/wiki/Siloam_inscription'
@@ -326,6 +331,7 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'persia',
     scriptureRef: '2 CHRONICLES {36:22}–{36:23}, EZRA {1:1}–{1:4}, ISAIAH {44:28}–{45:1}',
     scriptureOsis: 'Ezra.1.1',
+    scriptureConnection: 'Direct Synchrony: 2 Chronicles 36:22–23 & Ezra 1:1–4 — Cyrus the Great decrees return of exiled peoples and rebuilding of sanctuaries.',
     description: 'A barrel-shaped clay cylinder inscribed in Akkadian cuneiform by order of Cyrus the Great after his conquest of Babylon in 539 BC, proclaiming the return of displaced peoples and the restoration of their sanctuaries.',
     significance: 'Corroborates the imperial policy of Cyrus that enabled the Jewish remnant to return to Jerusalem and rebuild the Temple, fulfilling prophecies made 150 years earlier in Isaiah 44:28.',
     externalUrl: 'https://www.britishmuseum.org/collection/object/W_1880-0617-1941'
@@ -344,6 +350,7 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'babylon',
     scriptureRef: 'DANIEL {5:1}–{5:30}',
     scriptureOsis: 'Dan.5.1',
+    scriptureConnection: 'Direct Synchrony: Daniel 5:1–30 — Inscription naming Belshazzar as co-regent of Babylon, confirming the Daniel 5 narrative.',
     description: 'A clay foundation cylinder of King Nabonidus recording repairs to the temple of Sin at Ur. In its prayer, Nabonidus explicitly names "Bel-sarra-usur [Belshazzar], my eldest son, offspring of my heart".',
     significance: 'Vindicated Daniel 5 against 19th-century critics who claimed Belshazzar was fictional because classical Greek historians only mentioned Nabonidus. It confirmed Belshazzar as co-regent ruler in Babylon.',
     externalUrl: 'https://www.britishmuseum.org/collection/object/W_K-1689'
@@ -362,6 +369,7 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'assyria',
     scriptureRef: '2 SAMUEL {7:16}, 1 KINGS {12:16}, LUKE {1:32}',
     scriptureOsis: '2Sam.7.16',
+    scriptureConnection: 'Direct Synchrony: 2 Kings 8:28–29 & 9:24 — Hazael of Aram records conflict with the House of David and Israel.',
     description: 'A monumental basalt victory stele erected by Hazael of Aram-Damascus at the city gate of Tel Dan. Line 9 explicitly boasts of defeating "[...mlk.] Bytdwd" ("King of the House of David") and "[...mlk] Ysr\'l" ("King of Israel").',
     significance: 'The first direct extra-biblical historical attestation of King David and the Davidic Dynasty outside the Bible, refuting claims that David was a legendary figure.',
     externalUrl: 'https://www.imj.org.il/en/collections/374567-0'
@@ -380,6 +388,7 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'egypt',
     scriptureRef: 'EXODUS {1:11}, JOSHUA {1:1}',
     scriptureOsis: 'Exod.1.11',
+    scriptureConnection: 'Direct Synchrony: Exodus 1 & Joshua — Earliest non-biblical mention of Israel as an established people group in Canaan.',
     description: 'A 10-foot granite victory monument recording campaigns in the Levant. Line 27 states: "Israel is laid waste, its seed is not; Hurru has become a widow for Egypt." Israel is written with the hieroglyphic determinative for a distinct people group.',
     significance: 'The earliest known mention of "Israel" in any non-biblical archaeological record. Proves that Israel was an established nation in Canaan by at least the late 13th century BC.',
     externalUrl: 'https://en.wikipedia.org/wiki/Merneptah_Stele'
@@ -398,6 +407,7 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'rome',
     scriptureRef: 'ACTS {18:12}–{18:17}',
     scriptureOsis: 'Acts.18.12',
+    scriptureConnection: 'Direct Synchrony: Acts 18:12–17 — Inscription at Delphi dating Proconsul Gallio in Achaia to AD 51–52 during Paul\'s ministry.',
     description: 'Nine stone fragments preserving a Greek letter from Emperor Claudius to Delphi. It explicitly names "Lucius Junius Gallio, my friend and proconsul of Achaia".',
     significance: 'Provides the absolute chronological anchor for the entire New Testament apostolic chronology, dating Paul\'s 18-month ministry and courtroom trial in Corinth to AD 51–52.',
     externalUrl: 'https://en.wikipedia.org/wiki/Gallio_inscription'
@@ -416,6 +426,7 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'rome',
     scriptureRef: 'ROMANS {16:23}, 2 TIMOTHY {4:20}',
     scriptureOsis: 'Rom.16.23',
+    scriptureConnection: 'Direct Synchrony: Romans 16:23 & 2 Timothy 4:20 — Pavement in Corinth dedicated by Erastus, city chamberlain / treasurer.',
     description: 'A limestone plaza pavement near the Corinth theater inscribed in Latin: "ERASTVS PRO AEDILITATE S P STRAVIT" ("Erastus in return for his aedileship laid this pavement at his own expense").',
     significance: 'Matches Paul\'s salutation in Romans 16:23 written from Corinth: "Erastus the chamberlain [oikonomos / city treasurer] of the city saluteth you."',
     externalUrl: 'https://en.wikipedia.org/wiki/Erastus_of_Corinth'
@@ -434,6 +445,7 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'babylon',
     scriptureRef: 'NUMBERS {6:24}–{6:26}',
     scriptureOsis: 'Num.6.24',
+    scriptureConnection: 'Direct Synchrony: Numbers 6:24–26 & 2 Kings 22–23 — Pre-exilic priestly benediction in Paleo-Hebrew found in Jerusalem.',
     description: 'Two tiny rolled silver scrolls found in a burial chamber inscribed in Paleo-Hebrew with the priestly benediction: "The LORD bless thee, and keep thee: The LORD make his face shine upon thee...".',
     significance: 'The oldest surviving biblical texts ever discovered—predating the Dead Sea Scrolls by more than 300 years and proving the Torah\'s Priestly Blessing was in liturgical use before the Babylonian exile.',
     externalUrl: 'https://www.imj.org.il/en/collections/374568-0'
@@ -450,11 +462,50 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     currentLocation: 'Louvre Museum, Paris (Department of Near Eastern Antiquities)',
     figureId: 'david',
     empireId: 'assyria',
-    scriptureRef: '2 KINGS {3:4}–{3:27}',
-    scriptureOsis: '2Kgs.3.4',
+    scriptureRef: '2 KINGS {1:1}, {3:4}–{3:27}',
+    scriptureOsis: '2Kgs.1.1',
+    scriptureConnection: 'Direct Synchrony: 2 Kings 1:1 & 3:4 — King Mesha of Moab records his rebellion against the house of Omri and Israel.',
     description: 'A black basalt stele erected by King Mesha of Moab. The inscription records his rebellion against Israel and mentions "Omri, king of Israel", the "House of David", and the sacred divine name YHWH.',
-    significance: 'Independently confirms the events of 2 Kings 3, attests the God of Israel (YHWH) by name, and provides a second 9th-century BC mention of the "House of David".',
+    significance: 'Independently confirms the events of 2 Kings 1:1 and 2 Kings 3, attests the God of Israel (YHWH) by name, and provides a second 9th-century BC mention of the "House of David".',
     externalUrl: 'https://collections.louvre.fr/en/ark:/53355/cl010120567'
+  },
+  {
+    id: 'black-obelisk',
+    name: 'Nimrud (Biblical Calah)',
+    ancientRegion: 'Neo-Assyrian Empire',
+    modernCountry: 'Iraq',
+    coords: { lat: 36.098, lng: 43.330 },
+    artifactName: 'The Black Obelisk of Shalmaneser III',
+    artifactDate: 'c. 825 BC (Campaign of 841 BC)',
+    discoveryYear: '1846',
+    currentLocation: 'British Museum, London (Room 6)',
+    figureId: 'hezekiah',
+    empireId: 'assyria',
+    scriptureRef: '2 KINGS {9:1}–{10:36}',
+    scriptureOsis: '2Kgs.9.1',
+    scriptureConnection: 'Direct Synchrony: 2 Kings 9–10 — Depicts Jehu, King of Israel, paying tribute to Shalmaneser III of Assyria.',
+    description: 'A four-sided black limestone obelisk depicting five defeated kings paying tribute. Panel 2 shows "Yaua mar Humri" (Jehu, son/successor of Omri), king of Israel, prostrating before Shalmaneser III.',
+    significance: 'The only surviving ancient depiction of an Israelite king, providing precise non-biblical chronological synchrony for Jehu\'s accession recorded in 2 Kings 9–10.',
+    externalUrl: 'https://www.britishmuseum.org/collection/object/W_1848-1104-1'
+  },
+  {
+    id: 'sargon-prism',
+    name: 'Khorsabad (Dur-Sharrukin)',
+    ancientRegion: 'Neo-Assyrian Empire',
+    modernCountry: 'Iraq',
+    coords: { lat: 36.508, lng: 43.227 },
+    artifactName: 'The Khorsabad Annals of Sargon II',
+    artifactDate: 'c. 720 BC',
+    discoveryYear: '1847',
+    currentLocation: 'Louvre Museum, Paris',
+    figureId: 'hezekiah',
+    empireId: 'assyria',
+    scriptureRef: '2 KINGS {17:1}–{17:6}',
+    scriptureOsis: '2Kgs.17.6',
+    scriptureConnection: 'Direct Synchrony: 2 Kings 17:6 — Sargon II records the conquest of Samaria and deportation of 27,290 Israelites.',
+    description: 'Wall reliefs and prism fragments of Sargon II recording: "At the beginning of my royal rule, I besieged and conquered the city of the Samarians... 27,290 people who lived therein I carried away".',
+    significance: 'Verifies the historical fall of Samaria and the Assyrian deportation of the Northern Ten Tribes in 722 BC recorded in 2 Kings 17.',
+    externalUrl: 'https://en.wikipedia.org/wiki/Sargon_II'
   }
 ];
 
@@ -898,6 +949,53 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     activeFigureIds: ['david', 'solomon']
   },
   {
+    id: 'divided_monarchy_prophets',
+    name: 'Divided Monarchy: Elijah & Elisha',
+    yearLabel: 'c. 853 – 841 BC',
+    startYear: -853,
+    endYear: -841,
+    additionalRegionIds: ['judah', 'israel_kingdom', 'phoenicia'],
+    focusCenter: { lat: 32.1, lng: 35.5 },
+    focusZoom: 7,
+    headline: "The Divided Monarchy · Moabite Rebellion & Elijah's Ministry",
+    historicalSummary: "Following Ahab's death, Moab rebels against Israel (Mesha Stele, 2 Kings 1:1, 3:4). Ahaziah falls sick and seeks Baal-zebub at Ekron; Elijah prophesies judgment. Elisha ministers with miracles across Israel and Judah. Attested by the Mesha Stele, Tel Dan Stele, and Black Obelisk.",
+    activeRouteIds: [],
+    activeSiteIds: ['mesha-stele', 'tel-dan-stele', 'black-obelisk'],
+    activeFigureIds: ['david', 'hezekiah']
+  },
+  {
+    id: '2kings_jehu',
+    name: "Jehu's Dynasty & Tiglath-Pileser III",
+    yearLabel: 'c. 841 – 732 BC',
+    startYear: -841,
+    endYear: -732,
+    rulingEmpireId: 'assyria',
+    additionalRegionIds: ['judah', 'israel_kingdom', 'phoenicia'],
+    focusCenter: { lat: 33.5, lng: 37.0 },
+    focusZoom: 6,
+    headline: "Jehu's Coup & Assyrian Hegemony Under Tiglath-Pileser III",
+    historicalSummary: "Jehu executes Ahab's line and pays tribute to Shalmaneser III. Assyria expands westward, exacting tribute from Israel until Tiglath-Pileser III begins deportations. Discovered: The Black Obelisk of Shalmaneser III and Tel Dan Stele.",
+    activeRouteIds: [],
+    activeSiteIds: ['black-obelisk', 'tel-dan-stele'],
+    activeFigureIds: ['hezekiah']
+  },
+  {
+    id: '2kings_fall_samaria',
+    name: 'Fall of Samaria & Assyrian Exile',
+    yearLabel: '722 BC',
+    startYear: -722,
+    endYear: -722,
+    rulingEmpireId: 'assyria',
+    additionalRegionIds: ['judah', 'phoenicia'],
+    focusCenter: { lat: 32.5, lng: 35.5 },
+    focusZoom: 6,
+    headline: "The Fall of Samaria · Assyrian Deportation of Israel",
+    historicalSummary: "Hoshea rebels against Assyria; Shalmaneser V and Sargon II capture Samaria in 722 BC, exiling the ten northern tribes across Upper Mesopotamia and Media. Discovered: The Khorsabad Annals of Sargon II.",
+    activeRouteIds: [],
+    activeSiteIds: ['sargon-prism'],
+    activeFigureIds: ['hezekiah', 'isaiah']
+  },
+  {
     id: 'assyrian_siege',
     name: 'Assyrian Empire',
     yearLabel: '722 – 701 BC',
@@ -926,7 +1024,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     headline: 'The Fall of Jerusalem · Daniel in Babylon',
     historicalSummary: 'Nebuchadnezzar captures Jerusalem, burns the Temple in 586 BC, and carries Judah into 70 years of exile. Daniel testifies to the Most High in the courts of Babylon. Discovered: Nabonidus Cylinder naming Belshazzar.',
     activeRouteIds: [],
-    activeSiteIds: ['nabonidus-cylinder'],
+    activeSiteIds: ['nabonidus-cylinder', 'ketef-hinnom-scrolls'],
     activeFigureIds: ['daniel', 'jeremiah']
   },
   {
@@ -988,7 +1086,8 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     activeSiteIds: [
       'pilate-stone', 'caiaphas-ossuary', 'taylor-prism', 'siloam-inscription',
       'cyrus-cylinder', 'nabonidus-cylinder', 'tel-dan-stele', 'merneptah-stele',
-      'gallio-inscription', 'erastus-inscription', 'ketef-hinnom-scrolls', 'mesha-stele'
+      'gallio-inscription', 'erastus-inscription', 'ketef-hinnom-scrolls', 'mesha-stele',
+      'black-obelisk', 'sargon-prism'
     ],
     activeFigureIds: [
       'jesus-christ', 'daniel', 'hezekiah', 'moses', 'abraham', 'david',
@@ -996,4 +1095,152 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     ]
   }
 ];
+
+export interface BiblicalGeographicEntity {
+  name: string;
+  ancientRegion: string;
+  coords: GeoCoordinate;
+  zoom: number;
+  note: string;
+  scriptureRef?: string;
+}
+
+export const BIBLICAL_GEOGRAPHIC_ENTITIES: Record<string, BiblicalGeographicEntity> = {
+  tishbite: {
+    name: 'Tishbe in Gilead',
+    ancientRegion: 'Gilead / Transjordan',
+    coords: { lat: 32.410, lng: 35.730 },
+    zoom: 9,
+    note: "Hometown of the Prophet Elijah ('Elijah the Tishbite'), located in the mountainous region of Gilead east of the Jordan.",
+    scriptureRef: '1 KINGS 17:1, 2 KINGS 1:3'
+  },
+  tishbe: {
+    name: 'Tishbe in Gilead',
+    ancientRegion: 'Gilead / Transjordan',
+    coords: { lat: 32.410, lng: 35.730 },
+    zoom: 9,
+    note: "Mountainous highland village east of the Jordan River where Elijah was born.",
+    scriptureRef: '1 KINGS 17:1'
+  },
+  samaria: {
+    name: 'Samaria (Shomron)',
+    ancientRegion: 'Kingdom of Israel',
+    coords: { lat: 32.277, lng: 35.190 },
+    zoom: 9,
+    note: 'Royal capital of the Northern Kingdom of Israel from King Omri until its fall to the Assyrians in 722 BC.',
+    scriptureRef: '1 KINGS 16:24, 2 KINGS 1:2, 17:6'
+  },
+  ekron: {
+    name: 'Ekron (Tel Miqne)',
+    ancientRegion: 'Philistia',
+    coords: { lat: 31.777, lng: 34.857 },
+    zoom: 9,
+    note: 'Northernmost city of the Philistine Pentapolis; center of the cult of Baal-zebub whom Ahaziah sought in 2 Kings 1:2.',
+    scriptureRef: '2 KINGS 1:2–3, 1 SAMUEL 5:10'
+  },
+  moab: {
+    name: 'Moab (East of Dead Sea)',
+    ancientRegion: 'Transjordan',
+    coords: { lat: 31.500, lng: 35.776 },
+    zoom: 8,
+    note: "Kingdom of King Mesha east of the Dead Sea; rebelled against Israel after King Ahab died (2 Kings 1:1, 3:4; Mesha Stele).",
+    scriptureRef: '2 KINGS 1:1, 3:4–27'
+  },
+  israel: {
+    name: 'Kingdom of Israel (Northern 10 Tribes)',
+    ancientRegion: 'Canaan / Levant',
+    coords: { lat: 32.350, lng: 35.300 },
+    zoom: 7,
+    note: 'The Northern Ten Tribes ruled from Samaria; plagued by calf worship and Baal idolatry until exiled in 722 BC.',
+    scriptureRef: '1 KINGS 12:20, 2 KINGS 1:1'
+  },
+  judah: {
+    name: 'Kingdom of Judah (Southern Kingdom)',
+    ancientRegion: 'Judea / Levant',
+    coords: { lat: 31.650, lng: 35.150 },
+    zoom: 7,
+    note: 'The Southern Kingdom ruled by the Davidic royal line from Jerusalem; outlasted Israel until the Babylonian exile in 586 BC.',
+    scriptureRef: '1 KINGS 12:21, 2 KINGS 18–25'
+  },
+  jerusalem: {
+    name: 'Jerusalem (Mount Zion)',
+    ancientRegion: 'Kingdom of Judah',
+    coords: { lat: 31.778, lng: 35.234 },
+    zoom: 10,
+    note: "The Holy City, site of Solomon's Temple, David's royal palace, and the prophetic ministries of Isaiah and Jeremiah.",
+    scriptureRef: '2 SAMUEL 5:7, 2 KINGS 19:34'
+  },
+  carmel: {
+    name: 'Mount Carmel',
+    ancientRegion: 'Northern Israel',
+    coords: { lat: 32.730, lng: 35.050 },
+    zoom: 9,
+    note: "Promontory overlooking the Mediterranean Sea; site of Elijah's contest with 450 prophets of Baal (1 Kings 18) and his retreat.",
+    scriptureRef: '1 KINGS 18:19, 2 KINGS 1:9, 2:25'
+  },
+  gilead: {
+    name: 'Gilead',
+    ancientRegion: 'Transjordan',
+    coords: { lat: 32.300, lng: 35.800 },
+    zoom: 8,
+    note: 'Fertile mountainous region east of the Jordan assigned to Gad, Reuben, and Manasseh; home of Elijah.',
+    scriptureRef: '1 KINGS 17:1, NUMBERS 32:1'
+  },
+  bethel: {
+    name: 'Bethel (Luz)',
+    ancientRegion: 'Ephraim / Benjamin',
+    coords: { lat: 31.930, lng: 35.220 },
+    zoom: 9,
+    note: "Sacred patriarchal sanctuary where Jacob had his vision of the ladder; later corrupted by Jeroboam's golden calf shrine.",
+    scriptureRef: 'GENESIS 28:19, 2 KINGS 2:2'
+  },
+  jericho: {
+    name: 'Jericho (City of Palm Trees)',
+    ancientRegion: 'Jordan Valley',
+    coords: { lat: 31.870, lng: 35.450 },
+    zoom: 9,
+    note: "Ancient city near the Jordan; site of Joshua's conquest, the school of the prophets, and Elisha's healing of the waters.",
+    scriptureRef: 'JOSHUA 6:1, 2 KINGS 2:4, 2:19'
+  },
+  damascus: {
+    name: 'Damascus (Aram)',
+    ancientRegion: 'Syria',
+    coords: { lat: 33.513, lng: 36.292 },
+    zoom: 8,
+    note: 'Capital of the Aramean kingdom ruled by Ben-hadad and Hazael; frequent adversary and ally of Israel and Judah.',
+    scriptureRef: '1 KINGS 20:1, 2 KINGS 8:7'
+  },
+  nineveh: {
+    name: 'Nineveh',
+    ancientRegion: 'Assyria',
+    coords: { lat: 36.360, lng: 43.150 },
+    zoom: 8,
+    note: "Imperial capital of the Neo-Assyrian Empire on the Tigris; site of Sennacherib's palace and Jonah's preaching.",
+    scriptureRef: 'JONAH 1:2, 2 KINGS 19:36'
+  },
+  babylon: {
+    name: 'Babylon',
+    ancientRegion: 'Mesopotamia',
+    coords: { lat: 32.542, lng: 44.421 },
+    zoom: 8,
+    note: "Capital of Nebuchadnezzar's empire on the Euphrates; destroyed Solomon's Temple in 586 BC and exiled Judah.",
+    scriptureRef: '2 KINGS 25:1, DANIEL 1:1'
+  },
+  egypt: {
+    name: 'Egypt (Mizraim)',
+    ancientRegion: 'Nile River Valley',
+    coords: { lat: 30.000, lng: 31.250 },
+    zoom: 6,
+    note: 'Land of Goshen, the Nile, and the house of bondage delivered under Moses with 10 mighty plagues.',
+    scriptureRef: 'EXODUS 1:1, 1 KINGS 11:40'
+  },
+  jordan: {
+    name: 'Jordan River',
+    ancientRegion: 'Rift Valley',
+    coords: { lat: 32.000, lng: 35.560 },
+    zoom: 8,
+    note: 'The sacred river dividing the Promised Land; parted for Joshua, crossed by Elijah and Elisha, and healed Naaman the Syrian.',
+    scriptureRef: 'JOSHUA 3:1, 2 KINGS 2:8, 5:10'
+  }
+};
 

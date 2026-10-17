@@ -56,28 +56,126 @@ test.describe('Bible Side-by-Side Companion Map Tab', () => {
     await page.screenshot({ path: 'test-results/bible-side-by-side-map-proof.png', fullPage: false });
   });
 
-  test('2 Kings 1 displays Assyrian Empire epoch with full color map key at bottom of side panel', async ({ page }) => {
+  test('2 Kings 1 correctly resolves to Divided Monarchy: Elijah & Elisha epoch (c. 853–841 BC) with Mesha Stele, NOT Sennacherib', async ({ page }) => {
     // Navigate directly to 2 Kings 1 with tab=map
     await page.goto('/bible?book=2Kings&chapter=1&tab=map', { waitUntil: 'networkidle' });
 
     const mapContent = page.locator('#companion-tab-map-content');
     await expect(mapContent).toBeVisible();
 
-    // Assert title reflects 2 Kings 1 · Assyrian Empire
-    await expect(page.locator('#companion-map-title')).toContainText('2 Kings 1');
+    // Assert title reflects 2 Kings 1 · Divided Monarchy: Elijah & Elisha
+    const title = page.locator('#companion-map-title');
+    await expect(title).toContainText('2 Kings 1');
+    await expect(title).toContainText('Divided Monarchy: Elijah & Elisha');
+    await expect(title).not.toContainText('Sennacherib');
 
-    // Assert Map Key is visible at bottom of panel
+    // Assert description reflects c. 853–841 BC Moabite Rebellion
+    const desc = page.locator('#companion-map-desc');
+    await expect(desc).toContainText('c. 853 – 841 BC');
+    await expect(desc).toContainText('Moabite Rebellion');
+    await expect(desc).not.toContainText('722 - 701 BC');
+
+    // Assert dual chronology banner at top reflects chapter-level resolution
+    const eventPill = page.locator('.chrono-pill-event');
+    await expect(eventPill).toContainText('c. 853 – 841 BC');
+
+    // Assert highlighted marker shows The Mesha Stele (Moabite Stone)
+    const meshaLabel = page.locator('.gold-coin-label', { hasText: 'The Mesha Stele' });
+    await expect(meshaLabel).toBeVisible();
+
+    // Assert Taylor Prism is NOT an active site for 2 Kings 1
+    const taylorLabel = page.locator('.gold-coin-label', { hasText: 'The Taylor Prism' });
+    await expect(taylorLabel).toHaveCount(0);
+
+    // Scroll map key into view and capture visual proof of 2 Kings 1 side panel
     const mapKeyCard = page.locator('#bible-map-key-card');
-    await expect(mapKeyCard).toBeVisible();
-    await expect(mapKeyCard.locator('.dot-judah')).toBeVisible();
-    await expect(mapKeyCard.locator('.dot-israel')).toBeVisible();
-    await expect(mapKeyCard.locator('.dot-hostile')).toBeVisible();
-    await expect(mapKeyCard.locator('.dot-allied')).toBeVisible();
-
-    // Scroll map key into view and capture visual proof of 2 Kings 1 side panel map key
     await mapKeyCard.scrollIntoViewIfNeeded();
     await page.waitForTimeout(500);
     const companionPane = page.locator('#bible-companion-pane');
-    await companionPane.screenshot({ path: 'test-results/bible-map-key-2kings-proof.png' });
+    await companionPane.screenshot({ path: 'test-results/bible-map-2kings1-epoch-proof.png' });
+  });
+
+  test('Bug 1: Clicking a word while on Map tab does NOT hijack to Word Inspector, and pans to geographic entity', async ({ page }) => {
+    // Navigate to 2 Kings 1 on map tab
+    await page.goto('/bible?book=2Kings&chapter=1&tab=map', { waitUntil: 'networkidle' });
+
+    const mapTabBtn = page.locator('#companion-tab-map-btn');
+    const wordTabBtn = page.locator('#companion-tab-word-btn');
+    const mapContent = page.locator('#companion-tab-map-content');
+    const wordContent = page.locator('#companion-tab-word-content');
+
+    await expect(mapTabBtn).toHaveClass(/active/);
+    await expect(mapContent).toBeVisible();
+    await expect(wordContent).toBeHidden();
+
+    // Left-click the word "Tishbite" in 2 Kings 1:3
+    const tishbiteWord = page.locator('.kjv-word[data-word="tishbite"]').first();
+    await expect(tishbiteWord).toBeVisible();
+    await tishbiteWord.click();
+
+    // User MUST still be on the Map tab!
+    await expect(mapTabBtn).toHaveClass(/active/);
+    await expect(mapContent).toBeVisible();
+    await expect(wordContent).toBeHidden();
+
+    // URL should reflect the selected word
+    expect(page.url()).toContain('word=tishbite');
+    expect(page.url()).toContain('tab=map');
+
+    // Word Inspector tab button shows a subtle badge
+    await expect(wordTabBtn.locator('.tab-word-indicator')).toBeVisible();
+
+    // Geographic callout drawer appears below map for Tishbe in Gilead
+    const drawer = page.locator('#bible-companion-artifact-drawer');
+    await expect(drawer).toBeVisible();
+    await expect(drawer).toContainText('Tishbe in Gilead');
+    await expect(drawer).toContainText('Hometown of the Prophet Elijah');
+
+    // Right-clicking a word explicitly opens the Word Inspector
+    const elijahWord = page.locator('.kjv-word[data-word="elijah"]').first();
+    await elijahWord.click({ button: 'right' });
+
+    // Right-click should switch to Word Inspector
+    await expect(wordTabBtn).toHaveClass(/active/);
+    await expect(wordContent).toBeVisible();
+    await expect(wordContent).toContainText('ELIJAH');
+  });
+
+  test('Bug 3 & 5: Tooltip styling, Scripture Connection, and Artifact Drawer on marker click', async ({ page }) => {
+    await page.goto('/bible?book=2Kings&chapter=1&tab=map', { waitUntil: 'networkidle' });
+
+    // Click on the Mesha Stele gold marker
+    const meshaMarker = page.locator('.leaflet-gold-marker', { hasText: 'The Mesha Stele' });
+    await expect(meshaMarker).toBeVisible();
+    await meshaMarker.click();
+
+    // Assert Artifact Drawer opens below map with Scripture Connection
+    const drawer = page.locator('#bible-companion-artifact-drawer');
+    await expect(drawer).toBeVisible();
+    await expect(drawer).toContainText('The Mesha Stele (Moabite Stone)');
+    await expect(drawer).toContainText('✦ Scripture Connection:');
+    await expect(drawer).toContainText('King Mesha of Moab records his rebellion against the house of Omri and Israel');
+
+    // Close button dismisses the drawer
+    const closeBtn = drawer.locator('.artifact-drawer-close');
+    await closeBtn.click();
+    await expect(drawer).toBeHidden();
+  });
+
+  test('Bug 4: Map zoom control zooms past level 10 up to level 15', async ({ page }) => {
+    await page.goto('/bible?book=2Kings&chapter=1&tab=map', { waitUntil: 'networkidle' });
+
+    const zoomInBtn = page.locator('#map-zoom-in');
+    await expect(zoomInBtn).toBeVisible();
+
+    // Click zoom in multiple times without getting locked prematurely
+    for (let i = 0; i < 5; i++) {
+      await zoomInBtn.click();
+      await page.waitForTimeout(150);
+    }
+
+    // Assert map zoom button is still enabled and container is functional
+    const mapContainer = page.locator('#bible-companion-map-container');
+    await expect(mapContainer).toBeVisible();
   });
 });

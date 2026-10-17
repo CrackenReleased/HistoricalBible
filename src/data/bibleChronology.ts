@@ -384,6 +384,35 @@ export const BIBLE_CHRONOLOGY: BookChronology[] = [
     eventEraName: 'Divided Kingdom & Assyrian Judgment',
     eventOrder: 15,
     eventSummary: 'Solomon\'s wisdom and temple dedication, kingdom division under Rehoboam and Jeroboam (930 BC), civil strife, Ahab, Jezebel, and Elijah on Mount Carmel.',
+    chapterBreakdown: [
+      {
+        startChapter: 1,
+        endChapter: 11,
+        eventStartYear: -970,
+        eventEndYear: -931,
+        eventDateLabel: 'c. 970 – 931 BC',
+        eraName: 'United Monarchy: The Reign of Solomon & The First Temple',
+        summary: 'David\'s succession, Solomon\'s wisdom, construction and dedication of the First Temple in Jerusalem, trade alliances, visit of the Queen of Sheba, and Solomon\'s foreign wives.'
+      },
+      {
+        startChapter: 12,
+        endChapter: 16,
+        eventStartYear: -931,
+        eventEndYear: -874,
+        eventDateLabel: 'c. 931 – 874 BC',
+        eraName: 'The Disruption: Kingdom Division into Northern & Southern Realms',
+        summary: 'Rehoboam\'s harsh council, ten tribes rebel under Jeroboam I (golden calf shrines at Bethel and Dan), warfare between Judah and Israel, and the rise of Omri\'s dynasty.'
+      },
+      {
+        startChapter: 17,
+        endChapter: 22,
+        eventStartYear: -874,
+        eventEndYear: -853,
+        eventDateLabel: 'c. 874 – 853 BC',
+        eraName: 'Elijah\'s Ministry & The Ahab-Jehoshaphat Era',
+        summary: 'Elijah proclaims drought, showdown on Mount Carmel against 450 prophets of Baal, the still small voice at Horeb, Naboth\'s vineyard, and Ahab\'s death in battle at Ramoth-gilead.'
+      }
+    ],
     writtenStartYear: -560,
     writtenEndYear: -550,
     writtenDateLabel: 'c. 560 – 550 BC',
@@ -398,13 +427,60 @@ export const BIBLE_CHRONOLOGY: BookChronology[] = [
     testament: 'OT',
     canonicalOrder: 12,
     totalChapters: 25,
-    eventStartYear: -850,
+    eventStartYear: -853,
     eventEndYear: -561,
-    eventDateLabel: 'c. 850 – 561 BC',
+    eventDateLabel: 'c. 853 – 561 BC',
     eventEraId: 'divided_kingdom',
     eventEraName: 'Divided Kingdom & Assyrian Judgment',
     eventOrder: 16,
     eventSummary: 'Elisha\'s miracles, decline of both kingdoms, Assyrian destruction of Samaria (722 BC), Hezekiah\'s deliverance (701 BC), Josiah\'s reform, and Babylonian captivity (586 BC).',
+    chapterBreakdown: [
+      {
+        startChapter: 1,
+        endChapter: 8,
+        eventStartYear: -853,
+        eventEndYear: -841,
+        eventDateLabel: 'c. 853 – 841 BC',
+        eraName: 'The Divided Monarchy: Moabite Rebellion & Ministry of Elijah and Elisha',
+        summary: 'Moab rebels following Ahab\'s death (2 Kings 1:1, recorded on Mesha Stele). Ahaziah\'s fatal fall and inquiry of Baal-zebub; Elijah calls down fire from heaven and ascends in a whirlwind; Elisha\'s miraculous ministry across Israel and Judah.'
+      },
+      {
+        startChapter: 9,
+        endChapter: 16,
+        eventStartYear: -841,
+        eventEndYear: -732,
+        eventDateLabel: 'c. 841 – 732 BC',
+        eraName: 'Jehu\'s Dynasty & Rise of Tiglath-Pileser III',
+        summary: 'Jehu is anointed, executes judgment on Ahab and Jezebel, eradicates Baal worship, and submits tribute to Shalmaneser III (Black Obelisk). Assyria begins relentless westward expansion under Tiglath-Pileser III.'
+      },
+      {
+        startChapter: 17,
+        endChapter: 17,
+        eventStartYear: -722,
+        eventEndYear: -722,
+        eventDateLabel: '722 BC',
+        eraName: 'Fall of Samaria & Assyrian Deportation of Israel',
+        summary: 'King Hoshea rebels against Shalmaneser V; Samaria is besieged for three years and captured by Sargon II (Khorsabad Annals). The northern ten tribes are deported into Assyria and foreign nations resettled in Samaria.'
+      },
+      {
+        startChapter: 18,
+        endChapter: 20,
+        eventStartYear: -701,
+        eventEndYear: -697,
+        eventDateLabel: '701 BC',
+        eraName: 'Sennacherib\'s Invasion & Hezekiah\'s Deliverance',
+        summary: 'Sennacherib invades Judah and besieges Jerusalem (Taylor Prism); Hezekiah and Isaiah seek the LORD in prayer; the Angel of the LORD strikes 185,000 Assyrians in one night; Hezekiah constructs the Siloam Water Tunnel.'
+      },
+      {
+        startChapter: 21,
+        endChapter: 25,
+        eventStartYear: -697,
+        eventEndYear: -561,
+        eventDateLabel: '697 – 586 BC (To 561 BC in Exile)',
+        eraName: 'Josiah\'s Reforms to the Babylonian Captivity',
+        summary: 'Manasseh\'s idolatry, Josiah recovers the Book of the Law and purges the high places; Nebuchadnezzar captures Jerusalem in 586 BC, burns the Temple of Solomon, and exiles Judah to Babylon. Closes with King Jehoiachin released in 561 BC.'
+      }
+    ],
     writtenStartYear: -560,
     writtenEndYear: -550,
     writtenDateLabel: 'c. 560 – 550 BC',
@@ -447,6 +523,44 @@ export const BIBLE_CHRONOLOGY: BookChronology[] = [
     eventEraName: 'Divided Kingdom & Assyrian Judgment',
     eventOrder: 17,
     eventSummary: 'Solomon\'s reign, construction and glory of the First Temple, spiritual history of the kings of Judah, and the concluding decree of Cyrus the Persian.',
+    chapterBreakdown: [
+      {
+        startChapter: 1,
+        endChapter: 9,
+        eventStartYear: -970,
+        eventEndYear: -931,
+        eventDateLabel: 'c. 970 – 931 BC',
+        eraName: 'United Monarchy: Solomon\'s Temple & Imperial Glory',
+        summary: 'Solomon seeks wisdom at Gibeon; builds and dedicates the First Temple on Mount Moriah; God\'s fire descends; visit of the Queen of Sheba.'
+      },
+      {
+        startChapter: 10,
+        endChapter: 28,
+        eventStartYear: -931,
+        eventEndYear: -722,
+        eventDateLabel: 'c. 931 – 722 BC',
+        eraName: 'The Royal House of David: Divided Monarchy to Ahaz',
+        summary: 'Rehoboam, Abijah, Asa\'s victory, Jehoshaphat\'s judicial reform and singing battle, Joash, Uzziah\'s pride, and the dark days of King Ahaz.'
+      },
+      {
+        startChapter: 29,
+        endChapter: 35,
+        eventStartYear: -722,
+        eventEndYear: -609,
+        eventDateLabel: 'c. 722 – 609 BC',
+        eraName: 'Reformation, Hezekiah\'s Deliverance & Josiah\'s Revival',
+        summary: 'Hezekiah cleanses the Temple, celebrates the great Passover, faces Sennacherib\'s siege with trust in God; Manasseh\'s repentance; Josiah restores the covenant.'
+      },
+      {
+        startChapter: 36,
+        endChapter: 36,
+        eventStartYear: -605,
+        eventEndYear: -538,
+        eventDateLabel: '605 – 538 BC',
+        eraName: 'The Babylonian Captivity & Cyrus\'s Proclamation of Return',
+        summary: 'Final kings of Judah (Jehoiakim, Jehoiachin, Zedekiah); destruction of Jerusalem and Solomon\'s Temple in 586 BC; 70-year land sabbath; Cyrus\'s proclamation allowing return.'
+      }
+    ],
     writtenStartYear: -450,
     writtenEndYear: -400,
     writtenDateLabel: 'c. 450 – 400 BC',
