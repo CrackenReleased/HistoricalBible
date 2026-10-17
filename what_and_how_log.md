@@ -1132,3 +1132,10 @@
 - Retained binary: one attributed CC0 photograph (118 KB). Build outputs/screenshots stay ignored. No scratch scripts created. The duplicate legacy Interact entry implementation was removed in favor of the canonical page.
 - Existing unrelated working changes (KJV data/compiler, removed audio/3D modules, reconciliation report, favicon and prior scripts) were preserved. Standalone tapestry and its unrelated suite were outside scope.
 - No commit, push or deployment. Version 1.5.0. Local preview is intentionally retained on 127.0.0.1:5173 for Joel's review; no test browser processes are retained. Hub handoff/intent and Obsidian log sync record this session.
+
+## 2026-10-17 13:01:53 — Codex — v00.01.39 Interact search submission
+- Decision point: form submit regenerated suggestions instead of selecting a result. executeGlobalSearch now distinguishes input from submission, reuses the first ranked result click handler, and reveals submitted name studies.
+- Regression: tests/interact.spec.ts INT-21 Enter/Explore both failed before fix (dropdown stayed visible), pass after fix with Jonah title, passages, URL and viewport assertions. INT-22 covers figures, empire, blank and unmatched input; PASS. INT-05 covers canonical verse submission; PASS.
+- Baseline INT-16 PASS. Broader Interact run: 22/23 PASS; INT-17 existing scroll jump reproduced with submission behavior disabled (2286px vs <400). No adjacent fix attempted. Production build and canonical 31,102-verse validation PASS.
+- Sibling scan: four executeGlobalSearch call/definition sites and four result kinds (figures, empires, names, verses); shared form handles both Enter and Explore. Suggested threads and input keep preview behavior.
+- Artifact impact: no added/deleted files, dependencies, persisted data or retained generated artifacts. Only source, tests, release metadata and required logs changed. Unrelated map work preserved. No commit/push/deployment.

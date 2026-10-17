@@ -1,5 +1,43 @@
 import { test, expect } from '@playwright/test';
 
+for (const action of ['Enter', 'Explore'] as const) {
+  test(`INT-21: ${action} opens Jonah and dismisses suggestions`, async ({ page }) => {
+    await page.goto('/interact?figure=hezekiah');
+    await page.locator('#search-input').fill('Jonah');
+    await expect(page.locator('#search-results-list')).toBeVisible();
+    if (action === 'Enter') await page.locator('#search-input').press('Enter');
+    else await page.getByRole('button', { name: 'Explore', exact: true }).click();
+    await expect(page.locator('#search-results-list')).toBeHidden();
+    await expect(page.locator('#name-search-title')).toHaveText('Jonah');
+    await expect(page.locator('#name-search-detail')).toBeVisible();
+    await expect(page.locator('#name-search-title')).toBeInViewport();
+    await expect(page.locator('#name-search-detail .kjv-verse-text').first()).toContainText('Jonah');
+    await expect(page).toHaveURL(/name=Jonah/);
+  });
+}
+
+test('INT-22: submission also opens figures and empires, and handles empty or unmatched queries', async ({ page }) => {
+  await page.goto('/interact?figure=hezekiah');
+  const input = page.locator('#search-input');
+  await input.fill('Daniel');
+  await input.press('Enter');
+  await expect(page).toHaveURL(/figure=daniel/);
+  await expect(page.locator('#search-results-list')).toBeHidden();
+  await input.fill('Greek');
+  await page.getByRole('button', { name: 'Explore', exact: true }).click();
+  await expect(page.locator('#timeline-browser')).toHaveAttribute('open');
+  await expect(page.locator('#search-results-list')).toBeHidden();
+  const selectedUrl = page.url();
+  await input.fill('xyznonexistent987654');
+  await input.press('Enter');
+  await expect(page.locator('#search-status')).toContainText('No results');
+  await expect(page).toHaveURL(selectedUrl);
+  await input.fill('');
+  await input.press('Enter');
+  await expect(page.locator('#search-results-list')).toBeHidden();
+  await expect(page).toHaveURL(selectedUrl);
+});
+
 test('NAME-01: Scripture leads names, uncertain glosses are qualified, and the three companions stay connected', async ({ page }) => {
   await page.goto('/interact');
   await page.locator('#search-input').fill('Shadrach');
@@ -339,8 +377,8 @@ test.describe('HistoricalBible.com/Interact — Historical Synchrony & Canonical
     await searchInput.press('Enter');
 
     const results = page.locator('#search-results-list');
-    await expect(results).toBeVisible();
-    await expect(results).toContainText('GENESIS {1:1}');
+    await expect(results).toBeHidden();
+    await expect(page.locator('#scripture-anchors-list > article').first()).toContainText('GENESIS {1:1}');
   });
 
   test('INT-19: 2D Ego-Graph toggle and bidirectional URL deep-linking', async ({ page }) => {

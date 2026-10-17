@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.39] - 2026-10-17
+
+- Interact: Enter and Explore now open the top search suggestion and dismiss the dropdown. Name submissions bring the selected study into view; typing continues to preview suggestions. Empty and unmatched queries preserve the current selection.
+- Regression coverage: Jonah submission through both controls, figure/empire submission, empty/unmatched queries, and canonical verse submission. Existing INT-17 click-selection scroll failure reproduced with submission fix disabled; outside this fix.
+
 ## [00.01.38] - 2026-10-17
 
 - Strict 4-Tier Interactive Stacking Hierarchy & Equirectangular Geodesic Area Sorting:

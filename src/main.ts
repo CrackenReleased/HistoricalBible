@@ -712,7 +712,7 @@ class HistoricalInteractApp {
     this.explorer?.showName(name.name, reveal);
   }
 
-  private executeGlobalSearch(query: string): void {
+  private executeGlobalSearch(query: string, openResult = false): void {
     const dropdown = document.getElementById('search-results-list');
     if (!dropdown) return;
     const nameDetail = document.getElementById('name-search-detail');
@@ -793,7 +793,7 @@ class HistoricalInteractApp {
       button.addEventListener('click', () => {
         if (name.flagshipId) this.selectFigureById(name.flagshipId);
         else {
-          this.openNameSearchResult(name);
+          this.openNameSearchResult(name, openResult);
         }
         dropdown.classList.remove('active');
       });
@@ -834,6 +834,9 @@ class HistoricalInteractApp {
     }
 
     dropdown.classList.add('active');
+    // Submission opens the same ranked result as selecting its suggestion.
+    // Input events only populate suggestions; no-result searches stay visible.
+    if (openResult) dropdown.querySelector<HTMLButtonElement>('button')?.click();
   }
 
   private bindEvents(): void {
@@ -862,7 +865,7 @@ class HistoricalInteractApp {
 
     document.getElementById('collection-search-form')?.addEventListener('submit', event => {
       event.preventDefault();
-      if (searchInput) this.executeGlobalSearch(searchInput.value);
+      if (searchInput) this.executeGlobalSearch(searchInput.value, true);
     });
     document.querySelectorAll<HTMLButtonElement>('[data-search]').forEach(button => {
       button.addEventListener('click', () => {
