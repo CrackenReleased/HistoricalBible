@@ -1,3 +1,20 @@
+## 2026-10-17 18:18:30 — Antigravity / HistoricalBible — Map Reading-First Experience Slice Deployed with Explicit Revert Point (v00.01.45)
+
+- **Explicit Pre-Overhaul Revert Point**: Tagged and pushed `2213ba1` (`v00.01.44`) to `origin` as annotated tag `v00.01.44-pre-reading-map` and backup branch `backup/v00.01.44-pre-reading-map` before committing `v00.01.45`.
+- Picked up from Codex's live implementation checkpoint in `MAP_EXPERIENCE_DESIGN_PLAN.md` (`v00.01.45`).
+- Resolved `<label>`/`<select>` accessible-name collision in `map.html`, aligned `readingMode` camera transitions (`setEra`, `jumpToPreset`, `animateToCoords`) to non-animated `setView` in `src/engine/ancientMap.ts`, reset global dark `details` inheritance inside the parchment reading card (`.atlas-source-note`) and map caption in `src/interact.css`, and suppressed regional inland water labels at macro zoom (`zoom < 6`) in `readingMode`.
+- Expanded `tests/map-reading-experience.spec.ts` with desktop (`1440×900`) and mobile (`390×844`) layout, touch-target (`>= 44px`), and WCAG AA contrast (`>= 4.5:1`) verification. All 13/13 Playwright map tests (`tests/map-reading-experience.spec.ts`, `tests/map.spec.ts`, `tests/map-chronology-compass.spec.ts`), 8/8 `npm run test:selfcheck` suites, KJV canonical verification, and `npm run build` pass. Committed and pushed `v00.01.45` to `origin/master`.
+
+## 2026-10-17 17:44:44 — Codex / HistoricalBible — Map structure audit, design v1.1
+
+- Updated MAP_EXPERIENCE_DESIGN_PLAN.md in place: four user-facing parts; regional-source qualification; measured/attested/reconstructed/unknown distinction; conditional bounded LiDAR use; Scripture fidelity and stewardship requirements.
+- Removed premature persistence, new sharing formats, comparisons and journey-so-far from initial slice. Explicit student scenario and proof obligations added. No qualified regional map/LiDAR asset or runtime/student proof claimed. App stays v00.01.44; documentation only.
+
+## 2026-10-17 17:31:44 — Codex / HistoricalBible — Map experience design plan v1.0
+
+- Completed requested planning-only deliverable: [MAP_EXPERIENCE_DESIGN_PLAN.md](E:/HistoricalBible/MAP_EXPERIENCE_DESIGN_PLAN.md). Live first-entry/Apostolic Age review and scoped source inspection inform calm entry, progressive controls, temporal semantics, uncertainty handling, wireframe, staged implementation and acceptance matrix.
+- Application remains v00.01.44. No source, Scripture, tests, dependencies, commits or deployment changed. No application tests run for prose-only work. Next implementation starts with packages A/B only after owner requests implementation.
+
 ## 2026-10-17 01:05:00 — Antigravity / HistoricalBible — Map UI/UX Maturation: Viewport-Clamped Tooltips, Wrapped Single-Border Typography, 5x2 Era Grid & Label De-confliction (v00.01.32)
 
 - **Viewport-Clamped Hover Informationals (`src/engine/ancientMap.ts`, `src/interact.css`)**:

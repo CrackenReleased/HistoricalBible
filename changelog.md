@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.45] - 2026-10-17
+
+- **Reading-First Atlas Experience Slice (`/map`)**:
+  - Implemented calm orientation entry on `/map` (`Every journey begins with a place`), period and journey selectors, progressively disclosed layer and region controls (`What to show`), one-place narrative sequence slider with `Previous`/`Next` and `Show all stops`, side-by-side parchment reading card (`#atlas-detail-drawer`), and atlas-scoped muted palette (`.atlas-reading`).
+  - Refined `paul-first-journey` stops and notes against canonical KJV Acts 13–14 with explicit source and dating disclosure (`Exact date not specified in Acts 13–14`) and added the return stop at Antioch in Syria.
+  - Fixed `<label>`/`<select>` accessible-name collision in `map.html`, aligned `readingMode` camera transitions (`setEra`, `jumpToPreset`, `animateToCoords`) to non-animated `setView`, reset global dark `details` styling inside the parchment reading card and map caption, and hid regional inland water labels at macro zoom (`zoom < 6`) in `readingMode` to prevent Levant label overlap.
+  - Added `tests/map-reading-experience.spec.ts` and updated `tests/map.spec.ts` and `tests/map-chronology-compass.spec.ts` (13/13 Playwright tests pass; 8/8 self-check suites pass; KJV verification and production build pass).
+
+## [Design plan 1.1] - 2026-10-17
+
+- Audited user-first map structure, narrowed initial scope, and incorporated regional provenance, measured-terrain evidence and faithful Scripture handling. No application changes; version remains 00.01.44.
+
+## [Design plan 1.0] - 2026-10-17
+
+- Added MAP_EXPERIENCE_DESIGN_PLAN.md: inspected current atlas and documented calmer entry, progressive layers, within-era timeline, structured dating requirements, design wireframe and implementation handoff. Documentation only; application stays 00.01.44.
+
 ## [00.01.44] - 2026-10-17
 
 - **Atlas Canvas Width Calibration & Balanced Side Margin Breathing Room**:

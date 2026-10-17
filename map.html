@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./src/interact.css" />
 </head>
-<body class="atlas-page">
+<body class="atlas-page atlas-reading">
   <a class="skip-link" href="#map-main">Skip to the map</a>
 
   <!-- SITE HEADER -->
@@ -36,108 +36,70 @@
 
   <main id="map-main" class="atlas-main-container">
     <div class="atlas-page-layout">
-      <!-- 1. ATLAS HEADER -->
+
       <header class="atlas-header">
         <div>
-          <span class="eyebrow">&mdash; BIBLICAL GEOGRAPHY &amp; ARCHAEOLOGY</span>
-          <h1 id="atlas-title">The Biblical World in History</h1>
-          <p>
-            The events of Scripture occurred in real soil. Explore ancient world empires, biblical journeys, and the exact excavation sites of surviving historical records.
-          </p>
+          <span class="eyebrow">An atlas for reading Scripture</span>
+          <h1 id="atlas-title">Every journey begins with a place.</h1>
+          <p id="atlas-introduction">Look at the land. Find the coast. Choose a period, and follow one story at a time.</p>
         </div>
       </header>
-
-      <!-- 2. TOOLBAR: LAYERS & REGION PRESETS -->
-      <section class="atlas-toolbar" aria-label="Map layers and region controls">
-        <div class="atlas-layer-toggles" role="group" aria-label="Layer toggles">
-          <span class="atlas-toolbar-label">LAYERS:</span>
-          <button type="button" class="atlas-toggle-btn active" data-layer="archaeology" aria-pressed="true">
-            <span class="legend-swatch gold-pulse" aria-hidden="true"></span> Archaeological Finds
-          </button>
-          <button type="button" class="atlas-toggle-btn active" data-layer="empires" aria-pressed="true">
-            <span class="legend-swatch empire-zone" aria-hidden="true"></span> World Empires
-          </button>
-          <button type="button" class="atlas-toggle-btn active" data-layer="routes" aria-pressed="true">
-            <span class="legend-swatch route-line" aria-hidden="true"></span> Biblical Journeys
-          </button>
-          <button type="button" class="atlas-toggle-btn active" data-layer="cities" aria-pressed="true">
-            <span class="legend-swatch city-dot" aria-hidden="true"></span> Cities
-          </button>
-          <button type="button" class="atlas-toggle-btn active" data-layer="rivers" aria-pressed="true">
-            Waterways
-          </button>
+      <section class="atlas-reading-controls" aria-label="Explore the atlas">
+        <div class="atlas-field">
+          <label for="atlas-era">Choose a period</label>
+          <select id="atlas-era">
+            <option value="">Begin your exploration…</option>
+            <option value="patriarchs">Patriarchs · c. 2100 BC</option>
+            <option value="exodus">Exodus &amp; Law · c. 1446 BC</option>
+            <option value="united_monarchy">United Monarchy · c. 1000 BC</option>
+            <option value="divided_monarchy_prophets">Divided Kingdom · c. 930–722 BC</option>
+            <option value="assyrian_siege">Assyrian Siege · 722–701 BC</option>
+            <option value="babylonian_exile">Babylon Exile · 605–539 BC</option>
+            <option value="persian_restoration">Persian Return · 539–331 BC</option>
+            <option value="roman_christ">Christ &amp; Rome · 4 BC–AD 33</option>
+            <option value="apostolic_church">Apostolic Age · AD 33–96</option>
+            <option value="all">All eras · choose a journey</option>
+          </select>
         </div>
-
-        <div class="atlas-presets" role="group" aria-label="Quick region camera jumps">
-          <span class="atlas-toolbar-label">REGIONS:</span>
-          <button type="button" class="atlas-preset-btn active" data-preset="all">All World</button>
-          <button type="button" class="atlas-preset-btn" data-preset="levant">The Holy Land</button>
-          <button type="button" class="atlas-preset-btn" data-preset="egypt">Egypt &amp; Sinai</button>
-          <button type="button" class="atlas-preset-btn" data-preset="mesopotamia">Mesopotamia &amp; Persia</button>
-          <button type="button" class="atlas-preset-btn" data-preset="mediterranean">Greece &amp; Rome</button>
+        <div class="atlas-field" id="atlas-journey-field" hidden>
+          <label for="atlas-journey">Choose a journey</label>
+          <select id="atlas-journey"></select>
         </div>
-      </section>
-
-      <!-- 2. CHRONOLOGICAL TIMELINE & ACTIVE YEAR HUD -->
-      <section class="map-chronology-container" aria-label="Chronological Era and Year Selection">
-        <div class="chrono-hud-header">
-          <div class="chrono-year-badge-group">
-            <span class="chrono-tag">HISTORICAL TIMELINE &middot; ACTIVE EPOCH</span>
-            <div id="chrono-current-year" class="chrono-current-year" aria-live="polite">c. 2100 BC &ndash; AD 100+</div>
+        <details class="atlas-disclosure" id="atlas-visibility">
+          <summary>What to show</summary>
+          <div class="atlas-disclosure-body">
+            <p>Add only what helps you understand the story.</p>
+            <div class="atlas-layer-toggles" role="group" aria-label="Map layers">
+              <button type="button" class="atlas-toggle-btn" data-layer="archaeology" aria-pressed="false">Archaeological Finds</button>
+              <button type="button" class="atlas-toggle-btn" data-layer="empires" aria-pressed="false">World Empires</button>
+              <button type="button" class="atlas-toggle-btn" data-layer="routes" aria-pressed="false">Biblical Journeys</button>
+              <button type="button" class="atlas-toggle-btn active" data-layer="cities" aria-pressed="true">Cities</button>
+              <button type="button" class="atlas-toggle-btn active" data-layer="rivers" aria-pressed="true">Waterways</button>
+            </div>
+            <p class="atlas-small-note">Artifacts and empire outlines give period context, not an exact snapshot of a selected year.</p>
+            <div class="atlas-presets" role="group" aria-label="Quick region camera jumps">
+              <button type="button" class="atlas-preset-btn" data-preset="levant">The Holy Land</button>
+              <button type="button" class="atlas-preset-btn" data-preset="egypt">Egypt &amp; Sinai</button>
+              <button type="button" class="atlas-preset-btn" data-preset="mesopotamia">Mesopotamia &amp; Persia</button>
+              <button type="button" class="atlas-preset-btn" data-preset="mediterranean">Greece &amp; Rome</button>
+            </div>
           </div>
-          <div class="chrono-narrative">
-            <h2 id="chrono-headline" class="chrono-headline">The Complete Biblical World in History</h2>
-            <p id="chrono-summary" class="chrono-summary">
-              All surviving archaeological discoveries, imperial extents, and biblical routes across the Ancient Near East and Mediterranean.
-            </p>
-          </div>
-        </div>
-
-        <!-- ERA TIMELINE SCRUBBER BUTTONS -->
-        <div class="chrono-era-selector" role="tablist" aria-label="Biblical Chronological Eras">
-          <button type="button" class="chrono-era-btn" data-era="patriarchs" role="tab" aria-selected="false">
-            <span class="era-name">Patriarchs</span>
-            <span class="era-years">c. 2100 BC</span>
-          </button>
-          <button type="button" class="chrono-era-btn" data-era="exodus" role="tab" aria-selected="false">
-            <span class="era-name">Exodus &amp; Law</span>
-            <span class="era-years">c. 1446 BC</span>
-          </button>
-          <button type="button" class="chrono-era-btn" data-era="united_monarchy" role="tab" aria-selected="false">
-            <span class="era-name">United Monarchy</span>
-            <span class="era-years">c. 1000 BC</span>
-          </button>
-          <button type="button" class="chrono-era-btn" data-era="divided_monarchy_prophets" role="tab" aria-selected="false">
-            <span class="era-name">Divided Kingdom</span>
-            <span class="era-years">c. 930 &ndash; 722 BC</span>
-          </button>
-          <button type="button" class="chrono-era-btn" data-era="assyrian_siege" role="tab" aria-selected="false">
-            <span class="era-name">Assyrian Siege</span>
-            <span class="era-years">722 &ndash; 701 BC</span>
-          </button>
-          <button type="button" class="chrono-era-btn" data-era="babylonian_exile" role="tab" aria-selected="false">
-            <span class="era-name">Babylon Exile</span>
-            <span class="era-years">605 &ndash; 539 BC</span>
-          </button>
-          <button type="button" class="chrono-era-btn" data-era="persian_restoration" role="tab" aria-selected="false">
-            <span class="era-name">Persian Return</span>
-            <span class="era-years">539 &ndash; 331 BC</span>
-          </button>
-          <button type="button" class="chrono-era-btn" data-era="roman_christ" role="tab" aria-selected="false">
-            <span class="era-name">Christ &amp; Rome</span>
-            <span class="era-years">4 BC &ndash; AD 33</span>
-          </button>
-          <button type="button" class="chrono-era-btn" data-era="apostolic_church" role="tab" aria-selected="false">
-            <span class="era-name">Apostolic Age</span>
-            <span class="era-years">AD 33 &ndash; 96</span>
-          </button>
-          <button type="button" class="chrono-era-btn active" data-era="all" role="tab" aria-selected="true">
-            <span class="era-name">All Eras</span>
-            <span class="era-years">All History</span>
-          </button>
-        </div>
+        </details>
       </section>
-
+      <section id="atlas-sequence" class="atlas-sequence" aria-label="Journey timeline" hidden>
+        <div class="atlas-sequence-heading">
+          <div><span class="eyebrow" id="chrono-current-year"></span><h2 id="chrono-headline"></h2></div>
+          <span id="atlas-stop-count" aria-live="polite"></span>
+        </div>
+        <p id="chrono-summary">Follow the journey, one place at a time.</p>
+        <div class="atlas-sequence-rail">
+          <button type="button" id="stepper-prev-btn" aria-label="Previous chronological stop">← Previous</button>
+          <input id="atlas-sequence-slider" type="range" min="0" max="0" value="0" step="1" aria-label="Journey sequence" aria-describedby="chrono-summary" />
+          <button type="button" id="stepper-next-btn" aria-label="Next chronological stop">Next →</button>
+          <button type="button" id="atlas-show-all" aria-pressed="false">Show all stops</button>
+        </div>
+        <p id="atlas-sequence-status" class="atlas-small-note"></p>
+      </section>
       <!-- 3. MAIN INTERACTIVE CANVAS & DETAIL DRAWER -->
       <section class="atlas-canvas-card" aria-label="Interactive Ancient Near East Map">
         <div id="atlas-canvas-container" style="width: 100%; height: 100%; position: relative;"></div>
@@ -150,7 +112,7 @@
           </div>
           <div id="drawer-meta" class="atlas-drawer-meta"></div>
           <p id="drawer-desc" class="atlas-drawer-desc"></p>
-          <div id="drawer-significance" class="atlas-drawer-significance"></div>
+          <details class="atlas-source-note"><summary>Sources &amp; dating</summary><div id="drawer-significance" class="atlas-drawer-significance"></div></details>
           <div class="atlas-drawer-actions">
             <a id="drawer-desk-link" class="atlas-drawer-btn" href="/interact">Explore in Interact &rarr;</a>
             <a id="drawer-scripture-link" class="atlas-drawer-btn" href="/bible">Read Scripture &rarr;</a>
@@ -159,51 +121,11 @@
         </article>
       </section>
 
-      <!-- 4. CARTOGRAPHIC LEGEND -->
-      <footer class="atlas-legend" aria-label="Map legend">
-        <div class="atlas-legend-item">
-          <span class="legend-swatch gold-pulse" aria-hidden="true"></span>
-          <span>Surviving Archaeological Inscription / Artifact</span>
-        </div>
-        <div class="atlas-legend-item">
-          <span class="map-key-dot dot-judah" aria-hidden="true" style="margin-top: 0;"></span>
-          <span>Kingdom of Judah (Jerusalem)</span>
-        </div>
-        <div class="atlas-legend-item">
-          <span class="map-key-dot dot-israel" aria-hidden="true" style="margin-top: 0;"></span>
-          <span>Kingdom of Israel (Samaria)</span>
-        </div>
-        <div class="atlas-legend-item">
-          <span class="map-key-dot dot-hostile" aria-hidden="true" style="margin-top: 0;"></span>
-          <span>Hostile Empires &amp; Enemies (Assyria, Babylon, Rome, Egypt)</span>
-        </div>
-        <div class="atlas-legend-item">
-          <span class="map-key-dot dot-allied" aria-hidden="true" style="margin-top: 0;"></span>
-          <span>Friendly &amp; Allied Regions (Phoenicia / Tyre)</span>
-        </div>
-        <div class="atlas-legend-item">
-          <span class="map-key-dot dot-global" aria-hidden="true" style="margin-top: 0;"></span>
-          <span>Global World Civilizations (Ancient China, Scythia/Russia, Kush/Ethiopia, India, Sheba)</span>
-        </div>
-        <div class="atlas-legend-item">
-          <span class="legend-swatch city-dot" aria-hidden="true"></span>
-          <span>Biblical City &amp; Hitchcock Meaning</span>
-        </div>
-        <div class="atlas-legend-item">
-          <span class="legend-swatch route-line" aria-hidden="true"></span>
-          <span>Biblical Journey (Abraham, Exodus, Paul)</span>
-        </div>
-      </footer>
 
-      <!-- 5. GRANULAR SUB-TIMELINE: FIGURES, LIFE PHASES, MISSIONARY JOURNEYS & WAYPOINT STEPPER -->
-      <section id="chrono-granular-panel" class="chrono-granular-panel" aria-label="Granular Timeline and Journey Controls">
-        <div class="chrono-granular-header">
-          <span class="chrono-granular-title">GRANULAR TIMELINE &amp; JOURNEY TRACKS:</span>
-          <span id="chrono-granular-status" class="chrono-granular-status">Select any life phase, prophet, or apostolic mission to trace stop-by-stop</span>
-        </div>
-        <div id="chrono-granular-bar" class="chrono-granular-bar" role="toolbar" aria-label="Granular Figures, Life Phases and Journeys"></div>
-        <div id="chrono-waypoint-stepper" class="chrono-waypoint-stepper" aria-label="Chronological Stop-by-Stop Waypoint Scrubber" hidden></div>
-      </section>
+      <div class="atlas-map-caption">
+        <span>Modern geographic base · Esri. Historical annotations are separate.</span>
+        <details><summary>Reading this map</summary><p>Numbered marks identify selected places in a journey. Geography is approximate; connecting lines, when present, are illustrative. Open a place to read its Scripture reference and source notes.</p></details>
+      </div>
     </div>
   </main>
 
@@ -211,7 +133,7 @@
   <footer class="wrap">
     <a class="footer-brand" href="/"><img src="/images/brand/logo-small.webp" alt="Historical Bible — Home" width="600" height="300" loading="lazy" /></a>
     <div>John 17:3 &mdash; &ldquo;And this is life eternal, that they might know thee the only true God, and Jesus Christ, whom thou hast sent.&rdquo;</div>
-    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Historical Bible Est. 2019 &middot; All Rights Reserved &middot; Map &middot; v00.01.44</div>
+    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Historical Bible Est. 2019 &middot; All Rights Reserved &middot; Map &middot; v00.01.45</div>
   </footer>
 
   <script type="module" src="/src/atlasApp.ts"></script>

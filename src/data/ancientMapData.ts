@@ -2543,60 +2543,68 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     summary: 'Set apart by the Holy Ghost at Syrian Antioch, Barnabas and Saul (Paul) sail to Cyprus, witness Proconsul Sergius Paulus\'s conversion at Paphos, cross the Taurus Mountains into Galatia, and plant enduring churches in Pisidian Antioch, Iconium, Lystra, and Derbe.',
     stops: [
       {
-        name: 'Antioch in Syria & Seleucia Pieria',
+        name: 'Antioch in Syria',
         coords: { lat: 36.202, lng: 36.160 },
-        dateLabel: 'Spring AD 46 (Commissioning)',
-        scriptureRef: 'ACTS {13:1}–{13:4}',
+        dateLabel: 'Exact date not specified in Acts 13–14',
+        scriptureRef: 'ACTS {13:1}–{13:3}',
         scriptureOsis: 'ACT.13.2',
-        note: 'As the prophets and teachers minister to the Lord and fast, the Holy Ghost says, "Separate me Barnabas and Saul for the work whereunto I have called them." They sail from the port of Seleucia.'
+        note: 'At Antioch, the Holy Ghost calls Barnabas and Saul to the work. After fasting and prayer, the church sends them away. Read the passage, then look for the coast they will reach.'
       },
       {
-        name: 'Salamis & Paphos (Island of Cyprus)',
+        name: 'Paphos (Cyprus)',
         coords: { lat: 34.756, lng: 32.406 },
-        dateLabel: 'Summer AD 46',
-        scriptureRef: 'ACTS {13:5}–{13:12}',
+        dateLabel: 'Exact date not specified in Acts 13–14',
+        scriptureRef: 'ACTS {13:6}–{13:12}',
         scriptureOsis: 'ACT.13.7',
-        note: 'Crossing Cyprus from Salamis to Paphos, Paul blinds the sorcerer Bar-jesus (Elymas), and Roman Proconsul Sergius Paulus (whose family is attested on inscriptions at Pisidian Antioch and Cyprus) believes, being astonished at the doctrine of the Lord.'
+        note: 'At Paphos, Sergius Paulus asks to hear the word of God. Elymas opposes them; the deputy believes after seeing what happens and hearing the doctrine of the Lord.'
       },
       {
         name: 'Perga in Pamphylia',
         coords: { lat: 36.961, lng: 30.853 },
-        dateLabel: 'Late Summer AD 46',
+        dateLabel: 'Exact date not specified in Acts 13–14',
         scriptureRef: 'ACTS {13:13}',
         scriptureOsis: 'ACT.13.13',
-        note: 'Landing on the southern coast of Asia Minor, John Mark departs from them to return to Jerusalem while Paul and Barnabas press northward across the Taurus range.'
+        note: 'Paul and his company arrive at Perga from Paphos. John leaves them and returns to Jerusalem.'
       },
       {
         name: 'Antioch in Pisidia (Galatia)',
         coords: { lat: 38.304, lng: 31.189 },
-        dateLabel: 'Autumn AD 46',
+        dateLabel: 'Exact date not specified in Acts 13–14',
         scriptureRef: 'ACTS {13:14}–{13:52}',
         scriptureOsis: 'ACT.13.14',
-        note: 'Paul preaches his first recorded synagogue sermon tracing God\'s redemptive history from the Exodus and David to the bodily resurrection of Jesus (Psalm 2 & 16); the Word of the Lord is published throughout all the region.'
+        note: 'From Perga they come to Antioch in Pisidia and enter the synagogue on the sabbath day. This is a different Antioch from the city where the journey began.'
       },
       {
         name: 'Iconium',
         coords: { lat: 37.871, lng: 32.484 },
-        dateLabel: 'Winter AD 46 – Spring AD 47',
+        dateLabel: 'Exact date not specified in Acts 13–14',
         scriptureRef: 'ACTS {14:1}–{14:7}',
         scriptureOsis: 'ACT.14.1',
-        note: 'Paul and Barnabas speak boldly in the Lord for a long time, the Lord giving testimony unto the word of His grace with signs and wonders before they flee a plot to stone them.'
+        note: 'At Iconium, Paul and Barnabas speak in the synagogue. They remain for a time, but flee when they learn of an assault planned against them.'
       },
       {
-        name: 'Lystra & Derbe (Lycaonia)',
+        name: 'Lystra',
         coords: { lat: 37.583, lng: 32.483 },
-        dateLabel: 'Summer–Autumn AD 47',
-        scriptureRef: 'ACTS {14:8}–{14:23}',
+        dateLabel: 'Exact date not specified in Acts 13–14',
+        scriptureRef: 'ACTS {14:8}–{14:20}',
         scriptureOsis: 'ACT.14.8',
-        note: 'At Lystra (hometown of Timothy), Paul heals a man crippled from birth, refuses pagan worship as Mercury and Jupiter, survives being stoned and dragged out of the city, preaches in Derbe, and returns through Lystra, Iconium, and Antioch ordaining elders in every church.'
+        note: 'At Lystra, Paul heals a man who had never walked. Later Paul is stoned and taken outside the city. He rises and enters the city before departing with Barnabas for Derbe the next day.'
       },
       {
-        name: 'Attalia & Return to Syrian Antioch',
+        name: 'Attalia',
         coords: { lat: 36.884, lng: 30.705 },
-        dateLabel: 'Spring AD 48',
-        scriptureRef: 'ACTS {14:24}–{14:28}',
+        dateLabel: 'Exact date not specified in Acts 13–14',
+        scriptureRef: 'ACTS {14:25}–{14:26}',
         scriptureOsis: 'ACT.14.26',
-        note: 'Sailing from Attalia back to Syrian Antioch, they gather the church together and rehearse all that God had done with them, and how He had opened the door of faith unto the Gentiles.'
+        note: 'After preaching in Perga on the return journey, they go down to Attalia. From here they sail back to Antioch.'
+      },
+      {
+        name: 'Return to Antioch in Syria',
+        coords: { lat: 36.202, lng: 36.160 },
+        dateLabel: 'Exact date not specified in Acts 13–14',
+        scriptureRef: 'ACTS {14:26}–{14:28}',
+        scriptureOsis: 'ACT.14.27',
+        note: 'Back in Antioch, they gather the church and report all that God has done with them, and how He has opened the door of faith to the Gentiles.'
       }
     ]
   },

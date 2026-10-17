@@ -1,3 +1,37 @@
+## 2026-10-17 18:14:00 — Reading-First Atlas Experience Slice, Apostolic Age Sequence Scrubbing & Visual/Accessibility Completion (v00.01.45)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested:
+    "Please continue to work through the https://HistoricalBible.com/map updates that ChatGPT was working on. Check handoff and documentation, and then please pick up where it stopped."
+  - Inspected `MAP_EXPERIENCE_DESIGN_PLAN.md` (Revision 1.1) and Codex's in-progress `v00.01.45` implementation across `map.html`, `src/atlasApp.ts`, `src/engine/ancientMap.ts`, `src/interact.css`, `src/data/ancientMapData.ts`, `tests/map-reading-experience.spec.ts`, `tests/map.spec.ts`, and `tests/map-chronology-compass.spec.ts`.
+  - Diagnosed three remaining test/interaction failures and three visual/contrast defects at the handoff point:
+    1. **Accessible Label Collision (`map.html`)**: `<select id="atlas-era">` was nested inside `<label class="atlas-field" for="atlas-era">`, causing all `<option>` text (including `"All eras · choose a journey"`) to become part of `#atlas-era`'s accessible label name. Consequently, `getByLabel('Choose a journey')` matched both `#atlas-era` and `#atlas-journey`.
+    2. **Camera `flyTo` Animation Race in `readingMode` (`src/engine/ancientMap.ts`)**: While `fitRoute` and `resetView` used non-animated `setView`/`fitBounds` in `readingMode`, `setEra`, `jumpToPreset`, and `animateToCoords` still triggered 1.2s `flyTo` animations. When jumping to `The Holy Land` preset and hovering `Jerusalem`, the ongoing 1.2s camera pan moved `Gath & Ashdod` underneath the stationary cursor mid-hover and closed the tooltip on `movestart`.
+    3. **Dark `details` Box Inheritance Inside Parchment Reading Card (`src/interact.css`)**: Global `details` rules (`background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 0.85rem 1.15rem;`) leaked into `.atlas-source-note` inside `#atlas-detail-drawer` (`#e8dfcd` warm parchment), rendering `#drawer-significance` (`#474b40` dark gray text) on top of a `#0f141c` black background (~1.8:1 contrast ratio). The same global `details` box also wrapped `.atlas-map-caption details`.
+    4. **Macro-Zoom Levant Water Label Stacking (`src/engine/ancientMap.ts`, `src/interact.css`)**: At initial orientation zoom (`zoom < 6`), regional inland water labels (`SEA OF GALILEE`, `DEAD SEA`, `GULF OF SUEZ`, `GULF OF AQABA`) stacked on top of `Capernaum` and `Bethlehem`.
+
+- Decision Point & Implementation:
+  1. **Clean Field Label Structure (`map.html`)**:
+     - Separated `<label for="atlas-era">Choose a period</label>` and `<select id="atlas-era">` as siblings inside `<div class="atlas-field">`, and likewise for `<label for="atlas-journey">Choose a journey</label>` and `<select id="atlas-journey">` inside `<div class="atlas-field" id="atlas-journey-field" hidden>`.
+  2. **Calm Non-Animated Camera Transitions in `readingMode` (`src/engine/ancientMap.ts`)**:
+     - Updated `setEra`, `jumpToPreset`, and `animateToCoords` to use `this.map.setView(..., { animate: false })` when `this.options.readingMode` is active, keeping companion maps (`/bible`, `/interact`) unchanged while making `/map` camera jumps immediate and deterministic.
+  3. **Reading Card & Caption Disclosure Reset + Vertical Spacing Calibration (`src/interact.css`)**:
+     - Reset `.atlas-reading .atlas-source-note` and `.atlas-reading .atlas-map-caption details` to `background: transparent; border: 0; padding: 0;`, with `#2d3029` summary text and `#34382e` significance text on `#e8dfcd` parchment (>8.5:1 contrast).
+     - Calibrated `.atlas-reading` vertical spacing (`gap: 14px; padding-top: 18px`) so the header, period/journey controls, sequence scrubber, and map canvas with side-by-side detail drawer fit comfortably within a `1440×900` desktop viewport.
+  4. **Macro-Zoom Regional Water Label De-Cluttering (`src/engine/ancientMap.ts`, `src/interact.css`)**:
+     - Added `map-zoom-macro` (`zoom < 6`) in `syncZoomClasses()` and tagged inland regional water labels (`water-label-regional`) so `.atlas-reading .map-zoom-macro .water-label-regional` hides them until zoomed in (`zoom >= 6`), and styled `.atlas-reading .water-label-title` in muted desaturated slate blue (`rgba(155, 175, 181, 0.72)`).
+  5. **Step-Back Ritual (Sibling Scan)**:
+     - Grepped all `<label>` and `<details>` elements in `map.html` (2 `<label>` elements, 3 `<details>` elements: `#atlas-visibility`, `.atlas-source-note`, and `.atlas-map-caption details`). Verified all three `<details>` disclosures and both `<label>` controls have explicit `.atlas-reading` styling and unambiguous accessible names.
+
+- Regression Verification & Visual Proof:
+  - Expanded `tests/map-reading-experience.spec.ts` to 3 end-to-end tests covering:
+    1. Quiet first arrival at `1440×900` (`atlas-reading-entry-desktop.png`).
+    2. Full Apostolic Age (`paul-first-journey`) sequence scrubbing, `Sources & dating` inspection, Scripture link verification (`/bible?ref=ACT.13.2`), progressive layer toggle (`Archaeological Finds`), `Show all stops` (8 stops), and `Return to selected stop` (`atlas-reading-apostolic-desktop.png`, `atlas-reading-show-all-desktop.png`).
+    3. Mobile `390×844` responsive layout (`overflowX <= 0`), touch target heights (`>= 44px` across all 7 interactive controls), and WCAG AA contrast ratios (`>= 4.5:1` across all 8 foreground/background pairs including `.atlas-source-note > summary` and `#drawer-significance`) (`atlas-reading-apostolic-mobile.png`).
+  - All 13/13 Playwright tests across `tests/map-reading-experience.spec.ts`, `tests/map.spec.ts`, and `tests/map-chronology-compass.spec.ts` PASS in 13.0s.
+  - `npm.cmd run test:selfcheck` passes 8/8 suites; `node scripts/verify-canonical-kjv.js` passes (31,102 verses); `npm.cmd run build` passes in 785ms with 0 errors.
+  - **Explicit Pre-Overhaul Revert Point**: Anchored commit `2213ba1` (`v00.01.44`) on `origin` via annotated git tag `v00.01.44-pre-reading-map` and backup branch `backup/v00.01.44-pre-reading-map` prior to committing and deploying `v00.01.45`.
+
 ## 2026-10-17 16:12:00 — Atlas Canvas Width Calibration & Balanced Side Margin Breathing Room (v00.01.44)
 
 - User Request & Direct Root-Cause Diagnosis:
@@ -1292,3 +1326,13 @@
 - Version v00.01.40; local work only, no commit/push/deployment for this request.
 - Final verification: 8/8 targeted browser checks PASS; animal desktop/mobile screenshot review PASS after hiding navigation prompts with no destinations. Node collection/router/bookmark checks 6/6 PASS. Broader Interact + study-controls 27/28 PASS (only pre-existing INT-17). Production build and canonical KJV validation PASS.
 - Artifact impact: one source file added (reviewed subject vocabulary); no files removed; 115 net test lines plus approximately 104 net source lines. No dependencies changed; new subject URL parameter reuses existing local bookmarks, no new storage/database. Only ignored test-run screenshot proof retained; generated dist remains ignored. Existing renderers and dataset consumers reused, stale parallel selection paths removed.
+
+## 2026-10-17 17:31:44 — Codex / HistoricalBible — Map experience design plan v1.0
+
+- Completed requested planning-only deliverable: [MAP_EXPERIENCE_DESIGN_PLAN.md](E:/HistoricalBible/MAP_EXPERIENCE_DESIGN_PLAN.md). Live first-entry/Apostolic Age review and scoped source inspection inform calm entry, progressive controls, temporal semantics, uncertainty handling, wireframe, staged implementation and acceptance matrix.
+- Application remains v00.01.44. No source, Scripture, tests, dependencies, commits or deployment changed. No application tests run for prose-only work. Next implementation starts with packages A/B only after owner requests implementation.
+
+## 2026-10-17 17:44:44 — Codex / HistoricalBible — Map structure audit, design v1.1
+
+- Updated MAP_EXPERIENCE_DESIGN_PLAN.md in place: four user-facing parts; regional-source qualification; measured/attested/reconstructed/unknown distinction; conditional bounded LiDAR use; Scripture fidelity and stewardship requirements.
+- Removed premature persistence, new sharing formats, comparisons and journey-so-far from initial slice. Explicit student scenario and proof obligations added. No qualified regional map/LiDAR asset or runtime/student proof claimed. App stays v00.01.44; documentation only.

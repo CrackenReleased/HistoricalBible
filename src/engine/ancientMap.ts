@@ -40,6 +40,9 @@ export interface AncientMapOptions {
   container: HTMLElement;
   compact?: boolean;
   initialEraId?: string;
+  /** Atlas-only presentation; companion maps retain their defaults. */
+  readingMode?: boolean;
+  initialLayers?: Partial<Record<'archaeology' | 'empires' | 'routes' | 'cities' | 'rivers', boolean>>;
   onSelectSite?: (site: ArchaeologicalSite) => void;
   onSelectCity?: (city: BiblicalCity) => void;
   onSelectEmpire?: (empire: WorldEmpireRegion) => void;
@@ -217,6 +220,7 @@ export class AncientMapCanvas {
   public activeGranularFilterId: string | null = null;
   public activeRouteOverrideIds: string[] | null = null;
   public activeRouteStopSelection: { routeId: string; stopIndex: number } | null = null;
+  public focusedStopOnly = false;
   private routeStopMarkersMap: Map<string, L.Marker[]> = new Map();
 
   // Layer Toggles
@@ -230,6 +234,7 @@ export class AncientMapCanvas {
 
   constructor(options: AncientMapOptions) {
     this.options = options;
+    Object.assign(this.layers, options.initialLayers);
     this.container = options.container;
 
     // Default to 'all' or initial era
@@ -252,7 +257,7 @@ export class AncientMapCanvas {
       minZoom: 2,
       maxZoom: 15,
       zoomControl: false, // We render custom zoom controls
-      attributionControl: false
+      attributionControl: !!options.readingMode
     });
 
     // 2. High-Resolution Basemap: Esri World Dark Gray Base (clean, dark, watermark-free)
@@ -343,8 +348,9 @@ export class AncientMapCanvas {
   }
 
   private syncZoomClasses(): void {
-    const isDetailed = this.map ? this.map.getZoom() >= 8 : false;
-    this.container.classList.toggle('map-zoom-detailed', isDetailed);
+    const zoom = this.map ? this.map.getZoom() : 5;
+    this.container.classList.toggle('map-zoom-detailed', zoom >= 8);
+    this.container.classList.toggle('map-zoom-macro', zoom < 6);
   }
 
   // Singleton Active Tooltip Tracking across all layers
@@ -915,7 +921,7 @@ export class AncientMapCanvas {
   }
 
   public getVisibleRoutes(): BiblicalRoute[] {
-    if (this.activeRouteOverrideIds && this.activeRouteOverrideIds.length > 0) {
+    if (this.activeRouteOverrideIds !== null) {
       return BIBLICAL_ROUTES.filter(r => this.activeRouteOverrideIds!.includes(r.id));
     }
     if (this.activeEra.id === 'all') {
@@ -1034,12 +1040,16 @@ export class AncientMapCanvas {
     this.updateYearHud();
     this.renderActiveEra();
 
-    // Smoothly fly camera to era focus
-    this.map.flyTo(
-      [era.focusCenter.lat, era.focusCenter.lng],
-      era.focusZoom,
-      { duration: 1.2 }
-    );
+    // Position camera to era focus (calm non-animated transition in readingMode)
+    if (this.options.readingMode) {
+      this.map.setView([era.focusCenter.lat, era.focusCenter.lng], era.focusZoom, { animate: false });
+    } else {
+      this.map.flyTo(
+        [era.focusCenter.lat, era.focusCenter.lng],
+        era.focusZoom,
+        { duration: 1.2 }
+      );
+    }
 
     if (this.options.onEraChange) {
       this.options.onEraChange(era);
@@ -1061,11 +1071,25 @@ export class AncientMapCanvas {
       mediterranean: 5
     };
     const targetZoom = zoomMap[presetId] || 6;
-    this.map.flyTo([preset.center.lat, preset.center.lng], targetZoom, { duration: 1.2 });
+    if (this.options.readingMode) {
+      this.map.setView([preset.center.lat, preset.center.lng], targetZoom, { animate: false });
+    } else {
+      this.map.flyTo([preset.center.lat, preset.center.lng], targetZoom, { duration: 1.2 });
+    }
   }
 
   public animateToCoords(coords: GeoCoordinate, zoom = 7): void {
-    this.map.flyTo([coords.lat, coords.lng], zoom, { duration: 1.2 });
+    if (this.options.readingMode) {
+      this.map.setView([coords.lat, coords.lng], zoom, { animate: false });
+    } else {
+      this.map.flyTo([coords.lat, coords.lng], zoom, { duration: 1.2 });
+    }
+  }
+
+  public fitRoute(routeId: string): void {
+    const route = BIBLICAL_ROUTES.find(r => r.id === routeId);
+    if (!route?.stops.length) return;
+    this.map.fitBounds(route.stops.map(s => [s.coords.lat, s.coords.lng] as L.LatLngTuple), { padding: [60, 60], maxZoom: 7, animate: false });
   }
 
   public highlightGeographicPlace(entity: BiblicalGeographicEntity): void {
@@ -1091,6 +1115,10 @@ export class AncientMapCanvas {
   }
 
   public resetView(): void {
+    if (this.options.readingMode) {
+      this.map.setView([this.activeEra.focusCenter.lat, this.activeEra.focusCenter.lng], this.activeEra.focusZoom);
+      return;
+    }
     this.setEra('all');
   }
 
@@ -1137,6 +1165,301 @@ export class AncientMapCanvas {
   /**
    * Main render method filtering by the active chronological era
    */
+  /** Update temporal marks without rebuilding geography or disturbing the camera. */
+  public renderRouteSelection(): void {
+    this.closeActiveTooltip();
+    this.routeLayerGroup.clearLayers();
+    this.renderRoutes();
+    this.deconflictMarkerLabels();
+  }
+
+  private renderRoutes(): void {
+    // 2. Biblical Routes (Filtered by era or granular sub-timeline filter, rendered in dedicated routePane & routeStopPane above empires)
+    this.routeStopMarkersMap.clear();
+    if (this.layers.routes) {
+      const routesToRender = this.getVisibleRoutes();
+
+      const routeBannerCoords: Record<string, GeoCoordinate> = {
+        'abraham-call': { lat: 35.65, lng: 39.95 },
+        'jacob-joseph-egypt': { lat: 30.85, lng: 32.20 },
+        'exodus-route': { lat: 29.35, lng: 33.35 },
+        'joshua-conquest': { lat: 32.45, lng: 35.55 },
+        'david-exile-throne': { lat: 31.42, lng: 35.15 },
+        'elijah-elisha-ministry': { lat: 32.95, lng: 35.20 },
+        'babylonian-deportation-daniel': { lat: 34.90, lng: 41.20 },
+        'ezra-nehemiah-return': { lat: 33.25, lng: 44.80 },
+        'john-baptist-ministry': { lat: 31.62, lng: 35.72 },
+        'jesus-nativity-youth': { lat: 30.95, lng: 33.20 },
+        'jesus-early-ministry': { lat: 32.25, lng: 35.10 },
+        'jesus-galilean-ministry': { lat: 33.18, lng: 35.52 },
+        'jesus-passion-resurrection': { lat: 31.82, lng: 34.78 },
+        'peter-philip-missions': { lat: 31.50, lng: 33.80 },
+        'paul-first-journey': { lat: 35.10, lng: 33.20 },
+        'paul-second-journey': { lat: 42.65, lng: 23.50 },
+        'paul-third-journey': { lat: 36.60, lng: 25.40 },
+        'paul-voyage-rome': { lat: 36.10, lng: 16.50 },
+        'john-seven-churches-patmos': { lat: 38.80, lng: 29.80 },
+        'thomas-parthia-india': { lat: 24.50, lng: 62.50 },
+        'andrew-mark-missions': { lat: 44.20, lng: 33.50 },
+        'job-land-of-uz': { lat: 30.20, lng: 36.80 },
+        'gideon-judges': { lat: 32.70, lng: 35.40 },
+        'samson-judges': { lat: 31.60, lng: 34.75 },
+        'ruth-boaz': { lat: 31.55, lng: 35.50 },
+        'samuel-circuit': { lat: 32.10, lng: 34.90 },
+        'saul-reign': { lat: 32.30, lng: 35.35 },
+        'solomon-glory': { lat: 30.50, lng: 35.10 },
+        'elijah-prophet': { lat: 32.85, lng: 35.45 },
+        'elisha-ministry': { lat: 32.50, lng: 35.48 },
+        'amos-prophet': { lat: 31.25, lng: 35.10 },
+        'hosea-prophet': { lat: 32.65, lng: 35.25 },
+        'jonah-prophet': { lat: 34.80, lng: 36.50 },
+        'isaiah-ministry': { lat: 31.45, lng: 34.65 },
+        'jeremiah-ministry': { lat: 31.40, lng: 34.70 },
+        'daniel-exile': { lat: 32.80, lng: 43.80 },
+        'ezekiel-exile': { lat: 32.00, lng: 45.10 },
+        'esther-mordecai': { lat: 32.22, lng: 48.20 },
+        'ezra-journey': { lat: 34.20, lng: 43.20 },
+        'nehemiah-walls': { lat: 33.10, lng: 45.50 },
+        'stephen-philip-deacons': { lat: 31.35, lng: 34.45 },
+        'paul-conversion-early': { lat: 34.50, lng: 35.80 },
+        'barnabas-mark': { lat: 35.50, lng: 33.50 },
+
+      };
+
+      const selectRouteStopHandler = (route: BiblicalRoute, stop?: BiblicalRouteStop, stopIndex?: number): void => {
+        const idx = typeof stopIndex === 'number' ? stopIndex : 0;
+        this.activeRouteStopSelection = { routeId: route.id, stopIndex: idx };
+        const allCores = this.container.querySelectorAll<HTMLElement>('.route-stop-core');
+        allCores.forEach(el => {
+          const isCurrent = el.dataset.routeId === route.id && Number(el.dataset.stopIndex) === idx;
+          el.classList.toggle('active-stop', isCurrent);
+        });
+
+        if (this.options.onSelectRouteStop) {
+          this.options.onSelectRouteStop(route, stop, idx);
+          return;
+        }
+        // Fallback inline popup for standalone embeds without a drawer callback
+        const targetStop = stop || route.stops[0];
+        const popupHtml = `
+          <div class="map-tooltip-inner" style="min-width: 240px; max-width: 300px;">
+            <span class="tooltip-badge" style="color: ${route.color}; border-color: ${route.color};">${route.name.toUpperCase()} · STOP ${idx + 1} OF ${route.stops.length}</span>
+            <div style="color: #ffd700; font-weight: 700; font-size: 1.1rem; margin: 3px 0 4px;">${idx + 1}. ${targetStop.name}</div>
+            <div style="font-size: 0.76rem; color: #fef08a; margin-bottom: 3px;"><strong>🗓️ When:</strong> ${targetStop.dateLabel}</div>
+            <div style="font-size: 0.76rem; color: #7dd3fc; margin-bottom: 5px;"><strong>📖 Scripture:</strong> ${targetStop.scriptureRef}</div>
+            <p style="font-size: 0.76rem; color: #e2e8f0; margin: 0; line-height: 1.4;">${targetStop.note}</p>
+          </div>
+        `;
+        L.popup({ className: 'map-leaflet-popup', closeButton: true, autoClose: true })
+          .setLatLng([targetStop.coords.lat, targetStop.coords.lng])
+          .setContent(popupHtml)
+          .openOn(this.map);
+      };
+
+      // Track placed stop coordinates across concurrent routes so shared cities (e.g., Bethabara or Jerusalem) do not stack directly on top of one another
+      const placedStopCoords: GeoCoordinate[] = [];
+      const getDeconflictedStopCoords = (raw: GeoCoordinate): GeoCoordinate => {
+        let collisionCount = 0;
+        for (const prev of placedStopCoords) {
+          const dLat = prev.lat - raw.lat;
+          const dLng = prev.lng - raw.lng;
+          if (Math.sqrt(dLat * dLat + dLng * dLng) < 0.035) {
+            collisionCount++;
+          }
+        }
+        if (collisionCount === 0) {
+          placedStopCoords.push(raw);
+          return raw;
+        }
+        const angle = (collisionCount * 137.5 * Math.PI) / 180; // Golden-angle spiral separation
+        const radius = 0.028 * Math.ceil(collisionCount / 2);
+        const adjusted = {
+          lat: raw.lat + Math.sin(angle) * radius,
+          lng: raw.lng + (Math.cos(angle) * radius) / Math.cos((raw.lat * Math.PI) / 180)
+        };
+        placedStopCoords.push(adjusted);
+        return adjusted;
+      };
+
+      for (const sourceRoute of routesToRender) {
+        const route = this.options.readingMode ? { ...sourceRoute, color: '#c3a576' } : sourceRoute;
+        const path = (route.path && route.path.length > 0)
+          ? route.path.map(p => [p.lat, p.lng] as L.LatLngTuple)
+          : route.stops.map(s => [s.coords.lat, s.coords.lng] as L.LatLngTuple);
+        const isPatristicRoute = route.evidenceClass === 'EXTERNAL_HISTORICAL_ATTESTATION';
+        const evidenceBadgeText = isPatristicRoute
+          ? 'SCRIPTURE + PATRISTIC / HISTORICAL ATTESTATION'
+          : `BIBLICAL JOURNEY · ${route.stops.length} STOPS`;
+
+        // Sequence mode locates a place, not an invented interpolated position.
+        if (!this.focusedStopOnly && !this.options.readingMode) {
+        // Dark outer casing for high contrast against empire territories and terrain
+        const casingLine = L.polyline(path, {
+          pane: 'routePane',
+          color: 'rgba(8, 12, 17, 0.85)',
+          weight: 6.5,
+          opacity: 0.85,
+          interactive: false
+        });
+        this.routeLayerGroup.addLayer(casingLine);
+
+        // Visible high-contrast route line
+        const visiblePolyline = L.polyline(path, {
+          pane: 'routePane',
+          color: route.color,
+          weight: 3.8,
+          opacity: 0.96,
+          dashArray: isPatristicRoute ? '5, 7' : '9, 6',
+          interactive: false
+        });
+        this.routeLayerGroup.addLayer(visiblePolyline);
+
+        // Wide 24px interactive hit-corridor in routePane (above empirePane) so hovering anywhere along the path never falls through to Roman Empire
+        const hitCorridor = L.polyline(path, {
+          pane: 'routePane',
+          color: route.color,
+          weight: 24,
+          opacity: 0.01,
+          className: `leaflet-route-hit-corridor route-corridor-${route.id}`,
+          bubblingMouseEvents: false
+        });
+
+        hitCorridor.on('mouseover', () => {
+          visiblePolyline.setStyle({ weight: 5.2, opacity: 1.0, dashArray: undefined });
+        });
+        hitCorridor.on('mouseout', () => {
+          visiblePolyline.setStyle({ weight: 3.8, opacity: 0.96, dashArray: isPatristicRoute ? '5, 7' : '9, 6' });
+        });
+        hitCorridor.on('click', (e: L.LeafletMouseEvent) => {
+          L.DomEvent.stopPropagation(e);
+          selectRouteStopHandler(route, route.stops[0], 0);
+        });
+
+        const routeTooltipHtml = `
+          <div class="map-tooltip-inner route-tooltip" style="min-width: 240px; max-width: 315px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
+              <span class="tooltip-badge" style="background: rgba(15, 23, 42, 0.9); color: ${route.color}; border: 1px solid ${route.color}; font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">
+                ${evidenceBadgeText}
+              </span>
+              <span style="font-size: 0.72rem; color: #fef08a; font-family: var(--font-mono, monospace); font-weight: 600;">${route.dateRange}</span>
+            </div>
+            <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin-bottom: 4px;">
+              ${route.name}
+            </div>
+            <div style="font-size: 0.77rem; color: #cbd5e1; margin-bottom: 5px; display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; line-height: 1.35;">
+              <span style="color: #94a3b8;">🧭 Traveler:</span><strong style="color: #f8fafc;">${route.travelerName}</strong>
+              <span style="color: #94a3b8;">📖 Scripture:</span><strong style="color: #7dd3fc;">${route.scriptureRef}</strong>
+              ${route.attestationSource ? `<span style="color: #94a3b8;">🏛️ Sources:</span><span style="color: #fdba74; font-size: 0.72rem;">${route.attestationSource}</span>` : ''}
+            </div>
+            <div style="color: #e2e8f0; font-size: 0.75rem; line-height: 1.4; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px;">
+              ${route.summary}
+            </div>
+            <div class="tooltip-cta" style="margin-top: 5px; color: #38bdf8; font-size: 0.72rem; border-top: 1px dashed rgba(255, 255, 255, 0.12); padding-top: 4px;">
+              Hover or click any numbered stop (1–${route.stops.length}) for dates &amp; events &rarr;
+            </div>
+          </div>
+        `;
+        this.bindManagedTooltip(hitCorridor, routeTooltipHtml, { direction: 'top', offset: [0, -10] });
+        this.routeLayerGroup.addLayer(hitCorridor);
+
+        // On-Map Route Title Banner Pill so the user immediately sees whose journey it is without hovering
+        const bannerPos = routeBannerCoords[route.id] || route.stops[Math.floor(route.stops.length / 2)].coords;
+        const badgeIcon = L.divIcon({
+          className: `leaflet-route-badge route-badge-${route.id}`,
+          html: `
+            <div class="route-badge-pill" data-route-id="${route.id}" style="--route-color: ${route.color}; border-color: ${route.color};">
+              <span class="route-badge-dot" style="background: ${route.color};"></span>
+              <span class="route-badge-text">${route.shortBanner}</span>
+            </div>
+          `,
+          iconSize: [230, 24],
+          iconAnchor: [115, 12]
+        });
+        const badgeMarker = L.marker([bannerPos.lat, bannerPos.lng], {
+          pane: 'routePane',
+          icon: badgeIcon,
+          zIndexOffset: 1380,
+          bubblingMouseEvents: false
+        });
+        this.bindManagedTooltip(badgeMarker, routeTooltipHtml, { direction: 'top', offset: [0, -12] });
+        badgeMarker.on('click', (e: L.LeafletMouseEvent) => {
+          L.DomEvent.stopPropagation(e);
+          selectRouteStopHandler(route, route.stops[0], 0);
+        });
+        if (!this.options.readingMode) this.routeLayerGroup.addLayer(badgeMarker);
+        }
+
+        // Interactive Numbered Waypoint Stops (1..N) in routeStopPane above all polygons and lines
+        const routeMarkers: L.Marker[] = [];
+        route.stops.forEach((stop, stopIdx) => {
+          if (this.focusedStopOnly && (this.activeRouteStopSelection?.routeId !== route.id || this.activeRouteStopSelection.stopIndex !== stopIdx)) return;
+          const stopNum = stopIdx + 1;
+          // Never move a reading-mode point away from its recorded place to fit a label.
+          const displayCoords = this.options.readingMode ? stop.coords : getDeconflictedStopCoords(stop.coords);
+          const isSelectedStop =
+            this.activeRouteStopSelection?.routeId === route.id &&
+            this.activeRouteStopSelection?.stopIndex === stopIdx;
+          const stopEvidenceClass = stop.evidenceClass || route.evidenceClass || 'SCRIPTURE_TEXT';
+          const isExternalStop = stopEvidenceClass === 'EXTERNAL_HISTORICAL_ATTESTATION';
+
+          const stopIcon = L.divIcon({
+            className: `leaflet-route-stop-marker route-stop-${route.id}-${stopNum}`,
+            html: `
+              <div class="route-stop-core ${isSelectedStop ? 'active-stop' : ''}" data-route-id="${route.id}" data-stop-index="${stopIdx}" style="--route-color: ${route.color}; border-color: ${route.color};">
+                <span class="route-stop-num">${stopNum}</span>
+              </div>
+            `,
+            iconSize: [22, 22],
+            iconAnchor: [11, 11]
+          });
+
+          const stopMarker = L.marker([displayCoords.lat, displayCoords.lng], {
+            pane: 'routeStopPane',
+            icon: stopIcon,
+            zIndexOffset: isSelectedStop ? 1550 : 1450,
+            bubblingMouseEvents: false
+          });
+
+          const stopTooltipHtml = `
+            <div class="map-tooltip-inner route-stop-tooltip" style="min-width: 235px; max-width: 310px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap;">
+                <span class="tooltip-badge" style="background: rgba(15, 23, 42, 0.9); color: ${route.color}; border: 1px solid ${route.color}; font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">
+                  ${route.name.toUpperCase()} · STOP ${stopNum} OF ${route.stops.length}
+                </span>
+              </div>
+              <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.12rem; margin-bottom: 4px;">
+                Stop ${stopNum}: ${stop.name}
+              </div>
+              <div style="font-size: 0.77rem; color: #cbd5e1; margin-bottom: 6px; display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; line-height: 1.35; background: rgba(15, 23, 42, 0.72); padding: 5px 8px; border-radius: 4px; border-left: 2px solid ${route.color};">
+                <span style="color: #94a3b8;">🗓️ When:</span><strong style="color: #fef08a;">${stop.dateLabel}</strong>
+                <span style="color: #94a3b8;">🧭 Traveler:</span><span style="color: #f8fafc;">${route.travelerName}</span>
+                <span style="color: #94a3b8;">📖 Scripture:</span><strong style="color: #7dd3fc;">${stop.scriptureRef}</strong>
+                ${isExternalStop && (stop.attestationSource || route.attestationSource) ? `<span style="color: #94a3b8;">🏛️ Attestation:</span><span style="color: #fdba74; font-size: 0.72rem;">${stop.attestationSource || route.attestationSource}</span>` : ''}
+              </div>
+              <div style="color: #e2e8f0; font-size: 0.76rem; line-height: 1.42;">
+                ${stop.note}
+              </div>
+              <div class="tooltip-cta" style="margin-top: 6px; color: #38bdf8; font-size: 0.72rem; border-top: 1px dashed rgba(255, 255, 255, 0.12); padding-top: 4px;">
+                Click waypoint to inspect full journey itinerary &amp; Scripture &rarr;
+              </div>
+            </div>
+          `;
+
+          this.bindManagedTooltip(stopMarker, stopTooltipHtml, { direction: 'top', offset: [0, -12] });
+          stopMarker.on('click', (e: L.LeafletMouseEvent) => {
+            L.DomEvent.stopPropagation(e);
+            selectRouteStopHandler(route, stop, stopIdx);
+          });
+
+          routeMarkers.push(stopMarker);
+          this.routeLayerGroup.addLayer(stopMarker);
+        });
+        this.routeStopMarkersMap.set(route.id, routeMarkers);
+      }
+    }
+
+  }
+
   public renderActiveEra(): void {
     this.closeActiveTooltip();
     this.syncZoomClasses();
@@ -1224,20 +1547,21 @@ export class AncientMapCanvas {
         title: string;
         sub?: string;
         coords: [number, number];
+        regional?: boolean;
       }> = [
         { title: 'THE GREAT SEA', sub: 'MEDITERRANEAN SEA · YAM GADOL', coords: [33.8, 32.5] },
         { title: 'THE RED SEA', sub: 'YAM SUPH', coords: [27.0, 35.0] },
-        { title: 'GULF OF SUEZ', coords: [28.65, 33.15] },
-        { title: 'GULF OF AQABA', coords: [28.85, 34.72] },
-        { title: 'SEA OF GALILEE', sub: 'CHINNERETH', coords: [32.815, 35.58] },
-        { title: 'DEAD SEA', sub: 'THE SALT SEA', coords: [31.48, 35.48] },
+        { title: 'GULF OF SUEZ', coords: [28.65, 33.15], regional: true },
+        { title: 'GULF OF AQABA', coords: [28.85, 34.72], regional: true },
+        { title: 'SEA OF GALILEE', sub: 'CHINNERETH', coords: [32.815, 35.58], regional: true },
+        { title: 'DEAD SEA', sub: 'THE SALT SEA', coords: [31.48, 35.48], regional: true },
         { title: 'PERSIAN GULF', sub: 'LOWER SEA', coords: [27.5, 51.5] },
         { title: 'BLACK SEA', coords: [42.8, 35.0] }
       ];
 
       for (const wLabel of waterLabels) {
         const waterIcon = L.divIcon({
-          className: 'leaflet-water-label',
+          className: `leaflet-water-label${wLabel.regional ? ' water-label-regional' : ''}`,
           html: `
             <div class="water-label-title">${wLabel.title}</div>
             ${wLabel.sub ? `<div class="water-label-sub">${wLabel.sub}</div>` : ''}
@@ -1409,283 +1733,7 @@ export class AncientMapCanvas {
       }
     }
 
-    // 2. Biblical Routes (Filtered by era or granular sub-timeline filter, rendered in dedicated routePane & routeStopPane above empires)
-    this.routeStopMarkersMap.clear();
-    if (this.layers.routes) {
-      const routesToRender = this.getVisibleRoutes();
-
-      const routeBannerCoords: Record<string, GeoCoordinate> = {
-        'abraham-call': { lat: 35.65, lng: 39.95 },
-        'jacob-joseph-egypt': { lat: 30.85, lng: 32.20 },
-        'exodus-route': { lat: 29.35, lng: 33.35 },
-        'joshua-conquest': { lat: 32.45, lng: 35.55 },
-        'david-exile-throne': { lat: 31.42, lng: 35.15 },
-        'elijah-elisha-ministry': { lat: 32.95, lng: 35.20 },
-        'babylonian-deportation-daniel': { lat: 34.90, lng: 41.20 },
-        'ezra-nehemiah-return': { lat: 33.25, lng: 44.80 },
-        'john-baptist-ministry': { lat: 31.62, lng: 35.72 },
-        'jesus-nativity-youth': { lat: 30.95, lng: 33.20 },
-        'jesus-early-ministry': { lat: 32.25, lng: 35.10 },
-        'jesus-galilean-ministry': { lat: 33.18, lng: 35.52 },
-        'jesus-passion-resurrection': { lat: 31.82, lng: 34.78 },
-        'peter-philip-missions': { lat: 31.50, lng: 33.80 },
-        'paul-first-journey': { lat: 35.10, lng: 33.20 },
-        'paul-second-journey': { lat: 42.65, lng: 23.50 },
-        'paul-third-journey': { lat: 36.60, lng: 25.40 },
-        'paul-voyage-rome': { lat: 36.10, lng: 16.50 },
-        'john-seven-churches-patmos': { lat: 38.80, lng: 29.80 },
-        'thomas-parthia-india': { lat: 24.50, lng: 62.50 },
-        'andrew-mark-missions': { lat: 44.20, lng: 33.50 },
-        'job-land-of-uz': { lat: 30.20, lng: 36.80 },
-        'gideon-judges': { lat: 32.70, lng: 35.40 },
-        'samson-judges': { lat: 31.60, lng: 34.75 },
-        'ruth-boaz': { lat: 31.55, lng: 35.50 },
-        'samuel-circuit': { lat: 32.10, lng: 34.90 },
-        'saul-reign': { lat: 32.30, lng: 35.35 },
-        'solomon-glory': { lat: 30.50, lng: 35.10 },
-        'elijah-prophet': { lat: 32.85, lng: 35.45 },
-        'elisha-ministry': { lat: 32.50, lng: 35.48 },
-        'amos-prophet': { lat: 31.25, lng: 35.10 },
-        'hosea-prophet': { lat: 32.65, lng: 35.25 },
-        'jonah-prophet': { lat: 34.80, lng: 36.50 },
-        'isaiah-ministry': { lat: 31.45, lng: 34.65 },
-        'jeremiah-ministry': { lat: 31.40, lng: 34.70 },
-        'daniel-exile': { lat: 32.80, lng: 43.80 },
-        'ezekiel-exile': { lat: 32.00, lng: 45.10 },
-        'esther-mordecai': { lat: 32.22, lng: 48.20 },
-        'ezra-journey': { lat: 34.20, lng: 43.20 },
-        'nehemiah-walls': { lat: 33.10, lng: 45.50 },
-        'stephen-philip-deacons': { lat: 31.35, lng: 34.45 },
-        'paul-conversion-early': { lat: 34.50, lng: 35.80 },
-        'barnabas-mark': { lat: 35.50, lng: 33.50 },
-
-      };
-
-      const selectRouteStopHandler = (route: BiblicalRoute, stop?: BiblicalRouteStop, stopIndex?: number): void => {
-        const idx = typeof stopIndex === 'number' ? stopIndex : 0;
-        this.activeRouteStopSelection = { routeId: route.id, stopIndex: idx };
-        const allCores = this.container.querySelectorAll<HTMLElement>('.route-stop-core');
-        allCores.forEach(el => {
-          const isCurrent = el.dataset.routeId === route.id && Number(el.dataset.stopIndex) === idx;
-          el.classList.toggle('active-stop', isCurrent);
-        });
-
-        if (this.options.onSelectRouteStop) {
-          this.options.onSelectRouteStop(route, stop, idx);
-          return;
-        }
-        // Fallback inline popup for standalone embeds without a drawer callback
-        const targetStop = stop || route.stops[0];
-        const popupHtml = `
-          <div class="map-tooltip-inner" style="min-width: 240px; max-width: 300px;">
-            <span class="tooltip-badge" style="color: ${route.color}; border-color: ${route.color};">${route.name.toUpperCase()} · STOP ${idx + 1} OF ${route.stops.length}</span>
-            <div style="color: #ffd700; font-weight: 700; font-size: 1.1rem; margin: 3px 0 4px;">${idx + 1}. ${targetStop.name}</div>
-            <div style="font-size: 0.76rem; color: #fef08a; margin-bottom: 3px;"><strong>🗓️ When:</strong> ${targetStop.dateLabel}</div>
-            <div style="font-size: 0.76rem; color: #7dd3fc; margin-bottom: 5px;"><strong>📖 Scripture:</strong> ${targetStop.scriptureRef}</div>
-            <p style="font-size: 0.76rem; color: #e2e8f0; margin: 0; line-height: 1.4;">${targetStop.note}</p>
-          </div>
-        `;
-        L.popup({ className: 'map-leaflet-popup', closeButton: true, autoClose: true })
-          .setLatLng([targetStop.coords.lat, targetStop.coords.lng])
-          .setContent(popupHtml)
-          .openOn(this.map);
-      };
-
-      // Track placed stop coordinates across concurrent routes so shared cities (e.g., Bethabara or Jerusalem) do not stack directly on top of one another
-      const placedStopCoords: GeoCoordinate[] = [];
-      const getDeconflictedStopCoords = (raw: GeoCoordinate): GeoCoordinate => {
-        let collisionCount = 0;
-        for (const prev of placedStopCoords) {
-          const dLat = prev.lat - raw.lat;
-          const dLng = prev.lng - raw.lng;
-          if (Math.sqrt(dLat * dLat + dLng * dLng) < 0.035) {
-            collisionCount++;
-          }
-        }
-        if (collisionCount === 0) {
-          placedStopCoords.push(raw);
-          return raw;
-        }
-        const angle = (collisionCount * 137.5 * Math.PI) / 180; // Golden-angle spiral separation
-        const radius = 0.028 * Math.ceil(collisionCount / 2);
-        const adjusted = {
-          lat: raw.lat + Math.sin(angle) * radius,
-          lng: raw.lng + (Math.cos(angle) * radius) / Math.cos((raw.lat * Math.PI) / 180)
-        };
-        placedStopCoords.push(adjusted);
-        return adjusted;
-      };
-
-      for (const route of routesToRender) {
-        const path = (route.path && route.path.length > 0)
-          ? route.path.map(p => [p.lat, p.lng] as L.LatLngTuple)
-          : route.stops.map(s => [s.coords.lat, s.coords.lng] as L.LatLngTuple);
-        const isPatristicRoute = route.evidenceClass === 'EXTERNAL_HISTORICAL_ATTESTATION';
-        const evidenceBadgeText = isPatristicRoute
-          ? 'SCRIPTURE + PATRISTIC / HISTORICAL ATTESTATION'
-          : `BIBLICAL JOURNEY · ${route.stops.length} STOPS`;
-
-        // Dark outer casing for high contrast against empire territories and terrain
-        const casingLine = L.polyline(path, {
-          pane: 'routePane',
-          color: 'rgba(8, 12, 17, 0.85)',
-          weight: 6.5,
-          opacity: 0.85,
-          interactive: false
-        });
-        this.routeLayerGroup.addLayer(casingLine);
-
-        // Visible high-contrast route line
-        const visiblePolyline = L.polyline(path, {
-          pane: 'routePane',
-          color: route.color,
-          weight: 3.8,
-          opacity: 0.96,
-          dashArray: isPatristicRoute ? '5, 7' : '9, 6',
-          interactive: false
-        });
-        this.routeLayerGroup.addLayer(visiblePolyline);
-
-        // Wide 24px interactive hit-corridor in routePane (above empirePane) so hovering anywhere along the path never falls through to Roman Empire
-        const hitCorridor = L.polyline(path, {
-          pane: 'routePane',
-          color: route.color,
-          weight: 24,
-          opacity: 0.01,
-          className: `leaflet-route-hit-corridor route-corridor-${route.id}`,
-          bubblingMouseEvents: false
-        });
-
-        hitCorridor.on('mouseover', () => {
-          visiblePolyline.setStyle({ weight: 5.2, opacity: 1.0, dashArray: undefined });
-        });
-        hitCorridor.on('mouseout', () => {
-          visiblePolyline.setStyle({ weight: 3.8, opacity: 0.96, dashArray: isPatristicRoute ? '5, 7' : '9, 6' });
-        });
-        hitCorridor.on('click', (e: L.LeafletMouseEvent) => {
-          L.DomEvent.stopPropagation(e);
-          selectRouteStopHandler(route, route.stops[0], 0);
-        });
-
-        const routeTooltipHtml = `
-          <div class="map-tooltip-inner route-tooltip" style="min-width: 240px; max-width: 315px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
-              <span class="tooltip-badge" style="background: rgba(15, 23, 42, 0.9); color: ${route.color}; border: 1px solid ${route.color}; font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">
-                ${evidenceBadgeText}
-              </span>
-              <span style="font-size: 0.72rem; color: #fef08a; font-family: var(--font-mono, monospace); font-weight: 600;">${route.dateRange}</span>
-            </div>
-            <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin-bottom: 4px;">
-              ${route.name}
-            </div>
-            <div style="font-size: 0.77rem; color: #cbd5e1; margin-bottom: 5px; display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; line-height: 1.35;">
-              <span style="color: #94a3b8;">🧭 Traveler:</span><strong style="color: #f8fafc;">${route.travelerName}</strong>
-              <span style="color: #94a3b8;">📖 Scripture:</span><strong style="color: #7dd3fc;">${route.scriptureRef}</strong>
-              ${route.attestationSource ? `<span style="color: #94a3b8;">🏛️ Sources:</span><span style="color: #fdba74; font-size: 0.72rem;">${route.attestationSource}</span>` : ''}
-            </div>
-            <div style="color: #e2e8f0; font-size: 0.75rem; line-height: 1.4; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px;">
-              ${route.summary}
-            </div>
-            <div class="tooltip-cta" style="margin-top: 5px; color: #38bdf8; font-size: 0.72rem; border-top: 1px dashed rgba(255, 255, 255, 0.12); padding-top: 4px;">
-              Hover or click any numbered stop (1–${route.stops.length}) for dates &amp; events &rarr;
-            </div>
-          </div>
-        `;
-        this.bindManagedTooltip(hitCorridor, routeTooltipHtml, { direction: 'top', offset: [0, -10] });
-        this.routeLayerGroup.addLayer(hitCorridor);
-
-        // On-Map Route Title Banner Pill so the user immediately sees whose journey it is without hovering
-        const bannerPos = routeBannerCoords[route.id] || route.stops[Math.floor(route.stops.length / 2)].coords;
-        const badgeIcon = L.divIcon({
-          className: `leaflet-route-badge route-badge-${route.id}`,
-          html: `
-            <div class="route-badge-pill" data-route-id="${route.id}" style="--route-color: ${route.color}; border-color: ${route.color};">
-              <span class="route-badge-dot" style="background: ${route.color};"></span>
-              <span class="route-badge-text">${route.shortBanner}</span>
-            </div>
-          `,
-          iconSize: [230, 24],
-          iconAnchor: [115, 12]
-        });
-        const badgeMarker = L.marker([bannerPos.lat, bannerPos.lng], {
-          pane: 'routePane',
-          icon: badgeIcon,
-          zIndexOffset: 1380,
-          bubblingMouseEvents: false
-        });
-        this.bindManagedTooltip(badgeMarker, routeTooltipHtml, { direction: 'top', offset: [0, -12] });
-        badgeMarker.on('click', (e: L.LeafletMouseEvent) => {
-          L.DomEvent.stopPropagation(e);
-          selectRouteStopHandler(route, route.stops[0], 0);
-        });
-        this.routeLayerGroup.addLayer(badgeMarker);
-
-        // Interactive Numbered Waypoint Stops (1..N) in routeStopPane above all polygons and lines
-        const routeMarkers: L.Marker[] = [];
-        route.stops.forEach((stop, stopIdx) => {
-          const stopNum = stopIdx + 1;
-          const displayCoords = getDeconflictedStopCoords(stop.coords);
-          const isSelectedStop =
-            this.activeRouteStopSelection?.routeId === route.id &&
-            this.activeRouteStopSelection?.stopIndex === stopIdx;
-          const stopEvidenceClass = stop.evidenceClass || route.evidenceClass || 'SCRIPTURE_TEXT';
-          const isExternalStop = stopEvidenceClass === 'EXTERNAL_HISTORICAL_ATTESTATION';
-
-          const stopIcon = L.divIcon({
-            className: `leaflet-route-stop-marker route-stop-${route.id}-${stopNum}`,
-            html: `
-              <div class="route-stop-core ${isSelectedStop ? 'active-stop' : ''}" data-route-id="${route.id}" data-stop-index="${stopIdx}" style="--route-color: ${route.color}; border-color: ${route.color};">
-                <span class="route-stop-num">${stopNum}</span>
-              </div>
-            `,
-            iconSize: [22, 22],
-            iconAnchor: [11, 11]
-          });
-
-          const stopMarker = L.marker([displayCoords.lat, displayCoords.lng], {
-            pane: 'routeStopPane',
-            icon: stopIcon,
-            zIndexOffset: isSelectedStop ? 1550 : 1450,
-            bubblingMouseEvents: false
-          });
-
-          const stopTooltipHtml = `
-            <div class="map-tooltip-inner route-stop-tooltip" style="min-width: 235px; max-width: 310px;">
-              <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap;">
-                <span class="tooltip-badge" style="background: rgba(15, 23, 42, 0.9); color: ${route.color}; border: 1px solid ${route.color}; font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">
-                  ${route.name.toUpperCase()} · STOP ${stopNum} OF ${route.stops.length}
-                </span>
-              </div>
-              <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.12rem; margin-bottom: 4px;">
-                Stop ${stopNum}: ${stop.name}
-              </div>
-              <div style="font-size: 0.77rem; color: #cbd5e1; margin-bottom: 6px; display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; line-height: 1.35; background: rgba(15, 23, 42, 0.72); padding: 5px 8px; border-radius: 4px; border-left: 2px solid ${route.color};">
-                <span style="color: #94a3b8;">🗓️ When:</span><strong style="color: #fef08a;">${stop.dateLabel}</strong>
-                <span style="color: #94a3b8;">🧭 Traveler:</span><span style="color: #f8fafc;">${route.travelerName}</span>
-                <span style="color: #94a3b8;">📖 Scripture:</span><strong style="color: #7dd3fc;">${stop.scriptureRef}</strong>
-                ${isExternalStop && (stop.attestationSource || route.attestationSource) ? `<span style="color: #94a3b8;">🏛️ Attestation:</span><span style="color: #fdba74; font-size: 0.72rem;">${stop.attestationSource || route.attestationSource}</span>` : ''}
-              </div>
-              <div style="color: #e2e8f0; font-size: 0.76rem; line-height: 1.42;">
-                ${stop.note}
-              </div>
-              <div class="tooltip-cta" style="margin-top: 6px; color: #38bdf8; font-size: 0.72rem; border-top: 1px dashed rgba(255, 255, 255, 0.12); padding-top: 4px;">
-                Click waypoint to inspect full journey itinerary &amp; Scripture &rarr;
-              </div>
-            </div>
-          `;
-
-          this.bindManagedTooltip(stopMarker, stopTooltipHtml, { direction: 'top', offset: [0, -12] });
-          stopMarker.on('click', (e: L.LeafletMouseEvent) => {
-            L.DomEvent.stopPropagation(e);
-            selectRouteStopHandler(route, stop, stopIdx);
-          });
-
-          routeMarkers.push(stopMarker);
-          this.routeLayerGroup.addLayer(stopMarker);
-        });
-        this.routeStopMarkersMap.set(route.id, routeMarkers);
-      }
-    }
+    this.renderRoutes();
 
     // 3. Biblical Cities (Era-filtered so Greco-Roman/NT cities don't crowd Old Testament Levant)
     if (this.layers.cities) {
