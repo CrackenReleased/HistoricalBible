@@ -1,3 +1,51 @@
+## 2026-10-17 03:26:00 — High-Resolution Topographic Kingdom Boundaries, Authentic Biblical Hydrology, On-Water Antique Typography & Solid Cartographic Hairlines (v00.01.35)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - The owner reported severe cartographic issues with water bodies and boundary lines on the map during the United Monarchy epoch:
+    "And the Red Sea and Mediterranian Sea, as a matter of fact, all bodies of water look horrible... and almost ALL boundary lines look horrible... I really don't know what I have to do to get you to get these right.... But I guess I'll just keep pushing. Fix them and push to git...."
+  - Audited root causes in `src/data/ancientMapData.ts` and `src/engine/ancientMap.ts`:
+    1. `WATER_FEATURES.seas`: Mediterranean Sea, Red Sea, Black Sea, and Persian Gulf were represented by crude 8–14 point straight-line polygons rendered with `dashArray: '3, 5'` slicing across land, Sinai, Egyptian desert, and open sea. Because the basemap is `Esri World Dark Gray Base` (which already renders photorealistic physical water and sub-meter coastlines), drawing coarse polygons with dashed borders over open seas ruined visual quality.
+    2. `WATER_FEATURES.rivers`: Euphrates, Tigris, Jordan, and Nile were coarse 5–8 point straight line segments at sharp angles.
+    3. `WORLD_EMPIRES_GEO`: Every kingdom (Judah, Israel, Phoenicia, Philistia, Moab, Edom, Aram-Damascus, Egypt, Assyria, Babylon, Rome) was rendered as a crude 4–6 point box/trapezoid with `dashArray: '6, 6'`, creating ugly "coupon-clipping" dashed wireframes across the Levant.
+- Decision Point & Implementation:
+  1. **High-Resolution Geodetic Hydrology (`src/data/ancientMapData.ts`)**:
+     - Retained and elevated inland biblical lakes (Sea of Galilee and Dead Sea) with 17–21 point high-resolution shorelines matching authentic physical contours (Lisan peninsula, Arnon/Zered outlets, Tiberias/Capernaum bays).
+     - Upgraded rivers with 16–25 point serpentine geodetic paths following real river channels and biblical topography:
+       - Jordan River (serpentine bends through the Ghor, Dan/Hermon source, Sea of Galilee, Adam, Bethabara, Jericho, Dead Sea).
+       - Nile River (main valley from Elephantine/Aswan past Luxor/Thebes, Abydos, Memphis, Cairo apex).
+       - Nile Delta branches (Damietta branch to eastern coast, Rosetta branch to western coast, Pelusiac branch / Wadi Tumilat through Goshen).
+       - Euphrates River (Murat/Taurus highlands, Zeugma, Carchemish, Emar, Raqqa, Deir ez-Zor, Dura-Europos, Mari, Ana, Hit, Fallujah, Babylon, Nippur, Ur, Shatt al-Arab).
+       - Tigris River (Lake Hazar, Diyarbakir, Cizre, Nineveh, Calah/Nimrud, Assur, Samarra, Baghdad, Ctesiphon, Amarah, Qurna).
+       - Biblical tributaries: River Jabbok (Wadi Zarqa), River Arnon (Wadi Mujib), Brook Zered (Wadi al-Hasa), Brook Kishon, Brook Cherith (Wadi Qelt), Brook of Egypt (Wadi El-Arish).
+  2. **High-Resolution Topographic Kingdom & Empire Boundaries (`src/data/ancientMapData.ts`)**:
+     - Replaced crude 4–6 point boxes with detailed 12–24 coordinate polygons based on biblical and archaeological topography:
+       - `judah`: 22 vertices tracing Joshua 15 (Jericho, ascent of Adummim, Jerusalem north ridge, Valley of Aijalon, Shephelah foothills Beth-shemesh/Azekah/Lachish/Eglon, Negev Beersheba/Arad, Ascent of Akrabbim, Dead Sea western cliffs Masada/Ein Gedi/Qumran).
+       - `israel_kingdom`: 23 vertices tracing Samaria, Sharon plain, Dor, Mount Carmel, Plain of Acre, Upper Galilee (Kedesh, Dan), Golan/Bashan, and Transjordanian Gilead (Yarmouk, Ramoth-gilead, Mahanaim, Jabbok) down to Jordan River.
+       - `phoenicia`: 17 vertices hugging the coastal littoral from Carmel/Acre past Tyre, Sarepta, Sidon, Beirut, Byblos, Tripolis, Arvad, bounded tightly by Mount Lebanon crest.
+       - `philistia`: 12 vertices along the Mediterranean littoral from Raphia past Gaza, Ashkelon, Ashdod to Joppa, bounded on the east by Ekron, Gath, and Shephelah.
+       - `moab_kingdom`: 15 vertices following the eastern cliffs of the Dead Sea from Jordan mouth to Brook Zered, up the Zered canyon, along the desert fringe past Aroer/Arnon, and across the Medeba/Heshbon plateau.
+       - `edom_kingdom`: 13 vertices covering Mount Seir from Brook Zered past Bozrah, Petra/Sela, Teman down to Ezion-geber/Aqaba and western Arabah rim.
+       - `aram_damascus`: 12 vertices covering Anti-Lebanon, Mount Hermon, Kadesh on the Orontes, Syrian desert fringe, and Hauran.
+       - `egypt` / `saite_egypt` / `ptolemaic_egypt`: 11–15 vertices hugging the true Nile Valley corridor and Delta fan, completely eliminating crude polygons over the open Red Sea.
+       - `assyria`, `babylon`, `old_babylon`, `media`, `persia`, `parthia`, `rome`: Expanded with 14–22 vertices following natural geographic features (mountain chains, river frontiers, provinces).
+  3. **Solid Cartographic Hairlines & Antique On-Water Typography (`src/engine/ancientMap.ts` & `src/interact.css`)**:
+     - Completely removed `dashArray: '6, 6'` from kingdom borders: rendered as solid, elegant hairlines (`weight: 1.6`, `dashArray: undefined`, soft watercolor `fillOpacity: 0.14`, elevating to `0.26` on hover).
+     - Removed `dashArray: '3, 5'` from lakes: rendered as solid, crisp shorelines (`weight: 1.4`, `dashArray: undefined`, soft aquatic fill).
+     - Added classical on-water typographic annotations into `waterPane` with pointer-events disabled:
+       - `THE GREAT SEA · MEDITERRANEAN SEA · YAM GADOL`
+       - `THE RED SEA · YAM SUPH`
+       - `GULF OF SUEZ` & `GULF OF AQABA`
+       - `DEAD SEA · THE SALT SEA`
+       - `SEA OF GALILEE · CHINNERETH`
+       - `PERSIAN GULF · LOWER SEA`
+       - `BLACK SEA`
+  4. **Regression Verification (`tests/map.spec.ts`)**:
+     - Added automated regression test verifying that all kingdom boundaries render without `stroke-dasharray`, lake bodies render without dashed borders, and all on-water typography elements are visible.
+- Verification:
+  - All 10/10 Playwright tests in `tests/map.spec.ts` PASS.
+  - All 7/7 test suites in `npm run test:selfcheck` PASS.
+  - Production build `npm run build` PASS.
+
 ## 2026-10-17 03:04:00 — Complete Biblical Character Mapping (41 Canonical Routes across Genesis to Revelation), Dedicated Managed Panes Stack & Zero-Collision Hover Architecture (v00.01.34)
 
 - User Request & Direct Root-Cause Diagnosis:

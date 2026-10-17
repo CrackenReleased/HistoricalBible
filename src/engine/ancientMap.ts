@@ -1122,15 +1122,16 @@ export class AncientMapCanvas {
         const latLngs = sea.polygon.map(pt => [pt.lat, pt.lng] as L.LatLngTuple);
         const seaPoly = L.polygon(latLngs, {
           pane: 'waterPane',
-          color: 'rgba(56, 189, 248, 0.35)',
-          fillColor: 'rgba(14, 116, 144, 0.14)',
-          fillOpacity: 0.14,
-          weight: 1.2,
-          dashArray: '3, 5'
+          color: 'rgba(56, 189, 248, 0.50)',
+          fillColor: 'rgba(14, 116, 144, 0.22)',
+          fillOpacity: 0.22,
+          weight: 1.4,
+          dashArray: undefined
         });
+        const biblicalSubtitle = sea.biblicalLabel || 'Biblical Water Body';
         this.bindManagedTooltip(
           seaPoly,
-          `<div class="map-tooltip-inner"><strong style="color: #7dd3fc;">${sea.name}</strong><br/><span style="font-size: 0.72rem; color: #94a3b8;">Biblical Sea / Water Body</span></div>`,
+          `<div class="map-tooltip-inner"><strong style="color: #7dd3fc; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.05rem;">${sea.name}</strong><br/><span style="font-size: 0.72rem; color: #94a3b8; font-style: italic;">${biblicalSubtitle}</span></div>`,
           { direction: 'top' }
         );
         this.waterLayerGroup.addLayer(seaPoly);
@@ -1141,15 +1142,50 @@ export class AncientMapCanvas {
         const riverLine = L.polyline(path, {
           pane: 'waterPane',
           color: '#38bdf8',
-          weight: 2.2,
-          opacity: 0.72
+          weight: 2.0,
+          opacity: 0.75
         });
+        const scriptureSub = river.scriptureAnchor ? `<br/><span style="font-size: 0.70rem; color: #38bdf8; font-family: var(--font-mono, monospace);">${river.scriptureAnchor}</span>` : '';
         this.bindManagedTooltip(
           riverLine,
-          `<div class="map-tooltip-inner"><strong style="color: #7dd3fc;">${river.name}</strong><br/><span style="font-size: 0.72rem; color: #94a3b8;">Biblical River Course</span></div>`,
+          `<div class="map-tooltip-inner"><strong style="color: #7dd3fc; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.02rem;">${river.name}</strong>${scriptureSub}<br/><span style="font-size: 0.72rem; color: #94a3b8;">Biblical River Course</span></div>`,
           { direction: 'top' }
         );
         this.waterLayerGroup.addLayer(riverLine);
+      }
+
+      // Elegant Classical On-Water Typographic Annotations (rendered into waterPane)
+      const waterLabels: Array<{
+        title: string;
+        sub?: string;
+        coords: [number, number];
+      }> = [
+        { title: 'THE GREAT SEA', sub: 'MEDITERRANEAN SEA · YAM GADOL', coords: [33.8, 32.5] },
+        { title: 'THE RED SEA', sub: 'YAM SUPH', coords: [27.0, 35.0] },
+        { title: 'GULF OF SUEZ', coords: [28.65, 33.15] },
+        { title: 'GULF OF AQABA', coords: [28.85, 34.72] },
+        { title: 'SEA OF GALILEE', sub: 'CHINNERETH', coords: [32.815, 35.58] },
+        { title: 'DEAD SEA', sub: 'THE SALT SEA', coords: [31.48, 35.48] },
+        { title: 'PERSIAN GULF', sub: 'LOWER SEA', coords: [27.5, 51.5] },
+        { title: 'BLACK SEA', coords: [42.8, 35.0] }
+      ];
+
+      for (const wLabel of waterLabels) {
+        const waterIcon = L.divIcon({
+          className: 'leaflet-water-label',
+          html: `
+            <div class="water-label-title">${wLabel.title}</div>
+            ${wLabel.sub ? `<div class="water-label-sub">${wLabel.sub}</div>` : ''}
+          `,
+          iconSize: [220, 36],
+          iconAnchor: [110, 18]
+        });
+        const marker = L.marker(wLabel.coords, {
+          pane: 'waterPane',
+          icon: waterIcon,
+          interactive: false
+        });
+        this.waterLayerGroup.addLayer(marker);
       }
     }
 
@@ -1194,16 +1230,16 @@ export class AncientMapCanvas {
           pane: 'empirePane',
           color: empire.color,
           fillColor: empire.fillColor || empire.color,
-          fillOpacity: 0.16,
-          weight: 1.8,
-          dashArray: '6, 6'
+          fillOpacity: 0.14,
+          weight: 1.6,
+          dashArray: undefined
         };
         const hoverStyle: L.PathOptions = {
           pane: 'empirePane',
           color: empire.color,
           fillColor: empire.fillColor || empire.color,
-          fillOpacity: 0.28,
-          weight: 2.6,
+          fillOpacity: 0.26,
+          weight: 2.4,
           dashArray: undefined
         };
 

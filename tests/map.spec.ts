@@ -77,6 +77,42 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
     await expect(reset).toBeVisible();
   });
 
+  test('Biblical waterways and kingdom boundaries render with high-resolution coordinates, solid cartographic strokes, and on-water typography (v00.01.35)', async ({ page }) => {
+    await page.goto('/map?era=united_monarchy');
+    await page.waitForTimeout(600);
+
+    // 1. Kingdom boundaries must be rendered in empirePane as solid cartographic strokes with NO dashed borders
+    const empirePolygons = page.locator('.leaflet-empire-pane svg path');
+    const empireCount = await empirePolygons.count();
+    expect(empireCount).toBeGreaterThanOrEqual(6);
+
+    for (let i = 0; i < empireCount; i++) {
+      const dash = await empirePolygons.nth(i).getAttribute('stroke-dasharray');
+      expect(dash).toBeNull(); // Solid cartographic hairlines! No crude dashed '6, 6' borders
+    }
+
+    // 2. Lake bodies (Dead Sea & Sea of Galilee) must also render as solid polygons with NO dashed array
+    const waterPaths = page.locator('.leaflet-water-pane svg path');
+    const waterPathCount = await waterPaths.count();
+    expect(waterPathCount).toBeGreaterThanOrEqual(5); // At least 2 lake polygons + rivers
+
+    for (let i = 0; i < waterPathCount; i++) {
+      const dash = await waterPaths.nth(i).getAttribute('stroke-dasharray');
+      expect(dash).toBeNull(); // No crude dashed '3, 5' borders!
+    }
+
+    // 3. Classical on-water typography markers must be rendered into waterPane
+    const waterLabels = page.locator('.leaflet-water-pane .leaflet-water-label');
+    await expect(waterLabels.first()).toBeVisible();
+    const waterLabelCount = await waterLabels.count();
+    expect(waterLabelCount).toBeGreaterThanOrEqual(5);
+
+    await expect(page.locator('.leaflet-water-label', { hasText: 'THE GREAT SEA' })).toBeVisible();
+    await expect(page.locator('.leaflet-water-label', { hasText: 'THE RED SEA' })).toBeVisible();
+    await expect(page.locator('.leaflet-water-label', { hasText: 'DEAD SEA' })).toBeVisible();
+    await expect(page.locator('.leaflet-water-label', { hasText: 'SEA OF GALILEE' })).toBeVisible();
+  });
+
   test('Direct deep link to an archaeological site (?site=pilate-stone) displays the discovery detail drawer', async ({ page }) => {
     await page.goto('/map?site=pilate-stone');
 

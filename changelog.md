@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.35] - 2026-10-17
+
+- High-Resolution Topographic Kingdom Boundaries, Authentic Biblical Hydrology, On-Water Antique Typography & Solid Cartographic Hairlines:
+  - **High-Resolution Geodetic Hydrology (`src/data/ancientMapData.ts`)**:
+    - Replaced crude open sea polygons with genuine physical lake shorelines for the Sea of Galilee (17 pts) and Dead Sea (21 pts).
+    - Upgraded rivers with 16–25 point serpentine geodetic paths following real river channels: Jordan River (meanders through the Ghor, Dan, Sea of Galilee, Adam, Jericho to Dead Sea), Nile River (main valley from Elephantine/Aswan past Luxor, Abydos, Memphis, Cairo apex), Damietta and Rosetta Delta branches, Pelusiac branch / Wadi Tumilat through Goshen, Euphrates River (Carchemish, Emar, Mari, Babylon, Ur, Shatt al-Arab), Tigris River (Nineveh, Calah, Assur, Samarra, Baghdad, Ctesiphon), River Jabbok, River Arnon, Brook Zered, Brook Kishon, Brook Cherith, and Brook of Egypt.
+  - **High-Resolution Topographic Kingdom & Empire Boundaries (`src/data/ancientMapData.ts`)**:
+    - Replaced crude 4–6 point bounding boxes with detailed 12–24 coordinate polygons based on biblical and archaeological topography: Judah (Joshua 15 borders, Shephelah, Negev, Dead Sea cliffs), Israel (Samaria, Sharon, Carmel, Acre, Upper Galilee, Golan, Gilead, Jabbok), Phoenicia (coastal littoral bounded by Mount Lebanon), Philistia (coastal plain bounded by Ekron, Gath, Shephelah), Moab (Dead Sea cliffs, Arnon/Zered gorges, Medeba plateau), Edom (Mount Seir massif, Bozrah, Petra/Sela, Ezion-geber/Aqaba), Aram-Damascus, Egypt (Nile valley and Delta corridor, hugging land and avoiding the open Red Sea), Assyria, Babylon, Persia, and Rome.
+  - **Solid Cartographic Hairlines & Antique On-Water Typography (`src/engine/ancientMap.ts`, `src/interact.css`)**:
+    - Eliminated all dashed borders (`dashArray: '6, 6'` and `dashArray: '3, 5'`): rendered all boundaries as solid, elegant hairlines (`weight: 1.6`, `dashArray: undefined`, soft watercolor `fillOpacity: 0.14`, elevating to `0.26` on hover).
+    - Rendered classical on-water typographic annotations into `waterPane`: `THE GREAT SEA · MEDITERRANEAN SEA · YAM GADOL`, `THE RED SEA · YAM SUPH`, `GULF OF SUEZ`, `GULF OF AQABA`, `DEAD SEA · THE SALT SEA`, `SEA OF GALILEE · CHINNERETH`, `PERSIAN GULF · LOWER SEA`, and `BLACK SEA`.
+  - **Regression Coverage (`tests/map.spec.ts`)**:
+    - Added automated Playwright regression test verifying non-dashed solid strokes on all kingdom boundaries and lake bodies, and visibility of on-water antique typography. All 10/10 tests PASS.
+
 ## [00.01.34] - 2026-10-17
 
 - Complete Biblical Character Mapping (41 Canonical Routes across Genesis to Revelation) & 8-Tier Managed Panes Architecture:
