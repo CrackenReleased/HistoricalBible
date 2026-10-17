@@ -195,14 +195,7 @@ test('ancientMapData has valid foreign keys, WGS84 coordinates, figure links, an
   }
 
   // Regression: Non-maritime route segments and empire boundaries must not cut across Sea of Galilee
-  const galileePoly = [
-    { lat: 32.905, lng: 35.568 }, { lat: 32.898, lng: 35.602 }, { lat: 32.885, lng: 35.632 },
-    { lat: 32.860, lng: 35.648 }, { lat: 32.825, lng: 35.645 }, { lat: 32.795, lng: 35.633 },
-    { lat: 32.765, lng: 35.610 }, { lat: 32.730, lng: 35.588 }, { lat: 32.708, lng: 35.575 },
-    { lat: 32.715, lng: 35.558 }, { lat: 32.735, lng: 35.542 }, { lat: 32.768, lng: 35.530 },
-    { lat: 32.805, lng: 35.524 }, { lat: 32.845, lng: 35.520 }, { lat: 32.870, lng: 35.532 },
-    { lat: 32.885, lng: 35.555 }, { lat: 32.905, lng: 35.568 }
-  ];
+  const galileePoly = WATER_FEATURES.seas[0].polygon;
 
   function ptInPoly(pt: { lat: number; lng: number }, poly: Array<{ lat: number; lng: number }>) {
     let inside = false;

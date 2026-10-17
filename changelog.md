@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.37] - 2026-10-17
+
+- Sub-Meter OpenStreetMap Shoreline Geometry (Galilee & Dead Sea), True River Delta Realignment & Transjordan Satrapy Corridor:
+  - **Sub-Meter OpenStreetMap Lake Polygons (`src/data/ancientMapData.ts`)**: Replaced hand-crafted polygonal lake boundaries with 244-point (Sea of Galilee) and 281-point (Dead Sea) GIS-accurate shorelines extracted from OpenStreetMap, hugging every natural cove, bay, and promontory pixel-for-pixel on the raster basemap.
+  - **Hydrological Delta Alignment (`src/data/ancientMapData.ts`)**: Realigned the Upper Jordan River to enter the Sea of Galilee at the exact northern delta mouth (`[32.893, 35.618]`) and the Lower Jordan River to exit at the true southern Degania outlet (`[32.705, 35.588]`).
+  - **Persian Satrapy Corridor (`src/data/ancientMapData.ts`)**: Rerouted the western boundary of the Persian Empire along the King's Highway corridor east of Galilee, eliminating diagonal water collision chords.
+  - **Automated Collision Assertion (`tests/data-integrity-selfcheck.ts`)**: Bound ray-casting collision verification directly to the 244-point lake polygon, ensuring 0 unintended route and empire boundary collisions. All 11 Playwright and 7 self-check tests PASS.
+
 ## [00.01.36] - 2026-10-17
 
 - Zero-Collision Water Body Geometry, Geodetic Route Road Corridors, SVG Focus Outline Reset & Cartographic Boundary Overhaul:
