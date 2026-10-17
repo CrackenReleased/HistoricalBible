@@ -3300,9 +3300,7 @@ footer {
 
 /* 5. Leaflet Custom Markers */
 .leaflet-gold-marker {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  position: relative;
   cursor: pointer;
 }
 
@@ -3333,6 +3331,10 @@ footer {
 }
 
 .gold-coin-label {
+  position: absolute;
+  left: 34px;
+  top: 50%;
+  transform: translateY(-50%);
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: 0.74rem;
   font-weight: 600;
@@ -3365,11 +3367,55 @@ footer {
   }
 }
 
+/* Capital Markers */
+.leaflet-capital-marker {
+  position: relative;
+  cursor: pointer;
+}
+
+.capital-marker-dot {
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+}
+
+.capital-marker-label {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 5px #000;
+  white-space: nowrap;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.capital-marker-label.label-west {
+  left: auto;
+  right: 14px;
+  text-align: right;
+}
+
+.capital-marker-label.label-south {
+  top: 12px;
+  left: 2px;
+  transform: none;
+}
+
+.capital-marker-label.label-north {
+  top: -16px;
+  left: 4px;
+  transform: none;
+}
+
 /* City Markers */
 .leaflet-city-marker {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  position: relative;
   cursor: pointer;
 }
 
@@ -3383,6 +3429,10 @@ footer {
 }
 
 .city-marker-label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   font-family: var(--font-serif, 'EB Garamond', serif);
   font-size: 0.76rem;
   color: #cbd5e1;
@@ -3394,6 +3444,13 @@ footer {
 /* Leaflet Tooltips & Popups Dark Scholarly Theme Override */
 .leaflet-tooltip,
 .leaflet-tooltip.map-leaflet-tooltip,
+.map-leaflet-tooltip,
+.map-leaflet-tooltip * {
+  pointer-events: none !important;
+}
+
+.leaflet-tooltip,
+.leaflet-tooltip.map-leaflet-tooltip,
 .leaflet-popup-content-wrapper {
   background: rgba(18, 20, 26, 0.96) !important;
   border: 1px solid rgba(212, 175, 55, 0.45) !important;
@@ -3403,6 +3460,7 @@ footer {
   padding: 8px 12px !important;
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.9) !important;
   backdrop-filter: blur(10px) !important;
+  max-width: 320px !important;
 }
 
 .leaflet-popup-content {

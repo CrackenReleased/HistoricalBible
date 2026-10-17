@@ -800,11 +800,11 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     id: 'israel_kingdom',
     name: 'Kingdom of Israel (Samaria)',
     color: '#22c55e',
-    fillColor: 'rgba(34, 197, 94, 0.20)',
+    fillColor: 'rgba(34, 197, 94, 0.22)',
     dateRange: 'c. 930 – 722 BC',
     capital: { name: 'Samaria', coords: { lat: 32.277, lng: 35.190 } },
     approximateBounds: [
-      { lat: 33.30, lng: 35.10 }, { lat: 33.30, lng: 35.85 }, { lat: 31.95, lng: 35.50 },
+      { lat: 33.30, lng: 35.10 }, { lat: 33.30, lng: 35.80 }, { lat: 31.95, lng: 35.55 },
       { lat: 31.95, lng: 34.85 }, { lat: 32.70, lng: 34.95 }, { lat: 33.30, lng: 35.10 }
     ],
     biblicalIntersection: 'The northern ten tribes established under Jeroboam; capital at Samaria until exile by Assyria in 722 BC.',
@@ -820,8 +820,8 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 1200 – 332 BC',
     capital: { name: 'Tyre & Sidon', coords: { lat: 33.270, lng: 35.196 } },
     approximateBounds: [
-      { lat: 34.60, lng: 35.80 }, { lat: 34.60, lng: 36.15 }, { lat: 33.10, lng: 35.35 },
-      { lat: 33.10, lng: 35.10 }, { lat: 34.60, lng: 35.80 }
+      { lat: 34.80, lng: 35.65 }, { lat: 34.80, lng: 36.00 }, { lat: 33.15, lng: 35.35 },
+      { lat: 33.15, lng: 35.05 }, { lat: 34.80, lng: 35.65 }
     ],
     biblicalIntersection: 'Maritime alliance with King David and Solomon; supplied cedar of Lebanon and master craftsmen for the Temple.',
     factionCategory: 'allied',
@@ -834,7 +834,7 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     color: '#ef4444',
     fillColor: 'rgba(239, 68, 68, 0.16)',
     dateRange: 'c. 1300 – 582 BC',
-    capital: { name: 'Dibon & Kir-Hareseth', coords: { lat: 31.50, lng: 35.77 } },
+    capital: { name: 'Kir-Hareseth (Kerak)', coords: { lat: 31.18, lng: 35.70 } },
     approximateBounds: [
       { lat: 31.85, lng: 35.65 }, { lat: 31.85, lng: 36.15 }, { lat: 31.05, lng: 36.00 },
       { lat: 31.05, lng: 35.45 }, { lat: 31.85, lng: 35.65 }
@@ -901,8 +901,8 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     capital: { name: 'Nineveh', coords: { lat: 36.360, lng: 43.150 } },
     approximateBounds: [
       { lat: 38.5, lng: 40.0 }, { lat: 38.0, lng: 45.0 }, { lat: 35.0, lng: 46.0 },
-      { lat: 32.5, lng: 44.5 }, { lat: 31.5, lng: 35.0 }, { lat: 35.0, lng: 35.5 },
-      { lat: 37.5, lng: 37.5 }, { lat: 38.5, lng: 40.0 }
+      { lat: 33.2, lng: 44.5 }, { lat: 34.0, lng: 41.5 }, { lat: 35.2, lng: 38.2 },
+      { lat: 36.8, lng: 37.5 }, { lat: 37.8, lng: 37.5 }, { lat: 38.5, lng: 40.0 }
     ],
     biblicalIntersection: 'Exiled the Northern Kingdom (722 BC); invaded Judah and besieged Hezekiah in Jerusalem (701 BC; Taylor Prism).',
     factionCategory: 'hostile',
@@ -918,8 +918,8 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     capital: { name: 'Babylon', coords: { lat: 32.542, lng: 44.421 } },
     approximateBounds: [
       { lat: 36.0, lng: 38.0 }, { lat: 36.5, lng: 44.0 }, { lat: 33.0, lng: 47.0 },
-      { lat: 30.0, lng: 48.0 }, { lat: 30.5, lng: 45.0 }, { lat: 31.5, lng: 35.0 },
-      { lat: 34.5, lng: 36.0 }, { lat: 36.0, lng: 38.0 }
+      { lat: 30.0, lng: 48.0 }, { lat: 30.5, lng: 45.0 }, { lat: 31.5, lng: 37.5 },
+      { lat: 34.5, lng: 37.5 }, { lat: 36.0, lng: 38.0 }
     ],
     biblicalIntersection: 'Destroyed Solomon\'s Temple in 586 BC; 70-year captivity in Babylon; vindication of Daniel (Nabonidus Cylinder).',
     factionCategory: 'hostile',
@@ -1176,7 +1176,7 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     capital: { name: 'Antioch & Seleucia', coords: { lat: 36.202, lng: 36.160 } },
     approximateBounds: [
       { lat: 39.5, lng: 26.5 }, { lat: 40.0, lng: 48.0 }, { lat: 32.0, lng: 48.0 },
-      { lat: 31.0, lng: 35.0 }, { lat: 35.0, lng: 35.5 }, { lat: 38.0, lng: 27.0 },
+      { lat: 33.2, lng: 36.8 }, { lat: 35.0, lng: 36.0 }, { lat: 38.0, lng: 27.0 },
       { lat: 39.5, lng: 26.5 }
     ],
     biblicalIntersection: 'Daniel 8 & 11 ("King of the North"); Antiochus IV Epiphanes profaned the Temple with the abomination of desolation (167 BC).',

@@ -203,4 +203,29 @@ test.describe('Bible Side-by-Side Companion Map Tab', () => {
     await page.waitForTimeout(500);
     await page.screenshot({ path: 'test-results/global-macro-cartography-proof.png' });
   });
+
+  test('Zero-Collision Tooltips & Kingdom of Israel Drawer in Bible Companion Map: Hovering and clicking Samaria renders dossier without multiple popups', async ({ page }) => {
+    await page.goto('/bible?book=2Kings&chapter=1&tab=map', { waitUntil: 'networkidle' });
+
+    // Assert Samaria capital marker is visible
+    const samariaMarker = page.locator('.capital-marker-label', { hasText: 'Samaria' });
+    await expect(samariaMarker).toBeVisible({ timeout: 5000 });
+
+    // Hover over Samaria to open tooltip
+    await samariaMarker.hover();
+    await page.waitForTimeout(300);
+    const tooltip = page.locator('.leaflet-tooltip');
+    await expect(tooltip).toBeVisible();
+
+    // Click Samaria to open companion artifact drawer
+    await samariaMarker.click();
+    const drawer = page.locator('#bible-companion-artifact-drawer');
+    await expect(drawer).toBeVisible();
+    await expect(drawer).toContainText('Kingdom of Israel (Samaria)');
+    await expect(drawer).toContainText('Capital: Samaria');
+
+    // Verify no stuck multiple tooltips (strictly <= 1 in DOM)
+    const tooltips = page.locator('.leaflet-tooltip');
+    expect(await tooltips.count()).toBeLessThanOrEqual(1);
+  });
 });

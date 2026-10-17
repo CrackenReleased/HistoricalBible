@@ -13,6 +13,7 @@ import {
   CHRONOLOGICAL_ERAS,
   type ArchaeologicalSite,
   type BiblicalCity,
+  type WorldEmpireRegion,
   type ChronologicalEra
 } from './data/ancientMapData';
 
@@ -30,6 +31,7 @@ class HistoricalAtlasApp {
       initialEraId: 'all',
       onSelectSite: (site) => this.showSiteDetail(site),
       onSelectCity: (city) => this.showCityDetail(city),
+      onSelectEmpire: (empire) => this.showEmpireDetail(empire),
       onEraChange: (era) => this.syncEraUI(era)
     });
 
@@ -221,6 +223,39 @@ class HistoricalAtlasApp {
       } else {
         studyDeskLink.hidden = true;
       }
+    }
+
+    if (museumLink) {
+      museumLink.hidden = true;
+    }
+
+    drawer.hidden = false;
+  }
+
+  private showEmpireDetail(empire: WorldEmpireRegion): void {
+    const drawer = document.getElementById('atlas-detail-drawer');
+    if (!drawer) return;
+
+    const titleEl = document.getElementById('drawer-title');
+    const metaEl = document.getElementById('drawer-meta');
+    const descEl = document.getElementById('drawer-desc');
+    const sigEl = document.getElementById('drawer-significance');
+    const scriptureLink = document.getElementById('drawer-scripture-link') as HTMLAnchorElement | null;
+    const studyDeskLink = document.getElementById('drawer-desk-link') as HTMLAnchorElement | null;
+    const museumLink = document.getElementById('drawer-museum-link') as HTMLAnchorElement | null;
+
+    if (titleEl) titleEl.textContent = empire.name;
+    if (metaEl) metaEl.textContent = `Capital: ${empire.capital.name} · Estimated Population: ${empire.populationEstimate} · Extent: ${empire.approximateArea} · ${empire.dateRange}`;
+    if (descEl) descEl.textContent = empire.biblicalIntersection || 'Major world civilization contemporary with biblical history.';
+    if (sigEl) sigEl.textContent = `Faction: ${empire.factionCategory ? empire.factionCategory.toUpperCase() : 'REGIONAL POWER'} · Direct synchrony with Scripture and ancient near eastern annals.`;
+
+    if (scriptureLink) {
+      scriptureLink.textContent = `Open in Bible Reader →`;
+      scriptureLink.href = `/bible`;
+    }
+
+    if (studyDeskLink) {
+      studyDeskLink.hidden = true;
     }
 
     if (museumLink) {

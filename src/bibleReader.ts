@@ -20,7 +20,8 @@ import {
   ARCHAEOLOGICAL_SITES,
   BIBLICAL_GEOGRAPHIC_ENTITIES,
   type ArchaeologicalSite,
-  type BiblicalGeographicEntity
+  type BiblicalGeographicEntity,
+  type WorldEmpireRegion
 } from './data/ancientMapData';
 import { lookupScriptureLexicon } from './data/scriptureLexicon';
 
@@ -541,11 +542,11 @@ class BibleReader {
     this.switchTab('word');
   }
 
-  public renderArtifactDrawer(site: ArchaeologicalSite | null, geoEntity?: BiblicalGeographicEntity): void {
+  public renderArtifactDrawer(site: ArchaeologicalSite | null, geoEntity?: BiblicalGeographicEntity, empire?: WorldEmpireRegion): void {
     const drawerEl = document.getElementById('bible-companion-artifact-drawer');
     if (!drawerEl) return;
 
-    if (!site && !geoEntity) {
+    if (!site && !geoEntity && !empire) {
       drawerEl.hidden = true;
       drawerEl.innerHTML = '';
       return;
@@ -592,6 +593,29 @@ class BibleReader {
           ${geoEntity.note}
         </div>
         ${geoEntity.scriptureRef ? `<div class="artifact-drawer-meta" style="color: #38bdf8;"><strong>Passage Anchor:</strong> ${geoEntity.scriptureRef}</div>` : ''}
+      `;
+    } else if (empire) {
+      drawerEl.hidden = false;
+      drawerEl.innerHTML = `
+        <div class="artifact-drawer-header">
+          <div>
+            <span class="eyebrow" style="font-size: 0.68rem; color: #ffd700;">HISTORICAL KINGDOM · ${empire.factionCategory ? empire.factionCategory.toUpperCase() : 'WORLD REALM'}</span>
+            <h4 class="artifact-drawer-title">${empire.name}</h4>
+          </div>
+          <button type="button" class="artifact-drawer-close" aria-label="Dismiss kingdom card">&times;</button>
+        </div>
+        <div class="artifact-drawer-meta">
+          <span><strong>Capital:</strong> ${empire.capital.name}</span>
+          <span><strong>Est. Population:</strong> ${empire.populationEstimate}</span>
+          <span><strong>Kingdom Extent:</strong> ${empire.approximateArea}</span>
+        </div>
+        <div class="artifact-drawer-connection">
+          <strong>✦ Scripture Synchrony:</strong><br/>
+          ${empire.biblicalIntersection || 'Contemporary ancient world power.'}
+        </div>
+        <div class="artifact-drawer-desc">
+          <strong>Historical Setting (${empire.dateRange}):</strong> Imperial seat at ${empire.capital.name} throughout the biblical epoch.
+        </div>
       `;
     }
 
@@ -944,7 +968,8 @@ class BibleReader {
         container,
         compact: true,
         initialEraId: targetEraId,
-        onSelectSite: (site) => this.renderArtifactDrawer(site)
+        onSelectSite: (site) => this.renderArtifactDrawer(site),
+        onSelectEmpire: (empire) => this.renderArtifactDrawer(null, undefined, empire)
       });
     } else {
       this.companionMapCanvas.setEra(targetEraId);

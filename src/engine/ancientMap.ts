@@ -27,7 +27,6 @@ import {
   type BiblicalRoute,
   type WorldEmpireRegion,
   type ChronologicalEra,
-  type ChronologicalEra,
   type BiblicalGeographicEntity,
   type FactionType
 } from '../data/ancientMapData';
@@ -38,6 +37,7 @@ export interface AncientMapOptions {
   initialEraId?: string;
   onSelectSite?: (site: ArchaeologicalSite) => void;
   onSelectCity?: (city: BiblicalCity) => void;
+  onSelectEmpire?: (empire: WorldEmpireRegion) => void;
   onEraChange?: (era: ChronologicalEra) => void;
 }
 
@@ -257,13 +257,73 @@ export class AncientMapCanvas {
     this.buildControls();
     this.buildYearHud();
 
-    // 5. Initial Render
+    // 5. Zero-Collision Event Handlers
+    this.map.on('movestart', () => this.closeActiveTooltip());
+    this.map.on('zoomstart', () => this.closeActiveTooltip());
+    this.map.on('click', () => this.closeActiveTooltip());
+    this.container.addEventListener('mouseleave', () => this.closeActiveTooltip());
+
+    // 6. Initial Render
     this.renderActiveEra();
 
     // Handle container resize
     setTimeout(() => {
       this.map.invalidateSize();
     }, 200);
+  }
+
+  // Singleton Active Tooltip Tracking across all layers
+  private activeTooltipLayer: L.Layer | null = null;
+
+  public closeActiveTooltip(): void {
+    if (this.activeTooltipLayer) {
+      try {
+        this.activeTooltipLayer.closeTooltip();
+      } catch {
+        // Safe fallback
+      }
+      this.activeTooltipLayer = null;
+    }
+    // Also remove any rogue unclosed tooltips in the Leaflet tooltip pane
+    try {
+      const tooltipPane = this.map.getPane('tooltipPane');
+      if (tooltipPane) {
+        const rogueTooltips = tooltipPane.querySelectorAll('.leaflet-tooltip');
+        rogueTooltips.forEach(t => t.remove());
+      }
+    } catch {
+      // Safe fallback
+    }
+  }
+
+  public bindManagedTooltip(layer: L.Layer, content: string, options?: L.TooltipOptions): void {
+    const defaultOptions: L.TooltipOptions = {
+      className: 'map-leaflet-tooltip',
+      opacity: 0.98,
+      direction: 'top',
+      offset: [0, -8],
+      sticky: false,
+      ...options
+    };
+
+    layer.bindTooltip(content, defaultOptions);
+
+    layer.on('mouseover', () => {
+      if (this.activeTooltipLayer && this.activeTooltipLayer !== layer) {
+        try {
+          this.activeTooltipLayer.closeTooltip();
+        } catch {
+          // ignore
+        }
+      }
+      this.activeTooltipLayer = layer;
+    });
+
+    layer.on('mouseout', () => {
+      if (this.activeTooltipLayer === layer) {
+        this.activeTooltipLayer = null;
+      }
+    });
   }
 
   private yearHudEl: HTMLElement | null = null;
@@ -458,22 +518,38 @@ export class AncientMapCanvas {
    * Main render method filtering by the active chronological era
    */
   public renderActiveEra(): void {
+    this.closeActiveTooltip();
     this.empireLayerGroup.clearLayers();
     this.routeLayerGroup.clearLayers();
     this.cityLayerGroup.clearLayers();
     this.siteLayerGroup.clearLayers();
 
     const isAll = this.activeEra.id === 'all';
+    const targetEmpires = isAll
+      ? WORLD_EMPIRES_GEO
+      : WORLD_EMPIRES_GEO.filter(emp =>
+          emp.id === this.activeEra.rulingEmpireId ||
+          (this.activeEra.additionalRegionIds && this.activeEra.additionalRegionIds.includes(emp.id)) ||
+          (emp.eraIds && emp.eraIds.includes(this.activeEra.id))
+        );
+    const activeCapitalNames = new Set(targetEmpires.map(emp => emp.capital?.name.toLowerCase()).filter(Boolean));
 
     // 1. World Empires & Global Civilizations (Filtered strictly by era so empires never clash!)
     if (this.layers.empires) {
-      const targetEmpires = isAll
-        ? WORLD_EMPIRES_GEO
-        : WORLD_EMPIRES_GEO.filter(emp =>
-            emp.id === this.activeEra.rulingEmpireId ||
-            (this.activeEra.additionalRegionIds && this.activeEra.additionalRegionIds.includes(emp.id)) ||
-            (emp.eraIds && emp.eraIds.includes(this.activeEra.id))
-          );
+      // Z-Index ordering by area descending:
+      // Macro empires (millions of km²) render FIRST (in background).
+      // Smaller focal kingdoms (Judah, Israel, Phoenicia, Moab, etc.) render LAST (in foreground on top).
+      const parseArea = (areaStr?: string): number => {
+        if (!areaStr) return 0;
+        const num = parseFloat(areaStr.replace(/[^0-9.]/g, ''));
+        if (areaStr.includes('M') || areaStr.includes('million')) return num * 1_000_000;
+        if (areaStr.includes('k')) return num * 1_000;
+        return num || 0;
+      };
+
+      const sortedEmpires = [...targetEmpires].sort((a, b) => {
+        return parseArea(b.approximateArea) - parseArea(a.approximateArea);
+      });
 
       const badgeMap: Record<FactionType, { text: string; bg: string; color: string; border: string }> = {
         covenant: { text: 'COVENANT NATION · ROYAL DAVIDIC LINE', bg: 'rgba(234, 179, 8, 0.2)', color: '#fde047', border: 'rgba(234, 179, 8, 0.5)' },
@@ -483,67 +559,109 @@ export class AncientMapCanvas {
         global_power: { text: 'CONTEMPORARY WORLD CIVILIZATION', bg: 'rgba(192, 132, 252, 0.2)', color: '#e9d5ff', border: 'rgba(192, 132, 252, 0.5)' }
       };
 
-      for (const empire of targetEmpires) {
+      for (const empire of sortedEmpires) {
         const latLngs = empire.approximateBounds.map(b => [b.lat, b.lng] as L.LatLngTuple);
-        const polygon = L.polygon(latLngs, {
+        const defaultStyle: L.PathOptions = {
           color: empire.color,
           fillColor: empire.fillColor || empire.color,
           fillOpacity: 0.16,
           weight: 1.8,
           dashArray: '6, 6'
+        };
+        const hoverStyle: L.PathOptions = {
+          color: '#ffd700',
+          fillColor: empire.fillColor || empire.color,
+          fillOpacity: 0.32,
+          weight: 2.8,
+          dashArray: undefined
+        };
+
+        const polygon = L.polygon(latLngs, defaultStyle);
+
+        polygon.on('mouseover', () => {
+          polygon.setStyle(hoverStyle);
+          polygon.bringToFront();
+        });
+        polygon.on('mouseout', () => {
+          polygon.setStyle(defaultStyle);
+        });
+        polygon.on('click', () => {
+          if (this.options.onSelectEmpire) {
+            this.options.onSelectEmpire(empire);
+          }
         });
 
         const relevance = getEmpireRelevanceNote(empire.id, this.activeEra.id, empire);
         const faction = empire.factionCategory || 'global_power';
         const badge = badgeMap[faction] || badgeMap.global_power;
 
-        polygon.bindTooltip(`
-          <div class="map-leaflet-tooltip empire-tooltip" style="min-width: 240px; max-width: 340px;">
+        const tooltipHtml = `
+          <div class="map-leaflet-tooltip empire-tooltip" style="min-width: 220px; max-width: 310px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; gap: 8px;">
               <span class="tooltip-badge" style="background: ${badge.bg}; color: ${badge.color}; border: 1px solid ${badge.border}; font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">${badge.text}</span>
               <span style="font-size: 0.72rem; color: #94a3b8; font-family: var(--font-mono, monospace);">${empire.dateRange}</span>
             </div>
             <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin-bottom: 4px;">${empire.name}</div>
             
-            <div style="font-size: 0.78rem; color: #cbd5e1; margin-bottom: 5px; display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; line-height: 1.35;">
+            <div style="font-size: 0.78rem; color: #cbd5e1; margin-bottom: 5px; display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; line-height: 1.35;">
               <span style="color: #94a3b8;">👑 Capital:</span><strong style="color: #f1f5f9;">${empire.capital.name}</strong>
               <span style="color: #94a3b8;">👥 Est. Pop:</span><span style="color: #f1f5f9;">${empire.populationEstimate}</span>
               <span style="color: #94a3b8;">📐 Extent:</span><span style="color: #f1f5f9;">${empire.approximateArea}</span>
             </div>
 
-            <div class="tooltip-relevance" style="color: #e2e8f0; font-size: 0.75rem; line-height: 1.45; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 5px; margin-top: 4px;">
+            <div class="tooltip-relevance" style="color: #e2e8f0; font-size: 0.75rem; line-height: 1.4; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px; margin-top: 4px;">
               <strong style="color: #ffd700;">Chapter Relevance:</strong> ${relevance}
             </div>
             ${empire.biblicalIntersection && empire.biblicalIntersection !== relevance ? `
-              <div style="margin-top: 4px; padding-top: 4px; border-top: 1px dashed rgba(255, 255, 255, 0.1); font-size: 0.73rem; color: #93c5fd; line-height: 1.35;">
+              <div style="margin-top: 4px; padding-top: 4px; border-top: 1px dashed rgba(255, 255, 255, 0.1); font-size: 0.72rem; color: #93c5fd; line-height: 1.3;">
                 <strong>✦ Scripture Connection:</strong> ${empire.biblicalIntersection}
               </div>
             ` : ''}
+            <div class="tooltip-cta" style="margin-top: 5px; color: #38bdf8; font-size: 0.72rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 4px;">
+              Click kingdom to view historical dossier in drawer &rarr;
+            </div>
           </div>
-        `, {
-          className: 'map-leaflet-tooltip',
-          sticky: true,
-          opacity: 0.98
-        });
+        `;
 
+        this.bindManagedTooltip(polygon, tooltipHtml, { direction: 'top', offset: [0, -10] });
         this.empireLayerGroup.addLayer(polygon);
 
         // Prominent Imperial Capital Pin / Label
         if (empire.capital && empire.capital.coords) {
+          let dirClass = '';
+          if (empire.id === 'philistia' || empire.id === 'phoenicia' || (empire.capital.coords.lng < 35.1 && empire.capital.coords.lat < 32.0)) {
+            dirClass = 'label-west';
+          } else if (empire.id === 'judah' || empire.id === 'edom_kingdom') {
+            dirClass = 'label-south';
+          } else if (empire.id === 'israel_kingdom') {
+            dirClass = 'label-north';
+          }
+
+          const labelClass = `capital-marker-label ${dirClass}`.trim();
+          const isFocalRealm = empire.factionCategory === 'covenant' || empire.factionCategory === 'israel';
+          const capZIndex = isFocalRealm ? 1500 : 1200;
+
           const capIcon = L.divIcon({
             className: 'leaflet-capital-marker',
             html: `
               <div class="capital-marker-dot" style="background: ${empire.color}; border: 1.5px solid #ffffff; box-shadow: 0 0 8px ${empire.color}; width: 8px; height: 8px; border-radius: 50%;"></div>
-              <div class="capital-marker-label" style="font-size: 0.72rem; font-weight: 700; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 5px #000; white-space: nowrap; margin-left: 10px; margin-top: -6px;">${empire.capital.name}</div>
+              <div class="${labelClass}">${empire.capital.name}</div>
             `,
-            iconSize: [140, 18],
-            iconAnchor: [4, 4]
+            iconSize: [12, 12],
+            iconAnchor: [6, 6]
           });
           const capMarker = L.marker([empire.capital.coords.lat, empire.capital.coords.lng], {
             icon: capIcon,
-            zIndexOffset: 600
+            zIndexOffset: capZIndex
           });
-          capMarker.bindTooltip(`
+
+          capMarker.on('click', () => {
+            if (this.options.onSelectEmpire) {
+              this.options.onSelectEmpire(empire);
+            }
+          });
+
+          const capitalTooltipHtml = `
             <div class="map-leaflet-tooltip capital-tooltip" style="min-width: 220px; max-width: 300px;">
               <span class="tooltip-badge" style="background: ${badge.bg}; color: ${badge.color}; border: 1px solid ${badge.border}; font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">CAPITAL · ${badge.text}</span>
               <div style="color: #ffd700; font-weight: 700; font-size: 1.05rem; margin: 3px 0 2px;">${empire.capital.name}</div>
@@ -552,7 +670,9 @@ export class AncientMapCanvas {
               <div style="font-size: 0.75rem; color: #94a3b8;">📐 Kingdom Extent: ${empire.approximateArea}</div>
               <div style="font-size: 0.73rem; color: #38bdf8; margin-top: 4px; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px;"><strong>✦ Biblical Connection:</strong> ${empire.biblicalIntersection}</div>
             </div>
-          `, { className: 'map-leaflet-tooltip', opacity: 0.98 });
+          `;
+
+          this.bindManagedTooltip(capMarker, capitalTooltipHtml, { direction: 'top', offset: [0, -12] });
           this.empireLayerGroup.addLayer(capMarker);
         }
       }
@@ -574,12 +694,13 @@ export class AncientMapCanvas {
           dashArray: '5, 8'
         });
 
-        polyline.bindTooltip(`
+        const routeTooltipHtml = `
           <div class="map-leaflet-tooltip">
             <strong>${route.name}</strong><br/>
             <span>${route.scriptureRef}</span>
           </div>
-        `, { className: 'map-leaflet-tooltip', sticky: true, opacity: 0.98 });
+        `;
+        this.bindManagedTooltip(polyline, routeTooltipHtml, { direction: 'top' });
 
         this.routeLayerGroup.addLayer(polyline);
 
@@ -592,7 +713,8 @@ export class AncientMapCanvas {
             weight: 1.5,
             fillOpacity: 1
           });
-          dot.bindTooltip(`<strong>${stop.name}</strong>${stop.note ? `<br/><em>${stop.note}</em>` : ''}`, { className: 'map-leaflet-tooltip' });
+          const stopTooltipHtml = `<strong>${stop.name}</strong>${stop.note ? `<br/><em>${stop.note}</em>` : ''}`;
+          this.bindManagedTooltip(dot, stopTooltipHtml, { direction: 'top', offset: [0, -6] });
           this.routeLayerGroup.addLayer(dot);
         }
       }
@@ -601,23 +723,32 @@ export class AncientMapCanvas {
     // 3. Biblical Cities
     if (this.layers.cities) {
       for (const city of BIBLICAL_CITIES) {
+        // Skip if this city is already prominently rendered as an active imperial capital
+        if (activeCapitalNames.has(city.name.toLowerCase())) {
+          continue;
+        }
+
         const cityIcon = L.divIcon({
           className: 'leaflet-city-marker',
           html: `<div class="city-marker-dot"></div><div class="city-marker-label">${city.name}</div>`,
-          iconSize: [80, 20],
-          iconAnchor: [4, 5]
+          iconSize: [10, 10],
+          iconAnchor: [5, 5]
         });
 
-        const marker = L.marker([city.coords.lat, city.coords.lng], { icon: cityIcon });
+        const marker = L.marker([city.coords.lat, city.coords.lng], {
+          icon: cityIcon,
+          zIndexOffset: 500
+        });
 
-        marker.bindTooltip(`
+        const cityTooltipHtml = `
           <div class="map-leaflet-tooltip">
             <span class="tooltip-badge">BIBLICAL CITY</span>
             <strong>${city.name}</strong><br/>
             <em>&ldquo;${city.hitchcockMeaning}&rdquo;</em><br/>
             <small>${city.scriptureAnchor}</small>
           </div>
-        `, { className: 'map-leaflet-tooltip' });
+        `;
+        this.bindManagedTooltip(marker, cityTooltipHtml, { direction: 'top', offset: [0, -8] });
 
         marker.on('click', () => {
           if (this.options.onSelectCity) {
@@ -685,16 +816,16 @@ export class AncientMapCanvas {
             ${isEraHighlight ? '<div class="gold-coin-halo"></div>' : ''}
             <div class="gold-coin-label">${site.artifactName}</div>
           `,
-          iconSize: [120, 36],
-          iconAnchor: [16, 16]
+          iconSize: [28, 28],
+          iconAnchor: [14, 14]
         });
 
         const marker = L.marker([item.displayCoords.lat, item.displayCoords.lng], {
           icon: goldIcon,
-          zIndexOffset: 1000
+          zIndexOffset: 1600
         });
 
-        marker.bindTooltip(`
+        const siteTooltipHtml = `
           <div class="map-leaflet-tooltip gold-tooltip" style="min-width: 220px; max-width: 320px;">
             <span class="tooltip-badge">SURVIVING ARTIFACT · ${site.ancientRegion.toUpperCase()}</span>
             <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.05rem; margin-bottom: 2px;">${site.artifactName}</div>
@@ -705,10 +836,8 @@ export class AncientMapCanvas {
             </div>
             <span class="tooltip-cta" style="margin-top: 6px; display: block; color: #38bdf8; font-size: 0.74rem;">Click to view discovery card in companion panel &rarr;</span>
           </div>
-        `, {
-          className: 'map-leaflet-tooltip',
-          opacity: 0.98
-        });
+        `;
+        this.bindManagedTooltip(marker, siteTooltipHtml, { direction: 'top', offset: [0, -14] });
 
         marker.on('click', () => {
           if (this.options.onSelectSite) {

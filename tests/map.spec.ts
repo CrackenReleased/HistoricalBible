@@ -134,6 +134,44 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
     await expect(page.locator('#ancient-map-container')).toBeVisible();
   });
 
+  test('Zero-Collision & Northern Kingdom of Israel hover accessibility: Only 1 tooltip visible at any time, Northern Kingdom inspectable without overlap', async ({ page }) => {
+    await page.goto('/map?era=divided_monarchy_prophets', { waitUntil: 'networkidle' });
+
+    // Ensure Leaflet map canvas is initialized
+    const mapContainer = page.locator('#atlas-canvas-container');
+    await expect(mapContainer).toBeVisible();
+
+    // Hover over Samaria capital marker (Northern Kingdom of Israel)
+    const samariaMarker = page.locator('.capital-marker-label', { hasText: 'Samaria' });
+    await expect(samariaMarker).toBeVisible({ timeout: 5000 });
+    await samariaMarker.hover();
+    await page.waitForTimeout(300);
+
+    // Verify Samaria/Israel tooltip is visible with Northern Kingdom badge
+    const activeTooltip = page.locator('.leaflet-tooltip');
+    await expect(activeTooltip).toBeVisible();
+    await expect(activeTooltip).toContainText('Samaria');
+    await expect(activeTooltip).toContainText('NORTHERN KINGDOM');
+
+    // Hover over Jerusalem (Kingdom of Judah)
+    const jerusalemMarker = page.locator('.capital-marker-label', { hasText: 'Jerusalem' });
+    await expect(jerusalemMarker).toBeVisible();
+    await jerusalemMarker.hover();
+    await page.waitForTimeout(300);
+
+    // Verify Jerusalem tooltip opened AND Samaria tooltip closed (strictly <= 1 tooltip exists in DOM)
+    const tooltipsAfterJerusalem = page.locator('.leaflet-tooltip');
+    expect(await tooltipsAfterJerusalem.count()).toBeLessThanOrEqual(1);
+    await expect(tooltipsAfterJerusalem).toContainText('Jerusalem');
+
+    // Click Samaria capital pin: Detail drawer opens with full historical dossier
+    await samariaMarker.click();
+    const drawer = page.locator('#atlas-detail-drawer');
+    await expect(drawer).toBeVisible();
+    await expect(page.locator('#drawer-title')).toContainText('Kingdom of Israel (Samaria)');
+    await expect(page.locator('#drawer-meta')).toContainText('Capital: Samaria');
+  });
+
   test('Visual proof: captures high-resolution screenshots of map experiences', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
 

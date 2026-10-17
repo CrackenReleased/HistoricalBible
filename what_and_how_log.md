@@ -1,3 +1,39 @@
+## 2026-10-16 22:15:00 — Map Interaction Hardening, Zero-Collision Exclusivity & Northern Kingdom Inspection (v00.01.29)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested: *"There are too many popups and the colissions do not make sense. I am not really ever able to hover over and get the northern kingdoms of israel informations, please check all maps for these issues."*
+  - Diagnosis: Multiple compounding root causes across geometry, DOM z-index, event exclusivity, and Leaflet DivIcon sizing:
+    1. Geodetic Boundary Overlap: The `assyria` polygon had coordinates reaching down to `lat: 31.5, lng: 35.0`, physically blanketing Northern Israel (Samaria), Phoenicia, and upper Judah.
+    2. SVG Stacking Order: In SVG, later elements render on top. Because `assyria` was processed after `israel_kingdom`, its SVG `<path>` intercepted all pointer events over Samaria.
+    3. Multiple / Stuck Tooltip Popups: Leaflet's `bindTooltip` lacked centralized exclusivity. `sticky: true` on wide cards meant mouseout events dropped when cursor entered the card, leaving 3 tooltips stuck on screen simultaneously.
+    4. DivIcon Interactive Hitbox Inflation: DivIcons (`goldIcon: [120, 36]`, `capIcon: [140, 18]`, `cityIcon: [80, 20]`) created massive interactive bounding boxes. At zoom level 4 (where 1 degree ≈ 12px), an 80px–140px box spanned 7–12 degrees of longitude (~800–1400 km), occluding neighboring cities and capitals.
+    5. Horizontal Label Traffic Jam in the Levant: Long labels placed at `left: 14px` stretched across adjacent cities (e.g. Philistia's "Gath & Ashdod" and Jerusalem overlapping Samaria).
+    6. Capital vs. Artifact Stacking: Moab's capital at Dibon sat on the exact same coordinate (`lat: 31.50, lng: 35.77`) as the Mesha Stele discovery site.
+- Decision Point & Implementation:
+  - Single Tooltip Exclusivity:
+    - Added `bindManagedTooltip(layer, content, options)` in `src/engine/ancientMap.ts` to manage a single `activeTooltipLayer`. Opening any tooltip closes the previous one.
+    - Bound `movestart`, `zoomstart`, `click`, and `container.mouseleave` to close active tooltips and prune orphaned DOM nodes from `tooltipPane`.
+    - Applied `pointer-events: none !important;` in `src/interact.css` on `.leaflet-tooltip` and `.map-leaflet-tooltip` so tooltips never intercept mouse events.
+  - Northern Kingdom of Israel (`israel_kingdom`) Accessibility:
+    - Refined bounds in `src/data/ancientMapData.ts`: `assyria` and `babylon` western borders now terminate at `lng: 37.5` in upper Mesopotamia / Syrian desert, leaving Israel, Phoenicia, and Judah completely unblocked.
+    - Sized and enriched `israel_kingdom` bounds (`lat: 31.95–33.30, lng: 34.85–35.80`) covering Samaria, Megiddo, Jezreel, Shechem, and Gilead.
+    - Sorted SVG rendering by area descending (`parseArea(b.approximateArea) - parseArea(a.approximateArea)`), guaranteeing macro empires render in the background and focal kingdoms render last on top.
+    - Added interactive polygon styling on hover (`#ffd700` gold border, fill opacity 0.32, `polygon.bringToFront()`) and click listeners to open the historical dossier drawer.
+  - DivIcon Hitbox Shrinkage & Directional Quadrant Layout:
+    - Shrunk DivIcons to their exact visual dimensions: `capIcon: [12, 12]`, `goldIcon: [28, 28]`, `cityIcon: [10, 10]`.
+    - Implemented directional quadrant classes:
+      - Coastal / western capitals (`philistia`, `phoenicia`): `.label-west` (`right: 14px; left: auto; text-align: right;`) pointing into the Mediterranean Sea.
+      - Southern capitals (`judah`, `edom_kingdom`): `.label-south` (`top: 12px; left: 2px;`) pointing southward.
+      - Northern capitals (`israel_kingdom`): `.label-north` (`top: -16px; left: 4px;`) pointing northward.
+    - Established faction-aware Z-index priority: Covenant & Israel capitals (`zIndexOffset: 1500`), secondary empire capitals (`zIndexOffset: 1200`), discovery artifacts (`zIndexOffset: 1600`), general cities (`zIndexOffset: 500`).
+    - Deduplicated imperial seats in `BIBLICAL_CITIES` to prevent duplicate gray city dots from overlapping prominent royal capitals.
+    - Updated `moab_kingdom` capital coordinates to `Kir-Hareseth (Kerak)` (`lat: 31.18, lng: 35.70`), the southern fortress of King Mesha, completely eliminating overlap with the northern `Mesha Stele` discovery site at Dibon.
+  - Sibling Scan:
+    - Checked all 3 maps: `/map` (Full-Screen Atlas), `/bible` (Companion Map), and `/interact` (Study Desk Map modal). All share `AncientMapCanvas` and benefit identically.
+  - Automated Verification:
+    - Added regression tests in `tests/bible-side-by-side-map.spec.ts` and `tests/map.spec.ts` asserting single-tooltip exclusivity, Northern Kingdom hover accessibility, and drawer population.
+    - All 54 Playwright tests pass (54/54); collection tests pass (4/4); 100% canonical KJV 31,102 verses verified; Vite build clean.
+
 ## 2026-10-16 21:32:00 — Global Ancient Macro-Cartography & Contemporary Civilizations (v00.01.28)
 
 - User Request & Direct Root-Cause Diagnosis:
