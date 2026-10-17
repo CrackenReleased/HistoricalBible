@@ -15,29 +15,59 @@ let strongsReverseCache: Record<string, {
   kjvDef: string;
 }> | null = null;
 
-let isFetchingStrongs = false;
+let strongsFetchPromise: Promise<void> | null = null;
+const STRONGS_CACHE_NAME = 'historical-bible-cache-v00.01.18-names';
+const STRONGS_URL = '/data/strongs_reverse.json';
+
+export function isStrongsReverseReady(): boolean {
+  return strongsReverseCache !== null;
+}
 
 export async function prefetchStrongsReverse(): Promise<void> {
-  if (strongsReverseCache || isFetchingStrongs) return;
-  isFetchingStrongs = true;
-  try {
-    const res = await fetch('/data/strongs_reverse.json');
-    if (res.ok) {
+  if (strongsReverseCache) return;
+  if (strongsFetchPromise) return strongsFetchPromise;
+
+  strongsFetchPromise = (async () => {
+    try {
+      const cache =
+        typeof window !== 'undefined' && 'caches' in window
+          ? await window.caches.open(STRONGS_CACHE_NAME)
+          : null;
+      if (cache) {
+        const cached = await cache.match(STRONGS_URL);
+        if (cached) {
+          strongsReverseCache = await cached.json();
+          return;
+        }
+      }
+      const res = await fetch(STRONGS_URL);
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status} while loading ${STRONGS_URL}`);
+      }
+      if (cache) {
+        await cache.put(STRONGS_URL, res.clone());
+      }
       strongsReverseCache = await res.json();
+    } catch (err) {
+      console.warn('[scriptureLexicon] Reverse Strongs index unavailable (will retry on next lookup):', err);
+    } finally {
+      strongsFetchPromise = null;
     }
-  } catch {
-    // Offline or network error
-  } finally {
-    isFetchingStrongs = false;
-  }
+  })();
+
+  return strongsFetchPromise;
 }
 
 // Prefetch reverse index in browser idle time
 if (typeof window !== 'undefined') {
   if ('requestIdleCallback' in window) {
-    (window as any).requestIdleCallback(() => prefetchStrongsReverse());
+    (window as unknown as { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(() => {
+      void prefetchStrongsReverse();
+    });
   } else {
-    setTimeout(() => prefetchStrongsReverse(), 1200);
+    setTimeout(() => {
+      void prefetchStrongsReverse();
+    }, 1200);
   }
 }
 

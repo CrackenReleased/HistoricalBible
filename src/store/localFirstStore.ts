@@ -170,63 +170,112 @@ export class LocalFirstStore {
   private rankedNames: RankedBiblicalName[] = [];
   private synchrony: HistoricalSynchronyDataset | null = null;
   private isLoaded = false;
+  private isCriticalLoaded = false;
+  private criticalPromise: Promise<void> | null = null;
+  private initPromise: Promise<void> | null = null;
   private indexedConnectionCount = 0;
   private atlasPairs: Array<{ from: number; to: number }> = [];
   private initError: string | null = null;
 
+  public isFullyLoaded(): boolean {
+    return this.isLoaded;
+  }
+
+  public isCriticallyLoaded(): boolean {
+    return this.isCriticalLoaded;
+  }
+
+  /**
+   * Phase 1 Critical Hydration: Loads canonical KJV verses + Historical Synchrony in parallel
+   * and builds verse/chapter indices immediately so /bible can render Scripture, Chronology,
+   * and Map without waiting for the 64,299-edge cross-reference bundle and name network.
+   */
+  public async initCritical(onProgress?: (msg: string, percent: number) => void): Promise<void> {
+    if (this.isCriticalLoaded) return;
+    if (this.criticalPromise) return this.criticalPromise;
+
+    this.criticalPromise = (async () => {
+      try {
+        if (onProgress) onProgress('Loading canonical KJV corpus & Historical Synchrony...', 20);
+        const cache = typeof window !== 'undefined' && 'caches' in window
+          ? await window.caches.open(this.cacheName)
+          : null;
+
+        const [verses, synchrony] = await Promise.all([
+          this.fetchWithCache<KjvVerseData[]>(cache, '/data/kjv_verses.json'),
+          this.fetchWithCache<HistoricalSynchronyDataset>(
+            cache,
+            '/data/history/historical_synchrony.v1.json'
+          ),
+        ]);
+
+        this.verses = verses;
+        this.synchrony = synchrony;
+        this.buildVerseIndices();
+        this.isCriticalLoaded = true;
+        if (onProgress) onProgress('Scripture & Chronology ready...', 55);
+      } catch (err) {
+        this.isCriticalLoaded = false;
+        this.criticalPromise = null;
+        this.initError = err instanceof Error ? err.message : String(err);
+        throw err;
+      }
+    })();
+
+    return this.criticalPromise;
+  }
+
   public async init(onProgress?: (msg: string, percent: number) => void): Promise<void> {
     if (this.isLoaded) return;
+    if (this.initPromise) return this.initPromise;
     this.initError = null;
 
-    try {
-      if (onProgress) onProgress('Initializing local Scripture & History store...', 10);
-      const cache = typeof window !== 'undefined' && 'caches' in window
-        ? await window.caches.open(this.cacheName)
-        : null;
-
-      if (onProgress) onProgress('Loading canonical KJV corpus...', 25);
-      this.verses = await this.fetchWithCache<KjvVerseData[]>(cache, '/data/kjv_verses.json');
-
-      if (onProgress) onProgress('Loading Historical Synchrony & Empires model...', 50);
-      this.synchrony = await this.fetchWithCache<HistoricalSynchronyDataset>(
-        cache,
-        '/data/history/historical_synchrony.v1.json'
-      );
-
-      if (onProgress) onProgress('Indexing the complete Scripture cross-reference source...', 70);
-      const crossRefPayload = await this.fetchWithCache<any>(
-        cache,
-        '/data/cross_references_bundle.json'
-      );
-      const rawCrossRefs: CrossRefLink[] = Array.isArray(crossRefPayload)
-        ? crossRefPayload
-        : (crossRefPayload?.links || []);
-
-      if (onProgress) onProgress('Loading & ranking Biblical Names directory...', 85);
-      this.network = await this.fetchWithCache<BibleNetwork>(cache, '/data/bible_network.json');
+    this.initPromise = (async () => {
       try {
-        const audit = await this.fetchWithCache<NameAudit>(cache, '/data/name_audit.json');
-        this.applyNameReview(audit);
-      } catch {
-        this.nameReviews.clear();
-        // A failed lexical resource must not prevent Scripture reading or revive unchecked glosses.
-        for (const name of this.network.names) name.meaning = 'Name study unavailable. Read the Scripture passages below.';
-      }
-      this.referenceRecords = rawCrossRefs;
-      this.networkByName = new Map(this.network.names.flatMap(name => [
-        [name.name.toLowerCase(), name], [name.name.toLowerCase().replace(/[\s-]/g, ''), name],
-      ] as Array<[string, NetworkName]>));
-      this.hitchcock = Object.fromEntries(this.network.names.map(name =>
-        [name.name, { name: name.name, meanings: [name.meaning] }]));
+        if (onProgress) onProgress('Initializing local Scripture & History store...', 10);
+        const cache = typeof window !== 'undefined' && 'caches' in window
+          ? await window.caches.open(this.cacheName)
+          : null;
 
-      this.buildIndices(rawCrossRefs);
-      this.isLoaded = true;
-      if (onProgress) onProgress('Ready', 100);
-    } catch (err) {
-      this.isLoaded = false;
-      this.initError = err instanceof Error ? err.message : String(err);
-      throw err;
-    }
+        const [, crossRefPayload, network] = await Promise.all([
+          this.initCritical(onProgress),
+          this.fetchWithCache<any>(cache, '/data/cross_references_bundle.json'),
+          this.fetchWithCache<BibleNetwork>(cache, '/data/bible_network.json'),
+        ]);
+
+        if (onProgress) onProgress('Indexing Scripture cross-references & Biblical Names...', 80);
+        const rawCrossRefs: CrossRefLink[] = Array.isArray(crossRefPayload)
+          ? crossRefPayload
+          : (crossRefPayload?.links || []);
+
+        this.network = network;
+        try {
+          const audit = await this.fetchWithCache<NameAudit>(cache, '/data/name_audit.json');
+          this.applyNameReview(audit);
+        } catch {
+          this.nameReviews.clear();
+          // A failed lexical resource must not prevent Scripture reading or revive unchecked glosses.
+          for (const name of this.network.names) name.meaning = 'Name study unavailable. Read the Scripture passages below.';
+        }
+        this.referenceRecords = rawCrossRefs;
+        this.networkByName = new Map(this.network.names.flatMap(name => [
+          [name.name.toLowerCase(), name], [name.name.toLowerCase().replace(/[\s-]/g, ''), name],
+        ] as Array<[string, NetworkName]>));
+        this.hitchcock = Object.fromEntries(this.network.names.map(name =>
+          [name.name, { name: name.name, meanings: [name.meaning] }]));
+
+        this.buildIndices(rawCrossRefs);
+        this.isLoaded = true;
+        if (onProgress) onProgress('Ready', 100);
+      } catch (err) {
+        this.isLoaded = false;
+        this.initPromise = null;
+        this.initError = err instanceof Error ? err.message : String(err);
+        throw err;
+      }
+    })();
+
+    return this.initPromise;
   }
 
   private applyNameReview(audit: NameAudit): void {
@@ -287,14 +336,9 @@ export class LocalFirstStore {
     return (await networkResponse.json()) as T;
   }
 
-  private buildIndices(rawCrossRefs: CrossRefLink[]): void {
+  private buildVerseIndices(): void {
     this.verseByOsis.clear();
     this.chapterMap.clear();
-    this.crossRefAdj.clear();
-    this.indexedConnectionCount = 0;
-    const bookOrder = new Map(Object.keys(OSIS_TO_BOOK).map((book, index) => [book, index]));
-    const bookPairs = new Map<string, { from: number; to: number }>();
-
     for (const v of this.verses) {
       const osisBook = BOOK_TO_OSIS[v.book] || v.book;
       const osisKey = `${osisBook}.${v.chapter}.${v.verse}`;
@@ -305,6 +349,16 @@ export class LocalFirstStore {
       chapList.push(v);
       this.chapterMap.set(chapKey, chapList);
     }
+  }
+
+  private buildIndices(rawCrossRefs: CrossRefLink[]): void {
+    if (this.verseByOsis.size === 0 || this.chapterMap.size === 0) {
+      this.buildVerseIndices();
+    }
+    this.crossRefAdj.clear();
+    this.indexedConnectionCount = 0;
+    const bookOrder = new Map(Object.keys(OSIS_TO_BOOK).map((book, index) => [book, index]));
+    const bookPairs = new Map<string, { from: number; to: number }>();
 
     for (const link of rawCrossRefs) {
       const src = (link.s || link.from || '').trim();
@@ -417,7 +471,7 @@ export class LocalFirstStore {
   public getChapterReferences(book: string, chapter: number): string[] {
     const refs = this.getChapterVerses(book, chapter).map(verse => this.toOsisRef(verse));
     const prefix = `${book}.${chapter}.`.toLowerCase();
-    return [...refs, ...(this.network.meta.unavailableSiteRefs || []).filter(ref => ref.toLowerCase().startsWith(prefix))]
+    return [...refs, ...(this.network?.meta?.unavailableSiteRefs || []).filter(ref => ref.toLowerCase().startsWith(prefix))]
       .sort((a, b) => Number(a.split('.')[2]) - Number(b.split('.')[2]));
   }
 
@@ -496,8 +550,8 @@ export class LocalFirstStore {
       empires: this.synchrony?.empires.length ?? 0,
       books: Object.keys(OSIS_TO_BOOK).length,
       chapters: this.chapterMap.size,
-      names: this.network.names.length,
-      nameEdges: this.network.edges.length,
+      names: this.network?.names?.length ?? 0,
+      nameEdges: this.network?.edges?.length ?? 0,
       pairs: this.atlasPairs,
     };
   }
@@ -515,7 +569,9 @@ export class LocalFirstStore {
     }));
   }
   public getConnectedNames(name: string) {
+    if (!this.network) return [];
     const index = this.network.names.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
+    if (index < 0) return [];
     return this.network.edges.filter(([a, b]) => a === index || b === index)
       .map(([a, b, count]) => ({ name: this.network.names[a === index ? b : a].name, count }))
       .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
@@ -542,6 +598,36 @@ export class LocalFirstStore {
     if (!refs.some(ref => ref.toLowerCase() === first.toLowerCase())) refs.unshift(first);
     if (!refs.some(ref => ref.toLowerCase() === last.toLowerCase())) refs.push(last);
     return refs;
+  }
+
+  public bookToOsis(bookName: string): string {
+    return BOOK_TO_OSIS[bookName] || bookName;
+  }
+
+  public osisToBook(osis: string): string {
+    return OSIS_TO_BOOK[osis.toLowerCase()] || osis;
+  }
+
+  /**
+   * Whole-word concordance search across the 31,102 canonical KJV verses.
+   * Prevents short words (e.g. "in", "on", "no", "he") from matching substrings
+   * inside longer words ("beginning", "upon", "dragon") or book/chapter headers.
+   */
+  public searchWholeWord(word: string, maxVerses = 25): KjvVerseData[] {
+    const clean = word.replace(/[^a-zA-Z'-]/g, '').trim();
+    if (!clean) return [];
+    const escaped = clean.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`\\b${escaped}\\b`, 'i');
+    const matches: KjvVerseData[] = [];
+
+    for (const v of this.verses) {
+      if (matches.length >= maxVerses) break;
+      const plainText = v.text.replace(/[\[\]]/g, '');
+      if (regex.test(plainText)) {
+        matches.push(v);
+      }
+    }
+    return matches;
   }
 
   public searchAll(query: string, maxVerses = 25): {

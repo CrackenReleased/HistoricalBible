@@ -1,3 +1,14 @@
+## 2026-10-16 23:05:00 — Web KJV dataset inverted bracket repair (`[I[` / `[O[` → `[I]` / `[O]`)
+
+- **Symptom**: Five verses in `public/data/kjv_verses.json` contained inverted closing brackets (`[I[` or `[O[`) inherited from workbook extraction, causing `formatKjvText()` (`/\[([^\]]+)\]/g`) to greedily italicize entire clauses across bracket boundaries or render literal `[O[` on screen.
+- **Canonical Verification (`Bible.pdf` & `pdf-proof/v0.2.0/reference-verses.json`)**: Verified against `Bible.pdf` font/italic span metrics:
+  1. `Numbers 12:6` (`Bible.pdf` p. 83): `"[I[ the LORD"` → `"[I] the LORD"` (`italic_evidence`: `I` at chars 65–66).
+  2. `Psalms 25:17` (`Bible.pdf` p. 292): `"[O[ bring thou"` → `"[O] bring thou"` (`italic_evidence`: `O` at chars 39–40).
+  3. `Isaiah 41:17` (`Bible.pdf` p. 361): `"[I[ the God of Israel"` → `"[I] the God of Israel"` (`italic_evidence`: `I` at chars 119–120).
+  4. `Jeremiah 17:10` (`Bible.pdf` p. 380): `"[I[ try the reins"` → `"[I] try the reins"` (`italic_evidence`: `I` at chars 29–30).
+  5. `Habakkuk 1:5` (`Bible.pdf` p. 456): `"for [I[ will work"` → `"for [I] will work"` (`italic_evidence`: `I` at chars 70–71).
+- **Regression Lock**: Added strict balanced-bracket and non-nested-bracket invariant checks to `scripts/verify-canonical-kjv.js` and `tests/data-integrity-selfcheck.ts`.
+
 ## 2026-10-15 21:31:54 — PDF chapter navigation and page labels v0.3.0
 
 - Navigation-only PDF updates can preserve reading text, layout, link annotations and tags: compare every page and annotation after updating the outline and page-label tree.

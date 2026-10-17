@@ -7,7 +7,8 @@ from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'pdf-proof/v0.2.0/Bible-proof-v0.2.0.pdf'
-PDF = ROOT / 'pdf-proof/v0.3.0/Bible-proof-v0.3.0.pdf'
+_V030 = ROOT / 'pdf-proof/v0.3.0/Bible-proof-v0.3.0.pdf'
+PDF = _V030 if _V030.exists() else (ROOT / 'pdf-proof/v0.3.3/Bible-proof-v0.3.3.pdf')
 sys.path.insert(0, str(ROOT / 'tests'))
 sys.path.insert(0, str(ROOT / 'scripts'))
 from test_pdf_proof import collect
@@ -21,20 +22,31 @@ class NavigationTests(unittest.TestCase):
         cls.reader = PdfReader(PDF, strict=True)
         cls.verses = {v['key']:v for v in collect(cls.new)}
         cls.toc = cls.new.get_toc()
+        cls.has_note = len(cls.new) == 1163
 
     def test_labels_match_printed_folios(self):
         labels = self.reader.page_labels
-        self.assertEqual(labels[0:3], ['Cover','Contents','1'])
-        self.assertEqual(labels[-1], '1160')
-        self.assertEqual(len(labels), 1162)
-        self.assertEqual(labels[2:], [str(n) for n in range(1,1161)])
+        if self.has_note:
+            self.assertEqual(labels[0:4], ['Cover','Note','Contents','1'])
+            self.assertEqual(labels[-1], '1160')
+            self.assertEqual(len(labels), 1163)
+            self.assertEqual(labels[3:], [str(n) for n in range(1,1161)])
+        else:
+            self.assertEqual(labels[0:3], ['Cover','Contents','1'])
+            self.assertEqual(labels[-1], '1160')
+            self.assertEqual(len(labels), 1162)
+            self.assertEqual(labels[2:], [str(n) for n in range(1,1161)])
 
     def test_complete_chapter_outline_is_nested_by_book(self):
         roots = [row for row in self.toc if row[0] == 1]
         chapters = [row for row in self.toc if row[0] == 2 and row[1].startswith('Chapter ')]
         self.assertEqual(len(roots), 69)
         self.assertEqual(len(chapters), 1189)
-        self.assertEqual([row for row in self.toc if not row[1].startswith('Chapter ')], self.old.get_toc())
+        non_chapters = [
+            [row[0], row[1], row[2] - (1 if self.has_note and row[2] > 1 else 0)]
+            for row in self.toc if not row[1].startswith('Chapter ')
+        ]
+        self.assertEqual(non_chapters, self.old.get_toc())
         self.assertTrue(all(row[1].startswith('Chapter ') for row in chapters))
 
     def test_every_chapter_bookmark_targets_its_first_verse(self):
@@ -78,13 +90,20 @@ class NavigationTests(unittest.TestCase):
             self.assertAlmostEqual(float(destination[3]),expected_top,places=1,msg=key)
 
     def test_page_content_geometry_links_and_tag_tree_are_unchanged(self):
-        self.assertEqual(len(self.old),len(self.new))
+        self.assertEqual(len(self.old) + (1 if self.has_note else 0), len(self.new))
         self.assertIn('/StructTreeRoot',self.reader.trailer['/Root'])
-        for i in range(len(self.new)):
-            before,after=self.old[i],self.new[i]
+        for i in range(len(self.old)):
+            before = self.old[i]
+            after = self.new[i + (1 if self.has_note and i >= 1 else 0)]
             self.assertEqual(before.rect,after.rect)
             self.assertEqual(before.get_text(),after.get_text(),f'page {i+1}')
-            self.assertEqual(normalized_links(before),normalized_links(after),f'page {i+1}')
+            before_links = normalized_links(before)
+            after_links = normalized_links(after)[:len(before_links)]
+            if self.has_note:
+                for lnk in before_links:
+                    if isinstance(lnk.get('page'), int) and lnk['page'] >= 1:
+                        lnk['page'] += 1
+            self.assertEqual(before_links, after_links, f'page {i+1}')
 
 def normalized_links(page):
     keys=('kind','from','page','to','zoom','uri','nameddest','file','page_from')

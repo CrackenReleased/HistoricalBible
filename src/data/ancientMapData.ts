@@ -42,18 +42,33 @@ export interface BiblicalCity {
   figureIds?: string[];
 }
 
+export type RouteEvidenceClass = 'SCRIPTURE_TEXT' | 'EXTERNAL_HISTORICAL_ATTESTATION';
+
+export interface BiblicalRouteStop {
+  name: string;
+  coords: GeoCoordinate;
+  dateLabel: string;
+  scriptureRef: string;
+  scriptureOsis: string;
+  note: string;
+  evidenceClass?: RouteEvidenceClass;
+  attestationSource?: string;
+}
+
 export interface BiblicalRoute {
   id: string;
   name: string;
+  shortBanner: string;
+  travelerName: string;
+  dateRange: string;
   figureId: string;
   color: string;
   scriptureRef: string;
+  scriptureOsis: string;
   summary: string;
-  stops: Array<{
-    name: string;
-    coords: GeoCoordinate;
-    note?: string;
-  }>;
+  evidenceClass?: RouteEvidenceClass;
+  attestationSource?: string;
+  stops: BiblicalRouteStop[];
 }
 
 export type FactionType = 'covenant' | 'israel' | 'hostile' | 'allied' | 'global_power';
@@ -512,6 +527,120 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     description: 'Wall reliefs and prism fragments of Sargon II recording: "At the beginning of my royal rule, I besieged and conquered the city of the Samarians... 27,290 people who lived therein I carried away".',
     significance: 'Verifies the historical fall of Samaria and the Assyrian deportation of the Northern Ten Tribes in 722 BC recorded in 2 Kings 17.',
     externalUrl: 'https://en.wikipedia.org/wiki/Sargon_II'
+  },
+  {
+    id: 'lachish-ostraca',
+    name: 'Tel Lachish',
+    ancientRegion: 'Kingdom of Judah (Shephelah)',
+    modernCountry: 'Israel',
+    coords: { lat: 31.565, lng: 34.849 },
+    artifactName: 'The Lachish Letters (Ostraca)',
+    artifactDate: '588 – 586 BC (Babylonian Siege)',
+    discoveryYear: '1935',
+    currentLocation: 'British Museum, London & Israel Museum, Jerusalem',
+    figureId: 'jeremiah',
+    empireId: 'babylon',
+    scriptureRef: 'JEREMIAH {34:7}, 2 KINGS {18:14}',
+    scriptureOsis: 'Jer.34.7',
+    scriptureConnection: 'Direct Synchrony: Jeremiah 34:7 — Military dispatches watching for the fire-signals of Lachish and Azekah as Nebuchadnezzar closed in on Judah.',
+    description: 'Pottery shards (ostraca) written in carbon ink in Paleo-Hebrew by a Judean officer named Hoshaiah during the final days before Babylon conquered Judah. Ostracon IV states: "We are watching for the fire-signals of Lachish... for we cannot see Azekah."',
+    significance: 'Matches Jeremiah 34:7 ("when the king of Babylon\'s army fought against Jerusalem, and against all the cities of Judah that were left, against Lachish, and against Azekah: for these defenced cities remained of the cities of Judah") from the exact week of the siege.',
+    externalUrl: 'https://www.britishmuseum.org/collection/object/W_1938-1010-2'
+  },
+  {
+    id: 'jehoiachin-ration-tablets',
+    name: 'Babylon (Royal Palace Archives)',
+    ancientRegion: 'Neo-Babylonian Empire',
+    modernCountry: 'Iraq',
+    coords: { lat: 32.545, lng: 44.423 },
+    artifactName: 'The Jehoiachin Ration Tablets',
+    artifactDate: 'c. 592 BC (Reign of Nebuchadnezzar II)',
+    discoveryYear: '1899',
+    currentLocation: 'Vorderasiatisches Museum (Pergamon Museum), Berlin',
+    figureId: 'jeremiah',
+    empireId: 'babylon',
+    scriptureRef: '2 KINGS {25:27}–{25:30}, JEREMIAH {52:31}–{52:34}',
+    scriptureOsis: '2Kgs.25.27',
+    scriptureConnection: 'Direct Synchrony: 2 Kings 25:29–30 — Babylonian palace cuneiform ledgers recording royal oil and barley rations issued to "Jehoiachin, king of the land of Judah" and his five sons.',
+    description: 'Akkadian cuneiform administrative tablets excavated near the Ishtar Gate of Babylon listing rations of oil and grain distributed from Nebuchadnezzar\'s royal storehouse to "Ya\'ukin, king of the land of Yahudu [Judah]" and five royal princes.',
+    significance: 'Provides administrative eyewitness proof from Babylon\'s own palace archives confirming the exile, survival, and royal stipends of King Jehoiachin described at the close of 2 Kings 25 and Jeremiah 52.',
+    externalUrl: 'https://en.wikipedia.org/wiki/Jehoiachin%27s_Rations_Tablets'
+  },
+  {
+    id: 'dead-sea-scrolls-qumran',
+    name: 'Khirbet Qumran (Dead Sea Caves)',
+    ancientRegion: 'Judean Desert',
+    modernCountry: 'Israel',
+    coords: { lat: 31.741, lng: 35.459 },
+    artifactName: 'The Great Isaiah Scroll (1QIsaᵃ & Dead Sea Scrolls)',
+    artifactDate: 'c. 250 BC – AD 68 (1QIsaᵃ dated c. 125 BC)',
+    discoveryYear: '1947',
+    currentLocation: 'Shrine of the Book, Israel Museum, Jerusalem',
+    figureId: 'isaiah',
+    empireId: 'rome',
+    scriptureRef: 'ISAIAH {40:8}, {53:1}–{53:12}',
+    scriptureOsis: 'Isa.40.8',
+    scriptureConnection: 'Direct Synchrony: Isaiah 40:8 & 53:1–12 — Complete 24-foot Hebrew parchment scroll of all 66 chapters of Isaiah predating Christ\'s earthly ministry by over a century.',
+    description: 'Seventeen sewn sheepskin parchment sheets (7.34 meters long) found in Cave 1 at Qumran preserving the entire book of Isaiah in Hebrew, alongside fragments of every Old Testament book except Esther.',
+    significance: 'Shifted surviving Hebrew manuscript testimony back more than 1,000 years earlier than the medieval Masoretic codices, proving the extraordinary textual preservation of Messianic prophecies such as Isaiah 53.',
+    externalUrl: 'https://dss.collections.imj.org.il/isaiah'
+  },
+  {
+    id: 'pool-of-siloam-steps',
+    name: 'Jerusalem (Southern Tip of City of David)',
+    ancientRegion: 'Roman Judea',
+    modernCountry: 'Israel',
+    coords: { lat: 31.770, lng: 35.235 },
+    artifactName: 'The Second Temple Pool of Siloam',
+    artifactDate: '1st Century BC – AD 70',
+    discoveryYear: '2004',
+    currentLocation: 'City of David National Park, Jerusalem',
+    figureId: 'jesus-christ',
+    empireId: 'rome',
+    scriptureRef: 'JOHN {9:7}, {9:11}',
+    scriptureOsis: 'John.9.7',
+    scriptureConnection: 'Direct Synchrony: John 9:7 — Monumental stepped stone immersion pool fed by the Gihon Spring where Jesus sent the man born blind to wash and receive sight.',
+    description: 'A monumental 225-foot-wide trapezoidal stepped limestone pool discovered during infrastructure work in 2004, featuring three tiers of cut stone steps descending into the waters fed by Hezekiah\'s Tunnel.',
+    significance: 'Confirms the exact Second Temple topography described in the Gospel of John prior to the Roman destruction of Jerusalem in AD 70.',
+    externalUrl: 'https://en.wikipedia.org/wiki/Pool_of_Siloam'
+  },
+  {
+    id: 'sergius-paulus-inscription',
+    name: 'Pisidian Antioch & Soli (Cyprus)',
+    ancientRegion: 'Cyprus & Galatia / Roman Empire',
+    modernCountry: 'Turkey / Cyprus',
+    coords: { lat: 38.304, lng: 31.189 },
+    artifactName: 'The Sergius Paulus Inscriptions',
+    artifactDate: 'Mid-1st Century AD (Reign of Claudius)',
+    discoveryYear: '1877',
+    currentLocation: 'Yalvaç Museum, Turkey & Cyprus Museum, Nicosia',
+    figureId: 'paul',
+    empireId: 'rome',
+    scriptureRef: 'ACTS {13:7}, {13:12}',
+    scriptureOsis: 'Acts.13.7',
+    scriptureConnection: 'Direct Synchrony: Acts 13:7, 12 — Epigraphic attestations of the Roman senatorial family of Lucius Sergius Paulus, Proconsul of Cyprus during Paul\'s first missionary journey.',
+    description: 'Greek and Latin stone inscriptions from Cyprus (naming "Paulus the proconsul") and from the family estates at Pisidian Antioch naming Lucius Sergius Paullus the Younger and Sergia Paulla.',
+    significance: 'Corroborates Luke\'s exact Roman provincial title ("deputy / anthupatos [proconsul] of the country, Sergius Paulus, a prudent man") in Acts 13:7 and explains why Paul immediately traveled from Cyprus to Pisidian Antioch (Acts 13:14).',
+    externalUrl: 'https://en.wikipedia.org/wiki/Sergius_Paulus'
+  },
+  {
+    id: 'arch-of-titus-spoils',
+    name: 'Rome (Via Sacra, Forum Romanum)',
+    ancientRegion: 'Italy / Roman Empire',
+    modernCountry: 'Italy',
+    coords: { lat: 41.891, lng: 12.489 },
+    artifactName: 'The Arch of Titus (Jerusalem Temple Spoils Relief)',
+    artifactDate: 'AD 81 (Commemorating Siege of AD 70)',
+    discoveryYear: '81',
+    currentLocation: 'Roman Forum, Rome, Italy',
+    figureId: 'jesus-christ',
+    empireId: 'rome',
+    scriptureRef: 'LUKE {19:43}–{19:44}, {21:20}–{21:24}, MATTHEW {24:2}',
+    scriptureOsis: 'Luke.21.20',
+    scriptureConnection: 'Direct Synchrony: Luke 21:20–24 & Matthew 24:2 — Roman triumphal monument depicting soldiers carrying the golden Menorah, Table of Showbread, and silver trumpets from the destroyed Jerusalem Temple.',
+    description: 'A Pentelic marble triumphal arch erected by Emperor Domitian on the Via Sacra in Rome commemorating Titus\'s AD 70 capture of Jerusalem. Its inner south panel relief vividly depicts the sacred vessels of Herod\'s Temple carried in Roman triumph.',
+    significance: 'Monumental Roman testimony to the literal historical fulfillment of Jesus Christ\'s Olivet prophecy (Luke 19:43–44, 21:20–24) delivered forty years before the siege.',
+    externalUrl: 'https://en.wikipedia.org/wiki/Arch_of_Titus'
   }
 ];
 
@@ -722,58 +851,1430 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
   {
     id: 'abraham-call',
     name: "Abraham's Journey of Faith",
+    shortBanner: "⛺ ABRAHAM'S JOURNEY OF FAITH (c. 2091–1991 BC)",
+    travelerName: 'Abraham (Abram)',
     figureId: 'abraham',
-    color: '#d4af37', // Gold
+    color: '#f59e0b', // Warm Amber Gold
+    dateRange: 'c. 2091 – 1991 BC',
     scriptureRef: 'GENESIS {11:31}–{12:9}, HEBREWS {11:8}',
-    summary: "God calls Abram out of Ur of the Chaldees, through Haran, down into Shechem, Bethel, Hebron, and Egypt.",
+    scriptureOsis: 'GEN.12.1',
+    summary: 'God calls Abram out of Ur of the Chaldees, through Haran along the Fertile Crescent, and down into Shechem, Bethel, and Hebron in Canaan.',
     stops: [
-      { name: 'Ur of the Chaldees', coords: { lat: 30.962, lng: 46.103 }, note: 'Call to depart idolatrous homeland' },
-      { name: 'Babylon', coords: { lat: 32.542, lng: 44.421 }, note: 'Journey northwest along Euphrates' },
-      { name: 'Mari', coords: { lat: 34.400, lng: 40.900 }, note: 'Upper Euphrates trade route' },
-      { name: 'Haran', coords: { lat: 36.866, lng: 39.025 }, note: 'Terah dies; Abram sets out for Canaan at 75' },
-      { name: 'Damascus', coords: { lat: 33.513, lng: 36.292 }, note: 'Southern transit into Canaan' },
-      { name: 'Shechem', coords: { lat: 32.213, lng: 35.281 }, note: 'First altar erected under Oak of Moreh' },
-      { name: 'Bethel & Ai', coords: { lat: 31.928, lng: 35.239 }, note: 'Altar to the LORD' },
-      { name: 'Hebron (Mamre)', coords: { lat: 31.532, lng: 35.099 }, note: 'Covenant confirmed; burial at Machpelah' }
+      {
+        name: 'Ur of the Chaldees',
+        coords: { lat: 30.962, lng: 46.103 },
+        dateLabel: 'Before c. 2091 BC',
+        scriptureRef: 'GENESIS {11:31}, ACTS {7:2}',
+        scriptureOsis: 'GEN.11.31',
+        note: 'The God of glory appears to Abram in Mesopotamia and calls him to leave his homeland and kindred.'
+      },
+      {
+        name: 'Babylon (Euphrates Corridor)',
+        coords: { lat: 32.542, lng: 44.421 },
+        dateLabel: 'c. 2095 BC (en route north)',
+        scriptureRef: 'GENESIS {11:31}',
+        scriptureOsis: 'GEN.11.31',
+        note: 'Caravan transit northwest along the lower Euphrates valley with Terah, Sarai, and Lot.'
+      },
+      {
+        name: 'Mari (Middle Euphrates)',
+        coords: { lat: 34.400, lng: 40.900 },
+        dateLabel: 'c. 2093 BC (Fertile Crescent transit)',
+        scriptureRef: 'GENESIS {11:31}',
+        scriptureOsis: 'GEN.11.31',
+        note: 'Major Bronze Age trade hub along the upper Euphrates highway toward Padan-Aram.'
+      },
+      {
+        name: 'Haran (Padan-Aram)',
+        coords: { lat: 36.866, lng: 39.025 },
+        dateLabel: 'c. 2091 BC (Abram age 75)',
+        scriptureRef: 'GENESIS {12:1}–{12:4}',
+        scriptureOsis: 'GEN.12.1',
+        note: 'After Terah dies at age 205, Abram departs Haran at age 75 in obedience to the LORD\'s covenant promise.'
+      },
+      {
+        name: 'Damascus',
+        coords: { lat: 33.513, lng: 36.292 },
+        dateLabel: 'c. 2091 BC (Entering the Levant)',
+        scriptureRef: 'GENESIS {15:2}',
+        scriptureOsis: 'GEN.15.2',
+        note: 'Southern caravan gateway into Canaan; home of Eliezer of Damascus, steward of Abram\'s household.'
+      },
+      {
+        name: 'Shechem (Oak of Moreh)',
+        coords: { lat: 32.213, lng: 35.281 },
+        dateLabel: 'c. 2091 BC (First stop in Canaan)',
+        scriptureRef: 'GENESIS {12:6}–{12:7}',
+        scriptureOsis: 'GEN.12.6',
+        note: 'The LORD appears to Abram and promises, "Unto thy seed will I give this land." Abram builds his first altar in Canaan.'
+      },
+      {
+        name: 'Bethel & Ai',
+        coords: { lat: 31.928, lng: 35.239 },
+        dateLabel: 'c. 2090 BC',
+        scriptureRef: 'GENESIS {12:8}, {13:3}–{13:4}',
+        scriptureOsis: 'GEN.12.8',
+        note: 'Abram pitches his tent between Bethel on the west and Ai on the east, builds an altar, and calls upon the name of the LORD.'
+      },
+      {
+        name: 'Hebron (Oaks of Mamre)',
+        coords: { lat: 31.532, lng: 35.099 },
+        dateLabel: 'c. 2085 – 1991 BC',
+        scriptureRef: 'GENESIS {13:18}, {15:1}–{15:18}, {23:19}',
+        scriptureOsis: 'GEN.13.18',
+        note: 'Abraham\'s long-term residence where God cuts the Covenant of the Pieces and where Sarah and Abraham are buried at Machpelah.'
+      }
     ]
   },
   {
     id: 'exodus-route',
     name: 'The Exodus & Wilderness Route',
+    shortBanner: '🔥 THE EXODUS ROUTE (1446 BC)',
+    travelerName: 'Moses & Israel',
     figureId: 'moses',
-    color: '#38bdf8', // Azure Blue
-    scriptureRef: 'EXODUS {12:37}–{19:2}, NUMBERS {33:1}–{33:49}',
-    summary: 'The LORD delivers Israel from slavery in Egypt through the Red Sea to Mount Sinai.',
+    color: '#06b6d4', // Radiant Cyan
+    dateRange: 'Spring – Summer 1446 BC',
+    scriptureRef: 'EXODUS {12:37}–{19:2}, NUMBERS {33:1}–{33:15}',
+    scriptureOsis: 'EXO.12.37',
+    summary: 'The LORD delivers Israel from bondage in Egypt on the night of Passover, parting the Red Sea and leading them to Mount Sinai.',
     stops: [
-      { name: 'Rameses (Goshen)', coords: { lat: 30.800, lng: 31.840 }, note: 'Departure on the night of Passover' },
-      { name: 'Succoth', coords: { lat: 30.550, lng: 32.100 }, note: 'First encampment' },
-      { name: 'Etham', coords: { lat: 30.400, lng: 32.300 }, note: 'Edge of the wilderness' },
-      { name: 'Pi-hahiroth / Red Sea', coords: { lat: 29.850, lng: 32.550 }, note: 'Miraculous Red Sea crossing' },
-      { name: 'Marah', coords: { lat: 29.300, lng: 32.900 }, note: 'Bitter waters made sweet' },
-      { name: 'Elim', coords: { lat: 29.050, lng: 33.150 }, note: 'Twelve wells and seventy palm trees' },
-      { name: 'Rephidim', coords: { lat: 28.700, lng: 33.600 }, note: 'Water from the rock; defeat of Amalek' },
-      { name: 'Mount Sinai (Horeb)', coords: { lat: 28.539, lng: 33.975 }, note: 'Giving of the Ten Commandments & Law' }
+      {
+        name: 'Rameses (Goshen)',
+        coords: { lat: 30.800, lng: 31.840 },
+        dateLabel: '15 Nisan, 1446 BC (Passover Night)',
+        scriptureRef: 'EXODUS {12:37}, NUMBERS {33:3}',
+        scriptureOsis: 'EXO.12.37',
+        note: 'Israel departs Egypt with a high hand on the day after the Passover sacrifice after 430 years of sojourn.'
+      },
+      {
+        name: 'Succoth',
+        coords: { lat: 30.550, lng: 32.100 },
+        dateLabel: 'Mid-Nisan, 1446 BC (Day 2)',
+        scriptureRef: 'EXODUS {12:37}, {13:20}',
+        scriptureOsis: 'EXO.12.37',
+        note: 'First rallying encampment of the congregation of Israel, baking unleavened cakes from the dough brought out of Egypt.'
+      },
+      {
+        name: 'Etham',
+        coords: { lat: 30.400, lng: 32.300 },
+        dateLabel: 'Nisan, 1446 BC (Week 1)',
+        scriptureRef: 'EXODUS {13:20}–{13:22}',
+        scriptureOsis: 'EXO.13.20',
+        note: 'Encampment on the edge of the wilderness where the LORD goes before Israel in a pillar of cloud by day and fire by night.'
+      },
+      {
+        name: 'Pi-hahiroth / Red Sea Crossing',
+        coords: { lat: 29.850, lng: 32.550 },
+        dateLabel: '21 Nisan, 1446 BC',
+        scriptureRef: 'EXODUS {14:2}–{14:31}',
+        scriptureOsis: 'EXO.14.21',
+        note: 'Pharaoh\'s chariots pursue Israel; the LORD divides the sea so Israel walks through on dry ground and delivers them from Egypt.'
+      },
+      {
+        name: 'Marah',
+        coords: { lat: 29.300, lng: 32.900 },
+        dateLabel: 'Late Nisan, 1446 BC (3 days after Red Sea)',
+        scriptureRef: 'EXODUS {15:22}–{15:26}',
+        scriptureOsis: 'EXO.15.23',
+        note: 'Three days into the Wilderness of Shur, the LORD shows Moses a tree that turns the bitter waters sweet and reveals Himself as Jehovah-Rapha.'
+      },
+      {
+        name: 'Elim',
+        coords: { lat: 29.050, lng: 33.150 },
+        dateLabel: 'Early Iyyar, 1446 BC (Month 2)',
+        scriptureRef: 'EXODUS {15:27}, NUMBERS {33:9}',
+        scriptureOsis: 'EXO.15.27',
+        note: 'Oasis sanctuary with twelve wells of water and threescore and ten (70) palm trees where Israel encamps beside the waters.'
+      },
+      {
+        name: 'Rephidim (Massah & Meribah)',
+        coords: { lat: 28.700, lng: 33.600 },
+        dateLabel: 'Late Iyyar, 1446 BC (Month 2)',
+        scriptureRef: 'EXODUS {17:1}–{17:16}',
+        scriptureOsis: 'EXO.17.1',
+        note: 'Moses strikes the rock at Horeb to bring forth water; Joshua defeats Amalek while Aaron and Hur hold up Moses\' hands.'
+      },
+      {
+        name: 'Mount Sinai (Horeb)',
+        coords: { lat: 28.539, lng: 33.975 },
+        dateLabel: 'Sivan, 1446 BC – Iyyar, 1445 BC (11 Months)',
+        scriptureRef: 'EXODUS {19:1}–{20:21}, NUMBERS {10:11}',
+        scriptureOsis: 'EXO.19.1',
+        note: 'In the third month after leaving Egypt, Israel encamps before the mount; God speaks the Ten Commandments and gives the Tabernacle pattern.'
+      }
+    ]
+  },
+  {
+    id: 'jacob-joseph-egypt',
+    name: "Jacob's Sojourn & Joseph in Egypt",
+    shortBanner: "🌾 JACOB & JOSEPH TO EGYPT (c. 1915–1876 BC)",
+    travelerName: 'Patriarchs Jacob (Israel) & Joseph',
+    figureId: 'abraham',
+    color: '#fb923c',
+    dateRange: 'c. 1915 – 1876 BC',
+    scriptureRef: 'GENESIS {31:17}–{50:26}',
+    scriptureOsis: 'GEN.37.28',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Jacob returns from Padan-Aram to wrestle with the Angel at Peniel, dwells at Hebron, and after Joseph is sold into Egypt and exalted as Vizier under Pharaoh, brings all 70 souls of Israel down to Goshen during the seven-year famine.',
+    stops: [
+      {
+        name: 'Haran (Padan-Aram)',
+        coords: { lat: 36.865, lng: 39.031 },
+        dateLabel: 'c. 1929 BC',
+        scriptureRef: 'GENESIS {31:17}–{31:21}',
+        scriptureOsis: 'GEN.31.17',
+        note: 'After 20 years serving Laban, Jacob departs Padan-Aram at God\'s command with Rachel, Leah, his children, and flocks.'
+      },
+      {
+        name: 'Peniel / Jabbok River',
+        coords: { lat: 32.192, lng: 35.702 },
+        dateLabel: 'c. 1929 BC',
+        scriptureRef: 'GENESIS {32:22}–{32:32}',
+        scriptureOsis: 'GEN.32.24',
+        note: 'Jacob wrestles with a Man until daybreak; his name is changed from Jacob to Israel ("Prince with God").'
+      },
+      {
+        name: 'Dothan',
+        coords: { lat: 32.414, lng: 35.239 },
+        dateLabel: 'c. 1898 BC (Joseph Age 17)',
+        scriptureRef: 'GENESIS {37:17}–{37:28}',
+        scriptureOsis: 'GEN.37.17',
+        note: 'Joseph is cast into a pit by his brothers at Dothan and sold for 20 pieces of silver to Ishmaelite/Midianite merchants bound for Egypt.'
+      },
+      {
+        name: 'Hebron & Beersheba',
+        coords: { lat: 31.245, lng: 34.841 },
+        dateLabel: 'c. 1876 BC',
+        scriptureRef: 'GENESIS {46:1}–{46:5}',
+        scriptureOsis: 'GEN.46.1',
+        note: 'Hearing that Joseph is alive and ruler over Egypt, Jacob offers sacrifices at Beersheba; God promises, "I will go down with thee into Egypt; and I will also surely bring thee up again."'
+      },
+      {
+        name: 'Land of Goshen / Avaris (Eastern Nile Delta)',
+        coords: { lat: 30.787, lng: 31.821 },
+        dateLabel: 'c. 1876 – 1805 BC',
+        scriptureRef: 'GENESIS {46:28}–{47:11}, {50:24}',
+        scriptureOsis: 'GEN.46.28',
+        note: 'Joseph meets his father Israel in Goshen and nourishes his family through the famine; before dying at age 110, Joseph makes Israel swear to carry up his bones in the Exodus.'
+      }
+    ]
+  },
+  {
+    id: 'joshua-conquest',
+    name: "Joshua's Jordan Crossing & Conquest of Canaan",
+    shortBanner: "⚔️ JOSHUA'S CONQUEST OF CANAAN (1406–1399 BC)",
+    travelerName: 'Joshua Son of Nun & Israel',
+    figureId: 'moses',
+    color: '#60a5fa',
+    dateRange: 'c. 1406 – 1399 BC',
+    scriptureRef: 'JOSHUA {1:1}–{11:23}',
+    scriptureOsis: 'JOS.3.14',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'After Moses views the Promised Land from Mount Nebo, Joshua leads Israel across the parted Jordan River to Gilgal, conquers Jericho and Ai, defends Gibeon in the southern campaign, and defeats Hazor in the north.',
+    stops: [
+      {
+        name: 'Plains of Moab & Mount Nebo',
+        coords: { lat: 31.767, lng: 35.725 },
+        dateLabel: 'Adar, 1406 BC',
+        scriptureRef: 'DEUTERONOMY {34:1}–{34:9}, JOSHUA {1:1}–{1:9}',
+        scriptureOsis: 'DEU.34.1',
+        note: 'Moses views all the land of Gilead, Naphtali, Ephraim, Judah, and Jericho from Pisgah before his death; God commissions Joshua to be strong and very courageous.'
+      },
+      {
+        name: 'Jordan River Crossing & Gilgal',
+        coords: { lat: 31.855, lng: 35.535 },
+        dateLabel: '10 Nisan, 1406 BC',
+        scriptureRef: 'JOSHUA {3:14}–{4:24}',
+        scriptureOsis: 'JOS.3.14',
+        note: 'As the priests bearing the Ark of the Covenant step into the Jordan, the waters heap up upstream at Adam; Israel crosses on dry ground and sets up 12 memorial stones at Gilgal.'
+      },
+      {
+        name: 'Jericho',
+        coords: { lat: 31.871, lng: 35.444 },
+        dateLabel: 'Nisan, 1406 BC',
+        scriptureRef: 'JOSHUA {6:1}–{6:27}',
+        scriptureOsis: 'JOS.6.20',
+        note: 'On the seventh day Israel compasses the city seven times; at the blast of the rams\' horns and shout of the people, the wall falls down flat and Rahab\'s household is spared.'
+      },
+      {
+        name: 'Ai & Mount Ebal / Shechem',
+        coords: { lat: 32.213, lng: 35.281 },
+        dateLabel: '1406 BC',
+        scriptureRef: 'JOSHUA {8:1}–{8:35}',
+        scriptureOsis: 'JOS.8.30',
+        note: 'After capturing Ai, Joshua builds an altar on Mount Ebal and reads all the words of the Law—the blessings and cursings—between Mount Gerizim and Mount Ebal.'
+      },
+      {
+        name: 'Gibeon & Valley of Ajalon',
+        coords: { lat: 31.846, lng: 35.184 },
+        dateLabel: 'c. 1405 BC (Southern Campaign)',
+        scriptureRef: 'JOSHUA {10:1}–{10:15}',
+        scriptureOsis: 'JOS.10.12',
+        note: 'Marching all night from Gilgal to rescue Gibeon against five Amorite kings, Joshua prays and the sun stands still upon Gibeon and the moon in the Valley of Ajalon.'
+      },
+      {
+        name: 'Hazor (Upper Galilee)',
+        coords: { lat: 33.017, lng: 35.568 },
+        dateLabel: 'c. 1400 BC (Northern Campaign)',
+        scriptureRef: 'JOSHUA {11:1}–{11:15}',
+        scriptureOsis: 'JOS.11.10',
+        note: 'Joshua defeats Jabin\'s northern coalition at the waters of Merom and burns Hazor, "the head of all those kingdoms."'
+      },
+      {
+        name: 'Shiloh',
+        coords: { lat: 32.055, lng: 35.289 },
+        dateLabel: 'c. 1399 BC',
+        scriptureRef: 'JOSHUA {18:1}–{18:10}',
+        scriptureOsis: 'JOS.18.1',
+        note: 'The whole congregation of Israel assembles at Shiloh and sets up the Tabernacle of the Congregation after the land is subdued before them.'
+      }
+    ]
+  },
+  {
+    id: 'david-exile-throne',
+    name: "David's Anointing, Wilderness Flight & Royal Throne",
+    shortBanner: "👑 DAVID: BETHLEHEM TO ZION (c. 1025–1003 BC)",
+    travelerName: 'King David',
+    figureId: 'david',
+    color: '#eab308',
+    dateRange: 'c. 1025 – 1003 BC',
+    scriptureRef: '1 SAMUEL {16:1}–2 SAMUEL {5:10}',
+    scriptureOsis: '1SA.16.13',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Anointed by Samuel at Bethlehem, David defeats Goliath in the Valley of Elah, endures years as a fugitive from Saul in Adullam and En-gedi, reigns seven years in Hebron, and establishes Jerusalem (Mount Zion) as Israel\'s united capital.',
+    stops: [
+      {
+        name: 'Bethlehem Ephratah',
+        coords: { lat: 31.705, lng: 35.204 },
+        dateLabel: 'c. 1025 BC',
+        scriptureRef: '1 SAMUEL {16:1}–{16:13}',
+        scriptureOsis: '1SA.16.13',
+        note: 'Samuel anoints young shepherd David in the midst of his brethren; the Spirit of the LORD comes upon David from that day forward.'
+      },
+      {
+        name: 'Valley of Elah',
+        coords: { lat: 31.690, lng: 34.955 },
+        dateLabel: 'c. 1024 BC',
+        scriptureRef: '1 SAMUEL {17:1}–{17:54}',
+        scriptureOsis: '1SA.17.45',
+        note: 'Coming in the name of the LORD of hosts, David slays Goliath of Gath with a sling and a smooth stone from the brook.'
+      },
+      {
+        name: 'Cave of Adullam & En-gedi',
+        coords: { lat: 31.465, lng: 35.388 },
+        dateLabel: 'c. 1018 – 1011 BC',
+        scriptureRef: '1 SAMUEL {22:1}–{22:2}, {24:1}–{24:22}',
+        scriptureOsis: '1SA.24.1',
+        note: 'Fleeing King Saul, David gathers 400 distressed men at Adullam and spares Saul\'s life in the wilderness strongholds of En-gedi, refusing to touch the LORD\'s anointed.'
+      },
+      {
+        name: 'Hebron',
+        coords: { lat: 31.524, lng: 35.108 },
+        dateLabel: 'c. 1010 – 1003 BC (7.5 Years)',
+        scriptureRef: '2 SAMUEL {2:1}–{2:4}, {5:1}–{5:5}',
+        scriptureOsis: '2SA.2.4',
+        note: 'After Saul\'s death on Mount Gilboa, David is anointed king over Judah at Hebron for seven years and six months before all the tribes of Israel anoint him king.'
+      },
+      {
+        name: 'Jerusalem (City of David / Mount Zion)',
+        coords: { lat: 31.768, lng: 35.213 },
+        dateLabel: 'c. 1003 – 970 BC (33 Years)',
+        scriptureRef: '2 SAMUEL {5:6}–{7:29}',
+        scriptureOsis: '2SA.5.7',
+        note: 'David captures the stronghold of Zion, brings up the Ark of the Covenant, and receives the Davidic Covenant promise of an everlasting throne (attested externally on the Tel Dan Stele: "House of David").'
+      }
+    ]
+  },
+  {
+    id: 'elijah-elisha-ministry',
+    name: "Elijah & Elisha's Prophetic Ministry",
+    shortBanner: "🔥 ELIJAH & ELISHA PROPHETIC CIRCUIT (c. 865–841 BC)",
+    travelerName: 'Prophets Elijah the Tishbite & Elisha',
+    figureId: 'hezekiah',
+    color: '#f97316',
+    dateRange: 'c. 865 – 841 BC',
+    scriptureRef: '1 KINGS {17:1}–2 KINGS {13:21}',
+    scriptureOsis: '1KI.18.38',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'During the apostasy of Ahab, Jezebel, and Ahaziah, Elijah confronts Baal on Mount Carmel, hears the still small voice at Horeb, prophesies against Ahaziah (2 Kings 1), and ascends in a whirlwind across the Jordan as Elisha receives a double portion.',
+    stops: [
+      {
+        name: 'Brook Cherith (East of Jordan)',
+        coords: { lat: 32.350, lng: 35.680 },
+        dateLabel: 'c. 863 BC',
+        scriptureRef: '1 KINGS {17:1}–{17:7}',
+        scriptureOsis: '1KI.17.3',
+        note: 'After announcing a three-and-a-half-year drought to King Ahab, Elijah hides by the Brook Cherith where ravens bring him bread and flesh morning and evening.'
+      },
+      {
+        name: 'Zarephath (Phoenicia)',
+        coords: { lat: 33.447, lng: 35.298 },
+        dateLabel: 'c. 862 – 860 BC',
+        scriptureRef: '1 KINGS {17:8}–{17:24}',
+        scriptureOsis: '1KI.17.9',
+        note: 'In the heartland of Sidonian Baal worship, the widow\'s barrel of meal and cruse of oil do not fail, and God raises her son from the dead through Elijah\'s prayer.'
+      },
+      {
+        name: 'Mount Carmel',
+        coords: { lat: 32.648, lng: 35.078 },
+        dateLabel: 'c. 860 BC',
+        scriptureRef: '1 KINGS {18:19}–{18:46}',
+        scriptureOsis: '1KI.18.38',
+        note: 'Before all Israel and 450 prophets of Baal, fire of the LORD falls from heaven to consume Elijah\'s water-drenched sacrifice, and the people cry, "The LORD, he is the God!"'
+      },
+      {
+        name: 'Mount Horeb (Sinai)',
+        coords: { lat: 28.539, lng: 33.975 },
+        dateLabel: 'c. 860 BC',
+        scriptureRef: '1 KINGS {19:8}–{19:18}',
+        scriptureOsis: '1KI.19.12',
+        note: 'Strengthened by angel-baked cake for a 40-day journey, Elijah hears the LORD in a still small voice and is commissioned to anoint Hazael, Jehu, and Elisha.'
+      },
+      {
+        name: 'Samaria & Ekron (Ahaziah\'s Inquiry)',
+        coords: { lat: 32.277, lng: 35.190 },
+        dateLabel: 'c. 852 BC',
+        scriptureRef: '2 KINGS {1:1}–{1:17}',
+        scriptureOsis: '2KI.1.3',
+        note: 'After Moab rebels following Ahab\'s death (attested on the Mesha Stele), King Ahaziah sends messengers toward Ekron to inquire of Baal-zebub; Elijah intercepts them with the word of the LORD.'
+      },
+      {
+        name: 'Jericho & Jordan River (Elijah\'s Whirlwind Ascension)',
+        coords: { lat: 31.855, lng: 35.535 },
+        dateLabel: 'c. 851 BC',
+        scriptureRef: '2 KINGS {2:1}–{2:15}',
+        scriptureOsis: '2KI.2.11',
+        note: 'Elijah strikes the Jordan with his mantle; across the river a chariot of fire and horses of fire part them, Elijah goes up by a whirlwind into heaven, and Elisha parts the Jordan with Elijah\'s mantle.'
+      }
+    ]
+  },
+  {
+    id: 'babylonian-deportation-daniel',
+    name: 'Babylonian Exile: Jerusalem to Babylon (Daniel & Ezekiel)',
+    shortBanner: '🏛️ BABYLONIAN EXILE ROUTE (605–539 BC)',
+    travelerName: 'Daniel, Ezekiel & Judean Exiles',
+    figureId: 'daniel',
+    color: '#ef4444',
+    dateRange: '605 – 539 BC',
+    scriptureRef: '2 KINGS {24:1}–{25:21}, DANIEL {1:1}–{6:28}',
+    scriptureOsis: 'DAN.1.1',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'In three waves (605, 597, and 586 BC), Nebuchadnezzar II marches from Babylon up the Euphrates through Carchemish and Riblah to besiege Jerusalem, carrying Daniel, Ezekiel, King Jehoiachin, and Judah into 70 years of Babylonian captivity.',
+    stops: [
+      {
+        name: 'Jerusalem (Siege & Deportations)',
+        coords: { lat: 31.768, lng: 35.213 },
+        dateLabel: '605 BC (Daniel) · 597 BC (Jehoiachin/Ezekiel) · 586 BC (Temple Burned)',
+        scriptureRef: 'DANIEL {1:1}–{1:6}, 2 KINGS {24:10}–{25:10}',
+        scriptureOsis: 'DAN.1.1',
+        note: 'Nebuchadnezzar carries Daniel and the royal youths to Babylon in 605 BC, deports Jehoiachin and Ezekiel in 597 BC, and destroys the First Temple in 586 BC.'
+      },
+      {
+        name: 'Lachish (Shephelah Fortress)',
+        coords: { lat: 31.565, lng: 34.849 },
+        dateLabel: '588 – 586 BC',
+        scriptureRef: 'JEREMIAH {34:7}',
+        scriptureOsis: 'JER.34.7',
+        note: 'One of the last two fortified cities of Judah standing during Nebuchadnezzar\'s final siege, corroborated by the Lachish Letters ("watching for the fire signals of Lachish").'
+      },
+      {
+        name: 'Riblah (Land of Hamath)',
+        coords: { lat: 34.455, lng: 36.578 },
+        dateLabel: '586 BC',
+        scriptureRef: '2 KINGS {25:6}–{25:7}, JEREMIAH {39:5}–{39:7}',
+        scriptureOsis: '2KI.25.6',
+        note: 'Nebuchadnezzar\'s northern military headquarters on the Orontes River where captured King Zedekiah is judged before being taken in fetters to Babylon.'
+      },
+      {
+        name: 'Carchemish (Upper Euphrates)',
+        coords: { lat: 36.829, lng: 38.015 },
+        dateLabel: '605 BC',
+        scriptureRef: 'JEREMIAH {46:2}, 2 CHRONICLES {35:20}',
+        scriptureOsis: 'JER.46.2',
+        note: 'Strategic Euphrates crossing where Nebuchadnezzar decisively defeated Pharaoh Necho II in 605 BC (recorded in the Babylonian Chronicle), opening the Fertile Crescent arc to Babylon.'
+      },
+      {
+        name: 'River Chebar / Nippur (Tel-abib)',
+        coords: { lat: 32.126, lng: 45.231 },
+        dateLabel: '593 – 571 BC',
+        scriptureRef: 'EZEKIEL {1:1}–{1:3}, {3:15}',
+        scriptureOsis: 'EZK.1.1',
+        note: 'Jewish exile settlement along the Grand Canal (Kabaru) of Babylonia where the heavens opened and Ezekiel saw visions of the glory of God.'
+      },
+      {
+        name: 'Babylon (Royal Palace & Ishtar Gate)',
+        coords: { lat: 32.542, lng: 44.421 },
+        dateLabel: '605 – 539 BC (70 Years)',
+        scriptureRef: 'DANIEL {2:1}–{5:31}, 2 KINGS {25:27}–{25:30}',
+        scriptureOsis: 'DAN.5.30',
+        note: 'Capital of the Neo-Babylonian Empire where Daniel interprets Nebuchadnezzar\'s dream of four world empires, reads the handwriting on Belshazzar\'s wall (539 BC), and where Jehoiachin\'s rations are recorded on cuneiform tablets.'
+      }
+    ]
+  },
+  {
+    id: 'ezra-nehemiah-return',
+    name: 'Persian Restoration: Return of Zerubbabel, Ezra & Nehemiah',
+    shortBanner: '📜 PERSIAN RESTORATION RETURN (538–445 BC)',
+    travelerName: 'Zerubbabel, Ezra the Scribe & Nehemiah',
+    figureId: 'ezra-nehemiah',
+    color: '#22c55e',
+    dateRange: '538 – 445 BC',
+    scriptureRef: 'EZRA {1:1}–{8:36}, NEHEMIAH {1:1}–{6:16}',
+    scriptureOsis: 'EZR.1.1',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Fulfilling Jeremiah\'s 70-year prophecy and Isaiah\'s naming of Cyrus, the Jewish remnant returns from Babylon and Susa in three waves under Zerubbabel (538 BC), Ezra (458 BC), and Nehemiah (445 BC) to rebuild the Second Temple and Jerusalem\'s walls.',
+    stops: [
+      {
+        name: 'Babylon (Decree of Cyrus)',
+        coords: { lat: 32.542, lng: 44.421 },
+        dateLabel: '538 BC (Zerubbabel) · 458 BC (Ezra)',
+        scriptureRef: 'EZRA {1:1}–{1:11}, {7:6}–{7:9}',
+        scriptureOsis: 'EZR.1.1',
+        note: 'In the first year of Cyrus king of Persia, the LORD stirs up Cyrus\'s spirit to proclaim liberty for God\'s people to go up to Jerusalem and rebuild the House of the LORD (corroborated by the Cyrus Cylinder).'
+      },
+      {
+        name: 'Shushan the Palace (Susa)',
+        coords: { lat: 32.190, lng: 48.257 },
+        dateLabel: 'Chislev–Nisan, 445 BC',
+        scriptureRef: 'NEHEMIAH {1:1}–{2:8}, ESTHER {1:2}, {4:14}',
+        scriptureOsis: 'NEH.1.1',
+        note: 'Persian winter capital where Queen Esther saved the Jewish people under Xerxes and where royal cupbearer Nehemiah received King Artaxerxes\' commission to rebuild Jerusalem\'s walls.'
+      },
+      {
+        name: 'River Ahava (Babylonia)',
+        coords: { lat: 33.400, lng: 43.200 },
+        dateLabel: '1–12 Nisan, 458 BC',
+        scriptureRef: 'EZRA {8:15}–{8:31}',
+        scriptureOsis: 'EZR.8.21',
+        note: 'Ezra gathers the returning exiles and Levites by the river running to Ahava and proclaims a fast to seek from God a right way for them and their little ones.'
+      },
+      {
+        name: 'Tadmor / Upper Euphrates Corridor',
+        coords: { lat: 35.950, lng: 39.000 },
+        dateLabel: '538 / 458 / 445 BC (~900-Mile Caravan Route)',
+        scriptureRef: 'EZRA {7:9}, NEHEMIAH {2:7}–{2:9}',
+        scriptureOsis: 'EZR.7.9',
+        note: 'Four-month caravan journey following the Euphrates and Syrian saddle with letters to the governors "beyond the River" (Trans-Euphrates).'
+      },
+      {
+        name: 'Jerusalem (Second Temple & Rebuilt Walls)',
+        coords: { lat: 31.768, lng: 35.213 },
+        dateLabel: '516 BC (Temple Completed) · 445 BC (Walls Rebuilt in 52 Days)',
+        scriptureRef: 'EZRA {6:15}, NEHEMIAH {6:15}–{8:8}',
+        scriptureOsis: 'NEH.6.15',
+        note: 'Zerubbabel and Joshua complete the Second Temple in 516 BC; Ezra reads the Law distinctly before the Water Gate; Nehemiah completes the wall in 52 days so even enemies perceive this work was wrought of God.'
+      }
+    ]
+  },
+  {
+    id: 'john-baptist-ministry',
+    name: "John the Baptist: Wilderness, Jordan & Machaerus (In Relation to Jesus)",
+    shortBanner: "🌊 JOHN THE BAPTIST MINISTRY (AD 26–29)",
+    travelerName: 'John the Baptist (Forerunner of Christ)',
+    figureId: 'jesus-christ',
+    color: '#22d3ee', // Bright Cyan
+    dateRange: 'c. AD 26 – 29',
+    scriptureRef: 'MATTHEW {3:1}–{3:17}, {11:2}–{11:14}, JOHN {1:19}–{1:36}, {3:22}–{3:36}, MARK {6:17}–{6:29}',
+    scriptureOsis: 'JHN.1.28',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'In the 15th year of Tiberius Caesar (Luke 3:1), John the Baptist emerges in the Wilderness of Judea to prepare the way of the LORD, baptizes Jesus at Bethabara, ministers at Aenon near Salim simultaneously while Jesus ministers in Judea (John 3:22–24), and is imprisoned and martyred by Herod Antipas at Machaerus.',
+    stops: [
+      {
+        name: 'Hill Country of Judea (Ain Karim / Hebron)',
+        coords: { lat: 31.766, lng: 35.161 },
+        dateLabel: 'c. 6 BC – AD 26 (Birth & Desert Preparation)',
+        scriptureRef: 'LUKE {1:39}–{1:80}',
+        scriptureOsis: 'LUK.1.80',
+        note: 'Born to Zacharias and Elisabeth six months before Jesus; Mary visits Elisabeth here and sings the Magnificat. John grows and is in the deserts till the day of his shewing unto Israel.'
+      },
+      {
+        name: 'Wilderness of Judea (Lower Jordan Valley)',
+        coords: { lat: 31.820, lng: 35.460 },
+        dateLabel: 'Spring–Summer AD 26 (15th Year of Tiberius Caesar)',
+        scriptureRef: 'LUKE {3:1}–{3:6}, MATTHEW {3:1}–{3:6}',
+        scriptureOsis: 'LUK.3.1',
+        note: 'The word of God comes to John in the wilderness; clothed in camel\'s hair, he preaches the baptism of repentance as the voice crying in the wilderness foretold by Isaiah 40:3.'
+      },
+      {
+        name: 'Bethabara / Bethany Beyond Jordan (Al-Maghtas)',
+        coords: { lat: 31.837, lng: 35.551 },
+        dateLabel: 'Autumn AD 26 (Convergence with Jesus)',
+        scriptureRef: 'JOHN {1:28}–{1:36}, MATTHEW {3:13}–{3:17}',
+        scriptureOsis: 'JHN.1.28',
+        note: 'DIRECT RELATION TO JESUS: Jesus comes from Galilee to the Jordan unto John to be baptized. John sees the Spirit descending like a dove and testifies, "Behold the Lamb of God, which taketh away the sin of the world!" His disciples Andrew and John follow Jesus.'
+      },
+      {
+        name: 'Aenon Near Salim (Decapolis / Northern Jordan Valley)',
+        coords: { lat: 32.392, lng: 35.515 },
+        dateLabel: 'Summer–Autumn AD 27 (Parallel Ministry with Jesus)',
+        scriptureRef: 'JOHN {3:22}–{3:36}',
+        scriptureOsis: 'JHN.3.23',
+        note: 'DIRECT RELATION TO JESUS: While Jesus and His disciples are baptizing in the Judean countryside (~35 miles south, John 3:22), John baptizes at Aenon near Salim "because there was much water there; and he was not yet cast into prison." Here John declares: "He must increase, but I must decrease."'
+      },
+      {
+        name: 'Machaerus Fortress (Perea, East of Dead Sea)',
+        coords: { lat: 31.567, lng: 35.624 },
+        dateLabel: 'Late AD 27 – Early AD 29 (Imprisonment & Martyrdom)',
+        scriptureRef: 'MATTHEW {4:12}, {11:2}–{11:11}, {14:1}–{14:12}, MARK {6:17}–{6:29}',
+        scriptureOsis: 'MAT.11.2',
+        note: 'DIRECT RELATION TO JESUS: Imprisoned by Herod Antipas at Machaerus fortress (corroborated by Josephus, Antiquities 18.5.2) for rebuking Herod\'s unlawful marriage to Herodias. From this dungeon John sends two disciples to Jesus in Galilee asking, "Art thou he that should come?" before being beheaded by Herod.'
+      }
+    ]
+  },
+  {
+    id: 'jesus-nativity-youth',
+    name: "Jesus Phase 1: Nativity, Flight to Egypt & Youth in Nazareth",
+    shortBanner: "⭐ JESUS PHASE 1: NATIVITY & EGYPT (6 BC–AD 8)",
+    travelerName: 'Jesus Christ (with Mary & Joseph)',
+    figureId: 'jesus-christ',
+    color: '#fbbf24', // Warm Messianic Gold
+    dateRange: 'c. 6 BC – AD 8',
+    scriptureRef: 'MATTHEW {1:18}–{2:23}, LUKE {1:26}–{2:52}',
+    scriptureOsis: 'LUK.2.4',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'From Gabriel\'s announcement in Nazareth to the census birth in Bethlehem, presentation at the Jerusalem Temple, refuge in Egypt from Herod the Great, and childhood in Nazareth culminating in the Passover visit at age twelve.',
+    stops: [
+      {
+        name: 'Nazareth (Annunciation)',
+        coords: { lat: 32.701, lng: 35.303 },
+        dateLabel: 'c. 6 BC',
+        scriptureRef: 'LUKE {1:26}–{1:38}',
+        scriptureOsis: 'LUK.1.26',
+        note: 'The angel Gabriel is sent from God unto a city of Galilee named Nazareth to the virgin Mary: "Thou shalt conceive in thy womb, and bring forth a son, and shalt call his name JESUS."'
+      },
+      {
+        name: 'Bethlehem of Judea (Nativity & Wise Men)',
+        coords: { lat: 31.705, lng: 35.204 },
+        dateLabel: 'c. 5 BC',
+        scriptureRef: 'LUKE {2:1}–{2:20}, MATTHEW {2:1}–{2:12}, MICAH {5:2}',
+        scriptureOsis: 'LUK.2.4',
+        note: 'Under Caesar Augustus\'s decree, Joseph and Mary travel from Nazareth to Bethlehem, the city of David, where Jesus is born, laid in a manger, heralded to shepherds by angels, and later worshipped by Wise Men from the East.'
+      },
+      {
+        name: 'Jerusalem Temple (Presentation at 40 Days)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'c. 5 BC (40 Days Old)',
+        scriptureRef: 'LUKE {2:22}–{2:38}',
+        scriptureOsis: 'LUK.2.22',
+        note: 'Presented to the Lord according to the Law of Moses; righteous Simeon takes the child in his arms and praises God: "Mine eyes have seen thy salvation, a light to lighten the Gentiles."'
+      },
+      {
+        name: 'Egypt (Refuge from Herod the Great)',
+        coords: { lat: 30.650, lng: 32.050 },
+        dateLabel: 'c. 5 – 4 BC',
+        scriptureRef: 'MATTHEW {2:13}–{2:18}, HOSEA {11:1}',
+        scriptureOsis: 'MAT.2.13',
+        note: 'Warned by an angel of the Lord in a dream before Herod\'s massacre in Bethlehem, Joseph flees by night with the young child and his mother into Egypt until the death of Herod (4 BC), fulfilling "Out of Egypt have I called my son."'
+      },
+      {
+        name: 'Nazareth in Galilee (Boyhood)',
+        coords: { lat: 32.705, lng: 35.300 },
+        dateLabel: 'c. 4 BC – AD 26',
+        scriptureRef: 'MATTHEW {2:19}–{2:23}, LUKE {2:39}–{2:40}',
+        scriptureOsis: 'MAT.2.23',
+        note: 'Returning from Egypt after Herod\'s death, the family settles in Nazareth in Galilee under Herod Antipas, where the child grows and waxes strong in spirit, filled with wisdom.'
+      },
+      {
+        name: 'Jerusalem Temple (Passover at Age 12)',
+        coords: { lat: 31.776, lng: 35.236 },
+        dateLabel: 'Passover, c. AD 8 (Age 12)',
+        scriptureRef: 'LUKE {2:41}–{2:52}',
+        scriptureOsis: 'LUK.2.46',
+        note: 'At age twelve Jesus sits in the midst of the doctors in the Temple, both hearing them and asking them questions, declaring to Mary and Joseph: "Wist ye not that I must be about my Father\'s business?"'
+      }
+    ]
+  },
+  {
+    id: 'jesus-early-ministry',
+    name: "Jesus Phase 2: Baptism, Cana, Judea & Samaria (Parallel with John the Baptist)",
+    shortBanner: "🕊️ JESUS PHASE 2: BAPTISM, JUDEA & SAMARIA (AD 26–27)",
+    travelerName: 'Jesus Christ (Early Judean & Samaritan Ministry)',
+    figureId: 'jesus-christ',
+    color: '#34d399', // Emerald Green
+    dateRange: 'AD 26 – 27',
+    scriptureRef: 'MATTHEW {3:13}–{4:12}, JOHN {1:29}–{4:54}',
+    scriptureOsis: 'JHN.3.22',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Jesus is baptized by John the Baptist at the Jordan, overcomes Satan in the Judean Wilderness, turns water to wine at Cana, cleanses the Temple and teaches Nicodemus in Jerusalem, ministers in the Judean countryside simultaneously with John the Baptist at Aenon (John 3:22–24), and reveals Himself as Messiah to the Samaritan woman at Sychar.',
+    stops: [
+      {
+        name: 'Bethabara Beyond Jordan (Baptism by John)',
+        coords: { lat: 31.837, lng: 35.551 },
+        dateLabel: 'Autumn AD 26',
+        scriptureRef: 'MATTHEW {3:13}–{3:17}, JOHN {1:29}–{1:51}',
+        scriptureOsis: 'MAT.3.13',
+        note: 'Jesus is baptized by John the Baptist; the heavens open, the Spirit descends like a dove, and the Father\'s voice declares, "This is my beloved Son, in whom I am well pleased." Andrew, Peter, Philip, and Nathanael become His first disciples.'
+      },
+      {
+        name: 'Wilderness of Judea (40 Days of Temptation)',
+        coords: { lat: 31.875, lng: 35.410 },
+        dateLabel: 'Autumn AD 26',
+        scriptureRef: 'MATTHEW {4:1}–{4:11}, LUKE {4:1}–{4:13}',
+        scriptureOsis: 'MAT.4.1',
+        note: 'Led by the Spirit into the wilderness to be tempted of the devil for forty days and forty nights, Jesus triumphs over every temptation with the written Word of God ("It is written").'
+      },
+      {
+        name: 'Cana of Galilee (First Miracle)',
+        coords: { lat: 32.796, lng: 35.336 },
+        dateLabel: 'Early Spring AD 27',
+        scriptureRef: 'JOHN {2:1}–{2:12}',
+        scriptureOsis: 'JHN.2.1',
+        note: 'On the third day there is a marriage in Cana of Galilee; Jesus turns six stone waterpots of water into the best wine, manifesting forth His glory so His disciples believe on Him.'
+      },
+      {
+        name: 'Jerusalem (First Passover, Temple Cleansing & Nicodemus)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'Passover, Spring AD 27',
+        scriptureRef: 'JOHN {2:13}–{3:21}',
+        scriptureOsis: 'JHN.3.16',
+        note: 'Jesus drives the moneychangers from the Temple ("Destroy this temple, and in three days I will raise it up") and teaches Pharisee ruler Nicodemus by night of the new birth and God\'s love for the world (John 3:16).'
+      },
+      {
+        name: 'Judean Countryside (Parallel Ministry with John at Aenon)',
+        coords: { lat: 31.950, lng: 35.350 },
+        dateLabel: 'Summer–Autumn AD 27 (Concurrent with John at Aenon)',
+        scriptureRef: 'JOHN {3:22}–{3:26}, {4:1}–{4:3}',
+        scriptureOsis: 'JHN.3.22',
+        note: 'SPATIAL RELATION TO JOHN THE BAPTIST: Jesus tarries with His disciples in the land of Judea while His disciples baptize—at the exact same time John the Baptist is baptizing ~35 miles north at Aenon near Salim prior to John\'s arrest (John 3:22–24).'
+      },
+      {
+        name: 'Sychar / Jacob\'s Well in Samaria',
+        coords: { lat: 32.209, lng: 35.285 },
+        dateLabel: 'Late AD 27 (En Route to Galilee After John\'s Arrest)',
+        scriptureRef: 'JOHN {4:4}–{4:42}, MATTHEW {4:12}',
+        scriptureOsis: 'JHN.4.5',
+        note: 'Hearing that John the Baptist has been cast into prison (Matthew 4:12) and that the Pharisees heard Jesus made and baptized more disciples than John (John 4:1), Jesus passes through Samaria, offers living water at Jacob\'s Well, and many Samaritans confess Him as the Saviour of the world.'
+      }
+    ]
+  },
+  {
+    id: 'jesus-galilean-ministry',
+    name: "Jesus Phase 3: Great Galilean & Northern Ministry",
+    shortBanner: "⛵ JESUS PHASE 3: GALILEAN MINISTRY (AD 28–29)",
+    travelerName: 'Jesus Christ & the Twelve Apostles',
+    figureId: 'jesus-christ',
+    color: '#60a5fa', // Galilean Sky Blue
+    dateRange: 'AD 28 – 29',
+    scriptureRef: 'MATTHEW {4:13}–{18:35}, MARK {1:14}–{9:50}, LUKE {4:14}–{9:50}, JOHN {5:1}–{7:52}',
+    scriptureOsis: 'MAT.4.13',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Making Capernaum His headquarters by the Sea of Galilee, Jesus calls the Twelve, preaches the Sermon on the Mount, calms the storm, raises the dead at Nain and Capernaum, feeds the 5,000 near Bethsaida, ministers in Tyre and Sidon, and is transfigured in glory near Caesarea Philippi.',
+    stops: [
+      {
+        name: 'Nazareth Synagogue (Isaiah 61 Scroll)',
+        coords: { lat: 32.701, lng: 35.303 },
+        dateLabel: 'Early AD 28',
+        scriptureRef: 'LUKE {4:16}–{4:30}',
+        scriptureOsis: 'LUK.4.16',
+        note: 'In His hometown synagogue on the Sabbath, Jesus reads Isaiah 61:1–2 and declares, "This day is this scripture fulfilled in your ears."'
+      },
+      {
+        name: 'Capernaum ("His Own City" & Ministry HQ)',
+        coords: { lat: 32.881, lng: 35.575 },
+        dateLabel: 'AD 28 – 29',
+        scriptureRef: 'MATTHEW {4:13}–{4:25}, {8:5}–{9:8}, MARK {2:1}–{2:12}, JOHN {6:24}–{6:59}',
+        scriptureOsis: 'MAT.4.13',
+        note: 'Fulfilling Isaiah 9:1–2 ("Galilee of the nations"), Jesus dwells in Capernaum, calls Peter, Andrew, James, John, and Matthew, heals the centurion\'s servant and the paralytic let down through the roof, raises Jairus\'s daughter, and delivers the Bread of Life discourse.'
+      },
+      {
+        name: 'Mount of Beatitudes (North Shore of Galilee)',
+        coords: { lat: 32.880, lng: 35.556 },
+        dateLabel: 'Summer AD 28',
+        scriptureRef: 'MATTHEW {5:1}–{7:29}, LUKE {6:12}–{6:49}',
+        scriptureOsis: 'MAT.5.1',
+        note: 'After praying all night on a mountain and ordaining the Twelve Apostles, Jesus delivers the Sermon on the Mount with an authority that astonishes the multitudes.'
+      },
+      {
+        name: 'Nain (Hill of Moreh)',
+        coords: { lat: 32.632, lng: 35.347 },
+        dateLabel: 'Summer/Autumn AD 28 (Just Prior to John\'s Messengers)',
+        scriptureRef: 'LUKE {7:11}–{7:28}',
+        scriptureOsis: 'LUK.7.11',
+        note: 'Moved with compassion at the city gate of Nain, Jesus touches the bier and raises the widow\'s only son from the dead. Immediately afterward (Luke 7:18–23), John the Baptist\'s disciples arrive from Machaerus prison and witness Jesus healing the blind, lame, and lepers.'
+      },
+      {
+        name: 'Country of the Gadarenes / Gergesenes (East Shore)',
+        coords: { lat: 32.785, lng: 35.647 },
+        dateLabel: 'Late AD 28',
+        scriptureRef: 'MARK {4:35}–{5:20}, LUKE {8:22}–{8:39}',
+        scriptureOsis: 'MRK.4.39',
+        note: 'Crossing the Sea of Galilee, Jesus rebukes the wind and waves ("Peace, be still") and delivers the demoniac from a legion of unclean spirits on the eastern shore, sending him to proclaim throughout Decapolis how great things Jesus had done.'
+      },
+      {
+        name: 'Bethsaida Julias (Feeding the 5,000 & Walking on the Sea)',
+        coords: { lat: 32.910, lng: 35.630 },
+        dateLabel: 'Passover Season, Spring AD 29 (Upon Hearing of John\'s Martyrdom)',
+        scriptureRef: 'MATTHEW {14:13}–{14:33}, MARK {6:30}–{6:52}, JOHN {6:1}–{6:21}',
+        scriptureOsis: 'MAT.14.13',
+        note: 'When John the Baptist\'s disciples bury his body at Machaerus and come tell Jesus (Matthew 14:12–13), Jesus withdraws by boat to a desert place near Bethsaida, feeds 5,000 men besides women and children with five loaves and two fishes, and walks on the stormy sea.'
+      },
+      {
+        name: 'Coasts of Tyre & Sidon (Phoenicia)',
+        coords: { lat: 33.270, lng: 35.196 },
+        dateLabel: 'Summer AD 29',
+        scriptureRef: 'MATTHEW {15:21}–{15:28}, MARK {7:24}–{7:30}',
+        scriptureOsis: 'MAT.15.21',
+        note: 'Withdrawing northwest into Gentile Phoenicia, Jesus commends the great faith of the Syrophoenician woman and heals her daughter from afar.'
+      },
+      {
+        name: 'Caesarea Philippi & Mount Hermon (Confession & Transfiguration)',
+        coords: { lat: 33.248, lng: 35.694 },
+        dateLabel: 'Autumn AD 29',
+        scriptureRef: 'MATTHEW {16:13}–{17:13}, MARK {8:27}–{9:13}, LUKE {9:18}–{9:36}',
+        scriptureOsis: 'MAT.16.16',
+        note: 'At the foot of Mount Hermon, Peter confesses, "Thou art the Christ, the Son of the living God." Six days later on a high mountain, Jesus is transfigured in radiant glory as Moses and Elijah appear talking with Him of His decease (exodus) at Jerusalem.'
+      }
+    ]
+  },
+  {
+    id: 'jesus-passion-resurrection',
+    name: "Jesus Phase 4: Final Journey, Crucifixion, Resurrection & Ascension",
+    shortBanner: "✝️ JESUS PHASE 4: PASSION & RESURRECTION (AD 30/33)",
+    travelerName: 'Jesus Christ (Crucified & Risen Lord)',
+    figureId: 'jesus-christ',
+    color: '#f87171', // Crimson-Coral
+    dateRange: 'AD 29 – 30 / 33',
+    scriptureRef: 'LUKE {9:51}–{24:53}, JOHN {11:1}–{21:25}, MATTHEW {19:1}–{28:20}, ACTS {1:1}–{1:11}',
+    scriptureOsis: 'MAT.28.6',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Setting His face steadfastly toward Jerusalem, Jesus ministers in Perea, raises Lazarus at Bethany, passes through Jericho, enters Jerusalem in triumph, suffers and dies on Golgotha for our sins, rises bodily from the tomb on the third day, appears in Emmaus, Jerusalem, and Galilee, and ascends from the Mount of Olives.',
+    stops: [
+      {
+        name: 'Perea Beyond Jordan ("Where John at First Baptized")',
+        coords: { lat: 31.880, lng: 35.600 },
+        dateLabel: 'Winter AD 29/30',
+        scriptureRef: 'JOHN {10:40}–{10:42}, LUKE {13:22}–{17:10}, MATTHEW {19:1}',
+        scriptureOsis: 'JHN.10.40',
+        note: 'Jesus returns to the place beyond Jordan where John at first baptized; many resort unto Him and believe, saying, "John did no miracle: but all things that John spake of this man were true."'
+      },
+      {
+        name: 'Bethany (Raising of Lazarus)',
+        coords: { lat: 31.771, lng: 35.261 },
+        dateLabel: 'Early Spring AD 30/33',
+        scriptureRef: 'JOHN {11:1}–{12:11}',
+        scriptureOsis: 'JHN.11.25',
+        note: 'Two miles east of Jerusalem on the eastern slope of Olivet, Jesus declares "I am the resurrection, and the life" and calls Lazarus forth alive after four days in the tomb; Mary of Bethany later anoints His feet with costly spikenard.'
+      },
+      {
+        name: 'Jericho (Bartimaeus & Zacchaeus)',
+        coords: { lat: 31.856, lng: 35.444 },
+        dateLabel: 'Early Nisan, AD 30/33',
+        scriptureRef: 'LUKE {18:35}–{19:28}, MARK {10:46}–{10:52}',
+        scriptureOsis: 'LUK.19.10',
+        note: 'Ascending toward Jerusalem for His final Passover, Jesus gives sight to blind Bartimaeus and brings salvation to the house of chief publican Zacchaeus: "For the Son of man is come to seek and to save that which was lost."'
+      },
+      {
+        name: 'Jerusalem: Gethsemane, Gabbatha, Golgotha & The Empty Tomb',
+        coords: { lat: 31.778, lng: 35.230 },
+        dateLabel: '10–16 Nisan, AD 30/33 (Passover Week & Resurrection Sunday)',
+        scriptureRef: 'MATTHEW {21:1}–{28:15}, LUKE {22:1}–{24:12}, JOHN {18:1}–{20:31}',
+        scriptureOsis: 'MAT.28.6',
+        note: 'Jesus institutes the New Covenant in the Upper Room, prays in agony at Gethsemane, is condemned before Caiaphas and Pontius Pilate (both archaeologically attested), is crucified at Golgotha ("It is finished"), and rises bodily from the tomb on the third day ("He is not here: for he is risen").'
+      },
+      {
+        name: 'Emmaus (Resurrection Sunday Appearance)',
+        coords: { lat: 31.839, lng: 34.989 },
+        dateLabel: '16 Nisan, AD 30/33 (Resurrection Afternoon)',
+        scriptureRef: 'LUKE {24:13}–{24:35}',
+        scriptureOsis: 'LUK.24.13',
+        note: 'Walking with Cleopas and another disciple toward Emmaus, the risen Christ expounds in all the Scriptures the things concerning Himself from Moses and all the prophets, and is known to them in the breaking of bread.'
+      },
+      {
+        name: 'Sea of Galilee & Mountain in Galilee (The Great Commission)',
+        coords: { lat: 32.874, lng: 35.560 },
+        dateLabel: 'Spring AD 30/33 (During the 40 Post-Resurrection Days)',
+        scriptureRef: 'JOHN {21:1}–{21:25}, MATTHEW {28:16}–{28:20}, 1 CORINTHIANS {15:6}',
+        scriptureOsis: 'MAT.28.18',
+        note: 'Jesus appears to the disciples by the Sea of Tiberias, restores Peter threefold ("Feed my sheep"), appears to above 500 brethren at once, and gives the Great Commission: "Go ye therefore, and teach all nations."'
+      },
+      {
+        name: 'Mount of Olives / Bethany (The Ascension)',
+        coords: { lat: 31.778, lng: 35.245 },
+        dateLabel: '40 Days After Resurrection, AD 30/33',
+        scriptureRef: 'LUKE {24:50}–{24:53}, ACTS {1:3}–{1:12}',
+        scriptureOsis: 'ACT.1.8',
+        note: 'After showing Himself alive by many infallible proofs for forty days and promising power when the Holy Ghost comes ("witnesses unto me both in Jerusalem, and in all Judaea, and in Samaria, and unto the uttermost part of the earth"), Jesus ascends visibly into heaven from Olivet.'
+      }
+    ]
+  },
+  {
+    id: 'peter-philip-missions',
+    name: "Peter & Philip: Jerusalem, Samaria, Gaza, Caesarea & Rome",
+    shortBanner: "🔥 PETER & PHILIP MISSIONS (AD 33–67)",
+    travelerName: 'Apostle Peter & Philip the Evangelist',
+    figureId: 'peter',
+    color: '#38bdf8', // Apostolic Azure
+    dateRange: 'AD 33 – c. 67',
+    scriptureRef: 'ACTS {2:1}–{12:19}, {15:7}–{15:11}, GALATIANS {2:11}, 1 PETER {1:1}, {5:13}',
+    scriptureOsis: 'ACT.2.1',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'From the outpouring of the Holy Spirit at Pentecost in Jerusalem, the Gospel expands through Philip to Samaria and the Ethiopian treasurer on the Gaza road, and through Peter to Lydda, Joppa, Cornelius\'s Gentile household in Caesarea, Antioch, the Diaspora of Asia Minor, and Rome.',
+    stops: [
+      {
+        name: 'Jerusalem (Pentecost & Solomon\'s Porch)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'AD 33 – 44',
+        scriptureRef: 'ACTS {2:1}–{5:42}, {12:1}–{12:17}, {15:6}–{15:11}',
+        scriptureOsis: 'ACT.2.14',
+        note: 'On the Day of Pentecost, Peter preaches the crucified and exalted Christ to Jews from every nation—including Parthians, Medes, Elamites, Mesopotamia, Egypt, and Rome—and 3,000 souls are baptized. Delivered from Herod Agrippa I\'s prison by an angel in AD 44.'
+      },
+      {
+        name: 'Samaria (Philip, Peter & John)',
+        coords: { lat: 32.277, lng: 35.190 },
+        dateLabel: 'c. AD 34 – 35',
+        scriptureRef: 'ACTS {8:5}–{8:25}',
+        scriptureOsis: 'ACT.8.5',
+        note: 'Following Stephen\'s martyrdom, Philip goes down to the city of Samaria and preaches Christ; Peter and John come from Jerusalem and pray for the Samaritans to receive the Holy Ghost.'
+      },
+      {
+        name: 'Gaza Desert Road & Azotus (Philip & the Ethiopian Eunuch)',
+        coords: { lat: 31.520, lng: 34.550 },
+        dateLabel: 'c. AD 35',
+        scriptureRef: 'ACTS {8:26}–{8:40}',
+        scriptureOsis: 'ACT.8.26',
+        note: 'Directed by an angel to the desert road from Jerusalem to Gaza, Philip expounds Isaiah 53 to the Ethiopian treasurer of Queen Candace (Kush/Meroe) and baptizes him, sending the Gospel into Africa.'
+      },
+      {
+        name: 'Lydda & Joppa (Aeneas, Dorcas & Peter\'s Rooftop Vision)',
+        coords: { lat: 32.054, lng: 34.751 },
+        dateLabel: 'c. AD 38 – 40',
+        scriptureRef: 'ACTS {9:32}–{10:23}',
+        scriptureOsis: 'ACT.9.36',
+        note: 'Peter heals paralytic Aeneas at Lydda, raises Tabitha (Dorcas) from the dead at Joppa, and on the rooftop of Simon the tanner receives the threefold vision declaring that God has cleansed the Gentiles.'
+      },
+      {
+        name: 'Caesarea Maritima (House of Cornelius & Philip\'s Home)',
+        coords: { lat: 32.500, lng: 34.890 },
+        dateLabel: 'c. AD 40 (and AD 57 in Acts 21:8)',
+        scriptureRef: 'ACTS {10:24}–{10:48}, {21:8}–{21:9}',
+        scriptureOsis: 'ACT.10.34',
+        note: 'In the Roman provincial capital of Judea, Peter preaches to centurion Cornelius\'s household; the Holy Ghost falls on the Gentiles just as at Pentecost. Philip the Evangelist and his four prophesying daughters also reside here.'
+      },
+      {
+        name: 'Antioch (Syria) & Provinces of Pontus, Galatia, Cappadocia, Asia & Bithynia',
+        coords: { lat: 36.202, lng: 36.160 },
+        dateLabel: 'c. AD 47 – 63',
+        scriptureRef: 'GALATIANS {2:11}–{2:14}, 1 PETER {1:1}',
+        scriptureOsis: '1PE.1.1',
+        note: 'Peter visits the Gentile-Jewish church at Syrian Antioch and addresses his first epistle to the elect strangers scattered throughout Pontus, Galatia, Cappadocia, Asia, and Bithynia.'
+      },
+      {
+        name: 'Rome ("Babylon" — Final Testimony & Martyrdom)',
+        coords: { lat: 41.902, lng: 12.496 },
+        dateLabel: 'c. AD 64 – 67',
+        scriptureRef: '1 PETER {5:13}, 2 PETER {1:14}, JOHN {21:18}–{21:19}',
+        scriptureOsis: '1PE.5.13',
+        note: 'Writing with Silvanus and John Mark ("The church that is at Babylon, elected together with you, saluteth you; and so doth Marcus my son"), Peter fulfills Jesus\'s prophecy of his martyrdom in Rome under Nero (corroborated by Clement of Rome, 1 Clement 5, c. AD 95).'
+      }
+    ]
+  },
+  {
+    id: 'paul-first-journey',
+    name: "Paul's First Missionary Journey: Cyprus & Galatia",
+    shortBanner: "⛵ PAUL'S 1ST JOURNEY: CYPRUS & GALATIA (AD 46–48)",
+    travelerName: 'Apostle Paul & Barnabas (with John Mark)',
+    figureId: 'paul',
+    color: '#fb923c', // Warm Amber-Orange
+    dateRange: 'AD 46 – 48',
+    scriptureRef: 'ACTS {13:1}–{14:28}',
+    scriptureOsis: 'ACT.13.2',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Set apart by the Holy Ghost at Syrian Antioch, Barnabas and Saul (Paul) sail to Cyprus, witness Proconsul Sergius Paulus\'s conversion at Paphos, cross the Taurus Mountains into Galatia, and plant enduring churches in Pisidian Antioch, Iconium, Lystra, and Derbe.',
+    stops: [
+      {
+        name: 'Antioch in Syria & Seleucia Pieria',
+        coords: { lat: 36.202, lng: 36.160 },
+        dateLabel: 'Spring AD 46 (Commissioning)',
+        scriptureRef: 'ACTS {13:1}–{13:4}',
+        scriptureOsis: 'ACT.13.2',
+        note: 'As the prophets and teachers minister to the Lord and fast, the Holy Ghost says, "Separate me Barnabas and Saul for the work whereunto I have called them." They sail from the port of Seleucia.'
+      },
+      {
+        name: 'Salamis & Paphos (Island of Cyprus)',
+        coords: { lat: 34.756, lng: 32.406 },
+        dateLabel: 'Summer AD 46',
+        scriptureRef: 'ACTS {13:5}–{13:12}',
+        scriptureOsis: 'ACT.13.7',
+        note: 'Crossing Cyprus from Salamis to Paphos, Paul blinds the sorcerer Bar-jesus (Elymas), and Roman Proconsul Sergius Paulus (whose family is attested on inscriptions at Pisidian Antioch and Cyprus) believes, being astonished at the doctrine of the Lord.'
+      },
+      {
+        name: 'Perga in Pamphylia',
+        coords: { lat: 36.961, lng: 30.853 },
+        dateLabel: 'Late Summer AD 46',
+        scriptureRef: 'ACTS {13:13}',
+        scriptureOsis: 'ACT.13.13',
+        note: 'Landing on the southern coast of Asia Minor, John Mark departs from them to return to Jerusalem while Paul and Barnabas press northward across the Taurus range.'
+      },
+      {
+        name: 'Antioch in Pisidia (Galatia)',
+        coords: { lat: 38.304, lng: 31.189 },
+        dateLabel: 'Autumn AD 46',
+        scriptureRef: 'ACTS {13:14}–{13:52}',
+        scriptureOsis: 'ACT.13.14',
+        note: 'Paul preaches his first recorded synagogue sermon tracing God\'s redemptive history from the Exodus and David to the bodily resurrection of Jesus (Psalm 2 & 16); the Word of the Lord is published throughout all the region.'
+      },
+      {
+        name: 'Iconium',
+        coords: { lat: 37.871, lng: 32.484 },
+        dateLabel: 'Winter AD 46 – Spring AD 47',
+        scriptureRef: 'ACTS {14:1}–{14:7}',
+        scriptureOsis: 'ACT.14.1',
+        note: 'Paul and Barnabas speak boldly in the Lord for a long time, the Lord giving testimony unto the word of His grace with signs and wonders before they flee a plot to stone them.'
+      },
+      {
+        name: 'Lystra & Derbe (Lycaonia)',
+        coords: { lat: 37.583, lng: 32.483 },
+        dateLabel: 'Summer–Autumn AD 47',
+        scriptureRef: 'ACTS {14:8}–{14:23}',
+        scriptureOsis: 'ACT.14.8',
+        note: 'At Lystra (hometown of Timothy), Paul heals a man crippled from birth, refuses pagan worship as Mercury and Jupiter, survives being stoned and dragged out of the city, preaches in Derbe, and returns through Lystra, Iconium, and Antioch ordaining elders in every church.'
+      },
+      {
+        name: 'Attalia & Return to Syrian Antioch',
+        coords: { lat: 36.884, lng: 30.705 },
+        dateLabel: 'Spring AD 48',
+        scriptureRef: 'ACTS {14:24}–{14:28}',
+        scriptureOsis: 'ACT.14.26',
+        note: 'Sailing from Attalia back to Syrian Antioch, they gather the church together and rehearse all that God had done with them, and how He had opened the door of faith unto the Gentiles.'
+      }
     ]
   },
   {
     id: 'paul-second-journey',
-    name: "Paul's Missionary Voyage to Europe",
+    name: "Paul's Second Missionary Journey",
+    shortBanner: "⛵ PAUL'S MISSIONARY JOURNEY (AD 49–52)",
+    travelerName: 'Apostle Paul (with Silas, Timothy & Luke)',
     figureId: 'paul',
-    color: '#a78bfa', // Purple / Roman royal
+    color: '#f472b6', // Vibrant Rose-Coral (distinct from Roman Empire purple)
+    dateRange: 'AD 49 – 52',
     scriptureRef: 'ACTS {15:36}–{18:22}',
-    summary: 'Paul carries the Gospel from Syrian Antioch across Asia Minor and enters Europe at Philippi, Athens, and Corinth.',
+    scriptureOsis: 'ACT.15.36',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Paul and Silas depart Syrian Antioch after the Jerusalem Council, strengthen the churches in Asia Minor with Timothy, cross the Aegean after the Macedonian vision at Troas, and plant churches in Philippi, Thessalonica, Berea, Athens, and Corinth.',
     stops: [
-      { name: 'Antioch (Syria)', coords: { lat: 36.202, lng: 36.160 }, note: 'Departure with Silas' },
-      { name: 'Tarsus', coords: { lat: 36.916, lng: 34.895 }, note: 'Paul\'s hometown' },
-      { name: 'Derbe & Lystra', coords: { lat: 37.583, lng: 32.483 }, note: 'Timothy joins the mission' },
-      { name: 'Troas', coords: { lat: 39.750, lng: 26.150 }, note: 'Macedonian vision: "Come over and help us"' },
-      { name: 'Philippi', coords: { lat: 41.013, lng: 24.286 }, note: 'First church in Europe; prison earthquake' },
-      { name: 'Thessalonica', coords: { lat: 40.640, lng: 22.944 }, note: 'Preaching in the synagogue' },
-      { name: 'Berea', coords: { lat: 40.523, lng: 22.202 }, note: 'Searching the scriptures daily' },
-      { name: 'Athens', coords: { lat: 37.971, lng: 23.726 }, note: 'Areopagus sermon to the Unknown God' },
-      { name: 'Corinth', coords: { lat: 37.906, lng: 22.880 }, note: '18-month ministry; trial before Gallio' },
-      { name: 'Ephesus', coords: { lat: 37.940, lng: 27.341 }, note: 'Brief stop before return' },
-      { name: 'Caesarea & Jerusalem', coords: { lat: 31.778, lng: 35.234 }, note: 'Salutes the church at Jerusalem' }
+      {
+        name: 'Antioch (Syria)',
+        coords: { lat: 36.202, lng: 36.160 },
+        dateLabel: 'Spring AD 49 (Journey Departure)',
+        scriptureRef: 'ACTS {15:35}–{15:40}',
+        scriptureOsis: 'ACT.15.36',
+        note: 'Following the Jerusalem Council (Acts 15), Paul chooses Silas and departs Syrian Antioch, commended by the brethren unto the grace of God.'
+      },
+      {
+        name: 'Tarsus (Cilicia)',
+        coords: { lat: 36.916, lng: 34.895 },
+        dateLabel: 'Late Spring AD 49',
+        scriptureRef: 'ACTS {15:41}',
+        scriptureOsis: 'ACT.15.41',
+        note: 'Paul travels overland through Syria and his native province of Cilicia (Tarsus), confirming the churches.'
+      },
+      {
+        name: 'Derbe & Lystra (Galatia)',
+        coords: { lat: 37.583, lng: 32.483 },
+        dateLabel: 'Summer AD 49',
+        scriptureRef: 'ACTS {16:1}–{16:5}',
+        scriptureOsis: 'ACT.16.1',
+        note: 'Young disciple Timothy joins Paul and Silas at Lystra; they deliver the Jerusalem Council decrees and the churches increase in number daily.'
+      },
+      {
+        name: 'Troas (Aegean Coast)',
+        coords: { lat: 39.750, lng: 26.150 },
+        dateLabel: 'Late Summer / Early Autumn AD 49',
+        scriptureRef: 'ACTS {16:8}–{16:11}',
+        scriptureOsis: 'ACT.16.8',
+        note: 'After the Holy Spirit forbids preaching in Asia and Bithynia, Paul sees a night vision of a man of Macedonia pleading, "Come over into Macedonia, and help us." Luke joins the team ("we").'
+      },
+      {
+        name: 'Philippi (Macedonia)',
+        coords: { lat: 41.013, lng: 24.286 },
+        dateLabel: 'Autumn AD 49',
+        scriptureRef: 'ACTS {16:12}–{16:40}',
+        scriptureOsis: 'ACT.16.12',
+        note: 'First church planted on European soil: Lydia\'s household is baptized, Paul and Silas sing at midnight in prison, and the Philippian jailer believes after an earthquake.'
+      },
+      {
+        name: 'Thessalonica',
+        coords: { lat: 40.640, lng: 22.944 },
+        dateLabel: 'Late Autumn / Early Winter AD 49',
+        scriptureRef: 'ACTS {17:1}–{17:9}',
+        scriptureOsis: 'ACT.17.1',
+        note: 'For three Sabbath days Paul reasons out of the Scriptures in the synagogue that Jesus is the Christ; a multitude of devout Greeks and chief women believe.'
+      },
+      {
+        name: 'Berea',
+        coords: { lat: 40.523, lng: 22.202 },
+        dateLabel: 'Winter AD 49 / Early AD 50',
+        scriptureRef: 'ACTS {17:10}–{17:14}',
+        scriptureOsis: 'ACT.17.10',
+        note: 'The Bereans receive the word with all readiness of mind and search the Scriptures daily whether those things are so.'
+      },
+      {
+        name: 'Athens (Areopagus / Mars\' Hill)',
+        coords: { lat: 37.971, lng: 23.726 },
+        dateLabel: 'Spring AD 50',
+        scriptureRef: 'ACTS {17:15}–{17:34}',
+        scriptureOsis: 'ACT.17.15',
+        note: 'Provoked by the city\'s idols, Paul proclaims the Creator and risen Judge before the Epicurean and Stoic philosophers on Mars\' Hill; Dionysius and Damaris believe.'
+      },
+      {
+        name: 'Corinth (Achaia)',
+        coords: { lat: 37.906, lng: 22.880 },
+        dateLabel: 'Spring AD 50 – Autumn AD 51 (18 Months)',
+        scriptureRef: 'ACTS {18:1}–{18:18}',
+        scriptureOsis: 'ACT.18.1',
+        note: 'Paul labors in tentmaking with Aquila and Priscilla, stays a year and six months teaching the word of God, writes 1 & 2 Thessalonians, and is vindicated before Proconsul Gallio (AD 51/52).'
+      },
+      {
+        name: 'Ephesus (Ionia)',
+        coords: { lat: 37.940, lng: 27.341 },
+        dateLabel: 'Autumn AD 51',
+        scriptureRef: 'ACTS {18:19}–{18:21}',
+        scriptureOsis: 'ACT.18.19',
+        note: 'Sailing across the Aegean from Cenchrea, Paul leaves Priscilla and Aquila at Ephesus, reasons in the synagogue, and promises to return if God wills.'
+      },
+      {
+        name: 'Caesarea & Jerusalem',
+        coords: { lat: 31.778, lng: 35.234 },
+        dateLabel: 'Late Autumn AD 51 / Spring AD 52',
+        scriptureRef: 'ACTS {18:22}',
+        scriptureOsis: 'ACT.18.22',
+        note: 'Paul lands at Caesarea, goes up and salutes the church at Jerusalem, and goes down to Antioch to complete his ~2,800-mile second missionary journey.'
+      }
+    ]
+  },
+  {
+    id: 'paul-third-journey',
+    name: "Paul's Third Missionary Journey: Ephesus, Macedonia & Achaia",
+    shortBanner: "⛵ PAUL'S 3RD JOURNEY: EPHESUS & CORINTH (AD 53–57)",
+    travelerName: 'Apostle Paul (with Luke, Timothy, Titus & Erastus)',
+    figureId: 'paul',
+    color: '#a855f7', // Royal Violet
+    dateRange: 'AD 53 – 57',
+    scriptureRef: 'ACTS {18:23}–{21:17}',
+    scriptureOsis: 'ACT.19.1',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Passing through Galatia and Phrygia, Paul ministers for three years in Ephesus until all Asia hears the Word of the Lord, writes 1 & 2 Corinthians and Romans across Macedonia and Achaia, raises Eutychus at Troas, bids farewell to the Ephesian elders at Miletus, and goes up to Jerusalem.',
+    stops: [
+      {
+        name: 'Antioch, Galatia & Phrygia',
+        coords: { lat: 37.871, lng: 32.484 },
+        dateLabel: 'Spring–Summer AD 53',
+        scriptureRef: 'ACTS {18:23}',
+        scriptureOsis: 'ACT.18.23',
+        note: 'Departing Syrian Antioch, Paul goes over all the country of Galatia and Phrygia in order, strengthening all the disciples.'
+      },
+      {
+        name: 'Ephesus (School of Tyrannus — 3 Years)',
+        coords: { lat: 37.940, lng: 27.341 },
+        dateLabel: 'Autumn AD 53 – Spring AD 56 (3 Years)',
+        scriptureRef: 'ACTS {19:1}–{19:41}',
+        scriptureOsis: 'ACT.19.10',
+        note: 'Disputing daily in the school of Tyrannus for two years (three years total, Acts 20:31), "all they which dwelt in Asia heard the word of the Lord Jesus, both Jews and Greeks." Converts burn 50,000 pieces of silver worth of magic books; Paul writes 1 Corinthians here before Demetrius\'s silversmith riot.'
+      },
+      {
+        name: 'Philippi & Macedonia (Illyricum Border)',
+        coords: { lat: 41.013, lng: 24.286 },
+        dateLabel: 'Summer–Autumn AD 56',
+        scriptureRef: 'ACTS {20:1}–{20:2}, 2 CORINTHIANS {2:12}–{2:13}, {7:5}–{7:6}, ROMANS {15:19}',
+        scriptureOsis: 'ACT.20.1',
+        note: 'Crossing into Macedonia, Paul meets Titus with joyful news from Corinth, writes 2 Corinthians, and organizes the Macedonian relief collection for the poor saints in Jerusalem.'
+      },
+      {
+        name: 'Corinth (Three Months — Writes Epistle to the Romans)',
+        coords: { lat: 37.906, lng: 22.880 },
+        dateLabel: 'Winter AD 56/57 (3 Months)',
+        scriptureRef: 'ACTS {20:2}–{20:3}, ROMANS {16:1}, {16:23}',
+        scriptureOsis: 'ACT.20.3',
+        note: 'Spending three winter months in Greece as guest of Gaius and alongside city treasurer Erastus (Romans 16:23, attested by the Corinth Erastus Inscription), Paul dictates the Epistle to the Romans to Tertius and sends it by Phoebe of Cenchrea.'
+      },
+      {
+        name: 'Troas (Eutychus Raised)',
+        coords: { lat: 39.750, lng: 26.150 },
+        dateLabel: 'Passover / Unleavened Bread, Spring AD 57',
+        scriptureRef: 'ACTS {20:6}–{20:12}',
+        scriptureOsis: 'ACT.20.7',
+        note: 'On the first day of the week when the disciples come together to break bread, Paul preaches until midnight and restores young Eutychus alive after he falls from the third loft.'
+      },
+      {
+        name: 'Miletus (Farewell to the Ephesian Elders)',
+        coords: { lat: 37.530, lng: 27.278 },
+        dateLabel: 'Late Spring AD 57',
+        scriptureRef: 'ACTS {20:15}–{20:38}',
+        scriptureOsis: 'ACT.20.17',
+        note: 'Calling the elders of Ephesus to the port of Miletus, Paul testifies that he has not shunned to declare unto them all the counsel of God and charges them to feed the church of God, which He purchased with His own blood.'
+      },
+      {
+        name: 'Tyre & Caesarea Maritima (House of Philip the Evangelist)',
+        coords: { lat: 32.500, lng: 34.890 },
+        dateLabel: 'May AD 57',
+        scriptureRef: 'ACTS {21:3}–{21:14}',
+        scriptureOsis: 'ACT.21.8',
+        note: 'Sailing past Cyprus to Tyre and Ptolemais, Paul and Luke stay in Caesarea with Philip the Evangelist; prophet Agabus binds his own hands with Paul\'s girdle, foretelling Paul\'s arrest in Jerusalem, and Paul replies, "I am ready not to be bound only, but also to die at Jerusalem for the name of the Lord Jesus."'
+      },
+      {
+        name: 'Jerusalem (Arrest in the Temple & Witness Before Kings)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'Pentecost, May AD 57',
+        scriptureRef: 'ACTS {21:15}–{23:30}',
+        scriptureOsis: 'ACT.21.17',
+        note: 'After presenting the Gentile relief offering to James and the elders, Paul is seized by a mob in the Temple, rescued by Roman tribune Claudius Lysias, and comforted by the risen Lord by night: "Be of good cheer, Paul: for as thou hast testified of me in Jerusalem, so must thou bear witness also at Rome."'
+      }
+    ]
+  },
+  {
+    id: 'paul-voyage-rome',
+    name: "Paul's Voyage & Shipwreck to Rome",
+    shortBanner: "⚓ PAUL'S VOYAGE TO ROME (AD 59–62)",
+    travelerName: 'Apostle Paul (with Luke & Aristarchus under Centurion Julius)',
+    figureId: 'paul',
+    color: '#e879f9', // Bright Orchid-Magenta
+    dateRange: 'AD 59 – 62',
+    scriptureRef: 'ACTS {23:31}–{28:31}',
+    scriptureOsis: 'ACT.27.1',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'After two years imprisoned at Caesarea testifying before Felix, Festus, and King Agrippa II, Paul appeals to Caesar, sails across the stormy Mediterranean, survives the Euroclydon shipwreck on Malta with all 276 souls spared, and preaches the Kingdom of God in Rome.',
+    stops: [
+      {
+        name: 'Caesarea Maritima (Appeal to Caesar & Embarkation)',
+        coords: { lat: 32.500, lng: 34.890 },
+        dateLabel: 'AD 57 – Late Summer AD 59',
+        scriptureRef: 'ACTS {24:1}–{27:2}',
+        scriptureOsis: 'ACT.27.1',
+        note: 'Held two years at Herod\'s Praetorium in Caesarea under Governors Felix and Festus, Paul testifies before King Agrippa II ("Almost thou persuadest me to be a Christian") and embarks with Luke and Aristarchus under Centurion Julius of the Augustus Cohort.'
+      },
+      {
+        name: 'Sidon & Myra in Lycia',
+        coords: { lat: 36.259, lng: 29.985 },
+        dateLabel: 'Early Autumn AD 59',
+        scriptureRef: 'ACTS {27:3}–{27:6}',
+        scriptureOsis: 'ACT.27.5',
+        note: 'After touching at Sidon, they sail under the lee of Cyprus to Myra in Lycia, where the centurion transfers the prisoners onto a large Alexandrian grain ship bound for Italy.'
+      },
+      {
+        name: 'Fair Havens, Crete (Paul\'s Warning Ignored)',
+        coords: { lat: 34.928, lng: 24.805 },
+        dateLabel: 'October AD 59 (After the Fast / Day of Atonement)',
+        scriptureRef: 'ACTS {27:7}–{27:20}',
+        scriptureOsis: 'ACT.27.8',
+        note: 'With the Fast (Yom Kippur) already past and winter navigation dangerous, Paul warns of disaster; when the ship attempts to reach Phoenix, the tempestuous Euroclydon northeaster drives them helplessly across the Mediterranean for 14 days.'
+      },
+      {
+        name: 'Melita / Malta (Shipwreck & Three-Month Winter Miracles)',
+        coords: { lat: 35.946, lng: 14.403 },
+        dateLabel: 'November AD 59 – February AD 60',
+        scriptureRef: 'ACTS {27:21}–{28:10}',
+        scriptureOsis: 'ACT.28.1',
+        note: 'Just as the angel of God promised Paul ("there shall be no loss of any man\'s life among you"), all 276 souls escape safely to land on Malta (St. Paul\'s Bay). Paul shakes a venomous viper into the fire unharmed and heals the father of chief magistrate Publius.'
+      },
+      {
+        name: 'Syracuse (Sicily), Rhegium & Puteoli (Bay of Naples)',
+        coords: { lat: 40.826, lng: 14.122 },
+        dateLabel: 'Early Spring AD 60',
+        scriptureRef: 'ACTS {28:11}–{28:15}',
+        scriptureOsis: 'ACT.28.13',
+        note: 'Sailing in the Alexandrian ship Castor and Pollux, Paul lands at Syracuse and Puteoli, then walks up the Appian Way where Roman Christians meet him at the Forum of Appius and Three Taverns—causing Paul to thank God and take courage.'
+      },
+      {
+        name: 'Rome (Two-Year House Custody & Prison Epistles)',
+        coords: { lat: 41.902, lng: 12.496 },
+        dateLabel: 'Spring AD 60 – Spring AD 62 (2 Full Years)',
+        scriptureRef: 'ACTS {28:16}–{28:31}, PHILIPPIANS {1:12}–{1:13}',
+        scriptureOsis: 'ACT.28.30',
+        note: 'In his own hired house in the imperial capital—chained to Praetorian guards so that his bonds in Christ are manifest in all the palace (Philippians 1:13)—Paul writes Ephesians, Philippians, Colossians, and Philemon, preaching the Kingdom of God and teaching those things which concern the Lord Jesus Christ with all confidence, no man forbidding him.'
+      }
+    ]
+  },
+  {
+    id: 'thomas-parthia-india',
+    name: "Apostle Thomas (Didymus): Jerusalem, Parthia & India",
+    shortBanner: "🌏 THOMAS: PARTHIA & INDIA [SCRIPTURE + PATRISTIC] (AD 33–72)",
+    travelerName: 'Apostle Thomas (Called Didymus)',
+    figureId: 'peter',
+    color: '#2dd4bf', // Vibrant Teal-Turquoise
+    dateRange: 'AD 30 – c. AD 72',
+    scriptureRef: 'JOHN {11:16}, {14:5}–{14:6}, {20:24}–{20:29}, {21:2}, ACTS {1:13}, {2:9}',
+    scriptureOsis: 'JHN.20.28',
+    evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+    attestationSource: 'Canonical Scripture (John 11:16; 14:5; 20:24–29; Acts 1:13) + Early Patristic & Archaeological Attestation: Origen (c. AD 185–253, quoted in Eusebius Ecclesiastical History 3.1), Ephrem the Syrian (Carmina Nisibena 42, c. AD 363), Gregory of Nazianzus (Orations 33.11, AD 380), Ambrose of Milan, Jerome (Epistle 59 to Marcela, c. AD 395), 1st-century coins & Takht-i-Bahi inscription of King Gondophares (AD 20–46), and Ancient Malabar Syrian Christian Tradition (AD 52).',
+    summary: 'DISTINCTION OF EVIDENCE: In canonical Scripture, Thomas fiercely loves Christ ("Let us also go, that we may die with him," John 11:16), prompts "I am the way, the truth, and the life" (John 14:5–6), and makes the climactic confession to the risen Jesus, "My Lord and my God!" (John 20:28). Beyond Acts, unanimous early patristic witnesses (Origen, Ephrem the Syrian, Gregory of Nazianzus, Jerome) and South Indian Malabar tradition record that Thomas carried the Gospel eastward across the Parthian Empire, the Indo-Parthian court of King Gondophares in Taxila, and down the Malabar Coast of India (c. AD 52) until his martyrdom at Mylapore (c. AD 72).',
+    stops: [
+      {
+        name: 'Jerusalem & Galilee [Canonical Scripture]',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'AD 30 – 33 [Canonical Scripture]',
+        scriptureRef: 'JOHN {11:16}, {14:5}–{14:6}, {20:24}–{20:29}, {21:2}, ACTS {1:13}',
+        scriptureOsis: 'JHN.20.28',
+        evidenceClass: 'SCRIPTURE_TEXT',
+        note: 'CANONICAL SCRIPTURE: Eight days after the Resurrection in Jerusalem, the risen Christ shows Thomas His pierced hands and side; Thomas answers, "My Lord and my God!" Present by the Sea of Galilee (John 21:2) and in the Upper Room at Pentecost (Acts 1:13), where Jews from Parthia, Media, Elam, and Mesopotamia hear the Gospel (Acts 2:9).'
+      },
+      {
+        name: 'Edessa / Osrhoene (Upper Mesopotamia) [Patristic Tradition]',
+        coords: { lat: 37.159, lng: 38.796 },
+        dateLabel: 'c. AD 38 – 42 [Patristic Tradition]',
+        scriptureRef: 'ACTS {2:9}',
+        scriptureOsis: 'ACT.2.9',
+        evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+        attestationSource: 'Eusebius Ecclesiastical History 1.13, 3.1; Ephrem the Syrian Carmina Nisibena 42',
+        note: 'EXTERNAL HISTORICAL ATTESTATION: Early Syriac Christian chronicles and Eusebius record that Thomas organized the eastward Aramaic-speaking mission through Edessa (Urfa) at the gateway to the Parthian Empire.'
+      },
+      {
+        name: 'Ecbatana & Parthian Heartland (Media / Persia) [Patristic Tradition]',
+        coords: { lat: 34.798, lng: 48.515 },
+        dateLabel: 'c. AD 42 – 45 [Patristic: Origen in Eusebius 3.1]',
+        scriptureRef: 'ACTS {2:9}',
+        scriptureOsis: 'ACT.2.9',
+        evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+        attestationSource: 'Origen (c. AD 230), preserved in Eusebius Ecclesiastical History 3.1',
+        note: 'EXTERNAL HISTORICAL ATTESTATION: Origen writes in his third volume on Genesis (quoted by Eusebius, Hist. Eccl. 3.1): "When the holy apostles and disciples of our Saviour were dispersed over all the world, Parthia, according to tradition, was allotted to Thomas as his field of labor."'
+      },
+      {
+        name: 'Taxila — Court of Indo-Parthian King Gondophares (NW India / Punjab) [External Attestation]',
+        coords: { lat: 33.746, lng: 72.787 },
+        dateLabel: 'c. AD 46 – 49 [Patristic + Numismatic Attestation]',
+        scriptureRef: 'ESTHER {1:1}, {8:9}',
+        scriptureOsis: 'EST.1.1',
+        evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+        attestationSource: 'Takht-i-Bahi Inscription (dated Year 26 of King Gondophares = AD 46) & 1st-Century Indo-Parthian Coinage',
+        note: 'EXTERNAL HISTORICAL ATTESTATION: Early Syriac tradition places Thomas in northwestern India at the court of King "Gudnaphar" (Gondophares) and his brother Gad. For centuries critics doubted whether such a king existed—until 19th-century archaeologists discovered vast quantities of 1st-century coins of King Gondophares (reigned c. AD 20–46+) and the Takht-i-Bahi stone inscription dated AD 46.'
+      },
+      {
+        name: 'Muziris / Cranganore (Kodungallur, Malabar Coast, SW India) [Patristic & Malabar Tradition]',
+        coords: { lat: 10.221, lng: 76.197 },
+        dateLabel: 'c. AD 52 – 68 [Patristic: Gregory of Nazianzus & Jerome; Malabar Tradition]',
+        scriptureRef: 'ESTHER {1:1}, MATTHEW {28:19}',
+        scriptureOsis: 'MAT.28.19',
+        evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+        attestationSource: 'Gregory of Nazianzus (Orations 33.11), Jerome (Epistle 59: "Christ dwelt in India with Thomas"), Ambrose of Milan, and Mar Thoma Malabar Tradition (AD 52)',
+        note: 'EXTERNAL HISTORICAL ATTESTATION: Riding the active 1st-century Red Sea–Malabar monsoon trade route into the premier Roman pepper port of Muziris (attested in Pliny the Elder & the Periplus of the Erythraean Sea, c. AD 50), ancient Malabar tradition records that Thomas landed at Muziris (Cranganore) in AD 52 and established the "Ezharapallikal" (Seven and a Half Churches) along the Kerala coast.'
+      },
+      {
+        name: 'Mylapore / Chennai (Coromandel Coast, SE India) [Patristic Martyrdom Tradition]',
+        coords: { lat: 13.033, lng: 80.278 },
+        dateLabel: 'c. AD 72 [Patristic: Ephrem the Syrian & Gregory of Tours]',
+        scriptureRef: 'JOHN {11:16}, {20:28}',
+        scriptureOsis: 'JHN.11.16',
+        evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+        attestationSource: 'Ephrem the Syrian (Madrasha 1–3 & Carmina Nisibena 42, c. AD 363); Marco Polo (AD 1292); Portuguese excavations (AD 1523)',
+        note: 'EXTERNAL HISTORICAL ATTESTATION: Crossing to the eastern (Coromandel) coast of India at Mylapore (modern Chennai), tradition records that Thomas suffered martyrdom by a lance at St. Thomas Mount (Chinnamalai) around AD 72, fulfilling his own words in John 11:16 ("Let us also go, that we may die with him"). Ephrem the Syrian (4th century) celebrates the transfer of his relics from India to Edessa.'
+      }
+    ]
+  },
+  {
+    id: 'andrew-mark-missions',
+    name: "Apostle Andrew (Scythia) & John Mark (Alexandria)",
+    shortBanner: "🌍 ANDREW (SCYTHIA) & MARK (ALEXANDRIA) [PATRISTIC] (AD 33–68)",
+    travelerName: 'Apostle Andrew & Evangelist John Mark',
+    figureId: 'peter',
+    color: '#818cf8', // Periwinkle Indigo
+    dateRange: 'AD 33 – c. AD 68',
+    scriptureRef: 'JOHN {1:40}–{1:42}, {12:20}–{12:22}, ACTS {12:12}, {15:39}, COLOSSIANS {3:11}, 1 PETER {5:13}',
+    scriptureOsis: 'COL.3.11',
+    evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+    attestationSource: 'Canonical Scripture (John 1:40; 12:22; Acts 12:12; 15:39; Col 3:11; 1 Pet 5:13) + Early Patristic Attestation: Origen & Eusebius Ecclesiastical History 2.16 (Mark in Alexandria) and 3.1 (Andrew allotted Scythia); Jerome De Viris Illustribus 8.',
+    summary: 'DISTINCTION OF EVIDENCE: In Scripture, Andrew (Simon Peter\'s brother) is the first disciple to bring others to Jesus—including Greeks seeking Him at Passover (John 12:20–22)—while John Mark ministers in Jerusalem, Cyprus, and Rome (Acts 12:12; 15:39; 1 Peter 5:13). Early patristic history (Origen and Eusebius) records that Mark founded the churches of Alexandria in Egypt, while Andrew carried the Gospel north around the Black Sea into Scythia (Colossians 3:11) and south into Achaia (Patras).',
+    stops: [
+      {
+        name: 'Jerusalem & Cyprus [Canonical Scripture]',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'AD 30 – 49 [Canonical Scripture]',
+        scriptureRef: 'JOHN {1:40}–{1:42}, ACTS {1:13}, {12:12}, {15:39}',
+        scriptureOsis: 'ACT.12.12',
+        evidenceClass: 'SCRIPTURE_TEXT',
+        note: 'CANONICAL SCRIPTURE: Andrew serves among the Twelve in Jerusalem (Acts 1:13); the early Jerusalem church gathers for prayer in the house of Mary the mother of John Mark (Acts 12:12), and Barnabas takes Mark to evangelize Cyprus in AD 49 (Acts 15:39).'
+      },
+      {
+        name: 'Alexandria in Egypt (John Mark) [Patristic: Eusebius 2.16]',
+        coords: { lat: 31.200, lng: 29.918 },
+        dateLabel: 'c. AD 49 – 68 [Patristic: Eusebius Hist. Eccl. 2.16]',
+        scriptureRef: '1 PETER {5:13}, 2 TIMOTHY {4:11}',
+        scriptureOsis: '2TI.4.11',
+        evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+        attestationSource: 'Eusebius Ecclesiastical History 2.16, 2.24; Jerome De Viris Illustribus 8',
+        note: 'EXTERNAL HISTORICAL ATTESTATION: Eusebius (Hist. Eccl. 2.16) records: "They say that this Mark was the first that was sent to Egypt, and that he proclaimed the Gospel which he had written, and first established churches in Alexandria." Eusebius names Annianus as succeeded bishop in the eighth year of Nero (AD 62).'
+      },
+      {
+        name: 'Sinope & Chersonesus — Scythia / Black Sea (Andrew) [Patristic: Origen in Eusebius 3.1]',
+        coords: { lat: 44.616, lng: 33.493 },
+        dateLabel: 'c. AD 50 – 60 [Patristic: Origen in Eusebius 3.1]',
+        scriptureRef: 'COLOSSIANS {3:11}',
+        scriptureOsis: 'COL.3.11',
+        evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+        attestationSource: 'Origen (quoted in Eusebius Ecclesiastical History 3.1); Eucherius of Lyon',
+        note: 'EXTERNAL HISTORICAL ATTESTATION: Origen (Eusebius 3.1) states that "Scythia was allotted to Andrew." Echoing Paul\'s statement in Colossians 3:11 ("neither Greek nor Jew... Barbarian, Scythian, bond nor free: but Christ is all"), patristic tradition traces Andrew along the Black Sea ports of Sinope and Chersonesus (Crimea).'
+      },
+      {
+        name: 'Byzantium & Patras in Achaia (Andrew) [Patristic Tradition]',
+        coords: { lat: 38.246, lng: 21.734 },
+        dateLabel: 'c. AD 60 – 65 [Patristic: Jerome & Gregory of Nazianzus]',
+        scriptureRef: 'JOHN {1:40}, {12:20}–{12:22}',
+        scriptureOsis: 'JHN.12.22',
+        evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+        attestationSource: 'Gregory of Nazianzus (Orations 33.11: "Epirus/Achaia to Andrew"), Jerome (Epistle 59)',
+        note: 'EXTERNAL HISTORICAL ATTESTATION: Returning south through Thrace, Macedonia, and Greece, 4th-century patristic writers (Gregory of Nazianzus, Jerome) record that Andrew preached in Achaia and suffered martyrdom by crucifixion at Patras on the Gulf of Corinth.'
+      }
+    ]
+  },
+  {
+    id: 'john-seven-churches-patmos',
+    name: "Apostle John: Seven Churches of Asia & Isle of Patmos",
+    shortBanner: "📜 JOHN: 7 CHURCHES & PATMOS (AD 68–96)",
+    travelerName: 'Apostle John (The Beloved Disciple)',
+    figureId: 'peter',
+    color: '#facc15', // Revelation Gold
+    dateRange: 'c. AD 68 – 96',
+    scriptureRef: 'JOHN {19:26}–{19:27}, GALATIANS {2:9}, REVELATION {1:9}–{3:22}',
+    scriptureOsis: 'REV.1.9',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'After serving as a pillar of the Jerusalem church alongside Peter and James, the Apostle John shepherds the churches of Roman Asia from Ephesus, is banished to the rocky Aegean island of Patmos for the Word of God and the testimony of Jesus Christ, and sends the Book of Revelation along the imperial postal circuit of the Seven Churches of Asia.',
+    stops: [
+      {
+        name: 'Jerusalem (Pillar of the Mother Church)',
+        coords: { lat: 31.778, lng: 35.235 },
+        dateLabel: 'AD 30 – c. 66',
+        scriptureRef: 'JOHN {19:26}–{19:27}, ACTS {3:1}, {8:14}, GALATIANS {2:9}',
+        scriptureOsis: 'GAL.2.9',
+        note: 'Entrusted with the care of Jesus\'s mother Mary at the Cross (John 19:26–27), John ministers with Peter at the Beautiful Gate, in Samaria, and as a pillar at the Jerusalem Council (Galatians 2:9).'
+      },
+      {
+        name: 'Ephesus (First of the Seven Churches)',
+        coords: { lat: 37.940, lng: 27.341 },
+        dateLabel: 'c. AD 68 – 96',
+        scriptureRef: 'REVELATION {1:11}, {2:1}–{2:7}',
+        scriptureOsis: 'REV.2.1',
+        note: 'Port metropolis of Roman Asia where John resides in his later decades (attested by Irenaeus, pupil of John\'s disciple Polycarp, Against Heresies 3.1.1, 3.3.4). First stop of the Seven Churches circuit: commended for testing false apostles, called to return to her "first love."'
+      },
+      {
+        name: 'Smyrna & Pergamos (Northern Aegean & Caicus Valley)',
+        coords: { lat: 39.132, lng: 27.184 },
+        dateLabel: 'c. AD 95',
+        scriptureRef: 'REVELATION {2:8}–{2:17}',
+        scriptureOsis: 'REV.2.8',
+        note: 'Smyrna (where John\'s disciple Polycarp later served as bishop) is promised the crown of life ("Be thou faithful unto death"); Pergamos, seat of imperial temple cults ("where Satan\'s seat is"), is commended for holding fast Christ\'s name even in the days of Antipas\'s martyrdom.'
+      },
+      {
+        name: 'Thyatira, Sardis & Philadelphia (Inland Lydian Road)',
+        coords: { lat: 38.488, lng: 28.140 },
+        dateLabel: 'c. AD 95',
+        scriptureRef: 'REVELATION {2:18}–{3:13}',
+        scriptureOsis: 'REV.3.7',
+        note: 'Following the Roman circular postal road southeast: Thyatira (home of Lydia the seller of purple), Sardis (called to watch and strengthen what remains), and faithful Philadelphia ("I have set before thee an open door, and no man can shut it").'
+      },
+      {
+        name: 'Laodicea (Lycus Valley — near Hierapolis & Colossae)',
+        coords: { lat: 37.836, lng: 29.108 },
+        scriptureRef: 'REVELATION {3:14}–{3:22}, COLOSSIANS {4:13}–{4:16}',
+        scriptureOsis: 'REV.3.14',
+        dateLabel: 'c. AD 95',
+        note: 'Seventh church on the circuit, famous for its banking wealth, black wool, and Phrygian eye-salve—and its tepid aqueduct waters from hot Hierapolis and cold Colossae—where the risen Lord knocks: "Behold, I stand at the door, and knock."'
+      },
+      {
+        name: 'Isle of Patmos (Aegean Sea)',
+        coords: { lat: 37.315, lng: 26.546 },
+        dateLabel: 'c. AD 95 – 96 (Late Reign of Domitian)',
+        scriptureRef: 'REVELATION {1:9}–{1:19}, {22:20}',
+        scriptureOsis: 'REV.1.9',
+        note: '"I John, who also am your brother, and companion in tribulation... was in the isle that is called Patmos, for the word of God, and for the testimony of Jesus Christ. I was in the Spirit on the Lord\'s day." Receives the apocalypse of the reigning Lamb and New Jerusalem.'
+      }
     ]
   }
 ];
@@ -1231,9 +2732,9 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     additionalRegionIds: ['old_babylon', 'kush_nubia', 'china_zhou', 'scythia_steppes', 'kingdom_sheba'],
     focusCenter: { lat: 33.0, lng: 42.0 },
     focusZoom: 5,
-    headline: 'The Call of Abraham · Middle Kingdom Egypt & Ur III',
-    historicalSummary: 'God calls Abram out of Ur of the Chaldees, through Haran, into Canaan. The Middle Kingdom of Egypt and Ur III rule the wider ancient world alongside early civilizations in Nubia and the Far East.',
-    activeRouteIds: ['abraham-call'],
+    headline: 'The Call of Abraham · Jacob & Joseph in Egypt',
+    historicalSummary: 'God calls Abram out of Ur of the Chaldees, through Haran, into Canaan, and preserves Israel through Jacob and Joseph in Egypt. The Middle Kingdom of Egypt and Old Babylon rule the wider ancient world.',
+    activeRouteIds: ['abraham-call', 'jacob-joseph-egypt'],
     activeSiteIds: ['nabonidus-cylinder'],
     activeFigureIds: ['abraham']
   },
@@ -1247,9 +2748,9 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     additionalRegionIds: ['old_babylon', 'kush_nubia', 'china_zhou', 'scythia_steppes', 'kingdom_sheba'],
     focusCenter: { lat: 29.5, lng: 33.2 },
     focusZoom: 6,
-    headline: 'The Deliverance from Egypt · Mount Sinai & Red Sea',
-    historicalSummary: "The LORD judges Egypt's gods with 10 plagues, delivers Israel through the Red Sea, and establishes His Holy Law at Mount Sinai. Ruled by New Kingdom Egypt (18th Dynasty).",
-    activeRouteIds: ['exodus-route'],
+    headline: 'The Deliverance from Egypt · Mount Sinai & Conquest of Canaan',
+    historicalSummary: "The LORD judges Egypt's gods with 10 plagues, delivers Israel through the Red Sea, gives His Holy Law at Mount Sinai, and brings Israel across the Jordan under Joshua.",
+    activeRouteIds: ['exodus-route', 'joshua-conquest'],
     activeSiteIds: ['merneptah-stele'],
     activeFigureIds: ['moses']
   },
@@ -1268,7 +2769,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 7,
     headline: "The Davidic Kingdom · Solomon's Temple & Jerusalem",
     historicalSummary: "David establishes Jerusalem as the royal capital; Solomon builds the First Temple. Attested by the Tel Dan Stele ('House of David') and visited by the Queen of Sheba.",
-    activeRouteIds: [],
+    activeRouteIds: ['david-exile-throne'],
     activeSiteIds: ['tel-dan-stele', 'mesha-stele'],
     activeFigureIds: ['david', 'solomon']
   },
@@ -1287,7 +2788,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 7,
     headline: "The Divided Monarchy · Moabite Rebellion & Elijah's Ministry",
     historicalSummary: "Following Ahab's death, Moab rebels against Israel (Mesha Stele, 2 Kings 1:1, 3:4). Ahaziah falls sick and seeks Baal-zebub at Ekron; Elijah prophesies judgment. Attested by the Mesha Stele, Tel Dan Stele, and Black Obelisk.",
-    activeRouteIds: [],
+    activeRouteIds: ['elijah-elisha-ministry'],
     activeSiteIds: ['mesha-stele', 'tel-dan-stele', 'black-obelisk'],
     activeFigureIds: ['david', 'hezekiah']
   },
@@ -1306,7 +2807,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 6,
     headline: "Jehu's Coup & Assyrian Hegemony Under Tiglath-Pileser III",
     historicalSummary: "Jehu executes Ahab's line and pays tribute to Shalmaneser III. Assyria expands westward, exacting tribute from Israel until Tiglath-Pileser III begins deportations. Discovered: The Black Obelisk of Shalmaneser III and Tel Dan Stele.",
-    activeRouteIds: [],
+    activeRouteIds: ['elijah-elisha-ministry'],
     activeSiteIds: ['black-obelisk', 'tel-dan-stele'],
     activeFigureIds: ['hezekiah']
   },
@@ -1363,8 +2864,8 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 6,
     headline: 'The Fall of Jerusalem · Daniel in Babylon',
     historicalSummary: 'Nebuchadnezzar captures Jerusalem, burns the Temple in 586 BC, and carries Judah into 70 years of exile. Daniel testifies to the Most High in the courts of Babylon. Discovered: Nabonidus Cylinder naming Belshazzar.',
-    activeRouteIds: [],
-    activeSiteIds: ['nabonidus-cylinder', 'ketef-hinnom-scrolls'],
+    activeRouteIds: ['babylonian-deportation-daniel'],
+    activeSiteIds: ['nabonidus-cylinder', 'ketef-hinnom-scrolls', 'lachish-ostraca', 'jehoiachin-ration-tablets'],
     activeFigureIds: ['daniel', 'jeremiah']
   },
   {
@@ -1382,7 +2883,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 5,
     headline: 'The Decree of Cyrus · Rebuilding the Temple & Walls',
     historicalSummary: 'Cyrus the Great conquers Babylon in 539 BC and decrees the Jewish return. Nehemiah and Ezra rebuild the walls and worship in Jerusalem under Artaxerxes. Discovered: The Cyrus Cylinder.',
-    activeRouteIds: [],
+    activeRouteIds: ['ezra-nehemiah-return'],
     activeSiteIds: ['cyrus-cylinder'],
     activeFigureIds: ['ezra-nehemiah', 'daniel']
   },
@@ -1399,10 +2900,16 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     ],
     focusCenter: { lat: 32.1, lng: 35.2 },
     focusZoom: 7,
-    headline: 'The Fullness of Time · Ministry, Death & Resurrection of Christ',
-    historicalSummary: 'In Roman Judea under Caesar Augustus, Tiberius, and Pontius Pilate, Jesus Christ is born in Bethlehem, crucified in Jerusalem, and rises bodily on the third day. Discovered: The Pilate Stone & Caiaphas Ossuary.',
-    activeRouteIds: [],
-    activeSiteIds: ['pilate-stone', 'caiaphas-ossuary'],
+    headline: 'The Fullness of Time · John the Baptist & Earthly Life of Jesus Christ',
+    historicalSummary: 'In Roman Judea and Galilee, John the Baptist prepares the way at the Jordan and Aenon; Jesus Christ is born in Bethlehem, sheltered in Egypt, raised in Nazareth, ministers across Galilee, Samaria, and Judea, is crucified under Pontius Pilate, rises bodily on the third day, and ascends from Olivet.',
+    activeRouteIds: [
+      'john-baptist-ministry',
+      'jesus-nativity-youth',
+      'jesus-early-ministry',
+      'jesus-galilean-ministry',
+      'jesus-passion-resurrection'
+    ],
+    activeSiteIds: ['pilate-stone', 'caiaphas-ossuary', 'pool-of-siloam-steps', 'dead-sea-scrolls-qumran'],
     activeFigureIds: ['jesus-christ']
   },
   {
@@ -1416,13 +2923,22 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
       'judah', 'parthia', 'china_han', 'kush_nubia', 'nabataea',
       'scythia_steppes', 'india_maurya'
     ],
-    focusCenter: { lat: 38.0, lng: 25.0 },
+    focusCenter: { lat: 36.5, lng: 30.0 },
     focusZoom: 5,
-    headline: 'The Gospel to the Nations · Roman Highways & Courts',
-    historicalSummary: 'Apostle Paul and the Apostles proclaim the risen Christ across Roman provinces from Syrian Antioch to Philippi, Athens, Corinth, and Rome. Discovered: Gallio Inscription at Delphi & Erastus Inscription at Corinth.',
-    activeRouteIds: ['paul-second-journey'],
-    activeSiteIds: ['gallio-inscription', 'erastus-inscription'],
-    activeFigureIds: ['paul', 'peter']
+    headline: 'The Gospel to the Nations · Apostles from Rome to Parthia & India',
+    historicalSummary: 'From Pentecost in Jerusalem, Peter and Philip carry the Gospel through Samaria, Gaza, and Caesarea to Rome; Paul completes three missionary journeys and his voyage to Rome; John shepherds the Seven Churches and receives Revelation on Patmos; and early patristic history attests Andrew in Scythia, Mark in Alexandria, and Thomas across Parthia to India.',
+    activeRouteIds: [
+      'peter-philip-missions',
+      'paul-first-journey',
+      'paul-second-journey',
+      'paul-third-journey',
+      'paul-voyage-rome',
+      'john-seven-churches-patmos',
+      'thomas-parthia-india',
+      'andrew-mark-missions'
+    ],
+    activeSiteIds: ['gallio-inscription', 'erastus-inscription', 'sergius-paulus-inscription', 'arch-of-titus-spoils'],
+    activeFigureIds: ['jesus-christ', 'paul', 'peter']
   },
   {
     id: 'all',
@@ -1434,17 +2950,344 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 4,
     headline: 'The Complete Biblical World in History',
     historicalSummary: 'All surviving archaeological discoveries, imperial extents, and biblical routes across the known ancient world from the Atlantic to China.',
-    activeRouteIds: ['abraham-call', 'exodus-route', 'paul-second-journey'],
+    activeRouteIds: [
+      'abraham-call',
+      'jacob-joseph-egypt',
+      'exodus-route',
+      'joshua-conquest',
+      'david-exile-throne',
+      'elijah-elisha-ministry',
+      'babylonian-deportation-daniel',
+      'ezra-nehemiah-return',
+      'john-baptist-ministry',
+      'jesus-nativity-youth',
+      'jesus-early-ministry',
+      'jesus-galilean-ministry',
+      'jesus-passion-resurrection',
+      'peter-philip-missions',
+      'paul-first-journey',
+      'paul-second-journey',
+      'paul-third-journey',
+      'paul-voyage-rome',
+      'john-seven-churches-patmos',
+      'thomas-parthia-india',
+      'andrew-mark-missions'
+    ],
     activeSiteIds: [
       'pilate-stone', 'caiaphas-ossuary', 'taylor-prism', 'siloam-inscription',
       'cyrus-cylinder', 'nabonidus-cylinder', 'tel-dan-stele', 'merneptah-stele',
       'gallio-inscription', 'erastus-inscription', 'ketef-hinnom-scrolls', 'mesha-stele',
-      'black-obelisk', 'sargon-prism'
+      'black-obelisk', 'sargon-prism', 'lachish-ostraca', 'jehoiachin-ration-tablets',
+      'dead-sea-scrolls-qumran', 'pool-of-siloam-steps', 'sergius-paulus-inscription',
+      'arch-of-titus-spoils'
     ],
     activeFigureIds: [
       'jesus-christ', 'daniel', 'hezekiah', 'moses', 'abraham', 'david',
       'isaiah', 'paul', 'peter', 'jeremiah', 'solomon', 'ezra-nehemiah'
     ]
+  }
+];
+
+export interface GranularTimelineFilter {
+  id: string;
+  eraIds: string[]; // Which macro-eras display this granular filter button
+  categoryLabel: string;
+  label: string;
+  dateLabel: string;
+  routeIds: string[];
+  focusCenter: GeoCoordinate;
+  focusZoom: number;
+  evidenceClass: RouteEvidenceClass;
+  summary: string;
+}
+
+export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
+  // Patriarchs
+  {
+    id: 'filter-abraham-call',
+    eraIds: ['patriarchs', 'all'],
+    categoryLabel: 'Patriarchs',
+    label: '🏕️ Abraham: Ur to Canaan & Moriah',
+    dateLabel: 'c. 2091–2050 BC',
+    routeIds: ['abraham-call'],
+    focusCenter: { lat: 33.2, lng: 40.5 },
+    focusZoom: 5,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Abram\'s covenant journey from Ur of the Chaldees through Haran to Shechem, Bethel, Hebron, Egypt, Beersheba, and Mount Moriah.'
+  },
+  {
+    id: 'filter-jacob-joseph',
+    eraIds: ['patriarchs', 'all'],
+    categoryLabel: 'Patriarchs',
+    label: '🌾 Jacob & Joseph: Haran to Goshen',
+    dateLabel: 'c. 1929–1876 BC',
+    routeIds: ['jacob-joseph-egypt'],
+    focusCenter: { lat: 33.0, lng: 35.5 },
+    focusZoom: 6,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Jacob\'s return from Padan-Aram via Peniel and Joseph\'s sale from Dothan into Egypt, culminating in Israel\'s descent to Goshen.'
+  },
+  // Exodus & Conquest
+  {
+    id: 'filter-moses-exodus',
+    eraIds: ['exodus', 'all'],
+    categoryLabel: 'Exodus & Conquest',
+    label: '🔥 Moses: Exodus & Mount Sinai',
+    dateLabel: '1446–1445 BC',
+    routeIds: ['exodus-route'],
+    focusCenter: { lat: 29.5, lng: 33.1 },
+    focusZoom: 7,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Israel\'s departure from Rameses through Succoth, the Red Sea crossing, Marah, Elim, and Rephidim to the giving of the Law at Mount Sinai.'
+  },
+  {
+    id: 'filter-joshua-conquest',
+    eraIds: ['exodus', 'all'],
+    categoryLabel: 'Exodus & Conquest',
+    label: '⚔️ Joshua: Jordan Crossing & Conquest',
+    dateLabel: '1406–1399 BC',
+    routeIds: ['joshua-conquest'],
+    focusCenter: { lat: 32.15, lng: 35.42 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'From Mount Nebo and the parted Jordan River to Gilgal, Jericho, Ai, Gibeon, Hazor, and the Tabernacle at Shiloh.'
+  },
+  // Monarchy & Prophets
+  {
+    id: 'filter-david-throne',
+    eraIds: ['united_monarchy', 'all'],
+    categoryLabel: 'Monarchy',
+    label: '👑 David: Bethlehem & Adullam to Zion',
+    dateLabel: 'c. 1025–1003 BC',
+    routeIds: ['david-exile-throne'],
+    focusCenter: { lat: 31.65, lng: 35.20 },
+    focusZoom: 9,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'David\'s anointing at Bethlehem, victory in the Valley of Elah, wilderness refuge at Adullam and En-gedi, reign at Hebron, and enthronement in Jerusalem.'
+  },
+  {
+    id: 'filter-elijah-elisha',
+    eraIds: ['divided_monarchy_prophets', '2kings_jehu', 'all'],
+    categoryLabel: 'Prophets',
+    label: '🔥 Elijah & Elisha: Carmel, Horeb & Jordan',
+    dateLabel: 'c. 865–841 BC',
+    routeIds: ['elijah-elisha-ministry'],
+    focusCenter: { lat: 31.6, lng: 35.1 },
+    focusZoom: 6,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Elijah\'s prophetic circuit from Brook Cherith and Zarephath to Mount Carmel, Mount Horeb, Samaria (2 Kings 1), and his whirlwind ascension by the Jordan.'
+  },
+  // Exile & Restoration
+  {
+    id: 'filter-babylon-daniel',
+    eraIds: ['babylonian_exile', 'all'],
+    categoryLabel: 'Exile & Return',
+    label: '🏛️ Daniel & Ezekiel: Exile to Babylon',
+    dateLabel: '605–539 BC',
+    routeIds: ['babylonian-deportation-daniel'],
+    focusCenter: { lat: 33.8, lng: 40.0 },
+    focusZoom: 5,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Deportation waves from Jerusalem and Lachish through Riblah and Carchemish to Ezekiel\'s Tel-abib by the River Chebar and Daniel\'s witness in Babylon.'
+  },
+  {
+    id: 'filter-ezra-nehemiah',
+    eraIds: ['persian_restoration', 'all'],
+    categoryLabel: 'Exile & Return',
+    label: '📜 Zerubbabel, Ezra & Nehemiah Return',
+    dateLabel: '538–445 BC',
+    routeIds: ['ezra-nehemiah-return'],
+    focusCenter: { lat: 33.5, lng: 41.8 },
+    focusZoom: 5,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Return of the Jewish exiles from Babylon and Susa (Shushan) across the Euphrates to rebuild the Second Temple and the walls of Jerusalem.'
+  },
+  // Gospels & Life of Christ (accessible in BOTH Christ & Rome AND Apostolic Age!)
+  {
+    id: 'filter-john-jesus-parallel',
+    eraIds: ['roman_christ', 'apostolic_church', 'all'],
+    categoryLabel: 'John the Baptist & Jesus',
+    label: '🌊 John the Baptist + Jesus Parallel',
+    dateLabel: 'AD 26–29',
+    routeIds: ['john-baptist-ministry', 'jesus-early-ministry'],
+    focusCenter: { lat: 32.08, lng: 35.42 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Displays John the Baptist\'s wilderness, Bethabara, Aenon near Salim, and Machaerus imprisonment side-by-side with Jesus\'s baptism, Cana miracle, Judean ministry (John 3:22–24), and Samaritan journey.'
+  },
+  {
+    id: 'filter-john-baptist-only',
+    eraIds: ['roman_christ', 'apostolic_church', 'all'],
+    categoryLabel: 'John the Baptist & Jesus',
+    label: '🌊 John the Baptist: Wilderness to Machaerus',
+    dateLabel: 'c. 6 BC – AD 29',
+    routeIds: ['john-baptist-ministry'],
+    focusCenter: { lat: 31.95, lng: 35.48 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'John the Baptist\'s birth in the Judean hill country, preaching in the Wilderness of Judea, baptism of Jesus at Bethabara, parallel baptizing at Aenon near Salim, and imprisonment/martyrdom at Machaerus.'
+  },
+  {
+    id: 'filter-jesus-phase-1',
+    eraIds: ['roman_christ', 'apostolic_church', 'all'],
+    categoryLabel: 'Life of Jesus Christ',
+    label: '⭐ Jesus 1: Nativity, Flight to Egypt & Youth',
+    dateLabel: 'c. 6 BC – AD 8',
+    routeIds: ['jesus-nativity-youth'],
+    focusCenter: { lat: 31.65, lng: 33.90 },
+    focusZoom: 7,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Annunciation in Nazareth, birth in Bethlehem, Temple presentation, refuge in Egypt from Herod, childhood in Nazareth, and Passover in the Temple at age 12.'
+  },
+  {
+    id: 'filter-jesus-phase-2',
+    eraIds: ['roman_christ', 'apostolic_church', 'all'],
+    categoryLabel: 'Life of Jesus Christ',
+    label: '🕊️ Jesus 2: Baptism, Cana, Judea & Samaria',
+    dateLabel: 'AD 26–27',
+    routeIds: ['jesus-early-ministry'],
+    focusCenter: { lat: 32.25, lng: 35.38 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Baptism at Bethabara, 40 days in the Judean wilderness, water into wine at Cana, First Passover & Nicodemus in Jerusalem, Judean ministry parallel to John at Aenon, and the woman at the well in Sychar.'
+  },
+  {
+    id: 'filter-jesus-phase-3',
+    eraIds: ['roman_christ', 'apostolic_church', 'all'],
+    categoryLabel: 'Life of Jesus Christ',
+    label: '⛵ Jesus 3: Galilean & Northern Ministry',
+    dateLabel: 'AD 28–29',
+    routeIds: ['jesus-galilean-ministry'],
+    focusCenter: { lat: 32.92, lng: 35.50 },
+    focusZoom: 9,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Capernaum HQ, Sermon on the Mount, raising the widow\'s son at Nain, calming the storm to Gadara, feeding the 5,000 at Bethsaida, Tyre & Sidon, and Peter\'s confession & Transfiguration at Caesarea Philippi.'
+  },
+  {
+    id: 'filter-jesus-phase-4',
+    eraIds: ['roman_christ', 'apostolic_church', 'all'],
+    categoryLabel: 'Life of Jesus Christ',
+    label: '✝️ Jesus 4: Passion, Resurrection & Ascension',
+    dateLabel: 'AD 29–30/33',
+    routeIds: ['jesus-passion-resurrection'],
+    focusCenter: { lat: 32.15, lng: 35.35 },
+    focusZoom: 8,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Perean ministry, raising Lazarus at Bethany, Jericho, crucifixion at Golgotha & bodily resurrection in Jerusalem, Road to Emmaus, Sea of Galilee appearance, and Ascension from the Mount of Olives.'
+  },
+  {
+    id: 'filter-jesus-all-phases',
+    eraIds: ['roman_christ', 'apostolic_church', 'all'],
+    categoryLabel: 'Life of Jesus Christ',
+    label: '👑 Complete Earthly Life of Jesus (All 4 Phases)',
+    dateLabel: 'c. 6 BC – AD 33',
+    routeIds: [
+      'jesus-nativity-youth',
+      'jesus-early-ministry',
+      'jesus-galilean-ministry',
+      'jesus-passion-resurrection'
+    ],
+    focusCenter: { lat: 32.1, lng: 35.2 },
+    focusZoom: 7,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'All 27 chronological stops of Jesus\'s earthly life from Nazareth, Bethlehem, and Egypt through Galilee, Samaria, and Judea to His Resurrection and Ascension.'
+  },
+  // Apostolic Missions (accessible in Apostolic Age, Christ & Rome, and All)
+  {
+    id: 'filter-peter-philip',
+    eraIds: ['apostolic_church', 'roman_christ', 'all'],
+    categoryLabel: 'Twelve Apostles & Evangelists',
+    label: '🔥 Peter & Philip: Judea, Samaria, Gaza & Rome',
+    dateLabel: 'AD 33–67',
+    routeIds: ['peter-philip-missions'],
+    focusCenter: { lat: 35.5, lng: 25.5 },
+    focusZoom: 5,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Pentecost in Jerusalem, Philip in Samaria and on the Gaza road with the Ethiopian treasurer, Peter at Lydda, Joppa, Cornelius\'s house in Caesarea, Antioch, and final testimony in Rome.'
+  },
+  {
+    id: 'filter-paul-1',
+    eraIds: ['apostolic_church', 'roman_christ', 'all'],
+    categoryLabel: 'Apostle Paul',
+    label: '⛵ Paul\'s 1st Journey: Cyprus & Galatia',
+    dateLabel: 'AD 46–48',
+    routeIds: ['paul-first-journey'],
+    focusCenter: { lat: 36.8, lng: 33.0 },
+    focusZoom: 6,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Paul and Barnabas sail from Syrian Antioch to Cyprus (Paphos / Proconsul Sergius Paulus) and plant churches in Pisidian Antioch, Iconium, Lystra, and Derbe (Acts 13–14).'
+  },
+  {
+    id: 'filter-paul-2',
+    eraIds: ['apostolic_church', 'roman_christ', 'all'],
+    categoryLabel: 'Apostle Paul',
+    label: '⛵ Paul\'s 2nd Journey: Macedonia & Greece',
+    dateLabel: 'AD 49–52',
+    routeIds: ['paul-second-journey'],
+    focusCenter: { lat: 38.0, lng: 28.5 },
+    focusZoom: 5,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Paul, Silas, Timothy, and Luke travel from Antioch through Galatia and Troas into Philippi, Thessalonica, Berea, Athens (Mars\' Hill), Corinth, and Ephesus (Acts 15:36–18:22).'
+  },
+  {
+    id: 'filter-paul-3',
+    eraIds: ['apostolic_church', 'roman_christ', 'all'],
+    categoryLabel: 'Apostle Paul',
+    label: '⛵ Paul\'s 3rd Journey: Ephesus & Corinth',
+    dateLabel: 'AD 53–57',
+    routeIds: ['paul-third-journey'],
+    focusCenter: { lat: 37.8, lng: 28.5 },
+    focusZoom: 5,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Three years in Ephesus (Acts 19), ministry across Macedonia and Corinth (writing 1 & 2 Corinthians and Romans), raising Eutychus at Troas, Miletus farewell, and arrest in Jerusalem (Acts 18:23–21:17).'
+  },
+  {
+    id: 'filter-paul-rome',
+    eraIds: ['apostolic_church', 'roman_christ', 'all'],
+    categoryLabel: 'Apostle Paul',
+    label: '⚓ Paul\'s Voyage & Shipwreck to Rome',
+    dateLabel: 'AD 59–62',
+    routeIds: ['paul-voyage-rome'],
+    focusCenter: { lat: 37.2, lng: 22.5 },
+    focusZoom: 5,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'From Caesarea Maritima past Crete through the Euroclydon storm and shipwreck on Malta (Melita) to Syracuse, Puteoli, and two years of house arrest in Rome (Acts 27–28).'
+  },
+  {
+    id: 'filter-john-patmos',
+    eraIds: ['apostolic_church', 'roman_christ', 'all'],
+    categoryLabel: 'Twelve Apostles & Evangelists',
+    label: '📜 John: 7 Churches of Asia & Patmos',
+    dateLabel: 'AD 68–96',
+    routeIds: ['john-seven-churches-patmos'],
+    focusCenter: { lat: 37.8, lng: 27.6 },
+    focusZoom: 6,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Apostle John\'s ministry from Jerusalem to Ephesus, the Seven Churches postal circuit (Ephesus, Smyrna, Pergamos, Thyatira, Sardis, Philadelphia, Laodicea), and exile on the Isle of Patmos (Revelation 1–3).'
+  },
+  {
+    id: 'filter-thomas-india',
+    eraIds: ['apostolic_church', 'roman_christ', 'all'],
+    categoryLabel: 'Twelve Apostles & Evangelists',
+    label: '🌏 Thomas: Parthia & India [Scripture + Patristic]',
+    dateLabel: 'AD 33 – c. AD 72',
+    routeIds: ['thomas-parthia-india'],
+    focusCenter: { lat: 24.5, lng: 58.0 },
+    focusZoom: 4,
+    evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+    summary: 'Canonical appearances in Jerusalem & Galilee (John 20:28) followed by early patristic & Malabar historical attestation (Origen, Ephrem, Gregory of Nazianzus, Jerome) across Edessa, Parthia, King Gondophares\' Taxila (c. AD 46), Muziris on the Malabar Coast (AD 52), and Mylapore (c. AD 72).'
+  },
+  {
+    id: 'filter-andrew-mark',
+    eraIds: ['apostolic_church', 'roman_christ', 'all'],
+    categoryLabel: 'Twelve Apostles & Evangelists',
+    label: '🌍 Andrew (Scythia) & Mark (Alexandria) [Patristic]',
+    dateLabel: 'AD 33 – c. AD 68',
+    routeIds: ['andrew-mark-missions'],
+    focusCenter: { lat: 38.0, lng: 31.0 },
+    focusZoom: 5,
+    evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+    summary: 'Canonical ministry in Jerusalem and Cyprus followed by early patristic attestation (Origen & Eusebius Hist. Eccl. 2.16, 3.1) of John Mark founding the church in Alexandria and Andrew preaching along the Black Sea in Scythia and Patras in Achaia.'
   }
 ];
 
@@ -1657,6 +3500,214 @@ export const BIBLICAL_GEOGRAPHIC_ENTITIES: Record<string, BiblicalGeographicEnti
     zoom: 8,
     note: 'Sandstone canyon fortress city and capital of the Nabataeans; King Aretas IV attempted to arrest Paul at Damascus (2 Cor 11:32).',
     scriptureRef: '2 KINGS 14:7, ISAIAH 16:1, 2 CORINTHIANS 11:32'
+  },
+  corinth: {
+    name: 'Corinth (Achaia)',
+    ancientRegion: 'Greece / Roman Province of Achaia',
+    coords: { lat: 37.906, lng: 22.880 },
+    zoom: 8,
+    note: 'Commercial crossroads of Roman Greece where Paul ministered for 18 months (Acts 18), stood before Proconsul Gallio (AD 51–52), and penned Romans.',
+    scriptureRef: 'ACTS 18:1–17, 1 CORINTHIANS 1:2, ROMANS 16:23'
+  },
+  rome: {
+    name: 'Rome (Imperial Capital)',
+    ancientRegion: 'Italy / Roman Empire',
+    coords: { lat: 41.902, lng: 12.496 },
+    zoom: 7,
+    note: 'Seat of the Caesars; destination of Paul\'s appeal to Caesar (Acts 25:11, 28:16) where he penned the Prison Epistles (Ephesians, Philippians, Colossians, Philemon) and 2 Timothy.',
+    scriptureRef: 'ACTS 28:16, ROMANS 1:7, 2 TIMOTHY 1:17'
+  },
+  ephesus: {
+    name: 'Ephesus',
+    ancientRegion: 'Roman Asia Minor',
+    coords: { lat: 37.940, lng: 27.341 },
+    zoom: 8,
+    note: 'Metropolis of Roman Asia where Paul taught daily in the school of Tyrannus for three years (Acts 19:9–10) and later addressed Ephesians and 1 Timothy; first of the Seven Churches of Revelation.',
+    scriptureRef: 'ACTS 19:1–41, EPHESIANS 1:1, REVELATION 2:1'
+  },
+  philippi: {
+    name: 'Philippi (Roman Colony)',
+    ancientRegion: 'Macedonia',
+    coords: { lat: 41.013, lng: 24.286 },
+    zoom: 8,
+    note: 'Chief city of eastern Macedonia and a Roman military colony; site of Paul\'s first European convert (Lydia) and the conversion of the Philippian jailer (Acts 16).',
+    scriptureRef: 'ACTS 16:12–40, PHILIPPIANS 1:1'
+  },
+  colossae: {
+    name: 'Colossae (Lycus Valley)',
+    ancientRegion: 'Phrygia / Asia Minor',
+    coords: { lat: 37.787, lng: 29.261 },
+    zoom: 8,
+    note: 'Phrygian city in the Lycus River valley near Laodicea and Hierapolis; home of Epaphras, Philemon, and Onesimus.',
+    scriptureRef: 'COLOSSIANS 1:2, PHILEMON 1:1–2'
+  },
+  thessalonica: {
+    name: 'Thessalonica',
+    ancientRegion: 'Macedonia',
+    coords: { lat: 40.640, lng: 22.944 },
+    zoom: 8,
+    note: 'Capital port of Roman Macedonia on the Via Egnatia where Paul reasoned for three Sabbaths in the synagogue (Acts 17:1–9); recipient of 1 & 2 Thessalonians.',
+    scriptureRef: 'ACTS 17:1, 1 THESSALONIANS 1:1'
+  },
+  galatia: {
+    name: 'Galatia (Pisidian Antioch, Iconium, Lystra, Derbe)',
+    ancientRegion: 'Central Asia Minor',
+    coords: { lat: 38.304, lng: 31.189 },
+    zoom: 7,
+    note: 'Roman province in Asia Minor evangelized by Paul and Barnabas on the First Missionary Journey (Acts 13–14); recipient of the Epistle to the Galatians.',
+    scriptureRef: 'ACTS 13:14–14:23, GALATIANS 1:2'
+  },
+  antioch: {
+    name: 'Antioch on the Orontes (Syrian Antioch)',
+    ancientRegion: 'Roman Syria',
+    coords: { lat: 36.202, lng: 36.160 },
+    zoom: 8,
+    note: 'Third largest city of the Roman Empire where the disciples were first called Christians (Acts 11:26) and the sending church for Paul\'s three missionary journeys.',
+    scriptureRef: 'ACTS 11:26, 13:1–3, GALATIANS 2:11'
+  },
+  athens: {
+    name: 'Athens (Areopagus / Mars\' Hill)',
+    ancientRegion: 'Attica / Greece',
+    coords: { lat: 37.971, lng: 23.726 },
+    zoom: 9,
+    note: 'Intellectual heart of classical Greece where Paul proclaimed the Creator and risen Judge before the Epicurean and Stoic philosophers on Mars\' Hill (Acts 17:22–31).',
+    scriptureRef: 'ACTS 17:15–34, 1 THESSALONIANS 3:1'
+  },
+  crete: {
+    name: 'Crete',
+    ancientRegion: 'Mediterranean Sea',
+    coords: { lat: 35.240, lng: 24.809 },
+    zoom: 7,
+    note: 'Mountainous Mediterranean island where Paul left Titus to "set in order the things that are wanting, and ordain elders in every city" (Titus 1:5).',
+    scriptureRef: 'ACTS 27:7–13, TITUS 1:5'
+  },
+  patmos: {
+    name: 'Isle of Patmos',
+    ancientRegion: 'Aegean Sea / Roman Asia',
+    coords: { lat: 37.319, lng: 26.548 },
+    zoom: 9,
+    note: 'Rocky Aegean island where the Apostle John was exiled "for the word of God, and for the testimony of Jesus Christ" and received the book of Revelation (AD 95–96).',
+    scriptureRef: 'REVELATION 1:9'
+  },
+  hebron: {
+    name: 'Hebron (Kirjath-arba / Mamre)',
+    ancientRegion: 'Judean Highlands',
+    coords: { lat: 31.532, lng: 35.099 },
+    zoom: 9,
+    note: 'Patriarchal burial site at the Cave of Machpelah, Caleb\'s inheritance in Joshua 14, and King David\'s royal capital for the first seven years and six months of his reign.',
+    scriptureRef: 'GENESIS 23:19, JOSHUA 14:13, 2 SAMUEL 2:1–4, 5:5'
+  },
+  shiloh: {
+    name: 'Shiloh',
+    ancientRegion: 'Hill Country of Ephraim',
+    coords: { lat: 32.055, lng: 35.289 },
+    zoom: 9,
+    note: 'Central sanctuary of Israel for over 300 years where Joshua set up the Tabernacle (Joshua 18:1) and where Hannah prayed and young Samuel heard the voice of the LORD.',
+    scriptureRef: 'JOSHUA 18:1, JUDGES 21:19, 1 SAMUEL 1:3, 3:21'
+  },
+  gibeon: {
+    name: 'Gibeon (El-Jib)',
+    ancientRegion: 'Benjamin Plateau',
+    coords: { lat: 31.846, lng: 35.184 },
+    zoom: 9,
+    note: 'Canaanite royal city that made a treaty with Joshua; site where the sun stood still (Joshua 10:12) and where Solomon asked God for an understanding heart (1 Kings 3:5).',
+    scriptureRef: 'JOSHUA 9:3, 10:12, 1 KINGS 3:4–5'
+  },
+  hazor: {
+    name: 'Hazor (Tel Hazor)',
+    ancientRegion: 'Upper Galilee',
+    coords: { lat: 33.017, lng: 35.568 },
+    zoom: 9,
+    note: '"The head of all those kingdoms" in northern Canaan conquered and burned by Joshua (Joshua 11:10–13), later fortified with a six-chambered gate by Solomon (1 Kings 9:15).',
+    scriptureRef: 'JOSHUA 11:10, JUDGES 4:2, 1 KINGS 9:15'
+  },
+  ai: {
+    name: 'Ai (Beside Beth-aven, East of Bethel)',
+    ancientRegion: 'Central Highlands',
+    coords: { lat: 31.917, lng: 35.261 },
+    zoom: 9,
+    note: 'Canaanite stronghold east of Bethel where Abraham pitched his tent (Genesis 12:8) and which Joshua conquered after the judgment of Achan\'s sin (Joshua 7–8).',
+    scriptureRef: 'GENESIS 12:8, JOSHUA 7:2–8:29'
+  },
+  shechem: {
+    name: 'Shechem (Between Mount Ebal & Mount Gerizim)',
+    ancientRegion: 'Hill Country of Ephraim',
+    coords: { lat: 32.213, lng: 35.281 },
+    zoom: 9,
+    note: 'Site of Abram\'s first altar in Canaan (Genesis 12:6), Joshua\'s covenant renewal address (Joshua 24:1–25), and Rehoboam\'s coronation crisis (1 Kings 12:1).',
+    scriptureRef: 'GENESIS 12:6, JOSHUA 24:1, 1 KINGS 12:1'
+  },
+  beersheba: {
+    name: 'Beersheba (Well of the Oath)',
+    ancientRegion: 'Negev / Southern Judah',
+    coords: { lat: 31.245, lng: 34.841 },
+    zoom: 8,
+    note: 'Southern boundary anchor of Israel ("from Dan even to Beer-sheba") where Abraham, Isaac, and Jacob dug wells and called on the name of the everlasting God.',
+    scriptureRef: 'GENESIS 21:31–33, 26:33, JUDGES 20:1, 1 KINGS 19:3'
+  },
+  dan: {
+    name: 'Dan (Tel Dan / Laish)',
+    ancientRegion: 'Upper Jordan Sources (Mount Hermon)',
+    coords: { lat: 33.249, lng: 35.652 },
+    zoom: 9,
+    note: 'Northernmost boundary city of Israel ("from Dan even to Beer-sheba"); discovery site of the 9th-century BC Tel Dan Stele bearing the inscription "House of David".',
+    scriptureRef: 'GENESIS 14:14, JUDGES 18:29, 1 KINGS 12:29'
+  },
+  lachish: {
+    name: 'Lachish (Tel Lachish)',
+    ancientRegion: 'Judean Shephelah',
+    coords: { lat: 31.565, lng: 34.849 },
+    zoom: 9,
+    note: 'Second most important fortified city of Judah after Jerusalem; besieged by Sennacherib in 701 BC (2 Kings 18:14) and Nebuchadnezzar in 588–586 BC (Jeremiah 34:7; Lachish Letters).',
+    scriptureRef: 'JOSHUA 10:31, 2 KINGS 18:14, JEREMIAH 34:7'
+  },
+  susa: {
+    name: 'Susa (Shushan the Palace)',
+    ancientRegion: 'Elam / Persia',
+    coords: { lat: 32.190, lng: 48.257 },
+    zoom: 7,
+    note: 'Winter royal capital of the Achaemenid Persian Empire where Queen Esther interceded before Xerxes, Nehemiah served as cupbearer to Artaxerxes, and Daniel saw visions by the Ulai.',
+    scriptureRef: 'NEHEMIAH 1:1, ESTHER 1:2, DANIEL 8:2'
+  },
+  shushan: {
+    name: 'Shushan the Palace (Susa)',
+    ancientRegion: 'Elam / Persia',
+    coords: { lat: 32.190, lng: 48.257 },
+    zoom: 7,
+    note: 'Royal citadel of the Medo-Persian kings; setting for the entire book of Esther and the opening commission of Nehemiah.',
+    scriptureRef: 'NEHEMIAH 1:1, ESTHER 1:2, DANIEL 8:2'
+  },
+  bethlehem: {
+    name: 'Bethlehem Ephratah',
+    ancientRegion: 'Judea',
+    coords: { lat: 31.705, lng: 35.204 },
+    zoom: 10,
+    note: 'Home of Ruth and Boaz, birthplace and anointing city of King David (1 Samuel 16), and prophesied birthplace of Jesus the Messiah (Micah 5:2, Matthew 2:1, Luke 2:4).',
+    scriptureRef: 'RUTH 1:19, 1 SAMUEL 16:1, MICAH 5:2, LUKE 2:4–7'
+  },
+  nazareth: {
+    name: 'Nazareth',
+    ancientRegion: 'Lower Galilee',
+    coords: { lat: 32.701, lng: 35.303 },
+    zoom: 9,
+    note: 'Galilean hill town where the angel Gabriel appeared to Mary (Luke 1:26) and where Jesus Christ grew up in fulfillment of prophecy ("He shall be called a Nazarene").',
+    scriptureRef: 'MATTHEW 2:23, LUKE 1:26, 2:51, 4:16'
+  },
+  capernaum: {
+    name: 'Capernaum (His Own City)',
+    ancientRegion: 'Sea of Galilee',
+    coords: { lat: 32.881, lng: 35.575 },
+    zoom: 10,
+    note: 'Fishing town on the northwestern shore of the Sea of Galilee that served as the headquarters of Jesus\'s Galilean ministry and home of Peter, Andrew, and Matthew.',
+    scriptureRef: 'MATTHEW 4:13, 9:1, MARK 1:21, JOHN 6:59'
+  },
+  caesarea: {
+    name: 'Caesarea Maritima',
+    ancientRegion: 'Mediterranean Coast / Roman Judea',
+    coords: { lat: 32.500, lng: 34.890 },
+    zoom: 9,
+    note: 'Roman administrative capital of Judea built by Herod the Great; discovery site of the Pilate Stone, home of Cornelius (Acts 10), and site of Paul\'s two-year imprisonment (Acts 23–26).',
+    scriptureRef: 'ACTS 10:1, 23:23, 25:13'
   }
 };
 

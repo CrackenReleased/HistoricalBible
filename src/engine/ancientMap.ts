@@ -20,13 +20,17 @@ import {
   BIBLICAL_ROUTES,
   WORLD_EMPIRES_GEO,
   CHRONOLOGICAL_ERAS,
+  GRANULAR_TIMELINE_FILTERS,
   REGION_PRESETS,
+  WATER_FEATURES,
   type GeoCoordinate,
   type ArchaeologicalSite,
   type BiblicalCity,
   type BiblicalRoute,
+  type BiblicalRouteStop,
   type WorldEmpireRegion,
   type ChronologicalEra,
+  type GranularTimelineFilter,
   type BiblicalGeographicEntity,
   type FactionType
 } from '../data/ancientMapData';
@@ -38,7 +42,9 @@ export interface AncientMapOptions {
   onSelectSite?: (site: ArchaeologicalSite) => void;
   onSelectCity?: (city: BiblicalCity) => void;
   onSelectEmpire?: (empire: WorldEmpireRegion) => void;
+  onSelectRouteStop?: (route: BiblicalRoute, stop?: BiblicalRouteStop, stopIndex?: number) => void;
   onEraChange?: (era: ChronologicalEra) => void;
+  onGranularFilterChange?: (filter: GranularTimelineFilter | null) => void;
 }
 
 function getEmpireRelevanceNote(empireId: string, eraId: string, empire: WorldEmpireRegion): string {
@@ -195,21 +201,28 @@ export class AncientMapCanvas {
 
   // Active Layers
   private tileLayer: L.TileLayer;
+  private waterLayerGroup: L.LayerGroup;
   private empireLayerGroup: L.LayerGroup;
   private siteLayerGroup: L.LayerGroup;
   private routeLayerGroup: L.LayerGroup;
   private cityLayerGroup: L.LayerGroup;
+  private tileOfflineNoticeShown = false;
 
   // Active Chronological State
   public activeEra: ChronologicalEra;
   public showAllSites: boolean = false;
+  public activeGranularFilterId: string | null = null;
+  public activeRouteOverrideIds: string[] | null = null;
+  public activeRouteStopSelection: { routeId: string; stopIndex: number } | null = null;
+  private routeStopMarkersMap: Map<string, L.Marker[]> = new Map();
 
   // Layer Toggles
-  public layers = {
+  public layers: Record<string, boolean> = {
     archaeology: true,
     empires: true,
     routes: true,
     cities: true,
+    rivers: true,
   };
 
   constructor(options: AncientMapOptions) {
@@ -227,8 +240,8 @@ export class AncientMapCanvas {
     this.container.style.backgroundColor = '#080c11';
 
     // 1. Initialize Leaflet Map (maxZoom: 15 for deep scholarly inspection)
-    const initialZoom = options.compact ? 4 : initialEra.focusZoom;
-    const initialCenter = options.compact ? [32.5, 35.5] : [initialEra.focusCenter.lat, initialEra.focusCenter.lng];
+    const initialZoom = options.compact ? 5 : initialEra.focusZoom;
+    const initialCenter = options.compact ? [32.3, 35.6] : [initialEra.focusCenter.lat, initialEra.focusCenter.lng];
 
     this.map = L.map(this.container, {
       center: initialCenter as L.LatLngExpression,
@@ -246,36 +259,76 @@ export class AncientMapCanvas {
       attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
     }).addTo(this.map);
 
-    // 3. Layer Groups
+    this.tileLayer.on('tileerror', () => {
+      if (!this.tileOfflineNoticeShown) {
+        this.tileOfflineNoticeShown = true;
+        const badge = document.createElement('div');
+        badge.className = 'map-offline-tile-badge';
+        badge.style.cssText = 'position:absolute;bottom:10px;left:10px;z-index:900;background:rgba(15,23,42,0.88);border:1px solid rgba(212,175,55,0.4);color:#cbd5e1;font-size:11px;padding:4px 8px;border-radius:4px;pointer-events:none;';
+        badge.textContent = 'Offline Vector Cartography Mode (Base tiles unreachable)';
+        this.container.appendChild(badge);
+      }
+    });
+
+    // 3. Dedicated Z-Ordered Map Panes so Routes & Stops strictly sit above Empire Polygons, and Tooltips sit on top of everything
+    const createManagedPane = (name: string, zIndex: number): HTMLElement => {
+      const pane = this.map.getPane(name) || this.map.createPane(name);
+      pane.style.zIndex = String(zIndex);
+      return pane;
+    };
+    createManagedPane('waterPane', 380);
+    createManagedPane('empirePane', 400);
+    createManagedPane('routePane', 480);
+    createManagedPane('routeStopPane', 560);
+    createManagedPane('tooltipPane', 680);
+    createManagedPane('popupPane', 700);
+
+    // 4. Layer Groups
+    this.waterLayerGroup = L.layerGroup().addTo(this.map);
     this.empireLayerGroup = L.layerGroup().addTo(this.map);
     this.routeLayerGroup = L.layerGroup().addTo(this.map);
     this.cityLayerGroup = L.layerGroup().addTo(this.map);
     this.siteLayerGroup = L.layerGroup().addTo(this.map);
 
-    // 4. Custom On-Map UI: Ornate Compass Rose + Controls + Year HUD
+    // 5. Custom On-Map UI: Ornate Compass Rose + Controls + Year HUD
     this.buildCompassRose();
     this.buildControls();
     this.buildYearHud();
 
-    // 5. Zero-Collision Event Handlers
+    // 6. Zero-Collision Event Handlers
     this.map.on('movestart', () => this.closeActiveTooltip());
     this.map.on('zoomstart', () => this.closeActiveTooltip());
     this.map.on('click', () => this.closeActiveTooltip());
+    this.map.on('zoomend moveend viewreset', () => this.scheduleLabelDeconfliction());
+    this.map.on('tooltipopen', (e: L.TooltipEvent) => {
+      this.constrainTooltipToViewport(e.tooltip);
+    });
     this.container.addEventListener('mouseleave', () => this.closeActiveTooltip());
 
-    // 6. Initial Render
+    // 7. Initial Render
     this.renderActiveEra();
 
     // Handle container resize
     setTimeout(() => {
       this.map.invalidateSize();
+      this.scheduleLabelDeconfliction();
     }, 200);
   }
 
   // Singleton Active Tooltip Tracking across all layers
   private activeTooltipLayer: L.Layer | null = null;
+  private activeHoveredPolygon: { poly: L.Polygon; defaultStyle: L.PathOptions } | null = null;
+  private labelDeconflictTimer: number | null = null;
 
   public closeActiveTooltip(): void {
+    if (this.activeHoveredPolygon) {
+      try {
+        this.activeHoveredPolygon.poly.setStyle(this.activeHoveredPolygon.defaultStyle);
+      } catch {
+        // Safe fallback
+      }
+      this.activeHoveredPolygon = null;
+    }
     if (this.activeTooltipLayer) {
       try {
         this.activeTooltipLayer.closeTooltip();
@@ -308,7 +361,41 @@ export class AncientMapCanvas {
 
     layer.bindTooltip(content, defaultOptions);
 
-    layer.on('mouseover', () => {
+    // Hook Leaflet's internal _updatePosition so every position update is synchronously clamped inside the map viewport
+    const tip = layer.getTooltip() as (L.Tooltip & { _updatePosition?: () => void; __clampedHooked?: boolean }) | undefined;
+    if (tip && typeof tip._updatePosition === 'function' && !tip.__clampedHooked) {
+      const origUpdatePosition = tip._updatePosition.bind(tip);
+      tip.__clampedHooked = true;
+      tip._updatePosition = () => {
+        origUpdatePosition();
+        this.constrainTooltipToViewport(tip);
+      };
+    }
+
+    const updateVectorTooltipAnchor = (e: L.LeafletEvent): void => {
+      const mouseEvt = e as L.LeafletMouseEvent;
+      if (
+        (layer instanceof L.Polygon || layer instanceof L.Polyline) &&
+        mouseEvt.latlng &&
+        this.map.getBounds().contains(mouseEvt.latlng)
+      ) {
+        const origEvt = mouseEvt.originalEvent;
+        const isSyntheticOrigin = origEvt && origEvt.clientX === 0 && origEvt.clientY === 0;
+        if (!isSyntheticOrigin) {
+          layer.getTooltip()?.setLatLng(mouseEvt.latlng);
+        }
+      }
+    };
+
+    layer.on('mouseover', (e: L.LeafletEvent) => {
+      if (this.activeHoveredPolygon && this.activeHoveredPolygon.poly !== layer) {
+        try {
+          this.activeHoveredPolygon.poly.setStyle(this.activeHoveredPolygon.defaultStyle);
+        } catch {
+          // ignore
+        }
+        this.activeHoveredPolygon = null;
+      }
       if (this.activeTooltipLayer && this.activeTooltipLayer !== layer) {
         try {
           this.activeTooltipLayer.closeTooltip();
@@ -317,6 +404,22 @@ export class AncientMapCanvas {
         }
       }
       this.activeTooltipLayer = layer;
+      updateVectorTooltipAnchor(e);
+      this.constrainTooltipToViewport(layer.getTooltip());
+    });
+
+    if (layer instanceof L.Polygon || layer instanceof L.Polyline) {
+      layer.on('mousemove', (e: L.LeafletEvent) => {
+        if (this.activeTooltipLayer === layer) {
+          updateVectorTooltipAnchor(e);
+          this.constrainTooltipToViewport(layer.getTooltip());
+        }
+      });
+    }
+
+    layer.on('tooltipopen', (e: L.LeafletEvent) => {
+      const tipEvt = e as L.TooltipEvent;
+      this.constrainTooltipToViewport(tipEvt.tooltip || layer.getTooltip());
     });
 
     layer.on('mouseout', () => {
@@ -324,6 +427,358 @@ export class AncientMapCanvas {
         this.activeTooltipLayer = null;
       }
     });
+
+    layer.on('click', () => {
+      this.closeActiveTooltip();
+    });
+  }
+
+  /**
+   * Mathematically clamps any open Leaflet tooltip inside the visible map container bounds
+   * so hover informationals never clip past top, bottom, left, or right edges.
+   */
+  public constrainTooltipToViewport(tooltip?: L.Tooltip | null): void {
+    const activeTip = tooltip || this.activeTooltipLayer?.getTooltip();
+    if (!activeTip) return;
+    const el = activeTip.getElement();
+    if (!el || !this.container) return;
+
+    el.classList.remove('leaflet-tooltip-clamped');
+
+    const mapRect = this.container.getBoundingClientRect();
+    const tipRect = el.getBoundingClientRect();
+    if (tipRect.width === 0 || tipRect.height === 0 || mapRect.width === 0 || mapRect.height === 0) {
+      return;
+    }
+
+    const margin = 10;
+    const match =
+      el.style.transform.match(/translate3d\(\s*([-\d.]+)px,\s*([-\d.]+)px/i) ||
+      el.style.transform.match(/translate\(\s*([-\d.]+)px,\s*([-\d.]+)px/i);
+    if (!match) return;
+
+    const baseX = parseFloat(match[1]);
+    const baseY = parseFloat(match[2]);
+
+    let dx = 0;
+    let dy = 0;
+
+    // If tooltip overflows top edge, flip below the anchor point when room exists
+    const anchorLatLng = activeTip.getLatLng();
+    if (tipRect.top < mapRect.top + margin && anchorLatLng) {
+      const anchorPt = this.map.latLngToContainerPoint(anchorLatLng);
+      if (anchorPt.y >= 0 && anchorPt.y <= mapRect.height) {
+        const desiredTop = mapRect.top + anchorPt.y + 16;
+        if (desiredTop + tipRect.height <= mapRect.bottom - margin) {
+          dy = desiredTop - tipRect.top;
+        }
+      }
+    }
+
+    let projLeft = tipRect.left + dx;
+    let projRight = tipRect.right + dx;
+    let projTop = tipRect.top + dy;
+    let projBottom = tipRect.bottom + dy;
+
+    if (projLeft < mapRect.left + margin) {
+      dx += mapRect.left + margin - projLeft;
+    } else if (projRight > mapRect.right - margin) {
+      dx -= projRight - (mapRect.right - margin);
+    }
+
+    if (projTop < mapRect.top + margin) {
+      dy += mapRect.top + margin - projTop;
+    } else if (projBottom > mapRect.bottom - margin) {
+      dy -= projBottom - (mapRect.bottom - margin);
+    }
+
+    // Avoid overlapping top-left zoom controls when near the upper-left corner
+    projLeft = tipRect.left + dx;
+    projTop = tipRect.top + dy;
+    projBottom = tipRect.bottom + dy;
+    const controlsLeftClearance = 58;
+    const controlsTopClearance = 175;
+    if (
+      projLeft < mapRect.left + controlsLeftClearance &&
+      projTop < mapRect.top + controlsTopClearance &&
+      mapRect.left + controlsLeftClearance + tipRect.width <= mapRect.right - margin
+    ) {
+      dx += mapRect.left + controlsLeftClearance - projLeft;
+      projLeft = tipRect.left + dx;
+    }
+
+    // Avoid overlapping open #atlas-detail-drawer when hovering another marker while the drawer is open
+    const drawerEl = document.getElementById('atlas-detail-drawer');
+    if (drawerEl && !drawerEl.hidden) {
+      const drawerRect = drawerEl.getBoundingClientRect();
+      if (
+        drawerRect.width > 0 &&
+        projLeft < drawerRect.right + 10 &&
+        tipRect.right + dx > drawerRect.left - 4 &&
+        projBottom > drawerRect.top - 6 &&
+        projTop < drawerRect.bottom + 6 &&
+        drawerRect.right + 10 + tipRect.width <= mapRect.right - margin
+      ) {
+        dx += drawerRect.right + 10 - projLeft;
+      }
+    }
+
+    if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
+      const nextX = Math.round(baseX + dx);
+      const nextY = Math.round(baseY + dy);
+      el.style.transform = `translate3d(${nextX}px, ${nextY}px, 0px)`;
+      if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
+        el.classList.add('leaflet-tooltip-clamped');
+      }
+    }
+  }
+
+  public scheduleLabelDeconfliction(): void {
+    this.deconflictMarkerLabels();
+    if (this.labelDeconflictTimer !== null) {
+      window.clearTimeout(this.labelDeconflictTimer);
+    }
+    this.labelDeconflictTimer = window.setTimeout(() => {
+      this.deconflictMarkerLabels();
+      this.labelDeconflictTimer = null;
+    }, 60);
+  }
+
+  /**
+   * Resolves screen-space collisions between gold artifact labels, capital labels, and city labels.
+   */
+  public deconflictMarkerLabels(): void {
+    if (!this.container) return;
+    const mapRect = this.container.getBoundingClientRect();
+    if (mapRect.width === 0 || mapRect.height === 0) return;
+
+    type Box = { left: number; right: number; top: number; bottom: number };
+    const boxesOverlap = (a: Box, b: Box, pad = 2): boolean => {
+      return !(
+        a.right + pad <= b.left ||
+        a.left - pad >= b.right ||
+        a.bottom + pad <= b.top ||
+        a.top - pad >= b.bottom
+      );
+    };
+
+    const overlapArea = (a: Box, b: Box, pad = 2): number => {
+      const xOverlap = Math.max(0, Math.min(a.right + pad, b.right) - Math.max(a.left - pad, b.left));
+      const yOverlap = Math.max(0, Math.min(a.bottom + pad, b.bottom) - Math.max(a.top - pad, b.top));
+      return xOverlap * yOverlap;
+    };
+
+    const occupied: Box[] = [];
+    const addElementsToOccupied = (selector: string, expand = 0): void => {
+      const els = this.container.querySelectorAll<HTMLElement>(selector);
+      els.forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (
+          r.width > 0 &&
+          r.height > 0 &&
+          r.right >= mapRect.left &&
+          r.left <= mapRect.right &&
+          r.bottom >= mapRect.top &&
+          r.top <= mapRect.bottom
+        ) {
+          occupied.push({
+            left: r.left - expand,
+            right: r.right + expand,
+            top: r.top - expand,
+            bottom: r.bottom + expand
+          });
+        }
+      });
+    };
+
+    // Seed on-map HUD controls and high-priority interactive hitboxes first
+    addElementsToOccupied('.ancient-map-controls', 4);
+    addElementsToOccupied('.ornate-compass-rose', 4);
+    addElementsToOccupied('.map-canvas-year-hud', 4);
+    addElementsToOccupied('.leaflet-route-stop-marker .route-stop-core', 3);
+    addElementsToOccupied('.leaflet-gold-marker .gold-coin-core', 4);
+    addElementsToOccupied('.leaflet-capital-marker .capital-marker-dot', 2);
+
+    // Deconflict route banner pills when multiple routes are shown simultaneously
+    const routeBadges = Array.from(
+      this.container.querySelectorAll<HTMLElement>('.leaflet-route-badge .route-badge-pill')
+    );
+    const placedBadges: Box[] = [];
+    routeBadges.forEach((pill, badgeIdx) => {
+      pill.classList.remove('label-hidden');
+      pill.style.marginTop = '';
+      const r0 = pill.getBoundingClientRect();
+      if (r0.width === 0 || r0.height === 0) return;
+      const badgeOffsets = [0, -18, 18, -34, 34];
+      for (const dy of badgeOffsets) {
+        pill.style.marginTop = dy ? `${dy}px` : '';
+        const r = pill.getBoundingClientRect();
+        const insideViewport =
+          r.left >= mapRect.left + 6 &&
+          r.right <= mapRect.right - 6 &&
+          r.top >= mapRect.top + 6 &&
+          r.bottom <= mapRect.bottom - 6;
+        const collidesBadge = placedBadges.some(b => boxesOverlap(r, b, 4));
+        if (insideViewport && !collidesBadge) {
+          const box = { left: r.left - 3, right: r.right + 3, top: r.top - 3, bottom: r.bottom + 3 };
+          placedBadges.push(box);
+          occupied.push(box);
+          return;
+        }
+      }
+      // If more than 2 routes are visible in macro view and a secondary badge still collides with another badge, hide it cleanly
+      if (routeBadges.length > 2 && badgeIdx > 0) {
+        pill.classList.add('label-hidden');
+      } else {
+        pill.style.marginTop = '';
+        const r = pill.getBoundingClientRect();
+        const box = { left: r.left - 3, right: r.right + 3, top: r.top - 3, bottom: r.bottom + 3 };
+        placedBadges.push(box);
+        occupied.push(box);
+      }
+    });
+
+    const goldLabels = Array.from(
+      this.container.querySelectorAll<HTMLElement>('.leaflet-gold-marker .gold-coin-label')
+    );
+    const capitalLabels = Array.from(
+      this.container.querySelectorAll<HTMLElement>('.leaflet-capital-marker .capital-marker-label')
+    );
+    const cityLabels = Array.from(
+      this.container.querySelectorAll<HTMLElement>('.leaflet-city-marker .city-marker-label')
+    );
+
+    const dirClasses = ['label-west', 'label-north', 'label-south'];
+
+    const placeLabel = (label: HTMLElement, canHide: boolean): void => {
+      label.classList.remove('label-west', 'label-north', 'label-south', 'label-hidden');
+      label.style.marginTop = '';
+      label.style.marginLeft = '';
+
+      const parentMarker = label.parentElement;
+      if (parentMarker) {
+        const pr = parentMarker.getBoundingClientRect();
+        if (
+          pr.right < mapRect.left ||
+          pr.left > mapRect.right ||
+          pr.bottom < mapRect.top ||
+          pr.top > mapRect.bottom
+        ) {
+          return;
+        }
+      }
+
+      const preferred = label.dataset.preferredDir || '';
+      const candidates = Array.from(new Set([preferred, '', 'label-west', 'label-north', 'label-south']));
+
+      let bestCandidate: { dir: string; mt: number; ml: number; score: number; rect: Box } | null = null;
+
+      for (const dir of candidates) {
+        label.classList.remove(...dirClasses);
+        if (dir) label.classList.add(dir);
+
+        const r = label.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0) return;
+
+        const insideViewport =
+          r.left >= mapRect.left + 4 &&
+          r.right <= mapRect.right - 4 &&
+          r.top >= mapRect.top + 4 &&
+          r.bottom <= mapRect.bottom - 4;
+
+        const totalOverlap = occupied.reduce((sum, occ) => sum + overlapArea(r, occ, 2), 0);
+        const penalty = totalOverlap + (insideViewport ? 0 : 10000);
+
+        if (!bestCandidate || penalty < bestCandidate.score) {
+          bestCandidate = {
+            dir,
+            mt: 0,
+            ml: 0,
+            score: penalty,
+            rect: { left: r.left, right: r.right, top: r.top, bottom: r.bottom }
+          };
+        }
+
+        if (insideViewport && totalOverlap === 0) {
+          occupied.push({ left: r.left, right: r.right, top: r.top, bottom: r.bottom });
+          return;
+        }
+      }
+
+      if (canHide) {
+        label.classList.add('label-hidden');
+        return;
+      }
+
+      // High-priority label (gold artifact or capital): test vertical/horizontal nudges to guarantee zero overlap
+      const nudges: Array<{ dir: string; mt: number; ml: number }> = [
+        { dir: 'label-west', mt: -10, ml: -4 },
+        { dir: 'label-west', mt: 10, ml: -4 },
+        { dir: 'label-north', mt: -12, ml: 0 },
+        { dir: 'label-south', mt: 12, ml: 0 },
+        { dir: '', mt: -14, ml: 0 },
+        { dir: '', mt: 14, ml: 0 },
+        { dir: 'label-north', mt: -24, ml: 0 },
+        { dir: 'label-south', mt: 24, ml: 0 },
+        { dir: 'label-west', mt: -22, ml: -6 },
+        { dir: 'label-west', mt: 22, ml: -6 },
+        { dir: '', mt: -26, ml: 4 },
+        { dir: '', mt: 26, ml: 4 }
+      ];
+
+      for (const nudge of nudges) {
+        label.classList.remove(...dirClasses);
+        if (nudge.dir) label.classList.add(nudge.dir);
+        label.style.marginTop = `${nudge.mt}px`;
+        label.style.marginLeft = `${nudge.ml}px`;
+
+        const r = label.getBoundingClientRect();
+        const insideViewport =
+          r.left >= mapRect.left + 4 &&
+          r.right <= mapRect.right - 4 &&
+          r.top >= mapRect.top + 4 &&
+          r.bottom <= mapRect.bottom - 4;
+        const totalOverlap = occupied.reduce((sum, occ) => sum + overlapArea(r, occ, 2), 0);
+        const penalty = totalOverlap + (insideViewport ? 0 : 10000);
+
+        if (!bestCandidate || penalty < bestCandidate.score) {
+          bestCandidate = {
+            dir: nudge.dir,
+            mt: nudge.mt,
+            ml: nudge.ml,
+            score: penalty,
+            rect: { left: r.left, right: r.right, top: r.top, bottom: r.bottom }
+          };
+        }
+
+        if (insideViewport && totalOverlap === 0) {
+          occupied.push({ left: r.left, right: r.right, top: r.top, bottom: r.bottom });
+          return;
+        }
+      }
+
+      // In All-Eras macro view, if a label still collides after all nudges, hide it until zoomed in
+      if ((this.activeEra.id === 'all' || this.showAllSites) && bestCandidate && bestCandidate.score > 0) {
+        label.classList.add('label-hidden');
+        return;
+      }
+
+      // Apply the lowest-overlap candidate
+      label.classList.remove(...dirClasses);
+      if (bestCandidate) {
+        if (bestCandidate.dir) label.classList.add(bestCandidate.dir);
+        label.style.marginTop = bestCandidate.mt ? `${bestCandidate.mt}px` : '';
+        label.style.marginLeft = bestCandidate.ml ? `${bestCandidate.ml}px` : '';
+        occupied.push(bestCandidate.rect);
+      }
+    };
+
+    goldLabels.forEach(lbl => placeLabel(lbl, false));
+    capitalLabels.forEach(lbl => placeLabel(lbl, false));
+
+    // Now seed city dots and place lower-priority city labels
+    addElementsToOccupied('.leaflet-city-marker .city-marker-dot', 1);
+    cityLabels.forEach(lbl => placeLabel(lbl, true));
   }
 
   private yearHudEl: HTMLElement | null = null;
@@ -411,10 +866,129 @@ export class AncientMapCanvas {
 
   public updateYearHud(): void {
     if (!this.yearHudEl) return;
-    this.yearHudEl.innerHTML = `
-      <div class="hud-label">EPOCH: ${this.activeEra.name.toUpperCase()}</div>
-      <div class="hud-year">${this.activeEra.yearLabel}</div>
-    `;
+    const activeFilter = this.activeGranularFilterId
+      ? GRANULAR_TIMELINE_FILTERS.find(f => f.id === this.activeGranularFilterId)
+      : null;
+    if (activeFilter) {
+      this.yearHudEl.innerHTML = `
+        <div class="hud-label">EPOCH: ${this.activeEra.name.toUpperCase()} · ${activeFilter.categoryLabel.toUpperCase()}</div>
+        <div class="hud-year">${activeFilter.label} (${activeFilter.dateLabel})</div>
+      `;
+    } else {
+      this.yearHudEl.innerHTML = `
+        <div class="hud-label">EPOCH: ${this.activeEra.name.toUpperCase()}</div>
+        <div class="hud-year">${this.activeEra.yearLabel}</div>
+      `;
+    }
+  }
+
+  public getVisibleRoutes(): BiblicalRoute[] {
+    if (this.activeRouteOverrideIds && this.activeRouteOverrideIds.length > 0) {
+      return BIBLICAL_ROUTES.filter(r => this.activeRouteOverrideIds!.includes(r.id));
+    }
+    if (this.activeEra.id === 'all') {
+      return BIBLICAL_ROUTES;
+    }
+    return BIBLICAL_ROUTES.filter(r => this.activeEra.activeRouteIds.includes(r.id));
+  }
+
+  public setGranularFilter(filterId: string | null): void {
+    this.closeActiveTooltip();
+    if (!filterId || filterId === 'all-era') {
+      this.activeGranularFilterId = null;
+      this.activeRouteOverrideIds = null;
+      this.activeRouteStopSelection = null;
+      this.updateYearHud();
+      this.renderActiveEra();
+      this.map.flyTo(
+        [this.activeEra.focusCenter.lat, this.activeEra.focusCenter.lng],
+        this.activeEra.focusZoom,
+        { duration: 1.0 }
+      );
+      if (this.options.onGranularFilterChange) {
+        this.options.onGranularFilterChange(null);
+      }
+      return;
+    }
+
+    const filter = GRANULAR_TIMELINE_FILTERS.find(f => f.id === filterId);
+    if (!filter) {
+      // Allow passing a direct route ID as fallback
+      const directRoute = BIBLICAL_ROUTES.find(r => r.id === filterId);
+      if (!directRoute) return;
+      this.activeGranularFilterId = directRoute.id;
+      this.activeRouteOverrideIds = [directRoute.id];
+      this.activeRouteStopSelection = { routeId: directRoute.id, stopIndex: 0 };
+      this.updateYearHud();
+      this.renderActiveEra();
+      const firstStop = directRoute.stops[0];
+      if (firstStop) {
+        this.map.flyTo([firstStop.coords.lat, firstStop.coords.lng], 7, { duration: 1.0 });
+      }
+      if (this.options.onGranularFilterChange) {
+        this.options.onGranularFilterChange(null);
+      }
+      return;
+    }
+
+    this.activeGranularFilterId = filter.id;
+    this.activeRouteOverrideIds = [...filter.routeIds];
+    const primaryRouteId = filter.routeIds[0];
+    this.activeRouteStopSelection = primaryRouteId ? { routeId: primaryRouteId, stopIndex: 0 } : null;
+
+    this.updateYearHud();
+    this.renderActiveEra();
+
+    this.map.flyTo(
+      [filter.focusCenter.lat, filter.focusCenter.lng],
+      filter.focusZoom,
+      { duration: 1.1 }
+    );
+
+    if (this.options.onGranularFilterChange) {
+      this.options.onGranularFilterChange(filter);
+    }
+  }
+
+  public stepToRouteStop(routeId: string, stopIndex: number, openDetail = true): void {
+    const route = BIBLICAL_ROUTES.find(r => r.id === routeId);
+    if (!route || route.stops.length === 0) return;
+
+    const clampedIdx = ((stopIndex % route.stops.length) + route.stops.length) % route.stops.length;
+    const stop = route.stops[clampedIdx];
+    this.activeRouteStopSelection = { routeId: route.id, stopIndex: clampedIdx };
+
+    // Ensure the route is currently visible
+    const visibleIds = this.getVisibleRoutes().map(r => r.id);
+    if (!visibleIds.includes(route.id)) {
+      const matchingFilter = GRANULAR_TIMELINE_FILTERS.find(
+        f => f.routeIds.length === 1 && f.routeIds[0] === route.id
+      ) || GRANULAR_TIMELINE_FILTERS.find(f => f.routeIds.includes(route.id));
+      if (matchingFilter) {
+        this.activeGranularFilterId = matchingFilter.id;
+        this.activeRouteOverrideIds = [...matchingFilter.routeIds];
+      } else {
+        this.activeRouteOverrideIds = [route.id];
+      }
+      this.updateYearHud();
+      this.renderActiveEra();
+    } else {
+      // Update active highlight class on stop markers
+      const allCores = this.container.querySelectorAll<HTMLElement>('.route-stop-core');
+      allCores.forEach(el => {
+        const isCurrent = el.dataset.routeId === route.id && Number(el.dataset.stopIndex) === clampedIdx;
+        el.classList.toggle('active-stop', isCurrent);
+      });
+    }
+
+    this.closeActiveTooltip();
+    const minStepZoom = route.id === 'thomas-parthia-india' || route.id === 'andrew-mark-missions' || route.id === 'paul-voyage-rome' ? 5 : 7;
+    const targetZoom = Math.max(this.map.getZoom(), minStepZoom);
+    this.map.flyTo([stop.coords.lat, stop.coords.lng], targetZoom, { duration: 0.75 });
+
+    if (openDetail && this.options.onSelectRouteStop) {
+      this.options.onSelectRouteStop(route, stop, clampedIdx);
+    }
   }
 
   public setEra(eraId: string): void {
@@ -422,6 +996,9 @@ export class AncientMapCanvas {
     if (!era) return;
 
     this.activeEra = era;
+    this.activeGranularFilterId = null;
+    this.activeRouteOverrideIds = null;
+    this.activeRouteStopSelection = null;
     this.updateYearHud();
     this.renderActiveEra();
 
@@ -434,6 +1011,9 @@ export class AncientMapCanvas {
 
     if (this.options.onEraChange) {
       this.options.onEraChange(era);
+    }
+    if (this.options.onGranularFilterChange) {
+      this.options.onGranularFilterChange(null);
     }
   }
 
@@ -460,7 +1040,7 @@ export class AncientMapCanvas {
     this.map.flyTo([entity.coords.lat, entity.coords.lng], entity.zoom || 9, { duration: 1.0 });
 
     const popupContent = `
-      <div class="map-leaflet-tooltip geo-callout-tooltip" style="min-width: 200px; max-width: 280px;">
+      <div class="map-tooltip-inner geo-callout-tooltip" style="min-width: 200px; max-width: 280px;">
         <span class="tooltip-badge">BIBLICAL GEOGRAPHY · ${entity.ancientRegion.toUpperCase()}</span>
         <div style="color: #d4af37; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin: 3px 0 2px;">${entity.name}</div>
         <p style="font-size: 0.78rem; color: #f1f5f9; margin: 4px 0 6px; line-height: 1.45;">${entity.note}</p>
@@ -483,6 +1063,16 @@ export class AncientMapCanvas {
   }
 
   public focusOnFigure(figureId: string): void {
+    const era = CHRONOLOGICAL_ERAS.find(e => e.id !== 'all' && e.activeFigureIds.includes(figureId));
+    if (era && this.activeEra.id !== era.id) {
+      this.activeEra = era;
+      this.updateYearHud();
+      this.renderActiveEra();
+      if (this.options.onEraChange) {
+        this.options.onEraChange(era);
+      }
+    }
+
     // Find matching site for this figure
     const site = ARCHAEOLOGICAL_SITES.find(s => s.figureId === figureId);
     if (site) {
@@ -493,8 +1083,6 @@ export class AncientMapCanvas {
       return;
     }
 
-    // Otherwise check for figure's era
-    const era = CHRONOLOGICAL_ERAS.find(e => e.activeFigureIds.includes(figureId));
     if (era) {
       this.setEra(era.id);
     }
@@ -520,9 +1108,47 @@ export class AncientMapCanvas {
   public renderActiveEra(): void {
     this.closeActiveTooltip();
     this.empireLayerGroup.clearLayers();
+    this.waterLayerGroup.clearLayers();
     this.routeLayerGroup.clearLayers();
     this.cityLayerGroup.clearLayers();
     this.siteLayerGroup.clearLayers();
+
+    // 0. Biblical Waterways (Seas & Major Rivers)
+    if (this.layers.rivers) {
+      for (const sea of WATER_FEATURES.seas) {
+        const latLngs = sea.polygon.map(pt => [pt.lat, pt.lng] as L.LatLngTuple);
+        const seaPoly = L.polygon(latLngs, {
+          pane: 'waterPane',
+          color: 'rgba(56, 189, 248, 0.35)',
+          fillColor: 'rgba(14, 116, 144, 0.14)',
+          fillOpacity: 0.14,
+          weight: 1.2,
+          dashArray: '3, 5'
+        });
+        this.bindManagedTooltip(
+          seaPoly,
+          `<div class="map-tooltip-inner"><strong style="color: #7dd3fc;">${sea.name}</strong><br/><span style="font-size: 0.72rem; color: #94a3b8;">Biblical Sea / Water Body</span></div>`,
+          { direction: 'top' }
+        );
+        this.waterLayerGroup.addLayer(seaPoly);
+      }
+
+      for (const river of WATER_FEATURES.rivers) {
+        const path = river.path.map(pt => [pt.lat, pt.lng] as L.LatLngTuple);
+        const riverLine = L.polyline(path, {
+          pane: 'waterPane',
+          color: '#38bdf8',
+          weight: 2.2,
+          opacity: 0.72
+        });
+        this.bindManagedTooltip(
+          riverLine,
+          `<div class="map-tooltip-inner"><strong style="color: #7dd3fc;">${river.name}</strong><br/><span style="font-size: 0.72rem; color: #94a3b8;">Biblical River Course</span></div>`,
+          { direction: 'top' }
+        );
+        this.waterLayerGroup.addLayer(riverLine);
+      }
+    }
 
     const isAll = this.activeEra.id === 'all';
     const targetEmpires = isAll
@@ -562,6 +1188,7 @@ export class AncientMapCanvas {
       for (const empire of sortedEmpires) {
         const latLngs = empire.approximateBounds.map(b => [b.lat, b.lng] as L.LatLngTuple);
         const defaultStyle: L.PathOptions = {
+          pane: 'empirePane',
           color: empire.color,
           fillColor: empire.fillColor || empire.color,
           fillOpacity: 0.16,
@@ -569,10 +1196,11 @@ export class AncientMapCanvas {
           dashArray: '6, 6'
         };
         const hoverStyle: L.PathOptions = {
-          color: '#ffd700',
+          pane: 'empirePane',
+          color: empire.color,
           fillColor: empire.fillColor || empire.color,
-          fillOpacity: 0.32,
-          weight: 2.8,
+          fillOpacity: 0.28,
+          weight: 2.6,
           dashArray: undefined
         };
 
@@ -580,10 +1208,13 @@ export class AncientMapCanvas {
 
         polygon.on('mouseover', () => {
           polygon.setStyle(hoverStyle);
-          polygon.bringToFront();
+          this.activeHoveredPolygon = { poly: polygon, defaultStyle };
         });
         polygon.on('mouseout', () => {
           polygon.setStyle(defaultStyle);
+          if (this.activeHoveredPolygon?.poly === polygon) {
+            this.activeHoveredPolygon = null;
+          }
         });
         polygon.on('click', () => {
           if (this.options.onSelectEmpire) {
@@ -596,8 +1227,8 @@ export class AncientMapCanvas {
         const badge = badgeMap[faction] || badgeMap.global_power;
 
         const tooltipHtml = `
-          <div class="map-leaflet-tooltip empire-tooltip" style="min-width: 220px; max-width: 310px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; gap: 8px;">
+          <div class="map-tooltip-inner empire-tooltip" style="min-width: 220px; max-width: 300px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; gap: 8px; flex-wrap: wrap;">
               <span class="tooltip-badge" style="background: ${badge.bg}; color: ${badge.color}; border: 1px solid ${badge.border}; font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">${badge.text}</span>
               <span style="font-size: 0.72rem; color: #94a3b8; font-family: var(--font-mono, monospace);">${empire.dateRange}</span>
             </div>
@@ -640,12 +1271,13 @@ export class AncientMapCanvas {
           const labelClass = `capital-marker-label ${dirClass}`.trim();
           const isFocalRealm = empire.factionCategory === 'covenant' || empire.factionCategory === 'israel';
           const capZIndex = isFocalRealm ? 1500 : 1200;
+          const shortCapitalLabel = empire.capital.name.replace(/\s*\([^)]*\)/g, '').trim();
 
           const capIcon = L.divIcon({
             className: 'leaflet-capital-marker',
             html: `
               <div class="capital-marker-dot" style="background: ${empire.color}; border: 1.5px solid #ffffff; box-shadow: 0 0 8px ${empire.color}; width: 8px; height: 8px; border-radius: 50%;"></div>
-              <div class="${labelClass}">${empire.capital.name}</div>
+              <div class="${labelClass}" data-preferred-dir="${dirClass}">${shortCapitalLabel}</div>
             `,
             iconSize: [12, 12],
             iconAnchor: [6, 6]
@@ -662,7 +1294,7 @@ export class AncientMapCanvas {
           });
 
           const capitalTooltipHtml = `
-            <div class="map-leaflet-tooltip capital-tooltip" style="min-width: 220px; max-width: 300px;">
+            <div class="map-tooltip-inner capital-tooltip" style="min-width: 220px; max-width: 290px;">
               <span class="tooltip-badge" style="background: ${badge.bg}; color: ${badge.color}; border: 1px solid ${badge.border}; font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">CAPITAL · ${badge.text}</span>
               <div style="color: #ffd700; font-weight: 700; font-size: 1.05rem; margin: 3px 0 2px;">${empire.capital.name}</div>
               <div style="color: #cbd5e1; font-size: 0.78rem;">Imperial Seat of ${empire.name}</div>
@@ -678,53 +1310,289 @@ export class AncientMapCanvas {
       }
     }
 
-    // 2. Biblical Routes (Filtered by era)
+    // 2. Biblical Routes (Filtered by era or granular sub-timeline filter, rendered in dedicated routePane & routeStopPane above empires)
+    this.routeStopMarkersMap.clear();
     if (this.layers.routes) {
-      const routesToRender = isAll
-        ? BIBLICAL_ROUTES
-        : BIBLICAL_ROUTES.filter(r => this.activeEra.activeRouteIds.includes(r.id));
+      const routesToRender = this.getVisibleRoutes();
+
+      const routeBannerCoords: Record<string, GeoCoordinate> = {
+        'abraham-call': { lat: 35.65, lng: 39.95 },
+        'jacob-joseph-egypt': { lat: 30.85, lng: 32.20 },
+        'exodus-route': { lat: 29.35, lng: 33.35 },
+        'joshua-conquest': { lat: 32.45, lng: 35.55 },
+        'david-exile-throne': { lat: 31.42, lng: 35.15 },
+        'elijah-elisha-ministry': { lat: 32.95, lng: 35.20 },
+        'babylonian-deportation-daniel': { lat: 34.90, lng: 41.20 },
+        'ezra-nehemiah-return': { lat: 33.25, lng: 44.80 },
+        'john-baptist-ministry': { lat: 31.62, lng: 35.72 },
+        'jesus-nativity-youth': { lat: 30.95, lng: 33.20 },
+        'jesus-early-ministry': { lat: 32.25, lng: 35.10 },
+        'jesus-galilean-ministry': { lat: 33.18, lng: 35.52 },
+        'jesus-passion-resurrection': { lat: 31.82, lng: 34.78 },
+        'peter-philip-missions': { lat: 31.50, lng: 33.80 },
+        'paul-first-journey': { lat: 35.10, lng: 33.20 },
+        'paul-second-journey': { lat: 42.65, lng: 23.50 },
+        'paul-third-journey': { lat: 36.60, lng: 25.40 },
+        'paul-voyage-rome': { lat: 36.10, lng: 16.50 },
+        'john-seven-churches-patmos': { lat: 38.80, lng: 29.80 },
+        'thomas-parthia-india': { lat: 24.50, lng: 62.50 },
+        'andrew-mark-missions': { lat: 44.20, lng: 33.50 }
+      };
+
+      const selectRouteStopHandler = (route: BiblicalRoute, stop?: BiblicalRouteStop, stopIndex?: number): void => {
+        const idx = typeof stopIndex === 'number' ? stopIndex : 0;
+        this.activeRouteStopSelection = { routeId: route.id, stopIndex: idx };
+        const allCores = this.container.querySelectorAll<HTMLElement>('.route-stop-core');
+        allCores.forEach(el => {
+          const isCurrent = el.dataset.routeId === route.id && Number(el.dataset.stopIndex) === idx;
+          el.classList.toggle('active-stop', isCurrent);
+        });
+
+        if (this.options.onSelectRouteStop) {
+          this.options.onSelectRouteStop(route, stop, idx);
+          return;
+        }
+        // Fallback inline popup for standalone embeds without a drawer callback
+        const targetStop = stop || route.stops[0];
+        const popupHtml = `
+          <div class="map-tooltip-inner" style="min-width: 240px; max-width: 300px;">
+            <span class="tooltip-badge" style="color: ${route.color}; border-color: ${route.color};">${route.name.toUpperCase()} · STOP ${idx + 1} OF ${route.stops.length}</span>
+            <div style="color: #ffd700; font-weight: 700; font-size: 1.1rem; margin: 3px 0 4px;">${idx + 1}. ${targetStop.name}</div>
+            <div style="font-size: 0.76rem; color: #fef08a; margin-bottom: 3px;"><strong>🗓️ When:</strong> ${targetStop.dateLabel}</div>
+            <div style="font-size: 0.76rem; color: #7dd3fc; margin-bottom: 5px;"><strong>📖 Scripture:</strong> ${targetStop.scriptureRef}</div>
+            <p style="font-size: 0.76rem; color: #e2e8f0; margin: 0; line-height: 1.4;">${targetStop.note}</p>
+          </div>
+        `;
+        L.popup({ className: 'map-leaflet-popup', closeButton: true, autoClose: true })
+          .setLatLng([targetStop.coords.lat, targetStop.coords.lng])
+          .setContent(popupHtml)
+          .openOn(this.map);
+      };
+
+      // Track placed stop coordinates across concurrent routes so shared cities (e.g., Bethabara or Jerusalem) do not stack directly on top of one another
+      const placedStopCoords: GeoCoordinate[] = [];
+      const getDeconflictedStopCoords = (raw: GeoCoordinate): GeoCoordinate => {
+        let collisionCount = 0;
+        for (const prev of placedStopCoords) {
+          const dLat = prev.lat - raw.lat;
+          const dLng = prev.lng - raw.lng;
+          if (Math.sqrt(dLat * dLat + dLng * dLng) < 0.035) {
+            collisionCount++;
+          }
+        }
+        if (collisionCount === 0) {
+          placedStopCoords.push(raw);
+          return raw;
+        }
+        const angle = (collisionCount * 137.5 * Math.PI) / 180; // Golden-angle spiral separation
+        const radius = 0.028 * Math.ceil(collisionCount / 2);
+        const adjusted = {
+          lat: raw.lat + Math.sin(angle) * radius,
+          lng: raw.lng + (Math.cos(angle) * radius) / Math.cos((raw.lat * Math.PI) / 180)
+        };
+        placedStopCoords.push(adjusted);
+        return adjusted;
+      };
 
       for (const route of routesToRender) {
         const path = route.stops.map(s => [s.coords.lat, s.coords.lng] as L.LatLngTuple);
+        const isPatristicRoute = route.evidenceClass === 'EXTERNAL_HISTORICAL_ATTESTATION';
+        const evidenceBadgeText = isPatristicRoute
+          ? 'SCRIPTURE + PATRISTIC / HISTORICAL ATTESTATION'
+          : `BIBLICAL JOURNEY · ${route.stops.length} STOPS`;
 
-        const polyline = L.polyline(path, {
-          color: route.color,
-          weight: 3.5,
+        // Dark outer casing for high contrast against empire territories and terrain
+        const casingLine = L.polyline(path, {
+          pane: 'routePane',
+          color: 'rgba(8, 12, 17, 0.85)',
+          weight: 6.5,
           opacity: 0.85,
-          dashArray: '5, 8'
+          interactive: false
+        });
+        this.routeLayerGroup.addLayer(casingLine);
+
+        // Visible high-contrast route line
+        const visiblePolyline = L.polyline(path, {
+          pane: 'routePane',
+          color: route.color,
+          weight: 3.8,
+          opacity: 0.96,
+          dashArray: isPatristicRoute ? '5, 7' : '9, 6',
+          interactive: false
+        });
+        this.routeLayerGroup.addLayer(visiblePolyline);
+
+        // Wide 24px interactive hit-corridor in routePane (above empirePane) so hovering anywhere along the path never falls through to Roman Empire
+        const hitCorridor = L.polyline(path, {
+          pane: 'routePane',
+          color: route.color,
+          weight: 24,
+          opacity: 0.01,
+          className: `leaflet-route-hit-corridor route-corridor-${route.id}`,
+          bubblingMouseEvents: false
+        });
+
+        hitCorridor.on('mouseover', () => {
+          visiblePolyline.setStyle({ weight: 5.2, opacity: 1.0, dashArray: undefined });
+        });
+        hitCorridor.on('mouseout', () => {
+          visiblePolyline.setStyle({ weight: 3.8, opacity: 0.96, dashArray: isPatristicRoute ? '5, 7' : '9, 6' });
+        });
+        hitCorridor.on('click', (e: L.LeafletMouseEvent) => {
+          L.DomEvent.stopPropagation(e);
+          selectRouteStopHandler(route, route.stops[0], 0);
         });
 
         const routeTooltipHtml = `
-          <div class="map-leaflet-tooltip">
-            <strong>${route.name}</strong><br/>
-            <span>${route.scriptureRef}</span>
+          <div class="map-tooltip-inner route-tooltip" style="min-width: 240px; max-width: 315px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
+              <span class="tooltip-badge" style="background: rgba(15, 23, 42, 0.9); color: ${route.color}; border: 1px solid ${route.color}; font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">
+                ${evidenceBadgeText}
+              </span>
+              <span style="font-size: 0.72rem; color: #fef08a; font-family: var(--font-mono, monospace); font-weight: 600;">${route.dateRange}</span>
+            </div>
+            <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin-bottom: 4px;">
+              ${route.name}
+            </div>
+            <div style="font-size: 0.77rem; color: #cbd5e1; margin-bottom: 5px; display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; line-height: 1.35;">
+              <span style="color: #94a3b8;">🧭 Traveler:</span><strong style="color: #f8fafc;">${route.travelerName}</strong>
+              <span style="color: #94a3b8;">📖 Scripture:</span><strong style="color: #7dd3fc;">${route.scriptureRef}</strong>
+              ${route.attestationSource ? `<span style="color: #94a3b8;">🏛️ Sources:</span><span style="color: #fdba74; font-size: 0.72rem;">${route.attestationSource}</span>` : ''}
+            </div>
+            <div style="color: #e2e8f0; font-size: 0.75rem; line-height: 1.4; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px;">
+              ${route.summary}
+            </div>
+            <div class="tooltip-cta" style="margin-top: 5px; color: #38bdf8; font-size: 0.72rem; border-top: 1px dashed rgba(255, 255, 255, 0.12); padding-top: 4px;">
+              Hover or click any numbered stop (1–${route.stops.length}) for dates &amp; events &rarr;
+            </div>
           </div>
         `;
-        this.bindManagedTooltip(polyline, routeTooltipHtml, { direction: 'top' });
+        this.bindManagedTooltip(hitCorridor, routeTooltipHtml, { direction: 'top', offset: [0, -10] });
+        this.routeLayerGroup.addLayer(hitCorridor);
 
-        this.routeLayerGroup.addLayer(polyline);
+        // On-Map Route Title Banner Pill so the user immediately sees whose journey it is without hovering
+        const bannerPos = routeBannerCoords[route.id] || route.stops[Math.floor(route.stops.length / 2)].coords;
+        const badgeIcon = L.divIcon({
+          className: `leaflet-route-badge route-badge-${route.id}`,
+          html: `
+            <div class="route-badge-pill" data-route-id="${route.id}" style="--route-color: ${route.color}; border-color: ${route.color};">
+              <span class="route-badge-dot" style="background: ${route.color};"></span>
+              <span class="route-badge-text">${route.shortBanner}</span>
+            </div>
+          `,
+          iconSize: [230, 24],
+          iconAnchor: [115, 12]
+        });
+        const badgeMarker = L.marker([bannerPos.lat, bannerPos.lng], {
+          pane: 'routeStopPane',
+          icon: badgeIcon,
+          zIndexOffset: 1380,
+          bubblingMouseEvents: false
+        });
+        this.bindManagedTooltip(badgeMarker, routeTooltipHtml, { direction: 'top', offset: [0, -12] });
+        badgeMarker.on('click', (e: L.LeafletMouseEvent) => {
+          L.DomEvent.stopPropagation(e);
+          selectRouteStopHandler(route, route.stops[0], 0);
+        });
+        this.routeLayerGroup.addLayer(badgeMarker);
 
-        // Waypoints
-        for (const stop of route.stops) {
-          const dot = L.circleMarker([stop.coords.lat, stop.coords.lng], {
-            radius: 4,
-            fillColor: route.color,
-            color: '#080c11',
-            weight: 1.5,
-            fillOpacity: 1
+        // Interactive Numbered Waypoint Stops (1..N) in routeStopPane above all polygons and lines
+        const routeMarkers: L.Marker[] = [];
+        route.stops.forEach((stop, stopIdx) => {
+          const stopNum = stopIdx + 1;
+          const displayCoords = getDeconflictedStopCoords(stop.coords);
+          const isSelectedStop =
+            this.activeRouteStopSelection?.routeId === route.id &&
+            this.activeRouteStopSelection?.stopIndex === stopIdx;
+          const stopEvidenceClass = stop.evidenceClass || route.evidenceClass || 'SCRIPTURE_TEXT';
+          const isExternalStop = stopEvidenceClass === 'EXTERNAL_HISTORICAL_ATTESTATION';
+
+          const stopIcon = L.divIcon({
+            className: `leaflet-route-stop-marker route-stop-${route.id}-${stopNum}`,
+            html: `
+              <div class="route-stop-core ${isSelectedStop ? 'active-stop' : ''}" data-route-id="${route.id}" data-stop-index="${stopIdx}" style="--route-color: ${route.color}; border-color: ${route.color};">
+                <span class="route-stop-num">${stopNum}</span>
+              </div>
+            `,
+            iconSize: [22, 22],
+            iconAnchor: [11, 11]
           });
-          const stopTooltipHtml = `<strong>${stop.name}</strong>${stop.note ? `<br/><em>${stop.note}</em>` : ''}`;
-          this.bindManagedTooltip(dot, stopTooltipHtml, { direction: 'top', offset: [0, -6] });
-          this.routeLayerGroup.addLayer(dot);
-        }
+
+          const stopMarker = L.marker([displayCoords.lat, displayCoords.lng], {
+            pane: 'routeStopPane',
+            icon: stopIcon,
+            zIndexOffset: isSelectedStop ? 1550 : 1450,
+            bubblingMouseEvents: false
+          });
+
+          const stopTooltipHtml = `
+            <div class="map-tooltip-inner route-stop-tooltip" style="min-width: 235px; max-width: 310px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap;">
+                <span class="tooltip-badge" style="background: rgba(15, 23, 42, 0.9); color: ${route.color}; border: 1px solid ${route.color}; font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">
+                  ${route.name.toUpperCase()} · STOP ${stopNum} OF ${route.stops.length}
+                </span>
+              </div>
+              <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.12rem; margin-bottom: 4px;">
+                Stop ${stopNum}: ${stop.name}
+              </div>
+              <div style="font-size: 0.77rem; color: #cbd5e1; margin-bottom: 6px; display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; line-height: 1.35; background: rgba(15, 23, 42, 0.72); padding: 5px 8px; border-radius: 4px; border-left: 2px solid ${route.color};">
+                <span style="color: #94a3b8;">🗓️ When:</span><strong style="color: #fef08a;">${stop.dateLabel}</strong>
+                <span style="color: #94a3b8;">🧭 Traveler:</span><span style="color: #f8fafc;">${route.travelerName}</span>
+                <span style="color: #94a3b8;">📖 Scripture:</span><strong style="color: #7dd3fc;">${stop.scriptureRef}</strong>
+                ${isExternalStop && (stop.attestationSource || route.attestationSource) ? `<span style="color: #94a3b8;">🏛️ Attestation:</span><span style="color: #fdba74; font-size: 0.72rem;">${stop.attestationSource || route.attestationSource}</span>` : ''}
+              </div>
+              <div style="color: #e2e8f0; font-size: 0.76rem; line-height: 1.42;">
+                ${stop.note}
+              </div>
+              <div class="tooltip-cta" style="margin-top: 6px; color: #38bdf8; font-size: 0.72rem; border-top: 1px dashed rgba(255, 255, 255, 0.12); padding-top: 4px;">
+                Click waypoint to inspect full journey itinerary &amp; Scripture &rarr;
+              </div>
+            </div>
+          `;
+
+          this.bindManagedTooltip(stopMarker, stopTooltipHtml, { direction: 'top', offset: [0, -12] });
+          stopMarker.on('click', (e: L.LeafletMouseEvent) => {
+            L.DomEvent.stopPropagation(e);
+            selectRouteStopHandler(route, stop, stopIdx);
+          });
+
+          routeMarkers.push(stopMarker);
+          this.routeLayerGroup.addLayer(stopMarker);
+        });
+        this.routeStopMarkersMap.set(route.id, routeMarkers);
       }
     }
 
-    // 3. Biblical Cities
+    // 3. Biblical Cities (Era-filtered so Greco-Roman/NT cities don't crowd Old Testament Levant)
     if (this.layers.cities) {
+      const otEraIds = new Set([
+        'patriarchs',
+        'exodus',
+        'united_monarchy',
+        'divided_monarchy_prophets',
+        '2kings_jehu',
+        '2kings_fall_samaria',
+        'assyrian_siege',
+        'babylonian_exile',
+        'persian_restoration'
+      ]);
+      const ntOnlyCityIds = new Set([
+        'caesarea-maritima',
+        'capernaum',
+        'nazareth',
+        'antioch-syria',
+        'corinth',
+        'athens',
+        'rome',
+        'ephesus'
+      ]);
+
       for (const city of BIBLICAL_CITIES) {
         // Skip if this city is already prominently rendered as an active imperial capital
         if (activeCapitalNames.has(city.name.toLowerCase())) {
+          continue;
+        }
+        if (!isAll && !this.showAllSites && otEraIds.has(this.activeEra.id) && ntOnlyCityIds.has(city.id)) {
           continue;
         }
 
@@ -741,7 +1609,7 @@ export class AncientMapCanvas {
         });
 
         const cityTooltipHtml = `
-          <div class="map-leaflet-tooltip">
+          <div class="map-tooltip-inner">
             <span class="tooltip-badge">BIBLICAL CITY</span>
             <strong>${city.name}</strong><br/>
             <em>&ldquo;${city.hitchcockMeaning}&rdquo;</em><br/>
@@ -806,6 +1674,10 @@ export class AncientMapCanvas {
       for (const item of sitesWithOffset) {
         const site = item.site;
         const isEraHighlight = this.activeEra.activeSiteIds.includes(site.id);
+        const shortArtifactLabel = site.artifactName
+          .replace(/\s*\([^)]*\)/g, '')
+          .replace(/\s+of\s+(?:Sennacherib|Shalmaneser\s+III|Ur|Sargon\s+II)$/i, '')
+          .trim();
 
         const goldIcon = L.divIcon({
           className: `leaflet-gold-marker ${isEraHighlight ? 'pulse' : ''}`,
@@ -814,7 +1686,7 @@ export class AncientMapCanvas {
               <span class="core-inner">&#10022;</span>
             </div>
             ${isEraHighlight ? '<div class="gold-coin-halo"></div>' : ''}
-            <div class="gold-coin-label">${site.artifactName}</div>
+            <div class="gold-coin-label">${shortArtifactLabel}</div>
           `,
           iconSize: [28, 28],
           iconAnchor: [14, 14]
@@ -826,7 +1698,7 @@ export class AncientMapCanvas {
         });
 
         const siteTooltipHtml = `
-          <div class="map-leaflet-tooltip gold-tooltip" style="min-width: 220px; max-width: 320px;">
+          <div class="map-tooltip-inner gold-tooltip" style="min-width: 220px; max-width: 300px;">
             <span class="tooltip-badge">SURVIVING ARTIFACT · ${site.ancientRegion.toUpperCase()}</span>
             <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.05rem; margin-bottom: 2px;">${site.artifactName}</div>
             <div style="color: #cbd5e1; font-size: 0.78rem; margin-bottom: 4px;">${site.name} · ${site.artifactDate}</div>
@@ -848,6 +1720,8 @@ export class AncientMapCanvas {
         this.siteLayerGroup.addLayer(marker);
       }
     }
+
+    this.scheduleLabelDeconfliction();
   }
 
   public destroy(): void {

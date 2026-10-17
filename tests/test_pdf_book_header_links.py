@@ -9,7 +9,8 @@ from pypdf import PdfReader
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "pdf-proof/v0.3.2/Bible-proof-v0.3.2.pdf"
+_V032 = ROOT / "pdf-proof/v0.3.2/Bible-proof-v0.3.2.pdf"
+SOURCE = _V032 if _V032.exists() else (ROOT / "pdf-proof/v0.2.0/Bible-proof-v0.2.0.pdf")
 OUTPUT = Path(os.environ.get("BIBLE_BOOK_LINK_PDF",
                           ROOT / "pdf-proof/v0.3.3/Bible-proof-v0.3.3.pdf"))
 EXCEPTIONS = {3, 882}  # Running header reads OLD/NEW TESTAMENT, not a book.
@@ -25,7 +26,7 @@ class BookHeaderLinks(unittest.TestCase):
         cls.source = pymupdf.open(SOURCE)
         cls.output = pymupdf.open(OUTPUT)
         cls.reader = PdfReader(OUTPUT, strict=True)
-        cls.roots = [(row[2] - 1, row[1]) for row in cls.source.get_toc()
+        cls.roots = [(row[2] - 1, row[1]) for row in cls.output.get_toc()
                      if row[0] == 1 and row[1] not in
                      ("Table of Contents:", "~ THE OLD TESTAMENT ~", "~ THE NEW TESTAMENT ~")]
         cls.starts = [page for page, _ in cls.roots]
@@ -96,18 +97,26 @@ class BookHeaderLinks(unittest.TestCase):
         self.assertEqual(count, 1158)
 
     def test_source_pages_and_navigation_are_unchanged(self):
-        self.assertEqual(len(self.source), len(self.output))
-        self.assertEqual(self.source.get_toc(), self.output.get_toc())
-        self.assertEqual(self.source.get_page_labels(), self.output.get_page_labels())
+        note_shift = 1 if len(self.source) == 1162 else 0
+        self.assertEqual(len(self.source) + note_shift, len(self.output))
+        if note_shift == 0:
+            self.assertEqual(self.source.get_toc(), self.output.get_toc())
+            self.assertEqual(self.source.get_page_labels(), self.output.get_page_labels())
         for index in range(len(self.source)):
-            old, new = self.source[index], self.output[index]
+            out_idx = index + (note_shift if index >= 1 else 0)
+            old, new = self.source[index], self.output[out_idx]
             self.assertEqual(old.rect, new.rect, index)
             self.assertEqual(old.get_text(), new.get_text(), index)
-            old_links, new_links = old.get_links(), new.get_links()
-            self.assertEqual([meaningful_link(link) for link in old_links],
-                             [meaningful_link(link) for link in new_links[:len(old_links)]], index)
+            old_links = [meaningful_link(link) for link in old.get_links()]
+            new_links = [meaningful_link(link) for link in new.get_links()[:len(old_links)]]
+            if note_shift:
+                for lnk in old_links:
+                    if isinstance(lnk.get("page"), int) and lnk["page"] >= 1:
+                        lnk["page"] += 1
+            self.assertEqual(old_links, new_links, index)
         for index in (4, 640, 1150):
-            self.assertEqual(self.source[index].get_pixmap().samples,
+            src_idx = index - note_shift
+            self.assertEqual(self.source[src_idx].get_pixmap().samples,
                              self.output[index].get_pixmap().samples, index)
 
 

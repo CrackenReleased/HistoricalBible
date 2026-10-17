@@ -77,7 +77,8 @@
             </div>
 
             <div id="contact-status" role="status" hidden style="padding: 0.9rem 1.1rem; background: rgba(212, 175, 55, 0.12); border: 1px solid var(--border-gold); border-radius: 6px; color: var(--gold-bright); font-size: 0.9rem;">
-              Thank you for reaching out! Your message has been prepared for <a href="mailto:BibleHistorical@gmail.com">BibleHistorical@gmail.com</a>.
+              Thank you for reaching out! Your message has been prepared for <a id="contact-mailto-link" href="mailto:BibleHistorical@gmail.com">BibleHistorical@gmail.com</a>
+              <span id="contact-mailto-cta-wrap" hidden> · <a id="contact-mailto-cta" href="mailto:BibleHistorical@gmail.com" style="font-weight: 600; text-decoration: underline;">Open in Email Client →</a></span>
             </div>
           </form>
         </div>
@@ -121,9 +122,40 @@
   <script>
     const form = document.getElementById('contact-form');
     const statusBox = document.getElementById('contact-status');
+    const mailtoLink = document.getElementById('contact-mailto-link');
+    const mailtoCtaWrap = document.getElementById('contact-mailto-cta-wrap');
+    const mailtoCta = document.getElementById('contact-mailto-cta');
     if (form && statusBox) {
       form.addEventListener('submit', function (e) {
         e.preventDefault();
+        const nameInput = document.getElementById('contact-name');
+        const emailInput = document.getElementById('contact-email');
+        const msgInput = document.getElementById('contact-message');
+        const optInInput = form.querySelector('input[name="opt_in"]');
+
+        const senderName = (nameInput && nameInput.value ? nameInput.value.trim() : '') || 'Historical Bible Reader';
+        const senderEmail = (emailInput && emailInput.value ? emailInput.value.trim() : '');
+        const messageText = (msgInput && msgInput.value ? msgInput.value.trim() : '');
+        const optIn = Boolean(optInInput && optInInput.checked);
+
+        const subject = 'Historical Bible Inquiry from ' + senderName;
+        const bodyLines = [
+          'Name: ' + senderName,
+          'Reply-To Email: ' + senderEmail,
+          'Email List Opt-In: ' + (optIn ? 'Yes' : 'No'),
+          '',
+          'Message:',
+          messageText
+        ];
+        const mailtoHref =
+          'mailto:BibleHistorical@gmail.com?subject=' +
+          encodeURIComponent(subject) +
+          '&body=' +
+          encodeURIComponent(bodyLines.join('\r\n'));
+
+        if (mailtoLink) mailtoLink.setAttribute('href', mailtoHref);
+        if (mailtoCta) mailtoCta.setAttribute('href', mailtoHref);
+        if (mailtoCtaWrap) mailtoCtaWrap.hidden = false;
         statusBox.hidden = false;
       });
     }

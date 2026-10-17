@@ -22,6 +22,9 @@ export interface EgoEdge {
   source: string;
   target: string;
   weight: number;
+  kind?: 'shared' | 'relationship' | 'contemporary';
+  evidence?: string[];
+  note?: string;
 }
 
 export interface EgoGraphData {
@@ -29,11 +32,84 @@ export interface EgoGraphData {
   centerTitle: string;
   nodes: EgoNode[];
   edges: EgoEdge[];
+  pinnedIds?: string[];
+}
+
+export interface EgoGraphSettings {
+  maxHops: 1 | 2;
+  maxNodes: number;
+  minSharedVerses: number;
+  kinds: Array<NonNullable<EgoEdge['kind']>>;
+  showLabels: boolean;
+}
+
+const graphKinds: EgoGraphSettings['kinds'] = ['shared', 'relationship', 'contemporary'];
+const kindLabels = { shared: 'Shared verse', relationship: 'Curated relationship', contemporary: 'Historical contemporary' };
+
+export function normalizeGraphSettings(input: Partial<EgoGraphSettings> = {}): EgoGraphSettings {
+  const bounded = (value: number | undefined, fallback: number, low: number, high: number) =>
+    Number.isFinite(value) ? Math.min(high, Math.max(low, Math.floor(value!))) : fallback;
+  return {
+    maxHops: input.maxHops === 1 ? 1 : 2,
+    maxNodes: bounded(input.maxNodes, 30, 2, 100),
+    minSharedVerses: bounded(input.minSharedVerses, 1, 1, 10000),
+    kinds: Array.isArray(input.kinds) ? graphKinds.filter(kind => input.kinds!.includes(kind)) : [...graphKinds],
+    showLabels: input.showLabels !== false,
+  };
+}
+
+/** Select only reachable nodes, retaining explicit comparison selections and their paths. */
+export function filterStudyGraph(data: EgoGraphData, input: Partial<EgoGraphSettings> = {}) {
+  const settings = normalizeGraphSettings(input);
+  const nodeMap = new Map(data.nodes.map(node => [node.id, node]));
+  const available = data.edges.filter(edge => nodeMap.has(edge.source) && nodeMap.has(edge.target));
+  const eligible = available.filter(edge => settings.kinds.includes(edge.kind ?? 'shared') &&
+    (edge.kind && edge.kind !== 'shared' || edge.weight >= settings.minSharedVerses));
+  const adjacency = new Map<string, Array<{ id: string; weight: number }>>();
+  for (const edge of eligible) {
+    for (const [from, to] of [[edge.source, edge.target], [edge.target, edge.source]]) {
+      const links = adjacency.get(from) ?? [];
+      links.push({ id: to, weight: edge.weight });
+      adjacency.set(from, links);
+    }
+  }
+  const distance = new Map<string, number>();
+  const parent = new Map<string, string>();
+  const queue = nodeMap.has(data.centerId) ? [data.centerId] : [];
+  if (queue.length) distance.set(data.centerId, 0);
+  for (let i = 0; i < queue.length; i++) {
+    const id = queue[i], depth = distance.get(id)!;
+    if (depth >= settings.maxHops) continue;
+    for (const next of (adjacency.get(id) ?? []).sort((a, b) => b.weight - a.weight || a.id.localeCompare(b.id))) {
+      if (distance.has(next.id)) continue;
+      distance.set(next.id, depth + 1);
+      parent.set(next.id, id);
+      queue.push(next.id);
+    }
+  }
+  const selected = new Set<string>(queue.slice(0, 1));
+  const pins = [...new Set(data.pinnedIds ?? [])].filter(id => id !== data.centerId && nodeMap.has(id)).slice(0, settings.maxNodes - 1);
+  // Reserve room for every explicit selection before considering its path.
+  for (const id of pins) selected.add(id);
+  for (const id of pins) {
+    const path: string[] = [];
+    for (let current = parent.get(id); current && !selected.has(current); current = parent.get(current)) path.push(current);
+    if (selected.size + path.length <= settings.maxNodes) for (const current of path.reverse()) selected.add(current);
+  }
+  for (const id of queue) {
+    if (selected.size >= settings.maxNodes) break;
+    if (selected.has(parent.get(id) ?? data.centerId)) selected.add(id);
+  }
+  const nodes = [...selected].map(id => ({ ...nodeMap.get(id)!, hop: (distance.get(id) ?? 1) as 0 | 1 | 2 }));
+  const edges = eligible.filter(edge => selected.has(edge.source) && selected.has(edge.target));
+  return { nodes, edges, totalEdges: available.length, totalNodes: nodeMap.size };
 }
 
 export interface EgoGraphOptions {
   onSelectNode: (node: EgoNode) => void;
   maxHops?: 1 | 2;
+  settings?: Partial<EgoGraphSettings>;
+  onSettingsChange?: (settings: EgoGraphSettings) => void;
 }
 
 export class EgoGraphCanvas {
@@ -46,6 +122,7 @@ export class EgoGraphCanvas {
   private edges: EgoEdge[] = [];
   private hoveredNodeId: string | null = null;
   private maxHops: 1 | 2 = 2;
+  private settings: EgoGraphSettings;
 
   // Pan & Zoom
   private panX = 0;
@@ -58,11 +135,18 @@ export class EgoGraphCanvas {
 
   private tooltip: HTMLElement;
   private controls: HTMLElement;
+  private status: HTMLElement;
+  private connections: HTMLDetailsElement;
+  private boundResize = () => this.resize();
+  private boundMouseMove?: (e: MouseEvent) => void;
+  private boundMouseUp?: () => void;
 
   constructor(container: HTMLElement, options: EgoGraphOptions) {
     this.container = container;
     this.options = options;
     this.maxHops = options.maxHops ?? 2;
+    this.settings = normalizeGraphSettings({ maxHops: this.maxHops, ...options.settings });
+    this.maxHops = this.settings.maxHops;
 
     this.container.style.position = 'relative';
     this.container.style.userSelect = 'none';
@@ -92,26 +176,19 @@ export class EgoGraphCanvas {
     this.tooltip.style.boxShadow = '0 4px 12px rgba(0,0,0,0.4)';
     this.tooltip.style.maxWidth = '220px';
 
-    // Controls overlay (Hop toggle & Reset)
+    // Controls sit above the canvas so they stay usable at narrow widths.
     this.controls = document.createElement('div');
     this.controls.className = 'ego-graph-controls';
-    this.controls.style.position = 'absolute';
-    this.controls.style.top = '8px';
-    this.controls.style.right = '8px';
-    this.controls.style.display = 'flex';
-    this.controls.style.gap = '6px';
-    this.controls.style.zIndex = '5';
 
     const hopsBtn = document.createElement('button');
     hopsBtn.type = 'button';
     hopsBtn.className = 'btn-small';
+    hopsBtn.dataset.graphHops = '';
     hopsBtn.textContent = this.maxHops === 2 ? '2-Hop' : '1-Hop';
     hopsBtn.title = 'Toggle 1-hop or 2-hop neighborhood expansion';
     hopsBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      this.maxHops = this.maxHops === 2 ? 1 : 2;
-      hopsBtn.textContent = this.maxHops === 2 ? '2-Hop' : '1-Hop';
-      if (this.data) this.render(this.data);
+      this.setSettings({ maxHops: this.maxHops === 2 ? 1 : 2 }, true);
     });
 
     const resetBtn = document.createElement('button');
@@ -126,11 +203,63 @@ export class EgoGraphCanvas {
 
     this.controls.appendChild(hopsBtn);
     this.controls.appendChild(resetBtn);
+    for (const [label, factor] of [['Zoom in', 1.2], ['Zoom out', 1 / 1.2]] as const) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'btn-small';
+      button.textContent = label;
+      button.addEventListener('click', () => { this.zoom = Math.min(2.5, Math.max(0.6, this.zoom * factor)); this.draw(); });
+      this.controls.appendChild(button);
+    }
+    const addSelect = (labelText: string, key: 'maxNodes' | 'minSharedVerses', values: number[]) => {
+      const label = document.createElement('label');
+      label.textContent = labelText;
+      const select = document.createElement('select');
+      select.dataset.graphSetting = key;
+      for (const value of values) select.add(new Option(String(value), String(value)));
+      select.addEventListener('change', () => this.setSettings({ [key]: Number(select.value) }, true));
+      label.appendChild(select);
+      this.controls.appendChild(label);
+    };
+    addSelect('Visible names', 'maxNodes', [15, 30, 60]);
+    addSelect('Minimum shared verses', 'minSharedVerses', [1, 2, 5, 10, 25, 50]);
+    const kinds = document.createElement('fieldset');
+    kinds.className = 'ego-graph-kinds';
+    const legend = document.createElement('legend');
+    legend.textContent = 'Connection types';
+    kinds.appendChild(legend);
+    for (const kind of graphKinds) {
+      const label = document.createElement('label');
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.dataset.graphKind = kind;
+      checkbox.addEventListener('change', () => this.setSettings({ kinds: graphKinds.filter(item =>
+        item === kind ? checkbox.checked : this.settings.kinds.includes(item)) }, true));
+      label.append(checkbox, document.createTextNode(kindLabels[kind]));
+      kinds.appendChild(label);
+    }
+    this.controls.appendChild(kinds);
+    const labels = document.createElement('label');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.dataset.graphLabels = '';
+    checkbox.addEventListener('change', () => this.setSettings({ showLabels: checkbox.checked }, true));
+    labels.append(checkbox, document.createTextNode('Show labels'));
+    this.controls.appendChild(labels);
+
+    this.status = document.createElement('p');
+    this.status.className = 'ego-graph-status';
+    this.status.setAttribute('role', 'status');
+    this.connections = document.createElement('details');
+    this.connections.className = 'ego-graph-connections';
 
     container.innerHTML = '';
+    container.appendChild(this.controls);
+    container.appendChild(this.status);
     container.appendChild(this.canvas);
     container.appendChild(this.tooltip);
-    container.appendChild(this.controls);
+    container.appendChild(this.connections);
+    this.syncControls();
 
     const ctx = this.canvas.getContext('2d');
     if (!ctx) throw new Error('2D Canvas context unavailable');
@@ -138,7 +267,14 @@ export class EgoGraphCanvas {
 
     this.bindEvents();
     this.resize();
-    window.addEventListener('resize', () => this.resize());
+    window.addEventListener('resize', this.boundResize);
+  }
+
+  public destroy(): void {
+    window.removeEventListener('resize', this.boundResize);
+    if (this.boundMouseMove) window.removeEventListener('mousemove', this.boundMouseMove);
+    if (this.boundMouseUp) window.removeEventListener('mouseup', this.boundMouseUp);
+    this.container.replaceChildren();
   }
 
   public resize(): void {
@@ -150,7 +286,8 @@ export class EgoGraphCanvas {
     this.canvas.width = Math.round(w * dpr);
     this.canvas.height = Math.round(h * dpr);
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    this.draw();
+    if (this.data) this.render(this.data);
+    else this.draw();
   }
 
   public resetView(): void {
@@ -161,21 +298,49 @@ export class EgoGraphCanvas {
   }
 
   public setMaxHops(hops: 1 | 2): void {
-    this.maxHops = hops;
-    const hopsBtn = this.controls.querySelector('button');
-    if (hopsBtn) hopsBtn.textContent = hops === 2 ? '2-Hop' : '1-Hop';
+    this.setSettings({ maxHops: hops });
+  }
+
+  public getSettings(): EgoGraphSettings {
+    return { ...this.settings, kinds: [...this.settings.kinds] };
+  }
+
+  public setSettings(settings: Partial<EgoGraphSettings>, notify = false): void {
+    this.settings = normalizeGraphSettings({ ...this.settings, ...settings });
+    this.maxHops = this.settings.maxHops;
+    this.syncControls();
     if (this.data) this.render(this.data);
+    if (notify) this.options.onSettingsChange?.(this.getSettings());
+  }
+
+  private syncControls(): void {
+    const hops = this.controls.querySelector<HTMLButtonElement>('[data-graph-hops]');
+    if (hops) hops.textContent = `${this.maxHops}-Hop`;
+    for (const select of this.controls.querySelectorAll<HTMLSelectElement>('[data-graph-setting]')) {
+      const value = String(this.settings[select.dataset.graphSetting as 'maxNodes' | 'minSharedVerses']);
+      if (![...select.options].some(option => option.value === value)) select.add(new Option(value, value));
+      select.value = value;
+    }
+    for (const checkbox of this.controls.querySelectorAll<HTMLInputElement>('[data-graph-kind]')) {
+      checkbox.checked = this.settings.kinds.includes(checkbox.dataset.graphKind as NonNullable<EgoEdge['kind']>);
+    }
+    const labels = this.controls.querySelector<HTMLInputElement>('[data-graph-labels]');
+    if (labels) labels.checked = this.settings.showLabels;
   }
 
   public render(data: EgoGraphData): void {
     this.data = data;
+    this.hoveredNodeId = null;
+    this.tooltip.style.display = 'none';
     const width = this.canvas.clientWidth || 400;
     const height = this.canvas.clientHeight || 340;
     const cx = width / 2;
     const cy = height / 2;
 
-    const filteredNodes = data.nodes.filter((n) => n.hop <= this.maxHops);
-    const validNodeIds = new Set(filteredNodes.map((n) => n.id));
+    const filtered = filterStudyGraph(data, this.settings);
+    const filteredNodes = filtered.nodes;
+    this.status.textContent = `Displaying ${filtered.edges.length} of ${filtered.totalEdges} connections in this neighborhood · ${filteredNodes.length} of ${filtered.totalNodes} names. Types, shared-verse minimum, hops and density control what is shown.`;
+    this.canvas.setAttribute('aria-label', `Connection graph for ${data.centerTitle}. ${filteredNodes.length} visible names. Use the connection list below for evidence and keyboard navigation.`);
 
     const hop0 = filteredNodes.filter((n) => n.hop === 0);
     const hop1 = filteredNodes.filter((n) => n.hop === 1);
@@ -252,11 +417,53 @@ export class EgoGraphCanvas {
     }
 
     this.nodes = positioned;
-    this.edges = data.edges.filter(
-      (e) => validNodeIds.has(e.source) && validNodeIds.has(e.target)
-    );
+    this.edges = filtered.edges;
+    this.renderConnections();
 
     this.draw();
+  }
+
+  private renderConnections(): void {
+    const summary = document.createElement('summary');
+    summary.textContent = `Connection evidence & expand a name (${this.edges.length})`;
+    const list = document.createElement('ul');
+    const nodes = new Map(this.nodes.map(node => [node.id, node]));
+    const expand = (id: string) => {
+      const node = nodes.get(id)!;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'btn-small';
+      button.textContent = node.title;
+      button.setAttribute('aria-label', `Expand ${node.title}`);
+      button.addEventListener('click', () => this.options.onSelectNode(node));
+      return button;
+    };
+    for (const edge of this.edges) {
+      const item = document.createElement('li');
+      const details = document.createElement('details');
+      const heading = document.createElement('summary');
+      const kind = edge.kind ?? 'shared';
+      heading.textContent = `${nodes.get(edge.source)!.title} — ${nodes.get(edge.target)!.title} · ${kindLabels[kind]}${kind === 'shared' ? ` (${edge.weight})` : ''}`;
+      details.appendChild(heading);
+      const evidence = document.createElement('p');
+      evidence.textContent = edge.evidence?.length ? `Evidence: ${edge.evidence.join('; ')}` : 'No passage or source citation supplied for this connection.';
+      details.appendChild(evidence);
+      if (edge.note) { const note = document.createElement('p'); note.textContent = edge.note; details.appendChild(note); }
+      const actions = document.createElement('div');
+      actions.className = 'ego-graph-expand';
+      actions.append(document.createTextNode('Expand: '), expand(edge.source), expand(edge.target));
+      details.appendChild(actions);
+      item.appendChild(details);
+      list.appendChild(item);
+    }
+    this.connections.replaceChildren(summary, list);
+    const disconnected = this.nodes.filter(node => node.hop !== 0 && !this.edges.some(edge => edge.source === node.id || edge.target === node.id));
+    for (const node of disconnected) {
+      const note = document.createElement('p');
+      note.append(document.createTextNode('Selected for comparison; no visible connection under these settings: '), expand(node.id));
+      this.connections.appendChild(note);
+    }
+    if (!this.edges.length) { const empty = document.createElement('p'); empty.textContent = 'No connections match these settings. Try another connection type, a lower minimum, or two hops.'; this.connections.appendChild(empty); }
   }
 
   private bindEvents(): void {
@@ -268,7 +475,7 @@ export class EgoGraphCanvas {
       this.canvas.style.cursor = 'grabbing';
     });
 
-    window.addEventListener('mousemove', (e) => {
+    this.boundMouseMove = (e: MouseEvent) => {
       if (this.isDragging) {
         const nextX = e.clientX - this.dragStartX;
         const nextY = e.clientY - this.dragStartY;
@@ -325,14 +532,16 @@ export class EgoGraphCanvas {
         this.canvas.style.cursor = 'grab';
         this.draw();
       }
-    });
+    };
+    window.addEventListener('mousemove', this.boundMouseMove);
 
-    window.addEventListener('mouseup', () => {
+    this.boundMouseUp = () => {
       if (this.isDragging) {
         this.isDragging = false;
         this.canvas.style.cursor = this.hoveredNodeId ? 'pointer' : 'grab';
       }
-    });
+    };
+    window.addEventListener('mouseup', this.boundMouseUp);
 
     this.canvas.addEventListener('click', () => {
       if (this.dragMoved) return;
@@ -430,6 +639,7 @@ export class EgoGraphCanvas {
         this.hoveredNodeId === s.id || this.hoveredNodeId === t.id;
 
       this.ctx.beginPath();
+      this.ctx.setLineDash(edge.kind === 'contemporary' ? [4, 4] : edge.kind === 'relationship' ? [8, 3] : []);
       this.ctx.moveTo(s.x, s.y);
       this.ctx.lineTo(t.x, t.y);
 
@@ -443,6 +653,7 @@ export class EgoGraphCanvas {
       }
       this.ctx.stroke();
     }
+    this.ctx.setLineDash([]);
 
     // 2. Draw Nodes
     for (const n of this.nodes) {
@@ -487,7 +698,7 @@ export class EgoGraphCanvas {
       this.ctx.stroke();
 
       // Labels
-      const shouldDrawLabel = n.hop <= 1 || isHovered || isConnectedToHover;
+      const shouldDrawLabel = this.settings.showLabels || isHovered || isConnectedToHover;
       if (shouldDrawLabel) {
         this.ctx.font =
           n.hop === 0

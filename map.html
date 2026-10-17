@@ -107,6 +107,10 @@
             <span class="era-name">United Monarchy</span>
             <span class="era-years">c. 1000 BC</span>
           </button>
+          <button type="button" class="chrono-era-btn" data-era="divided_monarchy_prophets" role="tab" aria-selected="false">
+            <span class="era-name">Divided Kingdom</span>
+            <span class="era-years">c. 930 &ndash; 722 BC</span>
+          </button>
           <button type="button" class="chrono-era-btn" data-era="assyrian_siege" role="tab" aria-selected="false">
             <span class="era-name">Assyrian Siege</span>
             <span class="era-years">722 &ndash; 701 BC</span>
@@ -131,6 +135,16 @@
             <span class="era-name">All Eras</span>
             <span class="era-years">All History</span>
           </button>
+        </div>
+
+        <!-- GRANULAR SUB-TIMELINE: FIGURES, LIFE PHASES, MISSIONARY JOURNEYS & WAYPOINT STEPPER -->
+        <div id="chrono-granular-panel" class="chrono-granular-panel" aria-label="Granular Timeline and Journey Controls">
+          <div class="chrono-granular-header">
+            <span class="chrono-granular-title">GRANULAR TIMELINE &amp; JOURNEY TRACKS:</span>
+            <span id="chrono-granular-status" class="chrono-granular-status">Select any life phase, prophet, or apostolic mission to trace stop-by-stop</span>
+          </div>
+          <div id="chrono-granular-bar" class="chrono-granular-bar" role="toolbar" aria-label="Granular Figures, Life Phases and Journeys"></div>
+          <div id="chrono-waypoint-stepper" class="chrono-waypoint-stepper" aria-label="Chronological Stop-by-Stop Waypoint Scrubber" hidden></div>
         </div>
       </section>
 
@@ -197,7 +211,7 @@
   <footer class="wrap">
     <a class="footer-brand" href="/"><img src="/images/brand/logo-small.webp" alt="Historical Bible — Home" width="600" height="300" loading="lazy" /></a>
     <div>John 17:3 &mdash; &ldquo;And this is life eternal, that they might know thee the only true God, and Jesus Christ, whom thou hast sent.&rdquo;</div>
-    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Historical Bible Est. 2019 &middot; All Rights Reserved &middot; Map &middot; v00.01.19</div>
+    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Historical Bible Est. 2019 &middot; All Rights Reserved &middot; Map &middot; v00.01.31</div>
   </footer>
 
   <script type="module" src="/src/atlasApp.ts"></script>

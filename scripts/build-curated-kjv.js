@@ -36,6 +36,7 @@ const OSIS_TO_BOOK_NAME = {
 const cleanHeader = (text) => {
   return String(text || '')
     .replace(/\s*(?:(?:\d+\s+Kings|Exodus|Numbers|Esther|Job|Micah|[A-Z][a-z]+)\s+Page\s+\d+|Page\s+\d+\s+(?:\d+\s+Kings|Exodus|Numbers|Esther|Job|Micah|[A-Z][a-z]+))/g, '')
+    .replace(/\[([IO])\[/g, '[$1]')
     .replace(/\s{2,}/g, ' ')
     .trim();
 };

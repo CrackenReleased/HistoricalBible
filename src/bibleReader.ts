@@ -21,9 +21,15 @@ import {
   BIBLICAL_GEOGRAPHIC_ENTITIES,
   type ArchaeologicalSite,
   type BiblicalGeographicEntity,
+  type BiblicalRoute,
+  type BiblicalRouteStop,
   type WorldEmpireRegion
 } from './data/ancientMapData';
-import { lookupScriptureLexicon } from './data/scriptureLexicon';
+import {
+  isStrongsReverseReady,
+  lookupScriptureLexicon,
+  prefetchStrongsReverse
+} from './data/scriptureLexicon';
 
 interface BookMeta {
   osis: string;
@@ -65,6 +71,7 @@ class BibleReader {
   private tabContentChrono!: HTMLElement;
   private tabContentMap!: HTMLElement;
   private companionMapCanvas: AncientMapCanvas | null = null;
+  private mapResizeTimer: ReturnType<typeof setTimeout> | null = null;
 
   public async init(): Promise<void> {
     const readerRoot = document.getElementById('live-bible-reader');
@@ -74,10 +81,13 @@ class BibleReader {
     this.renderLoading();
 
     try {
-      await localStore.init((msg) => {
+      // Kick off full parallel hydration immediately while awaiting critical Scripture + Synchrony first
+      const fullInitPromise = localStore.init((msg) => {
         const statusEl = document.getElementById('reader-loading-status');
         if (statusEl) statusEl.textContent = msg;
       });
+
+      await localStore.initCritical();
 
       this.books = localStore.getBooks();
       this.parseUrlParameters();
@@ -85,6 +95,24 @@ class BibleReader {
       this.populateChapterSelect();
       this.renderCurrentChapter();
       this.attachEventListeners();
+
+      if (!localStore.isFullyLoaded()) {
+        void fullInitPromise
+          .then(() => {
+            const book = this.getActiveBook();
+            const verses = localStore.getChapterVerses(book.osis, this.currentChapter);
+            const activeVerse = verses.find((v) => v.verse === this.selectedVerseNum) || verses[0];
+            if (activeVerse) {
+              this.renderCompanionXrefs(activeVerse);
+            }
+            if (this.selectedWord) {
+              this.renderWordInspector(this.selectedWord);
+            }
+          })
+          .catch((err) => {
+            console.warn('[HistoricalBible] Background companion index hydration warning:', err);
+          });
+      }
     } catch (err) {
       this.renderError(err instanceof Error ? err.message : String(err));
     }
@@ -542,11 +570,18 @@ class BibleReader {
     this.switchTab('word');
   }
 
-  public renderArtifactDrawer(site: ArchaeologicalSite | null, geoEntity?: BiblicalGeographicEntity, empire?: WorldEmpireRegion): void {
+  public renderArtifactDrawer(
+    site: ArchaeologicalSite | null,
+    geoEntity?: BiblicalGeographicEntity,
+    empire?: WorldEmpireRegion,
+    route?: BiblicalRoute,
+    stop?: BiblicalRouteStop,
+    stopIndex?: number
+  ): void {
     const drawerEl = document.getElementById('bible-companion-artifact-drawer');
     if (!drawerEl) return;
 
-    if (!site && !geoEntity && !empire) {
+    if (!site && !geoEntity && !empire && !route) {
       drawerEl.hidden = true;
       drawerEl.innerHTML = '';
       return;
@@ -617,6 +652,31 @@ class BibleReader {
           <strong>Historical Setting (${empire.dateRange}):</strong> Imperial seat at ${empire.capital.name} throughout the biblical epoch.
         </div>
       `;
+    } else if (route) {
+      const targetStop = stop || route.stops[0];
+      const idx = typeof stopIndex === 'number' ? stopIndex : 0;
+      drawerEl.hidden = false;
+      drawerEl.innerHTML = `
+        <div class="artifact-drawer-header">
+          <div>
+            <span class="eyebrow" style="font-size: 0.68rem; color: ${route.color};">${route.name.toUpperCase()} · STOP ${idx + 1} OF ${route.stops.length}</span>
+            <h4 class="artifact-drawer-title">Stop ${idx + 1}: ${targetStop.name}</h4>
+          </div>
+          <button type="button" class="artifact-drawer-close" aria-label="Dismiss journey card">&times;</button>
+        </div>
+        <div class="artifact-drawer-meta">
+          <span><strong>🗓️ When:</strong> ${targetStop.dateLabel}</span>
+          <span><strong>🧭 Traveler:</strong> ${route.travelerName}</span>
+          <span><strong>📖 Scripture:</strong> ${targetStop.scriptureRef}</span>
+        </div>
+        <div class="artifact-drawer-connection">
+          <strong>✦ Event at ${targetStop.name}:</strong><br/>
+          ${targetStop.note}
+        </div>
+        <div class="artifact-drawer-desc">
+          <strong>Journey Overview (${route.dateRange}):</strong> ${route.summary}
+        </div>
+      `;
     }
 
     drawerEl.querySelector('.artifact-drawer-close')?.addEventListener('click', () => {
@@ -655,6 +715,8 @@ class BibleReader {
           `;
         })
         .join('');
+    } else if (!localStore.isFullyLoaded()) {
+      xrefsHtml = `<p style="font-size: 0.88rem; color: var(--gold-muted); font-style: italic;">Indexing 64,299 cross-reference connections in background...</p>`;
     } else {
       xrefsHtml = `<p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No direct cross-reference connections cataloged for this verse.</p>`;
     }
@@ -738,7 +800,12 @@ class BibleReader {
         ${chrono.deltaNote}
       </div>
 
-      <!-- 4. Bridge to Study Desk Timeline -->
+      <!-- 4. Evidence Classification Disclosure (AGENTS.md §4) -->
+      <div style="margin-top: 0.75rem; font-size: 0.72rem; color: var(--text-muted); line-height: 1.4;">
+        <strong>Evidence Class:</strong> Chronological Reconstruction (correlating internal KJV genealogical/regnal spans with Ussher &amp; classical Near Eastern synchrony; distinct from direct KJV verse text).
+      </div>
+
+      <!-- 5. Bridge to Study Desk Timeline -->
       <div style="margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.76rem; color: var(--text-muted);">Explore with contemporary empires:</span>
         <a href="/interact?era=${encodeURIComponent(chrono.eventEraId)}" class="secondary-link" style="font-size: 0.76rem; padding: 0.35rem 0.65rem;">View in Interact &rarr;</a>
@@ -749,7 +816,15 @@ class BibleReader {
   private renderWordInspector(word: string): void {
     if (!this.tabContentWord) return;
 
-    const searchRes = localStore.searchAll(word, 8);
+    if (!isStrongsReverseReady()) {
+      void prefetchStrongsReverse().then(() => {
+        if (this.selectedWord === word && isStrongsReverseReady()) {
+          this.renderWordInspector(word);
+        }
+      });
+    }
+
+    const concordanceVerses = localStore.searchWholeWord(word, 8);
     const lexicon = lookupScriptureLexicon(
       word,
       this.currentBookOsis,
@@ -804,8 +879,8 @@ class BibleReader {
     `;
 
     let concordanceHtml = '';
-    if (searchRes.verses.length > 0) {
-      concordanceHtml = searchRes.verses
+    if (concordanceVerses.length > 0) {
+      concordanceHtml = concordanceVerses
         .map((v) => {
           const displayRef = localStore.formatDisplayRef(v);
           const formatted = localStore.formatCanonicalKjvHtml(v.text);
@@ -832,7 +907,7 @@ class BibleReader {
 
       <div class="companion-section-title" style="margin-top: 1rem;">
         <span>Concordance Occurrences</span>
-        <span style="font-size: 0.72rem; color: var(--gold-muted);">${searchRes.verses.length} sample results</span>
+        <span style="font-size: 0.72rem; color: var(--gold-muted);">${concordanceVerses.length} sample results</span>
       </div>
 
       <div class="concordance-list concordance-verses-list" style="margin-top: 0.5rem;">
@@ -904,7 +979,7 @@ class BibleReader {
     const osis = book.osis.toLowerCase();
     const ch = this.currentChapter;
 
-    if (osis === 'gen') {
+    if (['gen', 'job'].includes(osis)) {
       return 'patriarchs';
     }
     if (['exod', 'lev', 'num', 'deut', 'josh'].includes(osis)) {
@@ -930,6 +1005,9 @@ class BibleReader {
       if (ch <= 35) return 'assyrian_siege';
       return 'babylonian_exile';
     }
+    if (['joel', 'obad'].includes(osis)) {
+      return 'divided_monarchy_prophets';
+    }
     if (['isa', 'hos', 'amos', 'mic', 'jonah', 'nah'].includes(osis)) {
       return 'assyrian_siege';
     }
@@ -942,10 +1020,10 @@ class BibleReader {
     if (['matt', 'mark', 'luke', 'john'].includes(osis)) {
       return 'roman_christ';
     }
-    if (['acts', 'rom', '1cor', '2cor', 'gal', 'eph', 'phil', 'col', '1thess', '2thess', '1tim', '2tim', 'tit', 'phlm', 'heb', 'jas', '1pet', '2pet', '1john', '2john', '3john', 'jude', 'rev'].includes(osis)) {
+    if (['acts', 'rom', '1cor', '2cor', 'gal', 'eph', 'phil', 'col', '1thess', '2thess', '1tim', '2tim', 'titus', 'phlm', 'heb', 'jas', '1pet', '2pet', '1john', '2john', '3john', 'jude', 'rev'].includes(osis)) {
       return 'apostolic_church';
     }
-    return 'all';
+    return getBookChronology(book.osis)?.eventEraId || 'all';
   }
 
   private renderCompanionMap(): void {
@@ -969,12 +1047,18 @@ class BibleReader {
         compact: true,
         initialEraId: targetEraId,
         onSelectSite: (site) => this.renderArtifactDrawer(site),
-        onSelectEmpire: (empire) => this.renderArtifactDrawer(null, undefined, empire)
+        onSelectEmpire: (empire) => this.renderArtifactDrawer(null, undefined, empire),
+        onSelectRouteStop: (route, stop, stopIndex) =>
+          this.renderArtifactDrawer(null, undefined, undefined, route, stop, stopIndex)
       });
     } else {
       this.companionMapCanvas.setEra(targetEraId);
-      setTimeout(() => {
+      if (this.mapResizeTimer !== null) {
+        clearTimeout(this.mapResizeTimer);
+      }
+      this.mapResizeTimer = setTimeout(() => {
         this.companionMapCanvas?.map.invalidateSize();
+        this.mapResizeTimer = null;
       }, 100);
     }
 
@@ -1121,12 +1205,25 @@ class BibleReader {
     }
   }
 
+  private escapeHtml(str: string): string {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   private renderError(message: string): void {
+    const controls = [this.sortSelect, this.bookSelect, this.chapterSelect, this.prevBtn, this.nextBtn, this.bottomPrevBtn, this.bottomNextBtn];
+    for (const ctrl of controls) {
+      if (ctrl) ctrl.disabled = true;
+    }
     if (this.versesContainer) {
       this.versesContainer.innerHTML = `
         <div class="reader-error-card">
           <h3>Failed to load Scripture corpus</h3>
-          <p>${message}</p>
+          <p>${this.escapeHtml(message)}</p>
           <a href="/Bible.pdf" class="primary-link" style="margin-top: 1rem;">Read Offline in the KJV PDF &rarr;</a>
         </div>
       `;

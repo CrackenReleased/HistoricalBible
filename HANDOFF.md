@@ -1,3 +1,43 @@
+## 2026-10-17 01:05:00 — Antigravity / HistoricalBible — Map UI/UX Maturation: Viewport-Clamped Tooltips, Wrapped Single-Border Typography, 5x2 Era Grid & Label De-confliction (v00.01.32)
+
+- **Viewport-Clamped Hover Informationals (`src/engine/ancientMap.ts`, `src/interact.css`)**:
+  - Added `constrainTooltipToViewport()` to clamp all `.leaflet-tooltip` popups strictly inside `#atlas-canvas-container`, `#bible-companion-map-container`, and `#ancient-map-container` with a `10px` margin and top-left zoom control clearance.
+  - Overrode Leaflet's `white-space: nowrap` with `white-space: normal !important; overflow-wrap: break-word !important;` and replaced inner `<div class="map-leaflet-tooltip">` duplicates with `<div class="map-tooltip-inner">`.
+- **5x2 Era Scrubber Grid & Screen-Space Label De-confliction (`map.html`, `src/atlasApp.ts`, `src/engine/ancientMap.ts`)**:
+  - Added `divided_monarchy_prophets` (`Divided Kingdom · c. 930 – 722 BC`) button to `map.html` and converted `.chrono-era-selector` to a 5x2 grid with zero text overflow.
+  - Added `deconflictMarkerLabels()` with HUD clearance, OT/NT city filtering, concise on-canvas labels, and `focusOnFigure()` era synchronization.
+- **Verification**:
+  - 14/14 headed Playwright tests in `tests/map.spec.ts` and `tests/bible-side-by-side-map.spec.ts` PASS; `npm run test:selfcheck` (7/7 PASS); `npm run build` PASS.
+
+## 2026-10-17 00:25:00 — Antigravity / HistoricalBible — Progressive Hydration, Expanded Archaeological/Geographic/Chronological Coverage, PDF Deduplication & Contact Mailto Wiring (v00.01.31)
+
+- **Two-Phase Progressive Hydration & Parallel Loading**:
+  - Added `localStore.initCritical()`, `isCriticallyLoaded()`, `isFullyLoaded()`, and `buildVerseIndices()` (`src/store/localFirstStore.ts`) and wired `BibleReader.init()` (`src/bibleReader.ts`) so `/bible` renders Scripture, Chronology, and Map panels immediately after `kjv_verses.json` + `historical_synchrony.v1.json` load in parallel, then refreshes X-Refs/Word Inspector when full hydration completes.
+- **Expanded Archaeological Sites, Geography & Chapter Chronology**:
+  - Added 6 archaeological sites (`lachish-ostraca`, `jehoiachin-ration-tablets`, `dead-sea-scrolls-qumran`, `pool-of-siloam-steps`, `sergius-paulus-inscription`, `arch-of-titus-spoils` → 20 total sites) and 26 biblical cities/regions to `src/data/ancientMapData.ts`.
+  - Added granular `chapterBreakdown` arrays to `Josh`, `Judg`, `1Sam`, `2Sam`, `Isa`, `Jer`, and `Dan` in `src/data/bibleChronology.ts`.
+- **PDF Proof Consolidation & `public/Bible.pdf` Deduplication**:
+  - Removed intermediate `v0.3.0`–`v0.3.2` PDF binaries in `pdf-proof/` (`187.5 MB` → `~87 MB`, under the 160 MB cap) while retaining `v0.2.0`, `v0.3.3`, JSON manifests, and PNG proofs; all 5 Python PDF test suites pass.
+  - Added `serveAndCopyRootBiblePdf()` in `vite.config.ts` to serve and copy root `Bible.pdf`, removing duplicate `public/Bible.pdf` (`31.38 MB`, `~136.7 MB` total workspace disk space saved).
+- **Contact Form `mailto:` Synthesis & Verification**:
+  - Wired dynamic `mailto:BibleHistorical@gmail.com` link generation on `/contact` (`contact.html`) and expanded `tests/data-integrity-selfcheck.ts` (11/11 tests pass; `vite build` passes).
+
+## 2026-10-16 23:36:00 — Antigravity / HistoricalBible — Codebase Audit Remediation: Data Self-Checks, Error Handling, Bloat Cleanup & Docs Sync (v00.01.30)
+
+- **Data Integrity & Automated Self-Checks**:
+  - Repaired 5 `[I[` / `[O[` bracket typos in `public/data/kjv_verses.json` (`Numbers 12:6`, `Psalms 25:17`, `Isaiah 41:17`, `Jeremiah 17:10`, `Habakkuk 1:5`) verified against `Bible.pdf` (`pdf-proof/v0.2.0/reference-verses.json`), updated `scripts/build-curated-kjv.js`, and logged exact page numbers and italic offsets in `error_corrections_log.md`.
+  - Enhanced `scripts/verify-canonical-kjv.js` with strict non-nested balanced bracket verification (`14,138` bracketed-italic verses, `5,556` `LORD` verses, `66` books, `1,189` chapters).
+  - Fixed `src/data/bibleChronology.ts` duplicate `eventOrder: 19` (`Ecclesiastes` & `Obadiah`), missing `eventOrder: 66`, 32 mismatched `eventEraId` foreign keys, and `Titus` `osis: 'Tit'` → `'Titus'`.
+  - Created `tests/data-integrity-selfcheck.ts` (`npm run test:selfcheck`) verifying all cross-dataset invariants across KJV, `BIBLE_CHRONOLOGY`, `ancientMapData`, `historical_synchrony.v1.json` ↔ `discoveries.ts`, and `localStore.searchWholeWord`.
+- **Error Handling & Runtime Fixes**:
+  - Replaced substring concordance matching in `BibleReader.renderWordInspector()` with `localStore.searchWholeWord()`, cached `/data/strongs_reverse.json` in `CacheStorage` with retry support and async Word Inspector re-render, fixed `'tit'` → `'titus'` and added `'job'`/`'joel'`/`'obad'` in `getMapEraForCurrentPassage()`, added `Chronological Reconstruction` evidence-class disclosure to `renderCompanionChrono()`, and HTML-escaped `BibleReader.renderError()`.
+  - Wired `/map` detail drawer links (`src/atlasApp.ts`) to `/bible?ref=...`, rendered `WATER_FEATURES` (`seas` and `rivers`) on the Waterways layer in `AncientMapCanvas` with an offline tile-error badge (`src/engine/ancientMap.ts`), added null guards in `src/main.ts`, `src/collectionExplorer.ts`, and `src/engine/egoGraph.ts` (`destroy()`), and fixed `tapestry.html` data ingestion and `SEED_TEXTS["Isa.49.6"]`.
+- **Bloat Cleanup & Docs Sync (`v00.01.30`)**:
+  - Removed duplicate `public/downloads/Bible.pdf` (31.38 MB), 6 legacy GoDaddy `*_files/` folders, 5 unused JSON datasets in `public/data/`, and 4 one-off migration scripts in `scripts/`, reducing `dist/` by **41.04 MB** (`107.75 MB` → `66.71 MB`).
+  - Converted duplicate `bible/index.html` and `contact/index.html` to lightweight redirect stubs and updated `README.md`, `package.json`, `interact.html`, and `map.html` to `v00.01.30`.
+- **Verification**:
+  - `node scripts/verify-canonical-kjv.js` PASS; `npm run test:collection` (9/9 PASS including `tests/data-integrity-selfcheck.ts`); `vite build` PASS in 682ms.
+
 ## 2026-10-16 22:15:00 — Antigravity / HistoricalBible — Map Interaction Hardening, Zero-Collision Exclusivity & Northern Kingdom Inspection (v00.01.29)
 
 - **Map Interaction Hardening & Tooltip Exclusivity**:

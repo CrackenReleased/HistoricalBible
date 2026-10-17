@@ -747,7 +747,7 @@
       "Luke.1.3": "It seemed good to me also, having had perfect understanding of all things from the very first, to write unto thee in order, most excellent Theophilus,",
       "Matt.4.23": "And Jesus went about all Galilee, teaching in their synagogues, and preaching the gospel of the kingdom, and healing all manner of sickness and all manner of disease among the people.",
       "Matt.11.5": "The blind receive their sight, and the lame walk, the lepers are cleansed, and the deaf hear, the dead are raised up, and the poor have the gospel preached to them.",
-      "Isa.49.6": "And he said, It is a light thing that thou shouldest be my servant to raise up the tribes of Jacob... I will also give thee for a light to the Gentiles, that thou mayest be my salvation unto the end of the earth.",
+      "Isa.49.6": "And he said, It is a light thing that thou shouldest be my servant to raise up the tribes of Jacob, and to restore the preserved of Israel: I will also give thee for a light to the Gentiles, that thou mayest be my salvation unto the end of the earth.",
       "Luke.24.49": "And, behold, I send the promise of my Father upon you: but tarry ye in the city of Jerusalem, until ye be endued with power from on high.",
       "Ps.33.6": "By the word of the LORD were the heavens made; and all the host of them by the breath of his mouth."
     };
@@ -1298,14 +1298,30 @@
     async function loadData() {
       // 1. Fetch KJV Verses Index
       try {
-        const respKjv = await fetch("public/data/kjv_verses.json");
+        const respKjv = await fetch("/data/kjv_verses.json");
         if (respKjv.ok) {
           const kjvData = await respKjv.json();
-          KJV_TEXT_DB = kjvData.verses || {};
-          if (kjvData.chapters) {
-            kjvData.chapters.forEach((c, idx) => {
-              if (CHAPTERS[idx]) CHAPTERS[idx].verses = c.count;
+          if (Array.isArray(kjvData)) {
+            KJV_TEXT_DB = {};
+            VERSE_COUNTS_BY_CH = {};
+            kjvData.forEach(v => {
+              const bMeta = BOOK_MAP[String(v.book || "").toLowerCase()];
+              if (!bMeta) return;
+              const vKey = `${bMeta.id}.${v.chapter}.${v.verse}`;
+              KJV_TEXT_DB[vKey] = v.text;
+              const chKey = `${bMeta.id}.${v.chapter}`;
+              if (!VERSE_COUNTS_BY_CH[chKey] || v.verse > VERSE_COUNTS_BY_CH[chKey]) {
+                VERSE_COUNTS_BY_CH[chKey] = v.verse;
+                if (CHAPTER_LOOKUP[chKey]) CHAPTER_LOOKUP[chKey].verses = v.verse;
+              }
             });
+          } else {
+            KJV_TEXT_DB = kjvData.verses || {};
+            if (kjvData.chapters) {
+              kjvData.chapters.forEach((c, idx) => {
+                if (CHAPTERS[idx]) CHAPTERS[idx].verses = c.count;
+              });
+            }
           }
           console.log(`Loaded ${Object.keys(KJV_TEXT_DB).length} KJV verses.`);
         }
@@ -1313,12 +1329,13 @@
         console.warn("Using seed KJV texts:", err);
       }
 
-      // 2. Fetch Curated or Full Cross-References
+      // 2. Fetch Canonical Cross-References Bundle
       try {
-        const respXref = await fetch("public/data/cross_references_curated.json");
+        const respXref = await fetch("/data/cross_references_bundle.json");
         if (respXref.ok) {
           const xrefData = await respXref.json();
-          processCrossReferences(xrefData.links || []);
+          const links = Array.isArray(xrefData) ? xrefData : (xrefData.links || []);
+          processCrossReferences(links);
         }
       } catch (err) {
         console.warn("Using seed cross-references:", err);
@@ -1330,13 +1347,19 @@
     function processCrossReferences(links) {
       XREF_BY_VERSE = {};
       const newArcs = [];
+      const seenChapterPairs = new Set();
 
       links.forEach(l => {
-        if (!XREF_BY_VERSE[l.s]) XREF_BY_VERSE[l.s] = [];
-        XREF_BY_VERSE[l.s].push(l);
+        const s = (l.s || l.from || "").trim();
+        const rawTarget = (l.t || l.to || "").trim();
+        const t = rawTarget.split("-")[0].trim();
+        if (!s || !t) return;
+        const norm = { s, t, r: l.r || rawTarget || t };
+        if (!XREF_BY_VERSE[s]) XREF_BY_VERSE[s] = [];
+        XREF_BY_VERSE[s].push(norm);
 
-        const srcParts = l.s.split(".");
-        const dstParts = l.t.split(".");
+        const srcParts = s.split(".");
+        const dstParts = t.split(".");
         const srcChKey = `${srcParts[0]}.${srcParts[1]}`;
         const dstChKey = `${dstParts[0]}.${dstParts[1]}`;
 
@@ -1344,12 +1367,16 @@
           const sIdx = CHAPTER_LOOKUP[srcChKey].index;
           const tIdx = CHAPTER_LOOKUP[dstChKey].index;
           if (sIdx !== tIdx) {
-            newArcs.push({
-              s: sIdx,
-              t: tIdx,
-              div: CHAPTERS[sIdx].div,
-              color: CHAPTERS[sIdx].color
-            });
+            const pairKey = `${sIdx}:${tIdx}`;
+            if (!seenChapterPairs.has(pairKey)) {
+              seenChapterPairs.add(pairKey);
+              newArcs.push({
+                s: sIdx,
+                t: tIdx,
+                div: CHAPTERS[sIdx].div,
+                color: CHAPTERS[sIdx].color
+              });
+            }
           }
         }
       });

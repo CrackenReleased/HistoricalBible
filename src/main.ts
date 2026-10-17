@@ -11,9 +11,10 @@ import {
 } from './store/localFirstStore';
 import { discoveries } from './discoveries';
 import { CollectionExplorer } from './collectionExplorer';
-import { EgoGraphCanvas, type EgoGraphData, type EgoNode } from './engine/egoGraph';
+import { EgoGraphCanvas, type EgoGraphData, type EgoNode, type EgoEdge, type EgoGraphSettings } from './engine/egoGraph';
 import { AncientMapCanvas } from './engine/ancientMap';
-import { readUrlState, writeUrlState, onUrlStateChange, type InteractUrlState } from './store/urlStateRouter';
+import { readUrlState, writeUrlState, onUrlStateChange, restoreUrlState, type InteractUrlState } from './store/urlStateRouter';
+import { StudySessionBar, getStudyMapTarget } from './studySession';
 
 class HistoricalInteractApp {
   private selectedEraId: string = 'all';
@@ -25,6 +26,7 @@ class HistoricalInteractApp {
   private ancientMap: AncientMapCanvas | null = null;
   private activeView: 'list' | 'graph' | 'map' = 'list';
   private activeGraphTarget: HistoricalFigure | string | null = null;
+  private studyBar: StudySessionBar | null = null;
 
   public async bootstrap(): Promise<void> {
     const errorBanner = document.getElementById('error-banner');
@@ -62,7 +64,12 @@ class HistoricalInteractApp {
       this.explorer = new CollectionExplorer(
         (...args) => this.buildScriptureCard(...args),
         id => this.selectFigureById(id),
-        name => this.openInGraph(name)
+        name => this.openInGraph(name),
+        name => {
+          this.activeGraphTarget = name;
+          if (this.activeView === 'graph') this.renderEgoGraph(name);
+          if (this.activeView === 'map') this.switchConnectionView(getStudyMapTarget(readUrlState()) ? 'map' : 'list');
+        }
       );
       this.bindEvents();
       this.renderCollectionOverview();
@@ -70,9 +77,7 @@ class HistoricalInteractApp {
       this.setSearchStatus('Search Scripture and the complete Obsidian name network. Every total below opens its records.');
 
       // Deep link handling
-      if (urlState.tab) {
-        this.explorer.open(urlState.tab as any, false);
-      }
+      this.explorer.restore(urlState);
       if (urlState.ref) {
         const verse = localStore.getVerseByOsis(urlState.ref);
         if (verse) {
@@ -84,32 +89,27 @@ class HistoricalInteractApp {
           }
         }
       }
-      if (urlState.name) {
-        const netName = localStore.getNetworkName(urlState.name);
-        if (netName) {
-          this.explorer.showName(netName.name, false);
-          if (this.activeView === 'graph') {
-            this.renderEgoGraph(netName.name);
-          }
+      restoreUrlState(() => this.switchConnectionView(this.activeView));
+      this.studyBar = new StudySessionBar({
+        onView: view => {
+          this.switchConnectionView(view);
+          if (view !== 'list') document.getElementById(view === 'graph' ? 'ego-graph-container' : 'ancient-map-container')?.scrollIntoView({ block: 'start' });
+        },
+        onReturn: () => {
+          const state = readUrlState();
+          const target = state.compare ? 'collection-explorer' : state.name ? 'name-search-detail' : 'scripture-anchors-list';
+          document.getElementById(target)?.scrollIntoView({ block: 'start' });
         }
-      }
-      if (this.activeView === 'graph') {
-        this.switchConnectionView('graph');
-      } else if (this.activeView === 'map') {
-        this.switchConnectionView('map');
-      }
+      });
 
       // Popstate handling for browser back/forward buttons
       onUrlStateChange((state) => {
-        if (state.figure && state.figure !== this.activeFigure?.id) {
-          this.selectFigureById(state.figure, false);
-        }
-        if (state.view && state.view !== this.activeView) {
-          this.switchConnectionView(state.view);
-        }
-        if (state.name) {
-          this.renderEgoGraph(state.name);
-        }
+        const figureId = state.figure || 'jesus-christ';
+        if (figureId !== this.activeFigure?.id) this.selectFigureById(figureId, false);
+        this.explorer?.restore(state);
+        this.activeGraphTarget = state.name || this.activeFigure;
+        this.switchConnectionView(state.view || 'list');
+        this.studyBar?.refresh(state);
       });
 
       // Links from Home and shared discoveries still land on the requested person.
@@ -309,7 +309,10 @@ class HistoricalInteractApp {
     if (this.selectedEmpireId && !target.secularContemporaries.some(c => c.empireId === this.selectedEmpireId)) this.selectedEmpireId = null;
     if (this.trail.at(-1) !== figureId) this.trail.push(figureId);
     if (this.trail.length > 12) this.trail.shift();
-    writeUrlState({ figure: figureId });
+    writeUrlState({ figure: figureId, name: null, compare: null, identity: null, studyPage: 1 });
+    this.activeGraphTarget = target;
+    const namePanel = document.getElementById('name-search-detail');
+    if (namePanel) namePanel.hidden = true;
     this.renderEraFilterBar();
     this.renderDualStreamSpine();
     this.renderActiveFigureWorkspace();
@@ -428,6 +431,7 @@ class HistoricalInteractApp {
 
   private renderDiscovery(fig: HistoricalFigure): void {
     const discovery = discoveries[fig.id];
+    if (!discovery) return;
     const sync = localStore.getSynchrony();
     const setText = (id: string, text: string) => {
       const element = document.getElementById(id);
@@ -444,8 +448,9 @@ class HistoricalInteractApp {
         const reader = document.getElementById('scripture-anchors-list');
         if (!reader) return;
         reader.prepend(this.buildScriptureCard(verse, localStore.formatDisplayRef(verse), discovery.verse, 'The passage from your current discovery.'));
-        const card = reader.firstElementChild as HTMLElement;
-        (card.querySelector('.btn-toggle-chapter') as HTMLButtonElement).click();
+        const card = reader.firstElementChild as HTMLElement | null;
+        if (!card) return;
+        (card.querySelector('.btn-toggle-chapter') as HTMLButtonElement | null)?.click();
         card.scrollIntoView({ behavior: 'instant', block: 'start' });
         card.tabIndex = -1;
         card.focus({ preventScroll: true });
@@ -556,9 +561,11 @@ class HistoricalInteractApp {
         }
       });
     }
-    const back = document.getElementById('journey-back') as HTMLButtonElement;
-    back.hidden = this.trail.length < 2;
-    if (!back.hidden) back.textContent = `Back to ${sync.figures.find(f => f.id === this.trail.at(-2))?.name}`;
+    const back = document.getElementById('journey-back') as HTMLButtonElement | null;
+    if (back) {
+      back.hidden = this.trail.length < 2;
+      if (!back.hidden) back.textContent = `Back to ${sync.figures.find(f => f.id === this.trail.at(-2))?.name || 'previous'}`;
+    }
     document.querySelectorAll<HTMLButtonElement>('[data-start]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.start === fig.id)));
   }
 
@@ -768,9 +775,11 @@ class HistoricalInteractApp {
           this.renderEraFilterBar();
           this.renderDualStreamSpine();
         }
-        const browser = document.getElementById('timeline-browser') as HTMLDetailsElement;
-        browser.open = true;
-        browser.scrollIntoView({ behavior: 'instant', block: 'start' });
+        const browser = document.getElementById('timeline-browser') as HTMLDetailsElement | null;
+        if (browser) {
+          browser.open = true;
+          browser.scrollIntoView({ behavior: 'instant', block: 'start' });
+        }
         dropdown.classList.remove('active');
       });
       dropdown.appendChild(button);
@@ -833,14 +842,20 @@ class HistoricalInteractApp {
       this.selectFigureById('jesus-christ');
     });
     document.querySelectorAll<HTMLButtonElement>('[data-start]').forEach(button => {
-      button.addEventListener('click', () => this.selectFigureById(button.dataset.start!));
+      button.addEventListener('click', () => {
+        if (button.dataset.start) this.selectFigureById(button.dataset.start);
+      });
     });
     document.getElementById('journey-back')?.addEventListener('click', () => this.returnToTrail(this.trail.length - 2));
     const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
     const dropdown = document.getElementById('search-results-list');
 
     document.getElementById('name-search-close')?.addEventListener('click', () => {
-      document.getElementById('name-search-detail')!.hidden = true;
+      const detail = document.getElementById('name-search-detail');
+      if (detail) detail.hidden = true;
+      writeUrlState({ name: null, compare: null, identity: null, section: null, studyPage: 1 });
+      this.activeGraphTarget = this.activeFigure;
+      if (this.activeView === 'graph' && this.activeFigure) this.renderEgoGraph(this.activeFigure);
       searchInput?.focus({ preventScroll: true });
       this.setSearchStatus('Search Scripture and the complete Obsidian name network. Every total below opens its records.');
     });
@@ -910,12 +925,18 @@ class HistoricalInteractApp {
   }
 
   private switchConnectionView(view: 'list' | 'graph' | 'map'): void {
+    const study = readUrlState();
+    const mapTarget = getStudyMapTarget(study);
+    if (view === 'map' && study.name && !mapTarget) view = 'list';
     this.activeView = view;
     const listBtn = document.getElementById('btn-view-list') as HTMLButtonElement | null;
     const graphBtn = document.getElementById('btn-view-graph') as HTMLButtonElement | null;
     const mapBtn = document.getElementById('btn-view-map') as HTMLButtonElement | null;
     const graphContainer = document.getElementById('ego-graph-container');
     const mapContainer = document.getElementById('ancient-map-container');
+    if (mapBtn) { mapBtn.disabled = Boolean(study.name && !mapTarget); mapBtn.title = mapBtn.disabled ? 'No reviewed geographic location for this name.' : ''; }
+    const listContainer = document.getElementById('personal-network-list');
+    if (listContainer) listContainer.hidden = view !== 'list';
 
     // Reset button states
     listBtn?.classList.remove('active');
@@ -942,7 +963,11 @@ class HistoricalInteractApp {
             }
           });
         }
-        if (this.activeFigure) {
+        if (mapTarget?.kind === 'geography') {
+          this.ancientMap.highlightGeographicPlace(mapTarget.entity);
+        } else if (mapTarget?.kind === 'figure') {
+          this.ancientMap.focusOnFigure(mapTarget.figureId);
+        } else if (this.activeFigure && !study.name) {
           this.ancientMap.focusOnFigure(this.activeFigure.id);
         }
       }
@@ -966,6 +991,7 @@ class HistoricalInteractApp {
   }
 
   public openInGraph(target: HistoricalFigure | string): void {
+    this.activeGraphTarget = target;
     this.switchConnectionView('graph');
     this.renderEgoGraph(target);
     const container = document.getElementById('ego-graph-container');
@@ -977,11 +1003,21 @@ class HistoricalInteractApp {
     const container = document.getElementById('ego-graph-container');
     if (!container) return;
 
+    const state = readUrlState();
+    const settings: Partial<EgoGraphSettings> = {
+      maxHops: state.hops, maxNodes: state.maxNodes, minSharedVerses: state.minShared,
+      kinds: state.kinds ? state.kinds.split(',') as EgoGraphSettings['kinds'] : undefined,
+      showLabels: state.labels !== 'off',
+    };
     if (!this.egoGraph) {
       this.egoGraph = new EgoGraphCanvas(container, {
         onSelectNode: (node) => this.handleEgoNodeClick(node),
+        settings,
+        onSettingsChange: next => writeUrlState({ hops: next.maxHops, maxNodes: next.maxNodes,
+          minShared: next.minSharedVerses, kinds: next.kinds.length ? next.kinds.join(',') : 'none',
+          labels: next.showLabels ? null : 'off' }),
       });
-    }
+    } else this.egoGraph.setSettings(settings);
 
     const data = this.buildEgoGraphData(target);
     this.egoGraph.render(data);
@@ -989,163 +1025,129 @@ class HistoricalInteractApp {
 
   private handleEgoNodeClick(node: EgoNode): void {
     const sync = localStore.getSynchrony();
-    const fig = sync.figures.find(f => f.id === node.id || f.name.toLowerCase() === node.title.toLowerCase());
+    const fig = sync.figures.find(f => f.id === node.id);
+    writeUrlState({ compare: null, identity: null, studyPage: 1 });
     if (fig) {
+      this.explorer?.showName(fig.hitchcockKey, false);
       this.selectFigureById(fig.id);
+      this.renderEgoGraph(fig);
       writeUrlState({ figure: fig.id, view: 'graph' });
       return;
     }
 
     const networkName = localStore.getNetworkName(node.title);
     if (networkName) {
+      this.explorer?.showName(networkName.name, false);
       this.renderEgoGraph(networkName.name);
-      writeUrlState({ name: networkName.name, view: 'graph' });
+      writeUrlState({ figure: null, name: networkName.name, view: 'graph' });
+    } else {
+      // A sourced contemporary can be explored even without a Bible-name index entry.
+      this.renderEgoGraph(node.title);
+      writeUrlState({ figure: null, name: node.title, view: 'graph' });
     }
   }
 
   private buildEgoGraphData(target: HistoricalFigure | string): EgoGraphData {
-    const isFigure = typeof target !== 'string';
-    const centerTitle = isFigure ? target.name : target;
-    const centerId = isFigure ? target.id : target;
-    const centerSubtitle = isFigure
-      ? `${target.title} (${target.dateRangeLabel})`
-      : (localStore.getNetworkName(target)?.meaning || 'Biblical Name');
-
-    const nodesMap = new Map<string, EgoNode>();
-    const edges: Array<{ source: string; target: string; weight: number }> = [];
-    const seenEdges = new Set<string>();
-
-    const addEdge = (source: string, targetId: string, weight = 1) => {
-      if (source === targetId) return;
-      const key = [source, targetId].sort().join('::');
-      if (!seenEdges.has(key)) {
-        seenEdges.add(key);
-        edges.push({ source, target: targetId, weight });
+    const figures = localStore.getSynchrony().figures;
+    const figureById = new Map(figures.map(figure => [figure.id, figure]));
+    const bySpelling = new Map<string, HistoricalFigure[]>();
+    for (const figure of figures) {
+      for (const spelling of new Set([figure.hitchcockKey, figure.name])) {
+        if (!spelling) continue;
+        const key = spelling.toLowerCase(), matches = bySpelling.get(key) ?? [];
+        if (!matches.includes(figure)) matches.push(figure);
+        bySpelling.set(key, matches);
+      }
+    }
+    const figureFor = (name: string) => {
+      const matches = bySpelling.get(name.toLowerCase());
+      return matches?.length === 1 ? matches[0] : undefined;
+    };
+    const canonicalId = (name: string) => figureFor(name)?.id || localStore.getNetworkName(name)?.name || name;
+    const spellingFor = (id: string) => figureById.get(id)?.hitchcockKey || id;
+    const centerName = typeof target === 'string' ? target : target.hitchcockKey;
+    const centerId = typeof target === 'string' ? canonicalId(target) : target.id;
+    const centerTitle = typeof target === 'string' ? target : target.name;
+    const state = readUrlState();
+    const identityRefs = state.identity && typeof target === 'string'
+      ? new Set(getIdentityRefs(centerName, state.identity, localStore.getNetworkName(centerName)?.refs ?? [])) : null;
+    const nodes = new Map<string, EgoNode>();
+    const edges = new Map<string, EgoEdge>();
+    const addNode = (id: string, title: string, hop: 0 | 1 | 2, subtitle?: string, contemporary = false) => {
+      const previous = nodes.get(id);
+      if (previous) { previous.hop = Math.min(previous.hop, hop) as 0 | 1 | 2; return; }
+      const figure = figureById.get(id);
+      nodes.set(id, { id, title: figure?.name || title,
+        subtitle: subtitle || (figure ? `${figure.title} (${figure.dateRangeLabel})` : localStore.getNetworkName(title)?.meaning),
+        type: contemporary ? 'contemporary' : figure ? 'figure' : 'name', hop, degree: 0 });
+    };
+    const addEdge = (source: string, targetId: string, kind: NonNullable<EgoEdge['kind']>, evidence: string[], note?: string) => {
+      if (source === targetId || !nodes.has(source) || !nodes.has(targetId)) return;
+      const refs = kind === 'shared' && identityRefs && (source === centerId || targetId === centerId)
+        ? evidence.filter(ref => identityRefs.has(ref)) : evidence;
+      if (kind === 'shared' && !refs.length) return;
+      const key = `${kind}:${[source, targetId].sort().join('::')}`;
+      const previous = edges.get(key);
+      const combined = [...new Set([...(previous?.evidence ?? []), ...refs])];
+      edges.set(key, { source, target: targetId, kind, evidence: combined,
+        weight: kind === 'shared' ? combined.length : 1,
+        note: previous?.note && previous.note !== note ? `${previous.note}; ${note || ''}` : note });
+    };
+    const network = localStore.getNetwork();
+    const adjacency = new Map<string, string[]>();
+    for (const [a, b] of network.edges) {
+      const first = network.names[a].name, second = network.names[b].name;
+      adjacency.set(first, [...(adjacency.get(first) ?? []), second]);
+      adjacency.set(second, [...(adjacency.get(second) ?? []), first]);
+    }
+    const contemporaryId = (name: string, empireId: string) => `sc:${empireId}:${name.toLowerCase()}`;
+    addNode(centerId, centerTitle, 0);
+    const queue = [centerId];
+    const expand = (id: string, hop: 1 | 2, create: boolean) => {
+      const figure = figureById.get(id);
+      const name = localStore.getNetworkName(spellingFor(id));
+      const neighbor = (targetId: string, title: string, subtitle?: string, contemporary = false) => {
+        if (create && !nodes.has(targetId)) { addNode(targetId, title, hop, subtitle, contemporary); queue.push(targetId); }
+      };
+      if (name) for (const title of adjacency.get(name.name) ?? []) {
+        const targetId = canonicalId(title);
+        const refs = localStore.getSharedRefs(name.name, title);
+        if (identityRefs && (id === centerId || targetId === centerId) && !refs.some(ref => identityRefs.has(ref))) continue;
+        neighbor(targetId, title);
+        addEdge(id, targetId, 'shared', refs, 'Indexed spellings occur in the same verse; co-occurrence alone does not establish identity or a personal relationship.');
+      }
+      if (figure && !(identityRefs && id === centerId)) {
+        for (const relation of figure.personalNetwork) {
+          const targetId = figureById.has(relation.targetId) ? relation.targetId : canonicalId(relation.name);
+          if (identityRefs && targetId === centerId) continue;
+          neighbor(targetId, relation.name, relation.relation);
+          addEdge(id, targetId, 'relationship', relation.ref ? [relation.ref] : [], `Curated relationship: ${relation.relation}`);
+        }
+        for (const contemporary of figure.secularContemporaries) {
+          const targetId = contemporaryId(contemporary.name, contemporary.empireId);
+          neighbor(targetId, contemporary.name, `${contemporary.role} · ${contemporary.empireId}`, true);
+          addEdge(id, targetId, 'contemporary', contemporary.sourceCitation ? [contemporary.sourceCitation] : [],
+            `${contemporary.evidenceCategory}: ${contemporary.synchronyDetail}`);
+        }
       }
     };
-
-    nodesMap.set(centerId, {
-      id: centerId,
-      title: centerTitle,
-      subtitle: centerSubtitle,
-      type: isFigure ? 'figure' : 'name',
-      hop: 0,
-      degree: 0,
-    });
-
-    const hop1Names: string[] = [];
-
-    if (isFigure) {
-      for (const rel of target.personalNetwork) {
-        const id = rel.targetId || rel.name;
-        if (!nodesMap.has(id)) {
-          nodesMap.set(id, {
-            id,
-            title: rel.name,
-            subtitle: rel.relation,
-            type: 'name',
-            hop: 1,
-            degree: 1,
-          });
-          hop1Names.push(rel.name);
-          addEdge(centerId, id, 3);
-        }
-      }
-
-      for (const sc of target.secularContemporaries.slice(0, 4)) {
-        const id = `sc-${sc.name.toLowerCase().replace(/\s+/g, '-')}`;
-        if (!nodesMap.has(id)) {
-          nodesMap.set(id, {
-            id,
-            title: sc.name,
-            subtitle: `${sc.role} · ${sc.empireId}`,
-            type: 'contemporary',
-            hop: 1,
-            degree: 1,
-          });
-          addEdge(centerId, id, 2);
-        }
-      }
-
-      const networkName = target.hitchcockKey || target.name.split(' ')[0];
-      const coNames = localStore.getConnectedNames(networkName).slice(0, 8);
-      for (const cn of coNames) {
-        if (!nodesMap.has(cn.name)) {
-          nodesMap.set(cn.name, {
-            id: cn.name,
-            title: cn.name,
-            subtitle: localStore.getNetworkName(cn.name)?.meaning,
-            type: 'name',
-            hop: 1,
-            degree: cn.count,
-            weight: cn.count,
-          });
-          hop1Names.push(cn.name);
-          addEdge(centerId, cn.name, cn.count);
-        }
-      }
-    } else {
-      const coNames = localStore.getConnectedNames(target).slice(0, 14);
-      for (const cn of coNames) {
-        nodesMap.set(cn.name, {
-          id: cn.name,
-          title: cn.name,
-          subtitle: localStore.getNetworkName(cn.name)?.meaning,
-          type: 'name',
-          hop: 1,
-          degree: cn.count,
-          weight: cn.count,
-        });
-        hop1Names.push(cn.name);
-        addEdge(centerId, cn.name, cn.count);
-      }
+    for (let i = 0; i < queue.length; i++) {
+      const node = nodes.get(queue[i])!;
+      if (node.hop < 2) expand(node.id, (node.hop + 1) as 1 | 2, true);
     }
-
-    const topHop1 = hop1Names.slice(0, 4);
-    for (const h1Name of topHop1) {
-      const h2Neighbors = localStore.getConnectedNames(h1Name).slice(0, 3);
-      for (const h2 of h2Neighbors) {
-        if (!nodesMap.has(h2.name)) {
-          nodesMap.set(h2.name, {
-            id: h2.name,
-            title: h2.name,
-            subtitle: localStore.getNetworkName(h2.name)?.meaning,
-            type: 'name',
-            hop: 2,
-            degree: h2.count,
-            weight: h2.count,
-          });
-        }
-        addEdge(h1Name, h2.name, h2.count);
-      }
+    const pinnedIds: string[] = [];
+    if (state.compare) {
+      const comparison = localStore.getNetworkName(state.compare);
+      if (comparison) { const id = canonicalId(comparison.name); addNode(id, comparison.name, 1); pinnedIds.push(id); }
     }
-
-    for (let i = 0; i < hop1Names.length; i++) {
-      for (let j = i + 1; j < hop1Names.length; j++) {
-        const a = hop1Names[i];
-        const b = hop1Names[j];
-        if (nodesMap.has(a) && nodesMap.has(b)) {
-          const shared = localStore.getSharedRefs(a, b);
-          if (shared.length > 0) {
-            addEdge(a, b, shared.length);
-          }
-        }
-      }
+    // Complete the induced neighborhood, including links between second-hop nodes.
+    for (const node of nodes.values()) expand(node.id, 2, false);
+    for (const edge of edges.values()) {
+      nodes.get(edge.source)!.degree++;
+      nodes.get(edge.target)!.degree++;
     }
-
-    const nodes = Array.from(nodesMap.values());
-    for (const n of nodes) {
-      n.degree = edges.filter(e => e.source === n.id || e.target === n.id).length;
-    }
-
-    return {
-      centerId,
-      centerTitle,
-      nodes,
-      edges,
-    };
-  }
-}
+    return { centerId, centerTitle, nodes: [...nodes.values()], edges: [...edges.values()], pinnedIds };
+  }}
 
 const app = new HistoricalInteractApp();
 window.addEventListener('DOMContentLoaded', () => {

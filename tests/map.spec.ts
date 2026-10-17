@@ -172,23 +172,341 @@ test.describe('HistoricalBible Interactive Maps & Cartographic Atlas (Option C)'
     await expect(page.locator('#drawer-meta')).toContainText('Capital: Samaria');
   });
 
+  test('Map UI/UX Maturation Regression: Hover informationals are strictly constrained inside the map viewport with wrapped text, era buttons do not overflow, and visible marker labels do not collide', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto('/map?era=divided_monarchy_prophets', { waitUntil: 'networkidle' });
+    await page.waitForTimeout(800);
+
+    const mapContainer = page.locator('#atlas-canvas-container');
+    await expect(mapContainer).toBeVisible();
+    const containerBox = await mapContainer.boundingBox();
+    expect(containerBox).not.toBeNull();
+
+    // 1. Era Timeline Scrubber: Divided Monarchy button must exist, be active, and no era button text may overflow its box
+    const activeEraBtn = page.locator('.chrono-era-btn.active');
+    await expect(activeEraBtn).toHaveCount(1);
+    await expect(activeEraBtn).toHaveAttribute('data-era', 'divided_monarchy_prophets');
+
+    const eraOverflowCount = await page.evaluate(() => {
+      const btns = Array.from(document.querySelectorAll<HTMLElement>('.chrono-era-btn'));
+      return btns.filter(btn => {
+        const nameEl = btn.querySelector<HTMLElement>('.era-name');
+        const btnRect = btn.getBoundingClientRect();
+        const nameRect = nameEl?.getBoundingClientRect();
+        return (nameRect && nameRect.right > btnRect.right + 1) || btn.scrollWidth > btn.clientWidth + 2;
+      }).length;
+    });
+    expect(eraOverflowCount).toBe(0);
+
+    // 2. Hover Informationals: Check Damascus, Tyre & Sidon, Samaria, Tel Dan Stele, Mesha Stele, and Aram-Damascus polygon
+    const hoverTargets = [
+      page.locator('.capital-marker-label', { hasText: 'Damascus' }),
+      page.locator('.capital-marker-label', { hasText: 'Tyre & Sidon' }),
+      page.locator('.capital-marker-label', { hasText: 'Samaria' }),
+      page.locator('.leaflet-gold-marker', { hasText: 'Tel Dan Stele' }),
+      page.locator('.leaflet-gold-marker', { hasText: 'Mesha Stele' }),
+      page.locator('.capital-marker-label', { hasText: 'Bozrah & Sela' })
+    ];
+
+    for (const target of hoverTargets) {
+      await expect(target).toBeVisible();
+      await target.hover({ force: true });
+      await page.waitForTimeout(250);
+
+      const tooltip = page.locator('.leaflet-tooltip').first();
+      await expect(tooltip).toBeVisible();
+
+      const metrics = await tooltip.evaluate((el) => {
+        const mapEl = document.getElementById('atlas-canvas-container')!;
+        const mapRect = mapEl.getBoundingClientRect();
+        const tipRect = el.getBoundingClientRect();
+        const style = window.getComputedStyle(el);
+        const nestedDuplicate = el.querySelectorAll('.map-leaflet-tooltip').length;
+        return {
+          mapTop: mapRect.top,
+          mapLeft: mapRect.left,
+          mapRight: mapRect.right,
+          mapBottom: mapRect.bottom,
+          tipTop: tipRect.top,
+          tipLeft: tipRect.left,
+          tipRight: tipRect.right,
+          tipBottom: tipRect.bottom,
+          whiteSpace: style.whiteSpace,
+          scrollWidth: el.scrollWidth,
+          clientWidth: el.clientWidth,
+          nestedDuplicate
+        };
+      });
+
+      // Tooltip text must wrap (never white-space: nowrap) and never overflow horizontally out of its card
+      expect(metrics.whiteSpace).toBe('normal');
+      expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth + 4);
+      // No double-nested .map-leaflet-tooltip box inside the outer .leaflet-tooltip.map-leaflet-tooltip
+      expect(metrics.nestedDuplicate).toBe(0);
+
+      // Tooltip bounding box must be strictly inside the map container on all 4 sides
+      expect(metrics.tipTop).toBeGreaterThanOrEqual(metrics.mapTop + 6);
+      expect(metrics.tipLeft).toBeGreaterThanOrEqual(metrics.mapLeft + 6);
+      expect(metrics.tipRight).toBeLessThanOrEqual(metrics.mapRight - 6);
+      expect(metrics.tipBottom).toBeLessThanOrEqual(metrics.mapBottom - 6);
+    }
+
+    // 3. Visible permanent marker labels must not collide in screen space
+    const labelCollisions = await page.evaluate(() => {
+      const labels = Array.from(
+        document.querySelectorAll<HTMLElement>('.gold-coin-label, .capital-marker-label, .city-marker-label')
+      ).filter((el) => {
+        const style = window.getComputedStyle(el);
+        return style.display !== 'none' && style.visibility !== 'hidden' && parseFloat(style.opacity) > 0.1;
+      });
+
+      const rects = labels.map((el) => ({
+        text: el.textContent?.trim() || '',
+        rect: el.getBoundingClientRect()
+      }));
+
+      const collisions: string[] = [];
+      for (let i = 0; i < rects.length; i++) {
+        for (let j = i + 1; j < rects.length; j++) {
+          const a = rects[i].rect;
+          const b = rects[j].rect;
+          const overlapX = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+          const overlapY = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+          if (overlapX > 2 && overlapY > 2) {
+            collisions.push(`${rects[i].text} <-> ${rects[j].text}`);
+          }
+        }
+      }
+      return collisions;
+    });
+    expect(labelCollisions).toEqual([]);
+  });
+
+  test("Biblical Journeys & Interactive Waypoint Stops: Paul's travel is explicitly labeled on-map, never intercepted by Roman Empire polygon, and every stop shows where & when Paul was there", async ({ page }) => {
+    await page.setViewportSize({ width: 1366, height: 860 });
+    await page.goto('/map?era=apostolic_church', { waitUntil: 'networkidle' });
+    await page.waitForTimeout(900);
+
+    // 1. On-Map Route Title Pill must explicitly identify Paul's Missionary Journey on the canvas
+    const paulBanner = page.locator('.route-badge-paul-second-journey .route-badge-pill');
+    await expect(paulBanner).toBeVisible();
+    await expect(paulBanner).toContainText("PAUL'S MISSIONARY JOURNEY");
+    await expect(paulBanner).toContainText('AD 49–52');
+
+    // 2. Hovering Paul's route banner or hit corridor must show Paul's Journey tooltip, NEVER the Roman Empire tooltip
+    await paulBanner.hover();
+    await page.waitForTimeout(250);
+    const routeTooltip = page.locator('.leaflet-tooltip').first();
+    await expect(routeTooltip).toBeVisible();
+    await expect(routeTooltip).toContainText("Paul's Second Missionary Journey");
+    await expect(routeTooltip).toContainText('Apostle Paul');
+    await expect(routeTooltip).not.toContainText('Roman Empire (Augustus to Trajan)');
+
+    // 3. All 11 numbered stops of Paul's Second Missionary Journey must be rendered and interactive
+    const paulStops = page.locator('.route-stop-core[data-route-id="paul-second-journey"]');
+    await expect(paulStops).toHaveCount(11);
+
+    // Inspect Stop 5 (Philippi) and Stop 8 (Athens) and Stop 9 (Corinth)
+    const stopChecks = [
+      { index: 0, place: 'Antioch', when: 'Spring AD 49', ref: 'ACTS {15:35}' },
+      { index: 4, place: 'Philippi', when: 'Autumn AD 49', ref: 'ACTS {16:12}' },
+      { index: 7, place: 'Athens', when: 'Spring AD 50', ref: 'ACTS {17:15}' },
+      { index: 8, place: 'Corinth', when: 'Spring AD 50 – Autumn AD 51', ref: 'ACTS {18:1}' }
+    ];
+
+    for (const check of stopChecks) {
+      const stopEl = page.locator(`.route-stop-core[data-route-id="paul-second-journey"][data-stop-index="${check.index}"]`);
+      await expect(stopEl).toBeVisible();
+      await stopEl.hover();
+      await page.waitForTimeout(250);
+
+      const tip = page.locator('.leaflet-tooltip').first();
+      await expect(tip).toBeVisible();
+      await expect(tip).toContainText(check.place);
+      await expect(tip).toContainText(check.when);
+      await expect(tip).toContainText(check.ref);
+      // Confirm Roman Empire polygon never intercepts the stop hover
+      await expect(tip).not.toContainText('Imperial superpower; Caesar Augustus');
+
+      // Confirm tooltip is 100% clamped inside the map viewport
+      const bounds = await tip.evaluate((el) => {
+        const mapRect = document.getElementById('atlas-canvas-container')!.getBoundingClientRect();
+        const r = el.getBoundingClientRect();
+        return {
+          insideTop: r.top >= mapRect.top + 6,
+          insideLeft: r.left >= mapRect.left + 6,
+          insideRight: r.right <= mapRect.right - 6,
+          insideBottom: r.bottom <= mapRect.bottom - 6
+        };
+      });
+      expect(bounds).toEqual({
+        insideTop: true,
+        insideLeft: true,
+        insideRight: true,
+        insideBottom: true
+      });
+    }
+
+    // 4. Clicking a waypoint stop (Corinth, Stop 9) opens the detail drawer with location, date, and Scripture link, fully inside the map card
+    const corinthStop = page.locator('.route-stop-core[data-route-id="paul-second-journey"][data-stop-index="8"]');
+    await corinthStop.click();
+    const drawer = page.locator('#atlas-detail-drawer');
+    await expect(drawer).toBeVisible();
+    await expect(page.locator('#drawer-title')).toContainText('Stop 9 of 11: Corinth');
+    await expect(page.locator('#drawer-meta')).toContainText('Spring AD 50 – Autumn AD 51');
+    await expect(page.locator('#drawer-desc')).toContainText('Aquila and Priscilla');
+    await expect(page.locator('#drawer-scripture-link')).toHaveAttribute('href', /ACT\.18\.1/);
+
+    const drawerAndPaneCheck = await page.evaluate(() => {
+      const cardRect = document.querySelector('.atlas-canvas-card')!.getBoundingClientRect();
+      const drawerRect = document.getElementById('atlas-detail-drawer')!.getBoundingClientRect();
+      const titleRect = document.getElementById('drawer-title')!.getBoundingClientRect();
+      const empireZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-empire-pane')!).zIndex, 10);
+      const routeZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-route-pane')!).zIndex, 10);
+      const stopZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-routeStop-pane')!).zIndex, 10);
+      const tooltipZ = parseInt(window.getComputedStyle(document.querySelector('.leaflet-tooltip-pane')!).zIndex, 10);
+      return {
+        drawerInsideTop: drawerRect.top >= cardRect.top + 8,
+        titleVisible: titleRect.top >= drawerRect.top,
+        zOrderValid: empireZ < routeZ && routeZ < stopZ && stopZ < tooltipZ
+      };
+    });
+    expect(drawerAndPaneCheck).toEqual({
+      drawerInsideTop: true,
+      titleVisible: true,
+      zOrderValid: true
+    });
+  });
+
+  test('Granular Timeline Controls: From Apostolic Age, user can inspect John the Baptist in relation to Jesus, Jesus throughout His life (4 phases), Thomas to Parthia & India, and step stop-by-stop', async ({ page }) => {
+    await page.setViewportSize({ width: 1400, height: 900 });
+    await page.goto('/map', { waitUntil: 'networkidle' });
+
+    // 1. Click Apostolic Age tab
+    await page.click('.chrono-era-btn[data-era="apostolic_church"]');
+    await page.waitForTimeout(600);
+
+    const granularBar = page.locator('#chrono-granular-bar');
+    await expect(granularBar).toBeVisible();
+
+    // Verify all requested granular tracks are selectable directly from Apostolic Age
+    const expectedGranularIds = [
+      'filter-john-jesus-parallel',
+      'filter-john-baptist-only',
+      'filter-jesus-phase-1',
+      'filter-jesus-phase-2',
+      'filter-jesus-phase-3',
+      'filter-jesus-phase-4',
+      'filter-jesus-all-phases',
+      'filter-peter-philip',
+      'filter-paul-1',
+      'filter-paul-2',
+      'filter-paul-3',
+      'filter-paul-rome',
+      'filter-john-patmos',
+      'filter-thomas-india',
+      'filter-andrew-mark'
+    ];
+    for (const gid of expectedGranularIds) {
+      await expect(page.locator(`.chrono-granular-pill[data-granular-id="${gid}"]`)).toBeVisible();
+    }
+
+    // 2. Select "John the Baptist + Jesus Parallel (AD 26–29)" to see John the Baptist in his areas and in relation to Jesus
+    await page.click('.chrono-granular-pill[data-granular-id="filter-john-jesus-parallel"]');
+    await page.waitForTimeout(900);
+
+    const johnStops = page.locator('.route-stop-core[data-route-id="john-baptist-ministry"]');
+    const jesusEarlyStops = page.locator('.route-stop-core[data-route-id="jesus-early-ministry"]');
+    await expect(johnStops).toHaveCount(5);
+    await expect(jesusEarlyStops).toHaveCount(6);
+
+    // Stepper must show both synchronized tracks and allow stepping through John's stops (Bethabara, Aenon near Salim, Machaerus)
+    const stepper = page.locator('#chrono-waypoint-stepper');
+    await expect(stepper).toBeVisible();
+    await expect(stepper).toContainText('John the Baptist');
+
+    // Step to Stop 4 of John the Baptist (Aenon Near Salim — parallel with Jesus in Judea, John 3:22–24)
+    await page.click('#chrono-waypoint-stepper .stepper-stop-chip[data-stop-index="3"]');
+    await page.waitForTimeout(500);
+    await expect(page.locator('#drawer-title')).toContainText('Aenon Near Salim');
+    await expect(page.locator('#drawer-desc')).toContainText('DIRECT RELATION TO JESUS');
+    await expect(page.locator('#drawer-desc')).toContainText('Judean countryside');
+
+    // Switch stepper tab to Jesus Phase 2 and inspect Stop 5 (Judean Countryside concurrent with John at Aenon)
+    await page.click('.stepper-route-tab[data-stepper-route-id="jesus-early-ministry"]');
+    await page.waitForTimeout(400);
+    await page.click('#chrono-waypoint-stepper .stepper-stop-chip[data-stop-index="4"]');
+    await page.waitForTimeout(500);
+    await expect(page.locator('#drawer-title')).toContainText('Judean Countryside');
+    await expect(page.locator('#drawer-desc')).toContainText('SPATIAL RELATION TO JOHN THE BAPTIST');
+
+    // 3. Select "Complete Earthly Life of Jesus (All 4 Phases)" and confirm all 27 stops across 4 phases render
+    await page.click('.chrono-granular-pill[data-granular-id="filter-jesus-all-phases"]');
+    await page.waitForTimeout(900);
+    await expect(page.locator('.route-stop-core[data-route-id="jesus-nativity-youth"]')).toHaveCount(6);
+    await expect(page.locator('.route-stop-core[data-route-id="jesus-early-ministry"]')).toHaveCount(6);
+    await expect(page.locator('.route-stop-core[data-route-id="jesus-galilean-ministry"]')).toHaveCount(8);
+    await expect(page.locator('.route-stop-core[data-route-id="jesus-passion-resurrection"]')).toHaveCount(7);
+
+    // 4. Select "Thomas: Parthia & India [Scripture + Patristic]" and verify dates, locations, and explicit evidence-class distinction
+    await page.click('.chrono-granular-pill[data-granular-id="filter-thomas-india"]');
+    await page.waitForTimeout(900);
+
+    const thomasStops = page.locator('.route-stop-core[data-route-id="thomas-parthia-india"]');
+    await expect(thomasStops).toHaveCount(6);
+    await expect(page.locator('#chrono-granular-status')).toContainText('Canonical Scripture + Early Patristic / External Historical Attestation');
+
+    // Step to Stop 4 (Taxila — King Gondophares, c. AD 46–49) and Stop 5 (Muziris / Malabar Coast, c. AD 52–68)
+    await page.click('#chrono-waypoint-stepper .stepper-stop-chip[data-stop-index="3"]');
+    await page.waitForTimeout(500);
+    await expect(page.locator('#drawer-title')).toContainText('Taxila');
+    await expect(page.locator('#drawer-meta')).toContainText('c. AD 46 – 49');
+    await expect(page.locator('#drawer-meta')).toContainText('Historical Attestation');
+    await expect(page.locator('#drawer-desc')).toContainText('Gondophares');
+
+    await page.click('#stepper-next-btn');
+    await page.waitForTimeout(500);
+    await expect(page.locator('#drawer-title')).toContainText('Muziris / Cranganore');
+    await expect(page.locator('#drawer-meta')).toContainText('c. AD 52 – 68');
+    await expect(page.locator('#drawer-desc')).toContainText('Malabar');
+  });
+
   test('Visual proof: captures high-resolution screenshots of map experiences', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
 
     // 1. Dedicated Atlas (/map)
     await page.goto('/map');
+    await page.locator('.atlas-canvas-card').scrollIntoViewIfNeeded();
     await page.waitForTimeout(600);
     await page.screenshot({ path: 'test-results/live_atlas_map.png', fullPage: false });
 
-    // 2. Atlas with detail drawer (?site=pilate-stone)
-    await page.goto('/map?site=pilate-stone');
-    await page.waitForTimeout(600);
-    await page.screenshot({ path: 'test-results/live_atlas_detail_drawer.png', fullPage: false });
-
-    // 3. Study desk with Map tab active (/interact?view=map)
-    await page.goto('/interact?view=map');
+    // 2. Divided Monarchy era with active constrained hover tooltip (/map?era=divided_monarchy_prophets)
+    await page.goto('/map?era=divided_monarchy_prophets');
+    await page.locator('.atlas-canvas-card').scrollIntoViewIfNeeded();
     await page.waitForTimeout(800);
-    await page.locator('.connections-panel .panel-header').scrollIntoViewIfNeeded();
+    await page.locator('.capital-marker-label', { hasText: 'Damascus' }).hover();
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: 'test-results/live_atlas_divided_monarchy_tooltip.png', fullPage: false });
+
+    // 3. Apostolic Church era with Granular Timeline Bar, John the Baptist + Jesus Parallel, and Thomas to India
+    await page.goto('/map?era=apostolic_church&filter=filter-john-jesus-parallel');
+    await page.waitForTimeout(900);
+    await page.click('#chrono-waypoint-stepper .stepper-stop-chip[data-stop-index="3"]');
+    await page.evaluate(() => document.getElementById('chrono-granular-panel')?.scrollIntoView({ block: 'start' }));
+    await page.waitForTimeout(600);
+    await page.screenshot({ path: 'test-results/live_atlas_john_jesus_parallel.png', fullPage: false });
+
+    await page.click('.chrono-granular-pill[data-granular-id="filter-thomas-india"]');
+    await page.waitForTimeout(1000);
+    await page.evaluate(() => document.getElementById('chrono-granular-panel')?.scrollIntoView({ block: 'start' }));
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: 'test-results/live_atlas_thomas_india.png', fullPage: false });
+
+    // 4. Study desk with Map tab active (/interact?view=map)
+    await page.goto('/interact?view=map', { waitUntil: 'networkidle' });
+    await expect(page.locator('#ancient-map-container')).toBeVisible({ timeout: 10000 });
+    await page.locator('#ancient-map-container').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(500);
     await page.screenshot({ path: 'test-results/live_study_desk_map_tab.png', fullPage: false });
   });
 });

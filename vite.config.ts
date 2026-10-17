@@ -1,7 +1,41 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import { resolve } from 'path';
+import { createReadStream, copyFileSync, existsSync, statSync } from 'fs';
+
+function serveAndCopyRootBiblePdf(): Plugin {
+  const rootPdfPath = resolve(__dirname, 'Bible.pdf');
+
+  const servePdfMiddleware = (req: { url?: string }, res: any, next: () => void) => {
+    const cleanUrl = (req.url || '').split('?')[0];
+    if (cleanUrl === '/Bible.pdf' && existsSync(rootPdfPath)) {
+      const stat = statSync(rootPdfPath);
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Length', String(stat.size));
+      createReadStream(rootPdfPath).pipe(res);
+      return;
+    }
+    next();
+  };
+
+  return {
+    name: 'serve-and-copy-root-bible-pdf',
+    configureServer(server) {
+      server.middlewares.use(servePdfMiddleware);
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(servePdfMiddleware);
+    },
+    closeBundle() {
+      const distPdfPath = resolve(__dirname, 'dist', 'Bible.pdf');
+      if (existsSync(rootPdfPath) && existsSync(resolve(__dirname, 'dist'))) {
+        copyFileSync(rootPdfPath, distPdfPath);
+      }
+    },
+  };
+}
 
 export default defineConfig({
+  plugins: [serveAndCopyRootBiblePdf()],
   server: {
     port: 5173,
     host: true,

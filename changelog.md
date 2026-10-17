@@ -2,6 +2,67 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.33] - 2026-10-17
+
+- Granular Sub-Era Map Timeline, 19 Biblical & Apostolic Journeys (130+ Dated Stops), John the Baptist & Jesus Parallel Synchrony, Thomas to Parthia & India & Interactive Waypoint Stepper:
+  - **19 Biblical & Apostolic Journeys with 130+ Dated Stops (`src/data/ancientMapData.ts`)**:
+    - Expanded `BIBLICAL_ROUTES` from 3 routes to 19 comprehensive routes across Old Testament (`abraham-call`, `jacob-joseph-egypt`, `exodus-route`, `joshua-conquest`, `david-exile-throne`, `elijah-elisha-ministry`, `babylonian-deportation-daniel`, `ezra-nehemiah-return`), John the Baptist & Earthly Life of Jesus (`john-baptist-ministry`, `jesus-nativity-youth`, `jesus-early-ministry`, `jesus-galilean-ministry`, `jesus-passion-resurrection`), and Apostolic Missions (`peter-philip-missions`, `paul-first-journey`, `paul-second-journey`, `paul-third-journey`, `paul-voyage-rome`, `john-seven-churches-patmos`, `thomas-parthia-india`, `andrew-mark-missions`).
+    - Added explicit `RouteEvidenceClass` (`'SCRIPTURE_TEXT' | 'EXTERNAL_HISTORICAL_ATTESTATION'`) and `attestationSource` citations (Origen in Eusebius *Hist. Eccl.* 3.1, Takht-i-Bahi inscription of King Gondophares, Gregory of Nazianzus, Jerome, Ephrem the Syrian) to distinguish canonical Scripture waypoints from patristic/historical tradition waypoints.
+  - **Granular Sub-Era Filter Bar & Interactive Waypoint Stepper (`map.html`, `src/atlasApp.ts`, `src/engine/ancientMap.ts`, `src/interact.css`)**:
+    - Added 22 granular sub-era track filters (`GRANULAR_TIMELINE_FILTERS`) accessible from `/map` (including all John the Baptist, 4 phases of Jesus's life, and Apostolic tracks directly from **Apostolic Age** and **Christ & Rome**), plus the `#chrono-waypoint-stepper` control bar (`◀ Prev Stop`, `Next Stop ▶`, multi-route switcher tabs, live stop readout card, and clickable `1..N` stop chips).
+    - Added golden-angle spiral micro-offset deconfliction (`getDeconflictedStopCoords`) for shared cities across concurrent routes and tuned pane z-ordering (`routeStopPane: 560`, `markerPane: 600`).
+  - **Regression Coverage (`tests/map.spec.ts`)**:
+    - Added headed Playwright regression test verifying John the Baptist + Jesus parallel view, Jesus's 4 life phases, Thomas's Parthia & India route with patristic badges, and stop-by-stop stepping (16/16 Playwright map tests passing).
+
+## [00.01.32] - 2026-10-17
+
+- Map UI/UX Maturation: Viewport-Clamped Hover Informationals, Wrapped Single-Border Tooltips, 5x2 Era Grid & Screen-Space Label De-confliction:
+  - **Viewport-Clamped Hover Informationals (`src/engine/ancientMap.ts`, `src/interact.css`)**:
+    - Added `AncientMapCanvas.constrainTooltipToViewport()` to mathematically clamp all `.leaflet-tooltip` popups within the visible map container (`10px` inset margin + top-left zoom control clearance), flipping top-clipped tooltips below their marker anchor and shifting `translate3d` horizontally/vertically as needed.
+    - Enforced `white-space: normal !important; overflow-wrap: break-word !important;` on `.leaflet-tooltip` and `.map-tooltip-inner` and removed duplicate nested `.map-leaflet-tooltip` wrappers so multi-sentence descriptions wrap cleanly inside a single gold border.
+  - **5x2 Responsive Era Timeline Grid & Divided Kingdom Tab (`map.html`, `src/atlasApp.ts`, `src/interact.css`)**:
+    - Added the `divided_monarchy_prophets` (`Divided Kingdom · c. 930 – 722 BC`) button to `map.html`, mapped granular sub-eras in `syncEraUI`, and converted `.chrono-era-selector` into a 5-column responsive grid with zero button text overflow or horizontal clipping.
+  - **Screen-Space Marker Label De-confliction & Era Filtering (`src/engine/ancientMap.ts`)**:
+    - Added `deconflictMarkerLabels()` across cardinal directions (`east`, `west`, `north`, `south`) and offset nudges with HUD control clearance (`.ancient-map-controls`, `.ornate-compass-rose`, `.map-canvas-year-hud`), filtered anachronistic Greco-Roman/NT cities out of Old Testament eras, shortened on-canvas artifact/capital labels while keeping full titles in tooltips/drawers, and synced `activeEra` in `focusOnFigure()` for `/interact?view=map`.
+  - **Regression Coverage (`tests/map.spec.ts`)**:
+    - Added headed Playwright regression test verifying 100% viewport containment of all tooltips, wrapped text width, zero era button overflow, and zero marker label collisions across `/map`, `/bible?tab=map`, and `/interact?view=map` (14/14 specs passing).
+
+## [00.01.31] - 2026-10-17
+
+- Progressive Hydration, Expanded Archaeological/Geographic/Chronological Coverage, PDF Deduplication & Contact Mailto Wiring:
+  - **Two-Phase Progressive Hydration & Parallel Loading**:
+    - Added `localStore.initCritical()`, `isCriticallyLoaded()`, `isFullyLoaded()`, and `buildVerseIndices()` in `src/store/localFirstStore.ts` to load `/data/kjv_verses.json` and `/data/history/historical_synchrony.v1.json` in parallel and hydrate `/bible` Scripture text, Chronology, and Map panels immediately while `/data/cross_references_bundle.json` and `/data/bible_network.json` finish hydrating in parallel (`src/bibleReader.ts`).
+  - **Expanded Archaeological Sites, Biblical Geography & Granular Chapter Chronology**:
+    - Added 6 high-attestation archaeological sites to `ARCHAEOLOGICAL_SITES` (`lachish-ostraca`, `jehoiachin-ration-tablets`, `dead-sea-scrolls-qumran`, `pool-of-siloam-steps`, `sergius-paulus-inscription`, `arch-of-titus-spoils`, bringing the total to 20 sites) and wired them into `CHRONOLOGICAL_ERAS` (`src/data/ancientMapData.ts`).
+    - Added 26 biblical cities and regions to `BIBLICAL_GEOGRAPHIC_ENTITIES` (`corinth`, `rome`, `ephesus`, `philippi`, `colossae`, `thessalonica`, `galatia`, `antioch`, `athens`, `crete`, `patmos`, `hebron`, `shiloh`, `gibeon`, `hazor`, `ai`, `shechem`, `beersheba`, `dan`, `lachish`, `susa`, `shushan`, `bethlehem`, `nazareth`, `capernaum`, `caesarea`).
+    - Added contiguous `chapterBreakdown` ranges to `Joshua`, `Judges`, `1 Samuel`, `2 Samuel`, `Isaiah`, `Jeremiah`, and `Daniel` (`src/data/bibleChronology.ts`).
+  - **PDF Proof Consolidation & `public/Bible.pdf` Deduplication**:
+    - Consolidated intermediate PDF binaries (`v0.3.0`–`v0.3.2`) in `pdf-proof/`, freeing `~105.3 MB` (`187.5 MB` → `~87 MB`, well under the 160 MB workspace cap) while retaining `v0.2.0`, `v0.3.3`, all JSON manifests, and PNG proofs; updated `tests/test_pdf_*.py` and `pdf-proof/README.md`.
+    - Added `serveAndCopyRootBiblePdf()` in `vite.config.ts` to serve and bundle `/Bible.pdf` directly from root `Bible.pdf`, removing the duplicate `31.38 MB` `public/Bible.pdf` (`~136.7 MB` total disk space saved).
+  - **Contact Form `mailto:` Synthesis & Expanded Self-Checks**:
+    - Updated `contact.html` to dynamically construct a `mailto:BibleHistorical@gmail.com` link with the user's Name, Email, Message, and email-list opt-in preference upon submission.
+    - Extended `tests/data-integrity-selfcheck.ts` with regression assertions for all `v00.01.31` enhancements.
+
+## [00.01.30] - 2026-10-16
+
+- Codebase Audit Remediation: Automated Data Self-Checks, Error Handling, Bloat Cleanup & Documentation Sync:
+  - **Canonical KJV & Cross-Dataset Self-Checks**:
+    - Repaired 5 `[I[` / `[O[` bracket typos in `public/data/kjv_verses.json` (`Numbers 12:6`, `Psalms 25:17`, `Isaiah 41:17`, `Jeremiah 17:10`, `Habakkuk 1:5`) verified against `Bible.pdf` (`pdf-proof/v0.2.0/reference-verses.json`), updated `scripts/build-curated-kjv.js`, and documented the repairs in `error_corrections_log.md`.
+    - Upgraded `scripts/verify-canonical-kjv.js` to enforce strict non-nested balanced `[...]` brackets across all 31,102 verses (`14,138` bracketed-italic verses, `5,556` `LORD` verses, `66` books, `1,189` chapters).
+    - Fixed `src/data/bibleChronology.ts`: resolved duplicate `eventOrder: 19` (`Ecclesiastes` & `Obadiah`) and missing `eventOrder: 66` so `eventOrder` forms a strict `1..66` permutation, aligned all 32 `eventEraId` values to valid `CHRONOLOGICAL_ERAS` IDs, and fixed Titus `osis: 'Tit'` → `'Titus'`.
+    - Added `tests/data-integrity-selfcheck.ts` (`npm run test:selfcheck`) verifying invariants across `kjv_verses.json`, `BIBLE_CHRONOLOGY`, `ancientMapData.ts`, `historical_synchrony.v1.json` ↔ `discoveries.ts`, and `localStore.searchWholeWord`.
+  - **Error Handling & Bug Fixes**:
+    - Added `localStore.searchWholeWord()` (`src/store/localFirstStore.ts`) and wired it into `BibleReader.renderWordInspector()` (`src/bibleReader.ts`) to eliminate substring false positives in concordance results.
+    - Cached `/data/strongs_reverse.json` in `CacheStorage`, shared an in-flight promise, enabled retries on transient failures, and refreshed the Word Inspector when Strong's prefetch resolves (`src/data/scriptureLexicon.ts`, `src/bibleReader.ts`).
+    - Fixed `'tit'` → `'titus'` and added `'job'`, `'joel'`, `'obad'` in `BibleReader.getMapEraForCurrentPassage()`, added `Chronological Reconstruction` evidence-class disclosure to `renderCompanionChrono()`, debounced `mapResizeTimer`, and HTML-escaped error messages in `BibleReader.renderError()`.
+    - Wired `/map` detail drawer links (`src/atlasApp.ts`) to `/bible?ref=...` instead of hardcoded `/bible`.
+    - Rendered `WATER_FEATURES` (`seas` and `rivers`) on `waterLayerGroup` when the Waterways (`rivers`) layer is enabled in `AncientMapCanvas` and added an offline tile-error fallback badge (`src/engine/ancientMap.ts`).
+    - Added defensive null guards in `src/main.ts`, `src/collectionExplorer.ts`, and `src/engine/egoGraph.ts` (added `destroy()` listener cleanup), and fixed `tapestry.html` data loading (`/data/kjv_verses.json`, `/data/cross_references_bundle.json`) and `SEED_TEXTS["Isa.49.6"]`.
+  - **Bloat Cleanup & Documentation Synchronization**:
+    - Removed duplicate `public/downloads/Bible.pdf`, 6 legacy GoDaddy `*_files/` folders, 5 unconsumed JSON files in `public/data/`, and 4 one-off scripts in `scripts/`, reducing production `dist/` size by **41.04 MB** (`107.75 MB` → `66.71 MB`).
+    - Replaced duplicate `bible/index.html` and `contact/index.html` with lightweight redirect stubs matching `interact/index.html` and `map/index.html`.
+    - Updated `README.md`, `package.json`, `interact.html`, and `map.html` to `v00.01.30`.
+
 ## [00.01.29] - 2026-10-16
 
 - Map Interaction Hardening, Zero-Collision Exclusivity & Northern Kingdom Inspection across All Maps (`/map`, `/bible`, `/interact`):
