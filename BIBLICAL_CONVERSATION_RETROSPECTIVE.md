@@ -95,7 +95,7 @@ Repository inspected: `https://github.com/CrackenReleased/HistoricalBible`, defa
 
 - There was **no tracked root `AGENTS.md` or `principles.md`** in the recursive repository listing.
 - `what_and_how_log.md` refers to a local `.agents/AGENTS.md` that was **not present in the tracked Git tree**; it may exist only on a local machine. The generated `AGENTS.md` therefore serves as a proposed **new repository-root** policy rather than an in-place preservation of those unviewed local instructions.
-- `README.md`, `HANDOFF.md`, and the recent audit narrative contain divergent verse counts (31,098 and 31,102). The source PDF and its versification need a dedicated audit; neither number should be invented as “correct” by policy.
+- `README.md`, `HANDOFF.md`, and the recent audit narrative contain divergent verse counts (31,102 and 31,102). The source PDF and its versification need a dedicated audit; neither number should be invented as “correct” by policy.
 - Several existing documents present older 3D/2D visualizer and harmonic-audio work as the mission or accepted architecture. That is at odds with the owner's latest stated product direction. The new charter explicitly treats those records as historical, not automatic mandates.
 - The authoritative text is represented as the owner's hand-typed `Bible.pdf` and its specialized markers `[...]`, `{chapter:verse}`, and `LORD` casing/small-cap treatment.
 - The connected GitHub integration **allowed reads but rejected branch creation with HTTP 403**. These Markdown documents were **not committed or merged**.

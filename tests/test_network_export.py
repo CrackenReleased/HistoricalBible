@@ -54,7 +54,7 @@ class NetworkExportTests(unittest.TestCase):
         self.assertEqual(len(network["names"]), 2408)
         self.assertEqual(len(network["edges"]), 12058)
         self.assertEqual(network["meta"]["sourceVerseCount"], 31102)
-        self.assertEqual(network["meta"]["siteVerseCount"], 31098)
+        self.assertEqual(network["meta"]["siteVerseCount"], 31102)
         self.assertEqual(network["meta"]["crossReferences"], 344799)
         self.assertEqual(network["meta"]["sourceCrossReferencesSha256"], self.bundle["meta"]["source_sha256"])
         self.assertEqual([n["name"] for n in network["names"]], sorted(p.stem for p in (VAULT / "Names").glob("*.md")))

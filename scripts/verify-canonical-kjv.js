@@ -19,8 +19,8 @@ if (!fs.existsSync(pdfPath)) {
 }
 
 const verses = JSON.parse(fs.readFileSync(kjvPath, 'utf8'));
-if (!Array.isArray(verses) || (verses.length !== 31098 && verses.length !== 31102)) {
-  throw new Error(`FAIL-CLOSED: Unexpected verse count ${verses.length} in kjv_verses.json`);
+if (!Array.isArray(verses) || verses.length !== 31102) {
+  throw new Error(`FAIL-CLOSED: Unexpected verse count ${verses.length} in kjv_verses.json. Expected 31,102 canonical KJV verses.`);
 }
 
 let bracketedItalicsCount = 0;

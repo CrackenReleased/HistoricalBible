@@ -66,7 +66,7 @@ test('unavailable lexical audit never revives unchecked glosses or blocks Script
     : new Response(await readFile(new URL(`../public${input}`, import.meta.url), 'utf8'));
   try {
     const store = new LocalFirstStore(); await store.init();
-    assert.equal(store.getVerseCount(), 31098);
+    assert.equal(store.getVerseCount(), 31102);
     assert.equal(store.getNameReview('Shadrach'), undefined);
     assert.match(store.getNetworkName('Shadrach')!.meaning, /unavailable/);
     assert.doesNotMatch(store.getNetworkName('Shadrach')!.meaning, /nipple/i);

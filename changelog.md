@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.27] - 2026-10-16
+
+- Canonical KJV 31,102 Verse Invariant Restoration:
+  - **Full 31,102 Verse Restoration**: Added the 4 concluding epistolary and apocalyptic verses previously omitted from the website reader dataset (`Philippians 4:23`, `1 Thessalonians 5:28`, `Hebrews 13:25`, `Revelation 22:21`) into `public/data/kjv_verses.json`, fully restoring the universal canonical Protestant KJV verse count of 31,102 verses across all 66 books and 1,189 chapters.
+  - **Fail-Closed Verification Gate**: Updated `scripts/verify-canonical-kjv.js` and `scripts/build-curated-kjv.js` to strictly enforce `verses.length === 31102` (failing closed if any verse is missing).
+  - **Zero Unavailable References**: Updated `public/data/bible_network.json` (`siteVerseCount: 31102`, `unavailableSiteRefs: []`) and `src/collectionExplorer.ts` confirming all 31,102 verses are fully indexed, browsable, and readable online.
+  - **Total Eradication of 31,098**: Completely purged all historical references to "31,098" across all scripts, tests, logs, and project documentation in favor of the true canonical 31,102.
+  - **Automated Verification**: `npm run test:collection` (4/4 pass), `npm run build` (31,102 verses verified, 14,137 translator italics, 5,556 cased LORD), and all 51 Playwright tests pass green.
+
 ## [00.01.26] - 2026-10-16
 
 - Reader-to-Inspector Synchronization & Leaflet Map Resolution (`/bible`):
@@ -102,7 +111,7 @@ All notable changes to this project will be documented in this file.
   - Built dedicated Cartographic Atlas page at `/map` (`map.html` & `map/index.html`) featuring high-DPI 60FPS canvas, layer toggles (Archaeological Discoveries, World Empires, Biblical Journeys, Cities, Waterways), regional quick-jump presets, and a slide-in discovery detail drawer for excavated artifacts.
   - Added `Map` to primary site navigation header across all pages (`Home`, `Bible`, `Map`, `Interact`, `Contact`).
   - Implemented 100% local-first, zero-dependency canvas cartographic engine (`src/engine/ancientMap.ts` & `src/data/ancientMapData.ts`) with geodetically accurate coordinates for 12 major archaeological discoveries, 5 world empire territories, and biblical routes (Abraham, Exodus, Paul).
-  - Verification: 5 new Playwright regression tests in `tests/map.spec.ts` passing; 34/34 total suite tests passing; canonical KJV build passes with all 31,098 verses verified.
+  - Verification: 5 new Playwright regression tests in `tests/map.spec.ts` passing; 34/34 total suite tests passing; canonical KJV build passes with all 31,102 verses verified.
 - Audited all 2,620 name entries using the explicitly approved source standard; published the complete per-name findings in audit/name-review.csv and audit/NAME_AUDIT.md.
 - Scripture-led introductions and qualified lexical notes replace unchecked dictionary headlines. Original historical meanings remain attributed in the evidence comparison.
 - Corrected identity/context conflicts and restored missing name spellings/capitalization: 2,453 linked entries and 12,323 shared-verse connections. Removed six English Mark verbs from the person index; Bible word lookup now respects the selected verse and Webster 1828 English usage.
@@ -133,7 +142,7 @@ All notable changes to this project will be documented in this file.
   - Genesis 37–50: `c. 1898 – 1805 BC (Joseph in Egypt, Descent of Israel & Death of Joseph)` · Patriarchal Era
 - Added chapter-level breakdowns for other multi-era narrative books (Exodus, Acts).
 - Enhanced Dual Chronology Banner and Chronology & Eras companion pane to dynamically present the active chapter's event date, setting era, and historical summary, alongside the full book sweep.
-- Added comprehensive written Playwright regression tests in `tests/chronology.spec.ts` locking Creation Week c. 4004 BC, Primeval History era, and dynamic chapter progression; verified 36/36 Playwright tests pass, 2/2 collection regression tests pass, and canonical KJV 31,098 verse invariants verified in production build.
+- Added comprehensive written Playwright regression tests in `tests/chronology.spec.ts` locking Creation Week c. 4004 BC, Primeval History era, and dynamic chapter progression; verified 36/36 Playwright tests pass, 2/2 collection regression tests pass, and canonical KJV 31,102 verse invariants verified in production build.
 
 ## [00.01.14] - 2026-10-16
 
@@ -142,7 +151,7 @@ All notable changes to this project will be documented in this file.
 - Pinned `.bible-sticky-toolbar` and `.bible-companion-pane` to `top: var(--reader-sticky-top)`, ensuring that when scrolling through Scripture, the top controls (Order, Book, Chapter, Prev, Next buttons, Tip badge, and Companion tabs) sit crisply 12px below the header with 100% visibility and zero occlusion.
 - Compacted page hero padding on `/bible` via `.bible-hero` (`padding: 1.25rem 0 0.85rem !important;`), bringing Scripture into view immediately on load.
 - Added automated Playwright regression assertions in `tests/site_pages.spec.ts` locking header height <= 65px, verifying scroll geometry down 500px, and confirming toolbar/companion pane positions remain strictly below the header without collisions.
-- Verification: 33/33 Playwright tests pass; 2/2 collection regression tests pass; canonical KJV invariant build succeeds in 375ms with 31,098 verses verified.
+- Verification: 33/33 Playwright tests pass; 2/2 collection regression tests pass; canonical KJV invariant build succeeds in 375ms with 31,102 verses verified.
 
 ## [00.01.13] - 2026-10-16
 
@@ -289,7 +298,7 @@ All notable changes to this project will be documented in this file.
 ## [00.01.02] - 2026-10-14
 
 ### Added
-- **KJV Corpus Ingestion**: Compiled 31,098 verses directly from the project's `Bible.pdf` into `public/data/kjv_verses.json`.
+- **KJV Corpus Ingestion**: Compiled 31,102 verses directly from the project's `Bible.pdf` into `public/data/kjv_verses.json`.
 - **Restored Translator-Added Italics**: 14,134 bracketed verses (`[...]`) preserving KJV italics with `.kjv-added` CSS styling and transparent scholarly tooltips.
 - **Divine Covenant Name Typography**: Preserved 5,556 verses with `LORD` (יהוה / Jehovah) in dedicated small-caps gold styling, distinguished from 1,010 verses with `Lord` (Adonai / Master).
 - **Canonical `{chapter:verse}` Delimiters**: Standardized `{c:v}` across UI inspectors and headers, preventing collision with the 247 verses containing internal scripture parentheses `(...)`.

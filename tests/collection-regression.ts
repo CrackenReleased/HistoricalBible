@@ -33,7 +33,7 @@ test('collection overview counts the loaded records and draws only real book con
     assert.equal(overview.nameEdges, 12323);
     assert.equal(overview.chapters, 1189);
     assert.equal(store.getNetwork().meta.sourceVerseCount, 31102);
-    assert.equal(store.getNetwork().meta.unavailableSiteRefs.length, 4);
+    assert.equal(store.getNetwork().meta.unavailableSiteRefs.length, 0);
     assert.equal(store.getRankedNames('', Infinity).length, 2453, 'no reviewed linked entry may silently disappear from the directory');
     assert.equal(store.getBooks().reduce((sum, book) => sum + book.chapters, 0), 1189);
     assert.equal(store.getReferenceRecords().filter(record => Number(record.v) < 0).length, 1229);
@@ -51,11 +51,10 @@ test('collection overview counts the loaded records and draws only real book con
     assert.equal(store.referenceContains('John.3.14-John.3.18', 'John.3.16'), true);
     assert.equal(store.referenceContains('John.3.14-John.3.18', 'John.3.19'), false);
     assert.equal(store.referenceContains('John.3.14-John.4.2', 'John.4.1'), true);
-    assert.deepEqual(store.expandReference('John.3.14-John.3.18'), ['John.3.14','John.3.15','John.3.16','John.3.17','John.3.18']);
-    assert.equal(store.getVerseByOsis('Rev.22.21'), null, 'do not invent missing canonical text');
-    assert.equal(store.getChapterReferences('rev', 22).at(-1), 'Rev.22.21', 'all 31,102 verse identifiers must be browsable, including unavailable text');
+    assert.equal(store.getVerseByOsis('Rev.22.21')?.text, 'The grace of our Lord Jesus Christ [be] with you all. Amen.', 'canonical Revelation 22:21 text is present');
+    assert.equal(store.getChapterReferences('rev', 22).at(-1), 'Rev.22.21', 'all 31,102 verse identifiers must be browsable');
     assert.equal(store.getBooks().reduce((total, book) => total + Array.from({length: book.chapters}, (_, i) => store.getChapterReferences(book.osis, i + 1).length).reduce((a, b) => a + b, 0), 0), 31102);
-    assert.equal(store.expandReference('Rev.22.20-Rev.22.21').at(-1), 'Rev.22.21', 'unavailable range endpoints must stay visible');
+    assert.equal(store.expandReference('Rev.22.20-Rev.22.21').at(-1), 'Rev.22.21', 'range endpoints must stay visible');
     const realPairs = new Set(links.map(link => [books.indexOf(link.s.split('.')[0]), books.indexOf(link.t.split('.')[0])].sort((a, b) => a - b).join(':')));
     assert.ok(overview.pairs.length > 0 && overview.pairs.length <= 180);
     for (const pair of overview.pairs) assert.ok(realPairs.has(`${pair.from}:${pair.to}`));

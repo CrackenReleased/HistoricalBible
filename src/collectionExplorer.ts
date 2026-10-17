@@ -206,7 +206,7 @@ export class CollectionExplorer {
   }
   private books(): void {
     const overview = localStore.getCollectionOverview();
-    this.body.append(el('p', `66 books · 1,189 chapters · 31,102 KJV verses. The current reader contains ${overview.verses.toLocaleString()} verse records; four source references are unavailable here.`, 'explorer-note'));
+    this.body.append(el('p', `66 books · 1,189 chapters · 31,102 KJV verses. All ${overview.verses.toLocaleString()} canonical verse records are fully indexed and browsable.`, 'explorer-note'));
     const selected = localStore.getBooks().find(book => book.osis === this.book)!;
     const chooser = document.createElement('details'); chooser.className = 'book-chooser'; chooser.open = this.choosingBook || Boolean(this.query);
     chooser.append(el('summary', `${selected.name} · choose a book`));

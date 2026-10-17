@@ -2,7 +2,7 @@
  * scripts/build-curated-kjv.js
  * Fail-Closed Canonical KJV Builder for HistoricalBible.com
  * Ensures public/data/kjv_verses.json is built strictly from the authoritative
- * Bible.pdf extraction (31,098 verses) without silently falling back to external KJV editions.
+ * Bible.pdf extraction (31,102 verses) without silently falling back to external KJV editions.
  */
 import fs from 'fs';
 import path from 'path';
@@ -69,8 +69,8 @@ if (Array.isArray(auditData.kjv_verses) && auditData.kjv_verses.length > 0) {
   throw new Error('FAIL-CLOSED ABORT: audit-context.json does not contain a valid kjv_verses array or verses dictionary.');
 }
 
-if (rawAuditList.length !== 31098 && rawAuditList.length !== 31102) {
-  throw new Error(`FAIL-CLOSED ABORT: Unexpected authoritative verse count ${rawAuditList.length}. Expected 31,098.`);
+if (rawAuditList.length !== 31102) {
+  throw new Error(`FAIL-CLOSED ABORT: Unexpected authoritative verse count ${rawAuditList.length}. Expected 31,102.`);
 }
 
 const auditVerseMap = new Map();

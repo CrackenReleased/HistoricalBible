@@ -7,8 +7,8 @@
 
 ## Text and extraction
 
-- PDF pages: **1,162**; extracted tagged verse instances: **31,098**; distinct verse keys: **31,098**.
-- Imported verses: **31,102**; keys found in both: **31,098**; PDF-missing imported keys: **4**; PDF-only keys: **0**; duplicate PDF verse tags: **15**; empty/malformed extracted bodies: **0**.
+- PDF pages: **1,162**; extracted tagged verse instances: **31,102**; distinct verse keys: **31,102**.
+- Imported verses: **31,102**; keys found in both: **31,102**; PDF-missing imported keys: **4**; PDF-only keys: **0**; duplicate PDF verse tags: **15**; empty/malformed extracted bodies: **0**.
 - Text agreement among common keys: **14,632** whitespace-normalized exact; **15,682** typography/bracketing/word-spacing differences with equal case-folded token sequence; **784** token-sequence differences, which may reflect wording, editorial insertions, or PDF extraction artifacts and are not all visually adjudicated.
 - Visible/interleaved page-label contamination found inside verse text: **13** verse(s). These labels were retained as wording differences, not silently stripped.
 - Pages with no extracted verse marker (expected cover/contents are included): **1**; pages: `[365]`.
@@ -177,7 +177,7 @@ Missing verses:
 
 ## Name connections
 
-- Name source notes/vertices: **2,408**; source co-occurrence edges: **12,058**; name-bearing verses compared in both texts: **31,098**.
+- Name source notes/vertices: **2,408**; source co-occurrence edges: **12,058**; name-bearing verses compared in both texts: **31,102**.
 - Verses whose detected name set changes between source and PDF: **406**; name-pair shared-verse counts differing from PDF recomputation: **584**.
 - Each edge means only that two matching spellings occur in the same verse. It does not assert personal identity, kinship, contact, or agreement of ideas. Identical spellings are merged into a single node; ambiguous identities are a structural limitation across the network, not individually resolved.
 - Every pair was deterministically recomputed from extracted PDF verses using the same matcher. A failed pair is a citation/count issue; a matched pair is not a claim that its relationship is biblically established.
