@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.52] - 2026-10-18
+
+- **Conquest & Judges Chronological Period**:
+  - Added the missing judges period ("Conquest & Judges · c. 1380–1050 BC") into CHRONOLOGICAL_ERAS in src/data/ancientMapData.ts and <option value="judges"> in map.html.
+  - Updated Judges and Ruth in src/data/bibleChronology.ts to eventEraId: 'judges'.
+  - Populates Gideon's route (gideon-judges), Samson (samson-judges), and Ruth (ruth-boaz), allowing users to easily explore the Harod Spring, Moreh, and the 300 Midian rout without guessing eras.
+- **Instant Journey & Story Search**:
+  - Added dedicated Journey Search field (#atlas-journey-search) directly in map.html controls with autocomplete popup and quick-clear button.
+  - Implemented real-time indexing with comprehensive phrase matching, keyword maps, and stop note recognition across all biblical routes.
+  - Prioritizes exact stop names over narrative note mentions. Selecting any result automatically switches era if needed, activates the journey, focuses and animates the map, and opens the matching stop in the detail drawer.
+- **Jacob's Travels: To & From Rachel in Padan-Aram**:
+  - Added jacob-padan-aram (Genesis 28–35) with 9 stops: Beersheba departure, Bethel (Jacob's Ladder), The Well of Haran in Padan-Aram (Meeting Rachel), Mount Gilead covenant heap with Laban, Mahanaim (God's host of angels), Peniel (wrestling for the blessing), Succoth/Shechem, Ephrath/Bethlehem (Rachel's grave pillar), and arrival at Hebron.
+- **Balaam's Donkey & the Oracles of Moab**:
+  - Added balaam-journey (Numbers 22–24) with 6 stops: Pethor on the Euphrates River, Path through the Vineyards (where the donkey speaks and the Angel of the LORD stands with drawn sword), City of Moab on the Arnon, Bamoth-Baal, Top of Pisgah, and Top of Peor (the Star out of Jacob prophecy).
+- **Jonah's 550-Mile Overland Trek to Nineveh**:
+  - Enriched jonah-prophet (Jonah 1–4) with 8 stops and explicit overland path geometry illustrating the immense 550-mile walking journey from where the great fish vomited him onto the Mediterranean shore, through the Hamath gap and Northern Syrian highway, across the Euphrates River ford at Tiphsah, into Nineveh (repenting in sackcloth and ashes), and out to the booth east of the city.
+- **Pane Hierarchy Synchronization**:
+  - Equalized z-index at 620 for sitePane and routeStopPane in src/engine/ancientMap.ts so archaeological discovery markers sit above route stops without being blocked from pointer clicks.
+- **Regression Tests**:
+  - Added Playwright regression tests in tests/map-reading-experience.spec.ts covering period selection, journey search for "gideon", "donkey", "rachel", and "nineveh", stop jumping, and drawer inspection. All 73/73 Playwright tests, 12/12 collection self-checks, and all water crossing audits pass cleanly.
+
 ## [00.01.51] - 2026-10-18
 
 - **'What to show' Menu Sits on Dedicated Line on `/map`**:

@@ -197,6 +197,233 @@ class HistoricalAtlasApp {
       btn.addEventListener('click', () => this.mapCanvas?.jumpToPreset(btn.dataset.preset!));
     });
     document.getElementById('atlas-drawer-close')?.addEventListener('click', () => this.hideDetailDrawer());
+    this.setupJourneySearch();
+  }
+
+  private selectJourneyAndStop(routeId: string, stopIndex = 0): void {
+    const route = BIBLICAL_ROUTES.find(r => r.id === routeId);
+    if (!route || !this.mapCanvas) return;
+
+    const routeEra = CHRONOLOGICAL_ERAS.find(e => e.id !== 'all' && e.activeRouteIds.includes(route.id));
+    const targetEraId = routeEra ? routeEra.id : 'all';
+    const currentEraId = (document.getElementById('atlas-era') as HTMLSelectElement)?.value;
+
+    if (currentEraId !== targetEraId) {
+      this.mapCanvas.setEra(targetEraId);
+    }
+
+    this.chooseJourney(route.id);
+    if (stopIndex >= 0 && stopIndex < route.stops.length) {
+      this.activeStepperStopIndex = stopIndex;
+      this.updateSequence();
+    }
+  }
+
+  private setupJourneySearch(): void {
+    const searchInput = document.getElementById('atlas-journey-search') as HTMLInputElement | null;
+    const clearBtn = document.getElementById('atlas-search-clear') as HTMLButtonElement | null;
+    const resultsContainer = document.getElementById('atlas-search-results');
+    if (!searchInput || !resultsContainer) return;
+
+    const KEYWORD_MAP: Record<string, string> = {
+      'balaam-journey': 'donkey balak speaking donkey ass curse blessing angel sword vineyards moab pisgah peor star of jacob numbers balac',
+      'jacob-padan-aram': 'rachel leah laban well haran padan-aram bethel ladder angels mahanaim peniel penuel wrestling thigh esau reconciliation succoth shechem ephrath bethlehem grave tomb genesis',
+      'jonah-prophet': 'jonah nineveh joppa tarshish fish whale deep tempest sea monster vomit vomited dry land shore 550 miles trek walk walking overland hamath euphrates tiphsah sackcloth repent repentance gourd worm wind',
+      'gideon-judges': 'gideon jerubbaal ophrah threshing winepress midian midianites fleece dew harod spring of harod well of harod 300 lap lapping moreh pitchers torches trumpets jordan fords beth-barah oreb zeeb succoth penuel karkor zebah zalmunna',
+      'samson-judges': 'samson lion timnath lehi jawbone ass gaza gates delilah dagon philistines pillars',
+      'ruth-boaz': 'ruth naomi boaz moab bethlehem barley threshingfloor kinsman redeemer obed david',
+      'exodus-route': 'moses aaron pharaoh plagues passover red sea sinai law commandments tabernacle manna water rock rephidim amalek',
+      'joshua-conquest': 'joshua nun jordan jericho rahab ai ebal gerizim gibeon sun stand still hazor shiloh',
+      'david-exile-throne': 'david goliath bethlehem saul jonathan adullam en-gedi ziklag hebron zion jerusalem ark',
+      'elijah-prophet': 'elijah ahab jezebel carmel prophets baal fire ravens brook cherith zarephath widow chariot of fire horeb',
+      'elisha-ministry': 'elisha mantle jordan naaman leprosy axe head chariot hosts damascus shunammite'
+    };
+
+    const performSearch = () => {
+      const query = searchInput.value.trim().toLowerCase();
+      if (!query) {
+        if (clearBtn) clearBtn.hidden = true;
+        resultsContainer.hidden = true;
+        resultsContainer.innerHTML = '';
+        return;
+      }
+
+      if (clearBtn) clearBtn.hidden = false;
+      const tokens = query.split(/\s+/).filter(Boolean);
+
+      type MatchResult = {
+        route: BiblicalRoute;
+        score: number;
+        matchedStopIndex: number;
+        matchedSnippet: string;
+        eraName: string;
+      };
+
+      const matches: MatchResult[] = [];
+
+      for (const route of BIBLICAL_ROUTES) {
+        let score = 0;
+        let matchedStopIndex = 0;
+        let matchedSnippet = '';
+
+        const nameLower = route.name.toLowerCase();
+        const shortLower = route.shortBanner.toLowerCase();
+        const travelerLower = route.travelerName.toLowerCase();
+        const summaryLower = route.summary.toLowerCase();
+        const scriptureLower = route.scriptureRef.toLowerCase();
+        const keywords = KEYWORD_MAP[route.id] || '';
+
+        // Exact phrase matches
+        if (nameLower.includes(query)) score += 60;
+        if (shortLower.includes(query)) score += 50;
+        if (travelerLower.includes(query)) score += 40;
+        if (keywords.includes(query)) score += 45;
+        if (summaryLower.includes(query)) score += 25;
+        if (scriptureLower.includes(query)) score += 20;
+
+        let hasNameMatch = false;
+        // Check stops
+        for (let i = 0; i < route.stops.length; i++) {
+          const stop = route.stops[i];
+          const sNameLower = stop.name.toLowerCase();
+          const sNoteLower = stop.note.toLowerCase();
+          const sRefLower = stop.scriptureRef.toLowerCase();
+
+          if (sNameLower.includes(query)) {
+            score += 35;
+            if (!hasNameMatch) {
+              matchedStopIndex = i;
+              matchedSnippet = `Stop ${i + 1}: ${stop.name}`;
+              hasNameMatch = true;
+            }
+          }
+          if (sNoteLower.includes(query)) {
+            score += 30;
+            if (!matchedSnippet && !hasNameMatch) {
+              matchedStopIndex = i;
+              const idx = sNoteLower.indexOf(query);
+              const start = Math.max(0, idx - 20);
+              const end = Math.min(stop.note.length, idx + query.length + 40);
+              matchedSnippet = `Stop ${i + 1} (${stop.name}): "…${stop.note.substring(start, end)}…"`;
+            }
+          }
+          if (sRefLower.includes(query)) {
+            score += 15;
+          }
+        }
+
+        // Token matching
+        let allTokensFound = true;
+        for (const token of tokens) {
+          const found = nameLower.includes(token) ||
+            shortLower.includes(token) ||
+            travelerLower.includes(token) ||
+            summaryLower.includes(token) ||
+            keywords.includes(token) ||
+            route.stops.some(s => s.name.toLowerCase().includes(token) || s.note.toLowerCase().includes(token));
+          if (found) {
+            score += 15;
+          } else {
+            allTokensFound = false;
+          }
+        }
+
+        if (allTokensFound && tokens.length > 1) {
+          score += 30;
+        }
+
+        if (score > 0) {
+          const era = CHRONOLOGICAL_ERAS.find(e => e.id !== 'all' && e.activeRouteIds.includes(route.id));
+          matches.push({
+            route,
+            score,
+            matchedStopIndex,
+            matchedSnippet,
+            eraName: era?.name || 'Biblical History'
+          });
+        }
+      }
+
+      matches.sort((a, b) => b.score - a.score);
+      const topMatches = matches.slice(0, 8);
+
+      if (topMatches.length === 0) {
+        resultsContainer.innerHTML = `<div class="atlas-search-empty">No biblical journeys found for "${query}"</div>`;
+      } else {
+        resultsContainer.innerHTML = topMatches.map(m => `
+          <button type="button" class="atlas-search-item" data-route-id="${m.route.id}" data-stop-index="${m.matchedStopIndex}">
+            <div class="atlas-search-item-header">
+              <span class="atlas-search-item-title">${m.route.name}</span>
+              <span class="atlas-search-item-era">${m.eraName}</span>
+            </div>
+            <div class="atlas-search-item-sub">${m.route.travelerName} · ${m.route.stops.length} stops · ${m.route.scriptureRef}</div>
+            ${m.matchedSnippet ? `<div class="atlas-search-item-match">${m.matchedSnippet}</div>` : ''}
+          </button>
+        `).join('');
+
+        resultsContainer.querySelectorAll<HTMLButtonElement>('.atlas-search-item').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const rId = btn.dataset.routeId!;
+            const sIdx = Number(btn.dataset.stopIndex || '0');
+            this.selectJourneyAndStop(rId, sIdx);
+            resultsContainer.hidden = true;
+          });
+        });
+      }
+
+      resultsContainer.hidden = false;
+    };
+
+    searchInput.addEventListener('input', performSearch);
+    searchInput.addEventListener('focus', () => {
+      if (searchInput.value.trim()) performSearch();
+    });
+
+    clearBtn?.addEventListener('click', () => {
+      searchInput.value = '';
+      clearBtn.hidden = true;
+      resultsContainer.hidden = true;
+      resultsContainer.innerHTML = '';
+      searchInput.focus();
+    });
+
+    searchInput.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        resultsContainer.hidden = true;
+      } else if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        const first = resultsContainer.querySelector<HTMLButtonElement>('.atlas-search-item');
+        first?.focus();
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        const first = resultsContainer.querySelector<HTMLButtonElement>('.atlas-search-item');
+        first?.click();
+      }
+    });
+
+    resultsContainer.addEventListener('keydown', event => {
+      const target = event.target as HTMLElement;
+      if (!target.classList.contains('atlas-search-item')) return;
+
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        (target.nextElementSibling as HTMLElement | null)?.focus();
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        const prev = target.previousElementSibling as HTMLElement | null;
+        if (prev) prev.focus();
+        else searchInput.focus();
+      } else if (event.key === 'Escape') {
+        resultsContainer.hidden = true;
+        searchInput.focus();
+      }
+    });
+
+    document.addEventListener('click', event => {
+      if (!searchInput.contains(event.target as Node) && !resultsContainer.contains(event.target as Node)) {
+        resultsContainer.hidden = true;
+      }
+    });
   }
 
   private syncLayers(): void {

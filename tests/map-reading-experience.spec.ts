@@ -264,4 +264,97 @@ test('what to show is on its own line, map fills screen generously, and leaflet 
   await page.locator('.leaflet-control-attribution').screenshot({ path: 'test-results/leaflet-attribution.png' });
 });
 
+test('judges era and instant journey search allow jumping between Gideon, Balaam donkey, Jacob Rachel, and Jonah Nineveh trek', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/map');
+
+  // 1. Period dropdown includes Conquest & Judges
+  const eraSelect = page.locator('#atlas-era');
+  await expect(eraSelect.locator('option[value="judges"]')).toHaveText('Conquest & Judges · c. 1380–1050 BC');
+
+  // Selecting judges period populates Gideon's path
+  await eraSelect.selectOption('judges');
+  const journeySelect = page.locator('#atlas-journey');
+  await expect(journeySelect).toBeVisible();
+  const options = await journeySelect.locator('option').allInnerTexts();
+  expect(options.some(opt => opt.includes('Gideon'))).toBe(true);
+  expect(options.some(opt => opt.includes('Samson'))).toBe(true);
+  expect(options.some(opt => opt.includes('Ruth'))).toBe(true);
+
+  // Focus Gideon's route
+  await journeySelect.selectOption('gideon-judges');
+  await expect(page.locator('#chrono-headline')).toContainText('Gideon');
+  await expect(page.locator('#drawer-title')).toContainText('Ophrah');
+
+  // Step slider to Spring of Harod
+  const slider = page.locator('#atlas-sequence-slider');
+  await slider.focus();
+  await slider.press('ArrowRight');
+  await expect(page.locator('#drawer-title')).toContainText('Harod');
+  await expect(page.locator('#drawer-desc')).toContainText('300');
+
+  // 2. Journey search for "donkey" finds Balaam's journey and speaking donkey stop
+  const searchInput = page.locator('#atlas-journey-search');
+  const searchResults = page.locator('#atlas-search-results');
+  await searchInput.fill('donkey');
+  await expect(searchResults).toBeVisible();
+  await page.screenshot({ path: 'test-results/atlas-journey-search-popup.png' });
+  const donkeyResult = searchResults.locator('.atlas-search-item').first();
+  await expect(donkeyResult).toContainText("Balaam's Donkey");
+  await expect(donkeyResult).toContainText('Donkey Speaks');
+  await donkeyResult.click();
+  await expect(searchResults).toBeHidden();
+
+  // Route switches to Balaam and drawer focuses the vineyard path
+  await expect(page.locator('#chrono-headline')).toContainText("Balaam's Donkey");
+  await expect(page.locator('#drawer-title')).toContainText('Donkey Speaks');
+  await expect(page.locator('#drawer-desc')).toContainText('Angel of the LORD');
+
+  // 3. Journey search for "rachel" finds Jacob's travels to and from Padan-Aram
+  await searchInput.fill('rachel');
+  await expect(searchResults).toBeVisible();
+  const rachelResult = searchResults.locator('.atlas-search-item').first();
+  await expect(rachelResult).toContainText('Rachel');
+  await rachelResult.click();
+  await expect(searchResults).toBeHidden();
+
+  // Route switches to Jacob's journey to Rachel
+  await expect(page.locator('#chrono-headline')).toContainText('Rachel');
+  await expect(page.locator('#drawer-title')).toContainText('Haran');
+  await expect(page.locator('#drawer-desc')).toContainText('Laban');
+
+  // 4. Journey search for "nineveh" finds Jonah's 550-mile trek
+  await searchInput.fill('nineveh');
+  await expect(searchResults).toBeVisible();
+  const jonahResult = searchResults.locator('.atlas-search-item').first();
+  await expect(jonahResult).toContainText('Jonah');
+  await expect(jonahResult).toContainText('550-Mile Trek');
+  await jonahResult.click();
+  await expect(searchResults).toBeHidden();
+
+  // Route switches to Jonah and drawer reveals the great Assyrian capital / overland trek
+  await expect(page.locator('#chrono-headline')).toContainText('Jonah');
+  await expect(page.locator('#drawer-title')).toContainText('Nineveh');
+  await expect(page.locator('#drawer-desc')).toContainText('120,000');
+
+  // Step backward to Mediterranean Shore vomit site
+  await slider.focus();
+  await slider.press('ArrowLeft'); // Euphrates River Ford
+  await slider.press('ArrowLeft'); // Hamath Gap
+  await slider.press('ArrowLeft'); // Mediterranean Shore (Vomited onto Dry Land)
+  await expect(page.locator('#drawer-title')).toContainText('Mediterranean Shore');
+  await expect(page.locator('#drawer-desc')).toContainText('550 miles');
+
+  // 5. Clear search button resets search
+  await searchInput.fill('test');
+  const clearBtn = page.locator('#atlas-search-clear');
+  await expect(clearBtn).toBeVisible();
+  await clearBtn.click();
+  await expect(searchInput).toHaveValue('');
+  await expect(clearBtn).toBeHidden();
+  await expect(searchResults).toBeHidden();
+
+  await page.screenshot({ path: 'test-results/atlas-journey-search-complete.png' });
+});
+
 

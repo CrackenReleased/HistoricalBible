@@ -1,3 +1,32 @@
+## 2026-10-18 03:00:00 — Conquest & Judges Period Selection, Instant Journey Search, Jacob & Rachel, Balaam's Donkey, and Jonah's 550-Mile Nineveh Trek (v00.01.52)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested:
+    1. "I was wanting to find Gideon's path... but I don't see it... We are still not granular enough in these selections."
+    2. "Also, we should implement a search so I could jump between balaam's donkey, to Jacobs travels to and from Rachel, and then look up Jonah's travels. I mean the walk from the shore where he was spat up on to where he had to walk to ninevah was a LONG trip that most christians don't have any perspective on."
+  - Root Cause & Diagnosis:
+    1. In `src/data/ancientMapData.ts`, `gideon-judges` was fully defined with Ophrah, Harod Spring, Moreh, Beth-barah, and Karkor, but it was invisible in the period dropdown because `CHRONOLOGICAL_ERAS` omitted the Conquest & Judges era, jumping straight from `exodus` (c. 1446 BC) to `united_monarchy` (c. 1000 BC). `map.html` had no `<option value="judges">`.
+    2. The atlas lacked an instant journey & story search bar to quickly jump to specific biblical figures, stories, or waypoints without needing to know which chronological era they belonged to.
+    3. Balaam's encounter with the speaking donkey and the Angel of the LORD in Moab (Numbers 22–24) was not yet modeled as a dedicated route in `BIBLICAL_ROUTES`.
+    4. Jacob's 20-year journey to Padan-Aram to meet Rachel at the well in Haran and return via Mount Gilead and Peniel (Genesis 28–35) was missing a dedicated route.
+    5. Jonah's prophetic route (`jonah-prophet`) jumped directly from the deep Mediterranean sea to Nineveh, omitting the historic ~550-mile overland walking journey from the Mediterranean shore vomit site through the Syrian pass and across the Euphrates river ford to Nineveh.
+  - Decision Point & Implementation:
+    1. Added `judges` ("Conquest & Judges · c. 1380–1050 BC") to `CHRONOLOGICAL_ERAS` in `src/data/ancientMapData.ts` and `<option value="judges">` in `map.html`. Updated `Judges` and `Ruth` in `src/data/bibleChronology.ts` to `eventEraId: 'judges'`.
+    2. Added `jacob-padan-aram` ("Jacob's Travels: To & From Rachel in Padan-Aram", Genesis 28–35) with 9 stops: Beersheba, Bethel (Jacob's Ladder), The Well of Haran in Padan-Aram (Meeting Rachel), Mount Gilead (Heap of Galeed), Mahanaim (Angels), Peniel (Wrestling for Blessing), Succoth/Shechem, Ephrath/Bethlehem (Rachel's Grave Pillar), and Hebron.
+    3. Added `balaam-journey` ("Balaam's Donkey & the Oracles of Moab", Numbers 22–24) with 6 stops: Pethor on the Euphrates, Path through the Vineyards (Donkey Speaks & the Angel with drawn sword), City of Moab on Arnon, Bamoth-Baal, Top of Pisgah, and Top of Peor (Star of Jacob prophecy).
+    4. Enriched `jonah-prophet` with 8 detailed stops and explicit overland `path` geometry capturing the 550-mile walking trek: Gath-hepher, Joppa, The Deep, Mediterranean Shore (Vomited onto Dry Land), Hamath Gap & Northern Syrian Highway, Euphrates River Ford at Tiphsah, Nineveh (Repentance of 120,000 in sackcloth and ashes), and East of Nineveh (The Gourd & East Wind).
+    5. Added Instant Journey Search in `map.html` (`#atlas-journey-search`, `#atlas-search-results`, `#atlas-search-clear`) and styled in `src/interact.css` with deep green/obsidian theme.
+    6. Wired `setupJourneySearch()` and `selectJourneyAndStop()` in `src/atlasApp.ts` with phrase matching, keyword maps, and prioritized stop name matches over note mentions. Selecting any search result automatically switches era if necessary, focuses the route, animates the map, and opens the matching stop in the detail drawer.
+    7. Synchronized pane hierarchy in `src/engine/ancientMap.ts` so `sitePane` (620) and `routeStopPane` (620) satisfy stacking order without blocking user clicks on archaeological finds (Mesha Stele).
+    8. Added comprehensive Playwright regression test in `tests/map-reading-experience.spec.ts` testing:
+       - Selection of Conquest & Judges period populating Gideon, Samson, and Ruth.
+       - Stepping to Spring of Harod (300 men).
+       - Searching "donkey" focusing Balaam's speaking donkey and Angel.
+       - Searching "rachel" focusing Jacob at Haran well.
+       - Searching "nineveh" focusing Jonah's 550-mile trek to Nineveh and stepping back to Mediterranean shore vomit site.
+       - Search clear and keyboard interactions.
+    9. All 73/73 Playwright tests, 12/12 collection self-checks, and all water crossing audits pass cleanly.
+
 ## 2026-10-18 01:58:00 — 'What to show' on Dedicated Line, Expansive Map Canvas Sizing, and Ukrainian Flag Removed (v00.01.51)
 
 - User Request & Direct Root-Cause Diagnosis:

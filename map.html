@@ -68,6 +68,7 @@
             <option value="">Begin your exploration…</option>
             <option value="patriarchs">Patriarchs · c. 2100 BC</option>
             <option value="exodus">Exodus &amp; Law · c. 1446 BC</option>
+            <option value="judges">Conquest &amp; Judges · c. 1380–1050 BC</option>
             <option value="united_monarchy">United Monarchy · c. 1000 BC</option>
             <option value="divided_monarchy_prophets">Divided Kingdom · c. 930–722 BC</option>
             <option value="assyrian_siege">Assyrian Siege · 722–701 BC</option>
@@ -81,6 +82,14 @@
         <div class="atlas-field" id="atlas-journey-field" hidden>
           <label for="atlas-journey">Choose a journey</label>
           <select id="atlas-journey"></select>
+        </div>
+        <div class="atlas-field atlas-search-field">
+          <label for="atlas-journey-search">Search journeys &amp; stories</label>
+          <div class="atlas-search-wrapper">
+            <input type="search" id="atlas-journey-search" placeholder="Search (e.g. Gideon, donkey, Rachel, Jonah, Nineveh)…" autocomplete="off" spellcheck="false" />
+            <button type="button" id="atlas-search-clear" class="atlas-search-clear-btn" aria-label="Clear search" hidden>&times;</button>
+          </div>
+          <div id="atlas-search-results" class="atlas-search-results" hidden role="listbox" aria-label="Search results"></div>
         </div>
         <details class="atlas-disclosure" id="atlas-visibility">
           <summary>What to show</summary>

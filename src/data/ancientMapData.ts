@@ -1642,6 +1642,93 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     ]
   },
   {
+    id: 'jacob-padan-aram',
+    name: "Jacob's Travels: To & From Rachel in Padan-Aram",
+    shortBanner: "🌾 JACOB'S JOURNEY: RACHEL & PADAN-ARAM (c. 1929 BC)",
+    travelerName: "Patriarch Jacob (Israel)",
+    figureId: 'abraham',
+    color: '#f59e0b',
+    dateRange: 'c. 1929 – 1899 BC (Genesis Era)',
+    scriptureRef: 'GENESIS {28:10}–{35:29}',
+    scriptureOsis: 'GEN.28.10',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Fleeing Esau from Beersheba, Jacob dreams of the ladder at Bethel, reaches Haran where he meets Rachel at the well, serves 20 years for Rachel, Leah, and his flocks, departs secretly, makes covenant with Laban at Mount Gilead, wrestles with the Angel at Peniel (where he is named Israel), reconciles with Esau, and buries Rachel at Bethlehem on the way to Hebron.',
+    stops: [
+      {
+        name: 'Beersheba (Departure)',
+        coords: { lat: 31.245, lng: 34.798 },
+        dateLabel: 'c. 1929 BC',
+        scriptureRef: 'GENESIS {28:10}',
+        scriptureOsis: 'GEN.28.10',
+        note: 'Jacob departs Beersheba after receiving Isaac\'s blessing, directed to flee from Esau and take a wife from the daughters of Laban his mother\'s brother in Padan-Aram.'
+      },
+      {
+        name: 'Bethel / Luz (Jacob\'s Ladder)',
+        coords: { lat: 31.930, lng: 35.220 },
+        dateLabel: 'c. 1929 BC',
+        scriptureRef: 'GENESIS {28:11}–{28:22}',
+        scriptureOsis: 'GEN.28.12',
+        note: 'Takes of the stones of that place for his pillow; dreams of a ladder reaching to heaven with angels of God ascending and descending; the LORD confirms the Abrahamic covenant; Jacob names the place Bethel ("House of God").'
+      },
+      {
+        name: 'The Well of Haran in Padan-Aram (Meeting Rachel)',
+        coords: { lat: 36.865, lng: 39.031 },
+        dateLabel: 'c. 1929 – 1909 BC',
+        scriptureRef: 'GENESIS {29:1}–{30:43}',
+        scriptureOsis: 'GEN.29.10',
+        note: 'Jacob rolls the heavy stone from the well\'s mouth to water Rachel\'s sheep; weeps and kisses her; serves Laban seven years for Rachel: "they seemed unto him but a few days, for the love he had to her." After Leah is given, serves another seven years for Rachel, and six years for cattle.'
+      },
+      {
+        name: 'Mount Gilead / Mizpah (Covenant Heap of Galeed)',
+        coords: { lat: 32.250, lng: 35.850 },
+        dateLabel: 'c. 1909 BC',
+        scriptureRef: 'GENESIS {31:21}–{31:55}',
+        scriptureOsis: 'GEN.31.48',
+        note: 'Laban pursues Jacob seven days into Mount Gilead; warned by God in a dream not to harm Jacob. They raise a pillar and heap of witness: "The LORD watch between me and thee, when we are absent one from another."'
+      },
+      {
+        name: 'Mahanaim (God\'s Host of Angels)',
+        coords: { lat: 32.320, lng: 35.650 },
+        dateLabel: 'c. 1909 BC',
+        scriptureRef: 'GENESIS {32:1}–{32:2}',
+        scriptureOsis: 'GEN.32.2',
+        note: 'The angels of God meet Jacob as he returns toward Canaan: "This is God\'s host: and he called the name of that place Mahanaim" ("Two Camps").'
+      },
+      {
+        name: 'Peniel / Ford of the Jabbok (Wrestling for the Blessing)',
+        coords: { lat: 32.192, lng: 35.702 },
+        dateLabel: 'c. 1909 BC',
+        scriptureRef: 'GENESIS {32:22}–{32:32}',
+        scriptureOsis: 'GEN.32.28',
+        note: 'Jacob sends his two wives, two handmaids, eleven sons, and all possessions across the Jabbok. Left alone, a Man wrestles with him until daybreak; his thigh is out of joint; he cries, "I will not let thee go, except thou bless me." He is named ISRAEL ("Prince with God").'
+      },
+      {
+        name: 'Succoth & Shechem (Reconciliation with Esau)',
+        coords: { lat: 32.213, lng: 35.285 },
+        dateLabel: 'c. 1909 BC',
+        scriptureRef: 'GENESIS {33:1}–{33:20}',
+        scriptureOsis: 'GEN.33.4',
+        note: 'Esau runs to meet him, embraces him, falls on his neck, and weeps. Jacob builds booths at Succoth and buys a parcel of a field at Shechem, erecting the altar El-Elohe-Israel ("God, the God of Israel").'
+      },
+      {
+        name: 'Ephrath / Bethlehem (Pillar at Rachel\'s Grave)',
+        coords: { lat: 31.705, lng: 35.204 },
+        dateLabel: 'c. 1900 BC',
+        scriptureRef: 'GENESIS {35:16}–{35:20}',
+        scriptureOsis: 'GEN.35.19',
+        note: 'Journeying from Bethel, Rachel enters hard labor and gives birth to Benjamin ("Son of the right hand"), dying as her soul was departing. Jacob buries Rachel in the way to Ephrath (Bethlehem) and sets a pillar upon her grave that stands throughout biblical history.'
+      },
+      {
+        name: 'Hebron / Mamre (Arrival to Father Isaac)',
+        coords: { lat: 31.530, lng: 35.100 },
+        dateLabel: 'c. 1899 BC',
+        scriptureRef: 'GENESIS {35:27}–{35:29}',
+        scriptureOsis: 'GEN.35.27',
+        note: 'Jacob arrives safely at Mamre unto Kirjath-arba (Hebron) where Abraham and Isaac sojourned, and with Esau buries his father Isaac at age 180.'
+      }
+    ]
+  },
+  {
     id: 'jacob-joseph-egypt',
     name: "Jacob's Sojourn & Joseph in Egypt",
     shortBanner: "🌾 JACOB & JOSEPH TO EGYPT (c. 1915–1876 BC)",
@@ -1781,6 +1868,69 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
         scriptureRef: 'JOSHUA {18:1}–{18:10}',
         scriptureOsis: 'JOS.18.1',
         note: 'The whole congregation of Israel assembles at Shiloh and sets up the Tabernacle of the Congregation after the land is subdued before them.'
+      }
+    ]
+  },
+  {
+    id: 'balaam-journey',
+    name: "Balaam's Donkey & the Oracles of Moab",
+    shortBanner: "🐴 BALAAM'S DONKEY & ORACLES (c. 1407 BC)",
+    travelerName: "Balaam Son of Beor & King Balak",
+    figureId: 'moses',
+    color: '#ec4899',
+    dateRange: 'c. 1407 BC (Wilderness Encampment in Moab)',
+    scriptureRef: 'NUMBERS {22:1}–{24:25}, {31:8}, 2 PETER {2:15}–{2:16}',
+    scriptureOsis: 'NUM.22.28',
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Summoned by Balak king of Moab from Pethor by the Euphrates to curse Israel encamped on the plains of Moab, Balaam saddles his donkey. The Angel of the LORD with drawn sword opposes him in the vineyards; God opens the mouth of the donkey to speak; and from the heights of Pisgah and Peor, Balaam can only utter blessings and prophecies of the Star out of Jacob.',
+    stops: [
+      {
+        name: 'Pethor on the Euphrates River (Mesopotamia)',
+        coords: { lat: 36.635, lng: 38.252 },
+        dateLabel: 'c. 1407 BC',
+        scriptureRef: 'NUMBERS {22:5}',
+        scriptureOsis: 'NUM.22.5',
+        note: 'Balak sends messengers to Balaam the son of Beor at Pethor, which is by the river of the land of the children of his people, pleading: "Behold, there is a people come out from Egypt... come now therefore, I pray thee, curse me this people."'
+      },
+      {
+        name: 'Path Through the Vineyards (Donkey Speaks & the Angel)',
+        coords: { lat: 31.950, lng: 35.800 },
+        dateLabel: 'c. 1407 BC',
+        scriptureRef: 'NUMBERS {22:21}–{22:35}, 2 PETER {2:16}',
+        scriptureOsis: 'NUM.22.28',
+        note: 'Balaam rides his donkey with two servants. The Angel of the LORD stands in a narrow path between the vineyards with a sword drawn in His hand. The donkey crushes Balaam\'s foot against the wall and falls down under him; Balaam smites her with a staff until the LORD opens the mouth of the donkey: "What have I done unto thee, that thou hast smitten me these three times?" The LORD then opens Balaam\'s eyes to see the Angel.'
+      },
+      {
+        name: 'City of Moab on Border of Arnon (Meeting Balak)',
+        coords: { lat: 31.450, lng: 35.780 },
+        dateLabel: 'c. 1407 BC',
+        scriptureRef: 'NUMBERS {22:36}–{22:40}',
+        scriptureOsis: 'NUM.22.36',
+        note: 'King Balak goes out to meet Balaam unto a city of Moab on the border of Arnon, in the utmost coast; Balaam warns Balak: "The word that God putteth in my mouth, that shall I speak."'
+      },
+      {
+        name: 'Bamoth-Baal (First Oracle & High Places of Baal)',
+        coords: { lat: 31.650, lng: 35.750 },
+        dateLabel: 'c. 1407 BC',
+        scriptureRef: 'NUMBERS {22:41}–{23:12}',
+        scriptureOsis: 'NUM.23.8',
+        note: 'Balak brings Balaam up into the high places of Baal to see the utmost part of Israel; they build seven altars; Balaam utters his first oracle: "How shall I curse, whom God hath not cursed? ... Who can count the dust of Jacob, and the number of the fourth part of Israel?"'
+      },
+      {
+        name: 'Top of Pisgah / Field of Zophim (Second Oracle)',
+        coords: { lat: 31.765, lng: 35.720 },
+        dateLabel: 'c. 1407 BC',
+        scriptureRef: 'NUMBERS {23:13}–{23:26}',
+        scriptureOsis: 'NUM.23.19',
+        note: 'Taken to the top of Pisgah, Balaam builds seven altars and prophesies: "God is not a man, that he should lie; neither the son of man, that he should repent... The LORD his God is with him, and the shout of a king is among them."'
+      },
+      {
+        name: 'Top of Peor Looking Toward Jeshimon (The Star of Jacob)',
+        coords: { lat: 31.810, lng: 35.710 },
+        dateLabel: 'c. 1407 BC',
+        scriptureRef: 'NUMBERS {23:27}–{24:25}',
+        scriptureOsis: 'NUM.24.17',
+        note: 'Looking down upon Israel abiding in their tents by tribes, the Spirit of God comes upon him: "How goodly are thy tents, O Jacob, and thy tabernacles, O Israel! ... There shall come a Star out of Jacob, and a Sceptre shall rise out of Israel."'
       }
     ]
   },
@@ -3814,8 +3964,8 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
   },
   {
     id: 'jonah-prophet',
-    name: "Prophet Jonah: Joppa, the Deep & the Great City of Nineveh",
-    shortBanner: "🐋 JONAH: JOPPA, THE DEEP & NINEVEH (c. 760 BC)",
+    name: "Prophet Jonah: Joppa, the Deep & 550-Mile Trek to Nineveh",
+    shortBanner: "🐋 JONAH: JOPPA, SHORE TO NINEVEH TREK (c. 760 BC)",
     travelerName: "Prophet Jonah Son of Amittai",
     figureId: 'hezekiah',
     color: '#0ea5e9',
@@ -3823,7 +3973,21 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     scriptureRef: 'JONAH {1:1}–{4:11}, 2 KINGS {14:25}, MATTHEW {12:39}–{12:41}',
     scriptureOsis: 'JON.1.1',
     evidenceClass: 'SCRIPTURE_TEXT',
-    summary: 'Fleeing from the presence of the LORD from Joppa toward Tarshish, Jonah is cast into the raging Mediterranean, preserved three days and three nights in the great fish, preaches repentance to 120,000 souls in Nineveh, and learns God\'s universal mercy through the withered gourd.',
+    summary: 'Fleeing the LORD from Joppa toward Tarshish, Jonah is cast into the Mediterranean, preserved three days in the great fish, and vomited onto dry land. He then undertakes an arduous 550-mile overland walking trek across Syria and the Euphrates to Nineveh, where 120,000 repent in sackcloth.',
+    path: [
+      { lat: 32.741, lng: 35.328 }, // Gath-hepher
+      { lat: 32.054, lng: 34.752 }, // Joppa
+      { lat: 33.500, lng: 33.000 }, // Deep Mediterranean
+      { lat: 33.563, lng: 35.371 }, // Mediterranean Shore (Sidon / Zarephath coast)
+      { lat: 34.430, lng: 35.840 }, // Tripoli / Syrian coastal route
+      { lat: 34.730, lng: 36.710 }, // Homs Gap
+      { lat: 35.132, lng: 36.756 }, // Hamath on Orontes
+      { lat: 35.950, lng: 39.050 }, // Tiphsah (Euphrates River crossing)
+      { lat: 36.865, lng: 40.070 }, // Upper Mesopotamian steppe / Khabur basin
+      { lat: 36.800, lng: 42.000 }, // Approach to Tigris basin
+      { lat: 36.360, lng: 43.150 }, // Nineveh
+      { lat: 36.380, lng: 43.250 }  // East of Nineveh
+    ],
     stops: [
       {
         name: 'Gath-hepher in Galilee (Zebulun)',
@@ -3842,20 +4006,44 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
         note: 'Jonah goes down to Joppa, pays the fare of a ship going to Tarshish (Spain), and sails to flee from the presence of the LORD.'
       },
       {
-        name: 'The Deep (Eastern Mediterranean Sea)',
+        name: 'The Deep (Eastern Mediterranean Tempest)',
         coords: { lat: 33.500, lng: 33.000 },
         dateLabel: 'c. 760 BC',
-        scriptureRef: 'JONAH {1:4}–{2:10}, MATTHEW {12:40}',
+        scriptureRef: 'JONAH {1:4}–{2:9}, MATTHEW {12:40}',
         scriptureOsis: 'JON.2.1',
-        note: 'A mighty tempest strikes; lots fall upon Jonah; cast into the sea which ceases from raging; swallowed by a prepared great fish; prays from the belly of hell; vomited upon dry land after three days and three nights (the sign of Jonah).'
+        note: 'A mighty tempest strikes; lots fall upon Jonah; cast into the sea which ceases from raging; swallowed by a prepared great fish; prays from the belly of hell during three days and three nights (the sign of Jonah).'
+      },
+      {
+        name: 'Mediterranean Shore (Vomited onto Dry Land)',
+        coords: { lat: 33.563, lng: 35.371 },
+        dateLabel: 'c. 760 BC',
+        scriptureRef: 'JONAH {2:10}–{3:2}',
+        scriptureOsis: 'JON.2.10',
+        note: 'The LORD speaks unto the fish, and it vomits out Jonah upon dry land. Stranded on the Phoenician shore over 550 miles (c. 900 km) from Nineveh, Jonah receives the word of the LORD the second time: "Arise, go unto Nineveh, that great city, and preach unto it."'
+      },
+      {
+        name: 'Hamath Gap & Northern Syrian Highway',
+        coords: { lat: 35.132, lng: 36.756 },
+        dateLabel: 'c. 760 BC (Overland Trek)',
+        scriptureRef: 'JONAH {3:3}',
+        scriptureOsis: 'JON.3.3',
+        note: 'Jonah begins the grueling overland walking journey through the Homs-Hamath gap along ancient caravan highways, ascending toward upper Syria and the Syrian desert border—a month of arduous foot travel.'
+      },
+      {
+        name: 'Euphrates River Ford at Tiphsah',
+        coords: { lat: 35.950, lng: 39.050 },
+        dateLabel: 'c. 760 BC (Mesopotamian Crossing)',
+        scriptureRef: 'JONAH {3:3}',
+        scriptureOsis: 'JON.3.3',
+        note: 'Fording the formidable Euphrates River into Upper Mesopotamia (Aram-Naharaim), traversing hundreds of miles of arid desert plateau toward the Tigris—a total walking expedition exceeding 550 miles that took weeks of stamina and obedience.'
       },
       {
         name: 'Nineveh (The Great Assyrian Capital)',
         coords: { lat: 36.360, lng: 43.150 },
         dateLabel: 'c. 760 BC',
-        scriptureRef: 'JONAH {3:1}–{3:10}',
+        scriptureRef: 'JONAH {3:3}–{3:10}',
         scriptureOsis: 'JON.3.4',
-        note: 'Enters a city of three days\' journey; preaches: "Yet forty days, and Nineveh shall be overthrown!" The king of Nineveh arises from his throne, covers himself with sackcloth, and sits in ashes; all people and cattle fast; God repents of the evil.'
+        note: 'Arriving at last, Jonah enters Nineveh, a metropolis of three days\' journey; preaches: "Yet forty days, and Nineveh shall be overthrown!" The king of Nineveh arises from his throne, covers himself with sackcloth, and sits in ashes; all 120,000 citizens and cattle fast; God repents of the evil.'
       },
       {
         name: 'East of Nineveh (The Gourd & Vehement East Wind)',
@@ -5180,28 +5368,11 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     headline: 'The Call of Abraham · Jacob & Joseph in Egypt',
     historicalSummary: 'God calls Abram out of Ur of the Chaldees, through Haran, into Canaan, and preserves Israel through Jacob and Joseph in Egypt. The Middle Kingdom of Egypt and Old Babylon rule the wider ancient world.',
     activeRouteIds: [
-      'gideon-judges',
-      'samson-judges',
-      'ruth-boaz',
-      'samuel-circuit',
-      'saul-reign',
-      'solomon-glory',
-      'elijah-prophet',
-      'elisha-ministry',
-      'amos-prophet',
-      'hosea-prophet',
-      'jonah-prophet',
-      'isaiah-ministry',
-      'jeremiah-ministry',
-      'daniel-exile',
-      'ezekiel-exile',
-      'esther-mordecai',
-      'ezra-journey',
-      'nehemiah-walls',
-      'stephen-philip-deacons',
-      'paul-conversion-early',
-      'barnabas-mark',
-      'job-land-of-uz','abraham-call', 'jacob-joseph-egypt'],
+      'abraham-call',
+      'jacob-padan-aram',
+      'jacob-joseph-egypt',
+      'job-land-of-uz'
+    ],
     activeSiteIds: ['nabonidus-cylinder'],
     activeFigureIds: ['abraham']
   },
@@ -5218,11 +5389,35 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     headline: 'The Deliverance from Egypt · Mount Sinai & Conquest of Canaan',
     historicalSummary: "The LORD judges Egypt's gods with 10 plagues, delivers Israel through the Red Sea, gives His Holy Law at Mount Sinai, and brings Israel across the Jordan under Joshua.",
     activeRouteIds: [
-      'gideon-judges',
-      'samson-judges',
-      'ruth-boaz','exodus-route', 'joshua-conquest'],
+      'exodus-route',
+      'balaam-journey',
+      'joshua-conquest'
+    ],
     activeSiteIds: ['merneptah-stele'],
     activeFigureIds: ['moses']
+  },
+  {
+    id: 'judges',
+    name: 'Conquest & Judges',
+    yearLabel: 'c. 1380 – 1050 BC',
+    startYear: -1380,
+    endYear: -1050,
+    rulingEmpireId: 'egypt',
+    additionalRegionIds: [
+      'old_babylon', 'kush_nubia', 'china_zhou', 'scythia_steppes', 'kingdom_sheba',
+      'moab_kingdom', 'philistia', 'edom_kingdom'
+    ],
+    focusCenter: { lat: 32.2, lng: 35.3 },
+    focusZoom: 7,
+    headline: 'The Era of the Judges · Deliverance & Cycles of Faith',
+    historicalSummary: "In those days there was no king in Israel: every man did that which was right in his own eyes. God raises up deliverers including Deborah, Gideon and the 300 at the Harod Spring, Samson against the Philistines, and Ruth's redemption in Bethlehem.",
+    activeRouteIds: [
+      'gideon-judges',
+      'samson-judges',
+      'ruth-boaz'
+    ],
+    activeSiteIds: ['merneptah-stele'],
+    activeFigureIds: ['moses', 'david']
   },
   {
     id: 'united_monarchy',
@@ -5449,9 +5644,11 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     historicalSummary: 'All surviving archaeological discoveries, imperial extents, and biblical routes across the known ancient world from the Atlantic to China.',
     activeRouteIds: [
       'abraham-call',
+      'jacob-padan-aram',
       'job-land-of-uz',
       'jacob-joseph-egypt',
       'exodus-route',
+      'balaam-journey',
       'joshua-conquest',
       'gideon-judges',
       'samson-judges',
@@ -5535,6 +5732,18 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     summary: 'Abram\'s covenant journey from Ur of the Chaldees through Haran to Shechem, Bethel, Hebron, Egypt, Beersheba, and Mount Moriah.'
   },
   {
+    id: 'filter-jacob-padan-aram',
+    eraIds: ['patriarchs', 'all'],
+    categoryLabel: 'Patriarchs',
+    label: '🌾 Jacob: Rachel, Haran & Peniel',
+    dateLabel: 'c. 1929–1899 BC',
+    routeIds: ['jacob-padan-aram'],
+    focusCenter: { lat: 33.5, lng: 37.0 },
+    focusZoom: 6,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Jacob\'s flight to Haran, meeting Rachel at the well, 20-year service, covenant heap with Laban at Mount Gilead, wrestling at Peniel, and Rachel\'s tomb at Bethlehem.'
+  },
+  {
     id: 'filter-jacob-joseph',
     eraIds: ['patriarchs', 'all'],
     categoryLabel: 'Patriarchs',
@@ -5558,6 +5767,18 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     focusZoom: 7,
     evidenceClass: 'SCRIPTURE_TEXT',
     summary: 'Israel\'s departure from Rameses through Succoth, the Red Sea crossing, Marah, Elim, and Rephidim to the giving of the Law at Mount Sinai.'
+  },
+  {
+    id: 'filter-balaam-journey',
+    eraIds: ['exodus', 'all'],
+    categoryLabel: 'Exodus & Wilderness',
+    label: '🐴 Balaam: The Speaking Donkey & Oracles of Moab',
+    dateLabel: 'c. 1407 BC',
+    routeIds: ['balaam-journey'],
+    focusCenter: { lat: 33.0, lng: 36.8 },
+    focusZoom: 6,
+    evidenceClass: 'SCRIPTURE_TEXT',
+    summary: 'Balaam summoned from Pethor on the Euphrates to Moab; the speaking donkey and Angel with drawn sword; and the prophecies of the Star out of Jacob on Pisgah and Peor.'
   },
   {
     id: 'filter-joshua-conquest',
@@ -5823,7 +6044,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
   },
   {
     id: 'filter-gideon-judges',
-    eraIds: ['exodus', 'all'],
+    eraIds: ['judges', 'exodus', 'all'],
     categoryLabel: 'Judges Era',
     label: '⚔️ Gideon: Harod Spring & 300 Midian Rout',
     dateLabel: 'c. 1191 BC',
@@ -5835,7 +6056,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
   },
   {
     id: 'filter-samson-judges',
-    eraIds: ['exodus', 'all'],
+    eraIds: ['judges', 'exodus', 'all'],
     categoryLabel: 'Judges Era',
     label: '🦁 Samson: Timnath, Lehi & Gaza Gates',
     dateLabel: 'c. 1085 BC',
@@ -5847,7 +6068,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
   },
   {
     id: 'filter-ruth-boaz',
-    eraIds: ['exodus', 'all'],
+    eraIds: ['judges', 'exodus', 'all'],
     categoryLabel: 'Judges Era',
     label: '🌾 Ruth & Naomi: Moab to Bethlehem',
     dateLabel: 'c. 1100 BC',

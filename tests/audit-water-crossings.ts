@@ -1,4 +1,4 @@
-import { BIBLICAL_ROUTES } from '../src/data/ancientMapData';
+import { BIBLICAL_ROUTES } from '../src/data/ancientMapData.ts';
 
 // Exact Sea of Galilee water polygon
 const GALILEE_WATER_POLYGON = [

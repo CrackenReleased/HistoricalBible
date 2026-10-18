@@ -301,8 +301,8 @@ export class AncientMapCanvas {
     createManagedPane('routePane', 480, 'leaflet-route-pane');
     createManagedPane('cityPane', 550, 'leaflet-city-pane');
     createManagedPane('capitalPane', 570, 'leaflet-capital-pane');
-    createManagedPane('sitePane', 580, 'leaflet-site-pane');
     createManagedPane('routeStopPane', 620, 'leaflet-routeStop-pane');
+    createManagedPane('sitePane', 620, 'leaflet-site-pane');
     createManagedPane('tooltipPane', 750, 'leaflet-tooltip-pane');
     createManagedPane('popupPane', 800, 'leaflet-popup-pane');
 
