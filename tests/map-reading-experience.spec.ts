@@ -357,4 +357,70 @@ test('judges era and instant journey search allow jumping between Gideon, Balaam
   await page.screenshot({ path: 'test-results/atlas-journey-search-complete.png' });
 });
 
+test('unrestricted atlas: all eras, journeys, artifacts, and world empires are fully accessible without artificial restrictions', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/map');
+
+  const eraSelect = page.locator('#atlas-era');
+  const journeySelect = page.locator('#atlas-journey');
+
+  // 1. Fresh load: Journey dropdown is accessible with all 45 biblical routes
+  await expect(journeySelect).toBeVisible();
+  const initialOptionCount = await journeySelect.locator('option').count();
+  expect(initialOptionCount).toBeGreaterThanOrEqual(45);
+
+  // 2. Selecting a journey directly auto-syncs the period picker to that journey's era
+  await journeySelect.selectOption('gideon-judges');
+  await expect(eraSelect).toHaveValue('judges');
+  await expect(page.locator('#chrono-headline')).toContainText('Gideon');
+
+  await journeySelect.selectOption('solomon-glory');
+  await expect(eraSelect).toHaveValue('united_monarchy');
+  await expect(page.locator('#chrono-headline')).toContainText('Solomon');
+
+  // 3. Conquest & Judges era includes Joshua, Gideon, Samson, Ruth, and Samuel
+  await eraSelect.selectOption('judges');
+  const judgesOptions = await journeySelect.locator('option').allInnerTexts();
+  expect(judgesOptions.some(t => t.includes('Joshua'))).toBe(true);
+  expect(judgesOptions.some(t => t.includes('Gideon'))).toBe(true);
+  expect(judgesOptions.some(t => t.includes('Samson'))).toBe(true);
+  expect(judgesOptions.some(t => t.includes('Ruth'))).toBe(true);
+  expect(judgesOptions.some(t => t.includes('Samuel'))).toBe(true);
+
+  // 4. Assyrian Siege era includes Jonah, Isaiah, and Hosea
+  await eraSelect.selectOption('assyrian_siege');
+  const assyrianOptions = await journeySelect.locator('option').allInnerTexts();
+  expect(assyrianOptions.some(t => t.includes('Jonah'))).toBe(true);
+  expect(assyrianOptions.some(t => t.includes('Isaiah'))).toBe(true);
+  expect(assyrianOptions.some(t => t.includes('Hosea'))).toBe(true);
+
+  // 5. Check Fall of Samaria and Jehu's Dynasty exist in era dropdown
+  const allEraValues = await eraSelect.locator('option').evaluateAll(opts =>
+    opts.map(o => (o as HTMLOptionElement).value)
+  );
+  expect(allEraValues).toContain('2kings_jehu');
+  expect(allEraValues).toContain('2kings_fall_samaria');
+  expect(allEraValues).toContain('judges');
+
+  // 6. Turn on Archaeological Finds & World Empires in What to show
+  await page.getByText('What to show', { exact: true }).click();
+  const artifactsToggle = page.getByRole('button', { name: 'Archaeological Finds', exact: true });
+  await artifactsToggle.click();
+  await expect(artifactsToggle).toHaveAttribute('aria-pressed', 'true');
+
+  // In Assyrian Siege, Sargon II's Annals (sargon-prism) and Sennacherib's Taylor Prism are present
+  await expect(page.locator('.leaflet-gold-marker').first()).toBeVisible();
+  const goldMarkers = page.locator('.leaflet-gold-marker .gold-coin-label');
+  const goldText = await goldMarkers.allInnerTexts();
+  expect(goldText.some(t => t.includes('Sargon') || t.includes('Taylor'))).toBe(true);
+
+  // 7. Persian Restoration includes both Seleucid Empire & Ptolemaic Egypt (Daniel 11 North & South)
+  await eraSelect.selectOption('persian_restoration');
+  const empiresToggle = page.getByRole('button', { name: 'World Empires', exact: true });
+  await empiresToggle.click();
+  await expect(empiresToggle).toHaveAttribute('aria-pressed', 'true');
+
+  await page.screenshot({ path: 'test-results/atlas-unrestricted-entities.png' });
+});
+
 

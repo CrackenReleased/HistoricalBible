@@ -60,6 +60,13 @@ class HistoricalAtlasApp {
       }
     });
     this.mapCanvas.activeRouteOverrideIds = [];
+    const journeySelect = document.getElementById('atlas-journey') as HTMLSelectElement | null;
+    const journeyField = document.getElementById('atlas-journey-field');
+    if (journeySelect && journeyField) {
+      journeySelect.innerHTML = '<option value="">Choose a biblical journey…</option>' +
+        BIBLICAL_ROUTES.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+      journeyField.hidden = false;
+    }
     this.bindControls();
     this.syncLayers();
     this.checkInitialUrlParams();
@@ -159,7 +166,11 @@ class HistoricalAtlasApp {
           this.mapCanvas.layers.routes = false;
           this.mapCanvas.render();
         }
-        document.getElementById('atlas-journey-field')!.hidden = true;
+        const journeySelect = document.getElementById('atlas-journey') as HTMLSelectElement | null;
+        if (journeySelect) {
+          journeySelect.innerHTML = '<option value="">Choose a biblical journey…</option>' +
+            BIBLICAL_ROUTES.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+        }
         this.updateSequence();
       }
       this.syncLayers();
@@ -469,6 +480,20 @@ class HistoricalAtlasApp {
     this.mapCanvas.activeRouteOverrideIds = [route.id];
     this.mapCanvas.layers.routes = true;
     (document.getElementById('atlas-journey') as HTMLSelectElement).value = route.id;
+
+    // Auto-sync period dropdown if current era does not contain this route
+    const eraSelect = document.getElementById('atlas-era') as HTMLSelectElement | null;
+    const currentEraId = eraSelect?.value;
+    const currentEra = CHRONOLOGICAL_ERAS.find(e => e.id === currentEraId);
+    const eraAlreadyContainsRoute = currentEra && currentEra.activeRouteIds.includes(route.id);
+    if (!eraAlreadyContainsRoute && currentEraId !== 'all') {
+      const routeEra = CHRONOLOGICAL_ERAS.find(e => e.id !== 'all' && e.activeRouteIds.includes(route.id));
+      const targetEraId = routeEra ? routeEra.id : 'all';
+      if (eraSelect) eraSelect.value = targetEraId;
+      this.mapCanvas.activeEra = routeEra || CHRONOLOGICAL_ERAS.find(e => e.id === 'all')!;
+      this.mapCanvas.updateYearHud();
+    }
+
     this.syncLayers();
     this.updateSequence();
     this.mapCanvas.fitRoute(route.id);

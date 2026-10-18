@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.53] - 2026-10-18
+
+- **Root-Cause Hidden Entities Audit & Unrestricted Navigation**:
+  - Traversed all 45 routes, 20 archaeological discoveries, 13 chronological eras, 26 world empires, and 47 granular timeline filters to eliminate all artificial restrictions.
+  - Added missing `2kings_jehu` and `2kings_fall_samaria` eras to `<select id="atlas-era">` in `map.html`.
+  - Added Sargon II's Khorsabad Annals (`sargon-prism`) and Jonah's mission (`jonah-prophet`) to the `assyrian_siege` era, resolving trapped discovery access.
+  - Added Joshua's Conquest (`joshua-conquest`) and Samuel's Circuit (`samuel-circuit`) to the `judges` era, providing the complete biblical arc of Conquest & Judges.
+  - Added `ptolemaic_egypt` to `persian_restoration.additionalRegionIds`, uniting Daniel 11's Ptolemaic and Seleucid kingdoms.
+  - Fixed city filtering in `src/engine/ancientMap.ts` by adding `'judges'` to `otEraIds`.
+  - Made the Journey dropdown (`#atlas-journey`) accessible on fresh page load with all 45 biblical journeys, and added automatic era synchronization when selecting any journey.
+  - Added Playwright regression test verifying unrestricted access across all eras, journeys, discoveries, and empires (all 74/74 Playwright tests pass).
+
 ## [00.01.52] - 2026-10-18
 
 - **Conquest & Judges Chronological Period**:

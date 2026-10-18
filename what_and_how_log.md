@@ -1,3 +1,30 @@
+## 2026-10-18 03:20:00 — Root-Cause Hidden Entities Audit & Unrestricted Biblical Atlas Navigation (v00.01.53)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested: "1. Root cause: Let's inspect that nothing is hidden from users because of self imposed restrictions due to period picker nor any other feature!"
+  - Comprehensive Diagnostic Audit:
+    - Authored and executed automated audit tool `scripts/audit-hidden-entities.ts` traversing all 45 biblical routes, 20 archaeological discoveries, 13 chronological eras, 26 world empires, and 47 granular timeline filters.
+    - Diagnosed 7 self-imposed restrictions and hidden entity defects across the system:
+      1. **Missing Periods in `map.html` Dropdown**: `2kings_jehu` ("Jehu's Dynasty & Tiglath-Pileser III · c. 841–732 BC") and `2kings_fall_samaria` ("Fall of Samaria & Assyrian Exile · 722 BC") were defined in `CHRONOLOGICAL_ERAS` in `ancientMapData.ts` for chapter linking, but were completely omitted from `<select id="atlas-era">` in `map.html`.
+      2. **Archaeological Discoveries Trapped in Hidden Eras**: Because `2kings_fall_samaria` was missing from the UI dropdown and `sargon-prism` (The Khorsabad Annals of Sargon II, recording the capture of Samaria in 722 BC) was only assigned to `2kings_fall_samaria` and `all`, Sargon's prism was completely invisible to any user browsing by historical period.
+      3. **Key Biblical Routes Excluded from Their Natural Historical Eras**:
+         - `joshua-conquest`: Joshua's conquest of Canaan was only in `exodus`, and omitted from `judges` ("Conquest & Judges · c. 1380–1050 BC"). Users selecting Conquest & Judges could not access Joshua.
+         - `samuel-circuit`: Samuel is the 15th and final biblical judge of Israel (1 Sam 7:15–17). His circuit was restricted to `united_monarchy` and completely missing from `judges`.
+         - `jonah-prophet`: Jonah prophesied to Nineveh (Assyrian capital), but was missing from `assyrian_siege`.
+      4. **Orphaned World Empires**: `ptolemaic_egypt` ("Ptolemaic Kingdom of Egypt", 305–30 BC, Daniel 11's "King of the South") was defined in `WORLD_EMPIRES_GEO`, but was omitted from every era except `all`. Its rival `greece_seleucid` ("King of the North") was present in `persian_restoration`, but Ptolemaic Egypt was absent.
+      5. **City Filtering Defect**: In `src/engine/ancientMap.ts`, `otEraIds` omitted `judges`, causing New Testament Roman imperial cities (Rome, Corinth, Athens) to be rendered on the Judges map alongside Canaanite settlements.
+      6. **Hidden Journey Dropdown on Initial Load**: On fresh page load (`atlas-era` at `""`), `atlasApp.ts` set `#atlas-journey-field` to `hidden = true`. Users could not see or browse the 45 biblical journeys without first selecting a period or searching.
+      7. **Period Dropdown Desynchronization**: In `src/atlasApp.ts`, selecting a journey in `#atlas-journey` did not synchronize the period dropdown if the journey belonged to a different era, locking the user into a mismatched period.
+  - Decision Point & Implementation:
+    1. Added `2kings_jehu` and `2kings_fall_samaria` options to `<select id="atlas-era">` in `map.html`.
+    2. Added `sargon-prism` and `jonah-prophet` to `assyrian_siege` in `src/data/ancientMapData.ts`.
+    3. Added `joshua-conquest` and `samuel-circuit` to `judges.activeRouteIds` in `src/data/ancientMapData.ts`, and updated `filter-joshua-conquest` and `filter-samuel-circuit` `eraIds` to include `'judges'`.
+    4. Added `ptolemaic_egypt` to `persian_restoration.additionalRegionIds`, uniting the Daniel 11 Ptolemaic and Seleucid kingdoms.
+    5. Added `'judges'` to `otEraIds` in `src/engine/ancientMap.ts:1744`.
+    6. Expanded `activeFigureIds` across all 13 eras in `src/data/ancientMapData.ts` so `focusOnFigure` resolves all prominent biblical figures (Gideon, Samson, Ruth, Samuel, Elijah, Elisha, Jonah, Amos, Hosea, Isaiah, Esther, etc.).
+    7. In `src/atlasApp.ts`, initialized `#atlas-journey` with all 45 biblical journeys on page load with field visible (`hidden = false`), and enhanced `chooseJourney` to auto-synchronize the period dropdown to the journey's era when different.
+    8. Added automated regression test in `tests/map-reading-experience.spec.ts` locking in full accessibility across all eras, routes, discoveries, and empires (all 74/74 Playwright tests, 12/12 collection self-checks, and water crossing audits pass cleanly).
+
 ## 2026-10-18 03:00:00 — Conquest & Judges Period Selection, Instant Journey Search, Jacob & Rachel, Balaam's Donkey, and Jonah's 550-Mile Nineveh Trek (v00.01.52)
 
 - User Request & Direct Root-Cause Diagnosis:

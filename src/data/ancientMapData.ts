@@ -5374,7 +5374,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
       'job-land-of-uz'
     ],
     activeSiteIds: ['nabonidus-cylinder'],
-    activeFigureIds: ['abraham']
+    activeFigureIds: ['abraham', 'isaac', 'jacob', 'joseph', 'job']
   },
   {
     id: 'exodus',
@@ -5394,7 +5394,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
       'joshua-conquest'
     ],
     activeSiteIds: ['merneptah-stele'],
-    activeFigureIds: ['moses']
+    activeFigureIds: ['moses', 'aaron', 'joshua', 'balaam']
   },
   {
     id: 'judges',
@@ -5412,12 +5412,14 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     headline: 'The Era of the Judges · Deliverance & Cycles of Faith',
     historicalSummary: "In those days there was no king in Israel: every man did that which was right in his own eyes. God raises up deliverers including Deborah, Gideon and the 300 at the Harod Spring, Samson against the Philistines, and Ruth's redemption in Bethlehem.",
     activeRouteIds: [
+      'joshua-conquest',
       'gideon-judges',
       'samson-judges',
-      'ruth-boaz'
+      'ruth-boaz',
+      'samuel-circuit'
     ],
     activeSiteIds: ['merneptah-stele'],
-    activeFigureIds: ['moses', 'david']
+    activeFigureIds: ['joshua', 'gideon', 'samson', 'ruth', 'samuel', 'moses', 'david']
   },
   {
     id: 'united_monarchy',
@@ -5438,7 +5440,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
       'saul-reign',
       'solomon-glory','david-exile-throne'],
     activeSiteIds: ['tel-dan-stele', 'mesha-stele'],
-    activeFigureIds: ['david', 'solomon']
+    activeFigureIds: ['samuel', 'saul', 'david', 'solomon']
   },
   {
     id: 'divided_monarchy_prophets',
@@ -5463,7 +5465,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
       'jonah-prophet',
       'isaiah-ministry','elijah-elisha-ministry'],
     activeSiteIds: ['mesha-stele', 'tel-dan-stele', 'black-obelisk'],
-    activeFigureIds: ['david', 'hezekiah']
+    activeFigureIds: ['elijah', 'elisha', 'amos', 'hosea', 'jonah', 'david', 'hezekiah']
   },
   {
     id: '2kings_jehu',
@@ -5486,7 +5488,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
       'amos-prophet',
       'jonah-prophet','elijah-elisha-ministry'],
     activeSiteIds: ['black-obelisk', 'tel-dan-stele'],
-    activeFigureIds: ['hezekiah']
+    activeFigureIds: ['elijah', 'elisha', 'amos', 'jonah', 'hezekiah']
   },
   {
     id: '2kings_fall_samaria',
@@ -5503,9 +5505,12 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     focusZoom: 6,
     headline: "The Fall of Samaria · Assyrian Deportation of Israel",
     historicalSummary: "Hoshea rebels against Assyria; Shalmaneser V and Sargon II capture Samaria in 722 BC, exiling the ten northern tribes across Upper Mesopotamia and Media. Discovered: The Khorsabad Annals of Sargon II.",
-    activeRouteIds: [],
+    activeRouteIds: [
+      'isaiah-ministry',
+      'hosea-prophet'
+    ],
     activeSiteIds: ['sargon-prism'],
-    activeFigureIds: ['hezekiah', 'isaiah']
+    activeFigureIds: ['hezekiah', 'isaiah', 'hosea']
   },
   {
     id: 'assyrian_siege',
@@ -5524,10 +5529,11 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     historicalSummary: "The Neo-Assyrian Empire conquers Samaria (722 BC) and besieges Hezekiah in Jerusalem in 701 BC. Discovered: The Taylor Prism of Sennacherib & Siloam Tunnel Inscription.",
     activeRouteIds: [
       'isaiah-ministry',
-      'hosea-prophet'
+      'hosea-prophet',
+      'jonah-prophet'
     ],
-    activeSiteIds: ['taylor-prism', 'siloam-inscription', 'ketef-hinnom-scrolls'],
-    activeFigureIds: ['hezekiah', 'isaiah']
+    activeSiteIds: ['taylor-prism', 'siloam-inscription', 'ketef-hinnom-scrolls', 'sargon-prism'],
+    activeFigureIds: ['hezekiah', 'isaiah', 'hosea', 'jonah']
   },
   {
     id: 'babylonian_exile',
@@ -5549,7 +5555,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
       'daniel-exile',
       'ezekiel-exile','babylonian-deportation-daniel'],
     activeSiteIds: ['nabonidus-cylinder', 'ketef-hinnom-scrolls', 'lachish-ostraca', 'jehoiachin-ration-tablets'],
-    activeFigureIds: ['daniel', 'jeremiah']
+    activeFigureIds: ['daniel', 'jeremiah', 'ezekiel']
   },
   {
     id: 'persian_restoration',
@@ -5559,7 +5565,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     endYear: -331,
     rulingEmpireId: 'persia',
     additionalRegionIds: [
-      'judah', 'greece_seleucid', 'kush_nubia', 'india_maurya',
+      'judah', 'greece_seleucid', 'ptolemaic_egypt', 'kush_nubia', 'india_maurya',
       'scythia_steppes', 'china_zhou', 'kingdom_sheba'
     ],
     focusCenter: { lat: 33.0, lng: 46.0 },
@@ -5571,7 +5577,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
       'ezra-journey',
       'nehemiah-walls','ezra-nehemiah-return'],
     activeSiteIds: ['cyrus-cylinder'],
-    activeFigureIds: ['ezra-nehemiah', 'daniel']
+    activeFigureIds: ['ezra-nehemiah', 'esther', 'mordecai', 'daniel', 'cyrus']
   },
   {
     id: 'roman_christ',
@@ -5599,7 +5605,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
       'jesus-passion-resurrection'
     ],
     activeSiteIds: ['pilate-stone', 'caiaphas-ossuary', 'pool-of-siloam-steps', 'dead-sea-scrolls-qumran'],
-    activeFigureIds: ['jesus-christ']
+    activeFigureIds: ['jesus-christ', 'john-baptist']
   },
   {
     id: 'apostolic_church',
@@ -5630,7 +5636,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
       'andrew-mark-missions'
     ],
     activeSiteIds: ['gallio-inscription', 'erastus-inscription', 'sergius-paulus-inscription', 'arch-of-titus-spoils'],
-    activeFigureIds: ['jesus-christ', 'paul', 'peter']
+    activeFigureIds: ['jesus-christ', 'paul', 'peter', 'john', 'stephen', 'philip', 'barnabas', 'thomas', 'andrew', 'mark']
   },
   {
     id: 'all',
@@ -5782,7 +5788,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
   },
   {
     id: 'filter-joshua-conquest',
-    eraIds: ['exodus', 'all'],
+    eraIds: ['exodus', 'judges', 'all'],
     categoryLabel: 'Exodus & Conquest',
     label: '⚔️ Joshua: Jordan Crossing & Conquest',
     dateLabel: '1406–1399 BC',
@@ -6080,7 +6086,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
   },
   {
     id: 'filter-samuel-circuit',
-    eraIds: ['united_monarchy', 'all'],
+    eraIds: ['judges', 'united_monarchy', 'all'],
     categoryLabel: 'Prophets & Judges',
     label: '📜 Samuel: Circuit Judge & Anointings',
     dateLabel: 'c. 1050 BC',
@@ -6152,7 +6158,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
   },
   {
     id: 'filter-hosea-prophet',
-    eraIds: ['divided_monarchy_prophets', 'assyrian_siege', 'all'],
+    eraIds: ['divided_monarchy_prophets', '2kings_fall_samaria', 'assyrian_siege', 'all'],
     categoryLabel: 'Prophets',
     label: '❤️ Hosea: Unfailing Love in Samaria',
     dateLabel: 'c. 755–715 BC',
@@ -6164,7 +6170,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
   },
   {
     id: 'filter-jonah-prophet',
-    eraIds: ['divided_monarchy_prophets', '2kings_jehu', 'all'],
+    eraIds: ['divided_monarchy_prophets', '2kings_jehu', 'assyrian_siege', 'all'],
     categoryLabel: 'Prophets',
     label: '🐋 Jonah: Joppa to Nineveh & Gourd',
     dateLabel: 'c. 760 BC',
@@ -6176,7 +6182,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
   },
   {
     id: 'filter-isaiah-ministry',
-    eraIds: ['divided_monarchy_prophets', 'assyrian_siege', 'all'],
+    eraIds: ['divided_monarchy_prophets', '2kings_fall_samaria', 'assyrian_siege', 'all'],
     categoryLabel: 'Prophets',
     label: '🕊️ Isaiah: Temple Vision, Immanuel & Zion',
     dateLabel: 'c. 740–681 BC',

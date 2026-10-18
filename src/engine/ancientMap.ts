@@ -1744,6 +1744,7 @@ export class AncientMapCanvas {
       const otEraIds = new Set([
         'patriarchs',
         'exodus',
+        'judges',
         'united_monarchy',
         'divided_monarchy_prophets',
         '2kings_jehu',
