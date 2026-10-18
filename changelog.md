@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.46] - 2026-10-17
+
+- **Dynamic Map Key Above Map Canvas When Colored Regions Are Enabled**:
+  - Restored the visual Map Key (`#atlas-legend`) positioned directly above `.atlas-canvas-card` in `map.html`, hidden by default and dynamically revealed whenever the user enables `World Empires` (`data-layer="empires"`) in `What to show` (`src/atlasApp.ts`).
+  - Styled `.atlas-reading .atlas-legend` in `src/interact.css` to span the full width of the map canvas card (`max-width: none`) in the warm reading-atlas palette (`#20241f` surface, `#eee6d6` ink) displaying the colored region swatches (`Kingdom of Judah`, `Kingdom of Israel`, `Hostile Empires & Enemies`, `Friendly & Allied Regions`, `Global World Civilizations`) and map symbols.
+  - Added Playwright regression test in `tests/map-reading-experience.spec.ts` verifying the Map Key appears directly above the map canvas when `World Empires` is toggled on and hides when toggled off (14/14 Playwright map tests pass).
+
 ## [00.01.45] - 2026-10-17
 
 - **Reading-First Atlas Experience Slice (`/map`)**:

@@ -55,6 +55,7 @@ class HistoricalAtlasApp {
     });
     this.mapCanvas.activeRouteOverrideIds = [];
     this.bindControls();
+    this.syncLayers();
     this.checkInitialUrlParams();
   }
 
@@ -117,6 +118,10 @@ class HistoricalAtlasApp {
       btn.classList.toggle('active', active);
       btn.setAttribute('aria-pressed', String(active));
     });
+    const legend = document.getElementById('atlas-legend');
+    if (legend) {
+      legend.hidden = !this.mapCanvas?.layers.empires;
+    }
   }
 
   private syncEraUI(era: ChronologicalEra): void {

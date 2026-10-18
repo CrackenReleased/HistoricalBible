@@ -1,3 +1,29 @@
+## 2026-10-17 20:35:00 — Dynamic Map Key Above Canvas When Colored Regions Enabled (v00.01.46)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested:
+    "uummm... we got rid of the Key tho... is the key in there anywhere?"
+    "We are still using the colored regions... right?"
+    "Then when the user turns on regions, we need to have the Key show up, just above the map."
+  - Root Cause & Diagnosis:
+    In `v00.01.45`, Codex stripped `<footer class="atlas-legend">` out of `map.html`, leaving no visual key for the colored empire/kingdom regions (`Kingdom of Judah`, `Kingdom of Israel`, `Hostile Empires & Enemies`, `Friendly & Allied Regions`, `Global World Civilizations`) when the user toggles `World Empires` (`data-layer="empires"`) on inside `What to show`.
+  - Decision Point:
+    Restore `#atlas-legend` directly above `.atlas-canvas-card` in `map.html` (hidden by default while `layers.empires` is `false`), bind its `hidden` attribute to `!this.mapCanvas?.layers.empires` inside `syncLayers()` in `src/atlasApp.ts`, and style `.atlas-reading .atlas-legend` in `src/interact.css` to span full width (`max-width: none`) in the warm reading-atlas palette (`#20241f` surface, `#eee6d6` text).
+
+- Decision Point & Implementation:
+  1. **Map Key Markup Directly Above Map (`map.html`)**:
+     - Added `<section id="atlas-legend" class="atlas-legend" aria-label="Map legend" hidden>` directly above `<section class="atlas-canvas-card">` with the five faction region swatches (`dot-judah`, `dot-israel`, `dot-hostile`, `dot-allied`, `dot-global`) and map symbol swatches (`gold-pulse`, `city-dot`, `route-line`).
+  2. **Dynamic Layer Synchronization (`src/atlasApp.ts`)**:
+     - Called `this.syncLayers()` in `HistoricalAtlasApp.init()` and updated `syncLayers()` to set `legend.hidden = !this.mapCanvas?.layers.empires`, so turning `World Empires` on reveals the Map Key immediately above the map and turning it off hides it again.
+  3. **Reading-First Legend Styling (`src/interact.css`)**:
+     - Added `.atlas-reading .atlas-legend` (`max-width: none; background: #20241f; border: 1px solid var(--atlas-line); border-radius: 3px; color: var(--atlas-ink); font-size: 13px; padding: 10px 16px; gap: 10px 18px;`) so it aligns edge-to-edge with `.atlas-canvas-card` and maintains >12:1 text contrast.
+  4. **Step-Back Ritual (Sibling Scan)**:
+     - Grepped all `layers.empires` and `layers[` mutations across `src/` (`src/atlasApp.ts` lines 102, 116; `src/engine/ancientMap.ts` line 1592). Confirmed every layer toggle path invokes `this.syncLayers()`.
+
+- Regression Verification:
+  - Added Playwright regression test `turning on World Empires reveals the Map Key directly above the map canvas` in `tests/map-reading-experience.spec.ts` (confirmed failing before the fix and passing after).
+  - All 14/14 Playwright tests across `tests/map-reading-experience.spec.ts`, `tests/map.spec.ts`, and `tests/map-chronology-compass.spec.ts` PASS in 13.1s; `npm.cmd run build` passes in 750ms.
+
 ## 2026-10-17 18:14:00 — Reading-First Atlas Experience Slice, Apostolic Age Sequence Scrubbing & Visual/Accessibility Completion (v00.01.45)
 
 - User Request & Direct Root-Cause Diagnosis:

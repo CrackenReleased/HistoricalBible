@@ -122,3 +122,41 @@ test('mobile layout, touch targets, and contrast meet reading-first thresholds w
   await page.screenshot({ path: 'test-results/atlas-reading-apostolic-mobile.png', fullPage: true });
 });
 
+test('turning on World Empires reveals the Map Key directly above the map canvas', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/map');
+
+  const legend = page.locator('#atlas-legend');
+  await expect(legend).toBeHidden();
+
+  await page.getByText('What to show', { exact: true }).click();
+  const empiresBtn = page.getByRole('button', { name: 'World Empires', exact: true });
+  await empiresBtn.click();
+
+  await expect(empiresBtn).toHaveAttribute('aria-pressed', 'true');
+  await expect(legend).toBeVisible();
+  await expect(legend).toContainText('Kingdom of Judah');
+  await expect(legend).toContainText('Kingdom of Israel');
+  await expect(legend).toContainText('Hostile Empires');
+  await expect(legend).toContainText('Friendly & Allied Regions');
+  await expect(legend).toContainText('Global World Civilizations');
+
+  const geometry = await page.evaluate(() => {
+    const legendRect = document.getElementById('atlas-legend')!.getBoundingClientRect();
+    const mapRect = document.querySelector('.atlas-canvas-card')!.getBoundingClientRect();
+    return {
+      legendBottom: legendRect.bottom,
+      mapTop: mapRect.top,
+      legendWidth: legendRect.width,
+      mapWidth: mapRect.width
+    };
+  });
+
+  expect(geometry.legendBottom).toBeLessThanOrEqual(geometry.mapTop + 1);
+  expect(Math.abs(geometry.legendWidth - geometry.mapWidth)).toBeLessThanOrEqual(2);
+
+  await empiresBtn.click();
+  await expect(empiresBtn).toHaveAttribute('aria-pressed', 'false');
+  await expect(legend).toBeHidden();
+});
+

@@ -1,3 +1,10 @@
+## 2026-10-17 20:36:00 — Antigravity / HistoricalBible — Dynamic Map Key Restored Above Map When Regions Enabled (v00.01.46)
+
+- Restored `<section id="atlas-legend" class="atlas-legend" aria-label="Map legend" hidden>` directly above `.atlas-canvas-card` in `map.html` with all five colored region swatches (`Kingdom of Judah`, `Kingdom of Israel`, `Hostile Empires & Enemies`, `Friendly & Allied Regions`, `Global World Civilizations`) and map symbol swatches.
+- Synced `legend.hidden = !this.mapCanvas?.layers.empires` inside `syncLayers()` in `src/atlasApp.ts` so the Map Key automatically appears just above the map whenever `World Empires` is toggled on and hides when toggled off.
+- Styled `.atlas-reading .atlas-legend` in `src/interact.css` to match the full width and warm reading-atlas palette (`#20241f` background, `#eee6d6` ink).
+- Added Playwright regression test in `tests/map-reading-experience.spec.ts` (14/14 map tests pass; `npm run build` passes). Pre-overhaul revert point remains anchored at `2213ba1` (`v00.01.44-pre-reading-map` / `backup/v00.01.44-pre-reading-map`).
+
 ## 2026-10-17 18:18:30 — Antigravity / HistoricalBible — Map Reading-First Experience Slice Deployed with Explicit Revert Point (v00.01.45)
 
 - **Explicit Pre-Overhaul Revert Point**: Tagged and pushed `2213ba1` (`v00.01.44`) to `origin` as annotated tag `v00.01.44-pre-reading-map` and backup branch `backup/v00.01.44-pre-reading-map` before committing `v00.01.45`.
