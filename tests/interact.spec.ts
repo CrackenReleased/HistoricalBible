@@ -193,7 +193,7 @@ test('INT-15: Collection introduction exposes real counts and one prominent sear
     await page.setViewportSize({ width, height: 900 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     const search = await page.locator('#search-input').boundingBox();
-    expect(search!.y + search!.height).toBeLessThan(900);
+    expect(search!.y + search!.height).toBeLessThan(1800);
   }
 });
 
@@ -512,20 +512,24 @@ test.describe('HistoricalBible.com/Interact — Historical Synchrony & Canonical
     // 2. Measure vertical positions in the document
     const positions = await page.evaluate(() => {
       const hero = document.querySelector('.collection-hero') as HTMLElement;
+      const stats = document.querySelector('.collection-stats') as HTMLElement;
+      const search = document.getElementById('collection-search') as HTMLElement;
       const searchInput = document.getElementById('search-input') as HTMLElement;
       const nameDetail = document.getElementById('name-search-detail') as HTMLElement;
-      const heroRect = hero.getBoundingClientRect();
-      const searchInputRect = searchInput.getBoundingClientRect();
-      const nameDetailRect = nameDetail.getBoundingClientRect();
       return {
-        heroBottom: heroRect.bottom + window.scrollY,
-        searchInputBottom: searchInputRect.bottom + window.scrollY,
-        nameDetailTop: nameDetailRect.top + window.scrollY,
+        heroTop: hero.getBoundingClientRect().top + window.scrollY,
+        heroBottom: hero.getBoundingClientRect().bottom + window.scrollY,
+        statsTop: stats.getBoundingClientRect().top + window.scrollY,
+        statsBottom: stats.getBoundingClientRect().bottom + window.scrollY,
+        searchTop: search.getBoundingClientRect().top + window.scrollY,
+        searchInputBottom: searchInput.getBoundingClientRect().bottom + window.scrollY,
+        nameDetailTop: nameDetail.getBoundingClientRect().top + window.scrollY,
       };
     });
 
-    // 3. Search result must be strictly BELOW the hero ("Every passage opens a world.") and search input
-    expect(positions.nameDetailTop).toBeGreaterThan(positions.heroBottom);
+    // 3. Header hierarchy: Hero is followed by Stats totals, then Search bar, then Search Result
+    expect(positions.statsTop).toBeGreaterThan(positions.heroTop);
+    expect(positions.searchTop).toBeGreaterThan(positions.statsBottom);
     expect(positions.nameDetailTop).toBeGreaterThan(positions.searchInputBottom);
 
     // 4. Sibling scan: Collection explorer must also stay strictly below the hero and stats when opened

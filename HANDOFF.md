@@ -1,3 +1,9 @@
+## 2026-10-17 21:52:00 — Antigravity / HistoricalBible — Header Statistics Positioned Above Search Bar on /interact (v00.01.50)
+
+- Fixed collection statistics totals and provenance footnote appearing below search results: In `src/interact.css`, moved `.collection-stats` and `.collection-provenance` to render above `.collection-search` on both desktop and mobile viewports (`@media (max-width: 820px)`).
+- Natural vertical hierarchy established: Masthead → Hero Banner → Collection Statistics Totals (344,799 / 31,102 / 2,453 / 12,323) → Provenance Footnote → Collection Explorer (when expanded) → Search Bar ("Where will you begin?") → Search Result Card (e.g. Jonah) → Study Desk / Discovery Walk.
+- Updated Playwright regression suite: `INT-15` search threshold adjusted for natural header hierarchy and expanded `INT-27` in `tests/interact.spec.ts` asserting that stats precede search bar and search results stay strictly underneath search bar (all 29/29 interact tests, 15/15 map tests, and 12/12 collection self-checks pass; `npm run build` passes).
+
 ## 2026-10-17 21:40:00 — Antigravity / HistoricalBible — Search Results & Collection Explorer Placed Strictly Below Header on /interact (v00.01.49)
 
 - Fixed search result panel jumping above the Interact header: Removed `#study-workspace` from `src/collectionExplorer.ts` which had assigned flex order 0 to `#name-search-detail` and `#collection-explorer`.

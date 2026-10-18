@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.50] - 2026-10-17
+
+- **Collection Statistics Totals & Provenance Placed Strictly Above Search Bar on `/interact`**:
+  - Reordered `.collection-stats` and `.collection-provenance` to render above `.collection-search` on both desktop and mobile viewports (`src/interact.css`), resolving the issue where searching for an entry (such as Jonah) expanded `#name-search-detail` and pushed the site collection totals to the bottom of the page beneath all search results.
+  - The vertical header hierarchy now follows the natural reading order: Masthead → Hero Banner → Collection Statistics Totals (344,799 Cross-reference records, 31,102 KJV verses, 2,453 Biblical name entries, 12,323 Name connections) → Provenance Footnote → Collection Explorer (when expanded) → Search Bar ("Where will you begin?") → Search Result Card (e.g. Jonah) → Study Desk / Discovery Walk.
+  - Updated Playwright regression suite: adjusted `INT-15` search threshold for natural header hierarchy and expanded `INT-27` in `tests/interact.spec.ts` asserting that stats precede search bar and search results stay strictly underneath search bar (all 29/29 interact tests, 15/15 map tests, and 12/12 collection self-checks pass).
+
 ## [00.01.49] - 2026-10-17
 
 - **Search Results & Collection Explorer Placed Strictly Below Header Information on `/interact`**:

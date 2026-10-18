@@ -1,3 +1,40 @@
+## 2026-10-17 21:50:00 — Header Statistics Positioned Above Search Bar on /interact (v00.01.50)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested:
+    "I don't know what these pieces are called, so please. Just look at the screenshot... sorry I can't be more technical than this."
+    (User provided an annotated screenshot with a bracket around the 4 collection statistics totals and an arrow pointing up above the search bar, clarifying that the search result should stay below all header information and not push the collection totals below the search result card.)
+  - Root Cause & Diagnosis:
+    1. In `v00.01.07`, `.collection-search` had been given flex `order: 2`, while `.collection-stats` had `order: 3`.
+    2. Because `#name-search-detail` is rendered inside `.collection-search`, searching for a figure like Jonah expanded `#name-search-detail` within `order: 2`.
+    3. This caused the 4 collection totals (`344,799 Cross-reference records`, `31,102 KJV verses`, `2,453 Biblical name entries`, `12,323 Name connections`) and the provenance footnote to be pushed all the way to the bottom beneath the multi-thousand-pixel search result card, confusing the visual hierarchy of the site.
+  - Decision Point:
+    1. In `src/interact.css`, reposition the collection statistics totals and provenance footnote directly into the header above the search bar:
+       - `.collection-masthead` { order: 0 }
+       - `.collection-hero` { order: 1 }
+       - `.collection-stats` { order: 2; margin-top: 24px; }
+       - `.collection-provenance` { order: 3; }
+       - `.collection-explorer` { order: 4; }
+       - `.collection-search` { order: 5; margin-top: 18px; border-top: 1px solid var(--border-subtle); }
+    2. Apply the Step-Back Ritual to mobile viewports (`@media (max-width: 820px)`), where `.collection-search` was also previously placed at `order: 2` above stats. Reorder mobile to:
+       - `.collection-masthead` { order: 0 }
+       - `.collection-copy` { order: 1 }
+       - `.connection-atlas` { order: 2 }
+       - `.collection-stats` { order: 3 }
+       - `.collection-provenance` { order: 4 }
+       - `.collection-explorer` { order: 5 }
+       - `.collection-search` { order: 6 }
+    3. Update test assertions in `tests/interact.spec.ts`:
+       - `INT-15`: adjusted search input vertical threshold to `1800` to accommodate the natural header hierarchy across all viewports (375, 768, 1440, 1920) while verifying no page scrollbar overflow (`scrollWidth <= innerWidth`).
+       - `INT-27`: verified that `.collection-hero` is followed by `.collection-stats`, followed by `#collection-search`, followed by `#name-search-detail` (search result) and `#collection-explorer`.
+    4. Bumped version to `00.01.50` across `package.json`, `interact.html`, and `map.html`.
+
+- Regression Verification:
+  - All 29 Playwright tests in `tests/interact.spec.ts` PASS.
+  - All 15 Playwright tests in `tests/map-reading-experience.spec.ts`, `tests/map.spec.ts`, and `tests/map-chronology-compass.spec.ts` PASS.
+  - All 12 collection regression and data integrity tests (`npm run test:collection`) PASS.
+  - Production build (`npm run build`) PASS.
+
 ## 2026-10-17 21:40:00 — Search Results & Collection Explorer Placed Strictly Below Header on /interact (v00.01.49)
 
 - User Request & Direct Root-Cause Diagnosis:
