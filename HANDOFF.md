@@ -1,3 +1,9 @@
+## 2026-10-17 21:40:00 — Antigravity / HistoricalBible — Search Results & Collection Explorer Placed Strictly Below Header on /interact (v00.01.49)
+
+- Fixed search result panel jumping above the Interact header: Removed `#study-workspace` from `src/collectionExplorer.ts` which had assigned flex order 0 to `#name-search-detail` and `#collection-explorer`.
+- Kept `#name-search-detail` naturally below `<form id="collection-search-form">` inside `.collection-search`, and `#collection-explorer` below `.collection-stats`.
+- Added Playwright regression test `INT-27` in `tests/interact.spec.ts` (all 29/29 interact tests pass; 15/15 map tests pass; 8/8 self-checks pass; `npm run build` passes).
+
 ## 2026-10-17 21:26:00 — Antigravity / HistoricalBible — Restored Deep Green Reading Palette on /map with Unified Map Key & Context Bar (v00.01.48)
 
 - Restored the distinctive deep green and warm charcoal reading atlas palette for `/map` (`.atlas-reading` in `src/interact.css`) per user preference: `#171a18` canvas, `#20241f` / `#232722` panels, `#e8dfcd` warm parchment detail drawer, `#c3a576` brass accents, and subtle sepia tile filter (`filter: sepia(.12) saturate(.45)`).

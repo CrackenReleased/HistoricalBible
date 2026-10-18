@@ -50,9 +50,6 @@ export class CollectionExplorer {
     this.filter.type = 'search'; this.filter.placeholder = 'Filter this collection…'; this.filter.setAttribute('aria-label', 'Filter collection');
     this.filter.addEventListener('input', () => { this.query = this.filter.value; this.page = 0; this.render(); this.saveCollection(true); });
     this.root.append(top, nav, this.filter, this.body);
-    const studyWorkspace = el('div', '', 'study-workspace'); studyWorkspace.id = 'study-workspace';
-    this.root.before(studyWorkspace); studyWorkspace.append(this.root);
-    const namePanel = document.getElementById('name-search-detail'); if (namePanel) studyWorkspace.append(namePanel);
     document.querySelectorAll<HTMLButtonElement>('[data-collection]').forEach(node => {
       node.disabled = false; node.addEventListener('click', () => this.open(node.dataset.collection as Mode));
     });
@@ -253,17 +250,22 @@ export class CollectionExplorer {
         if (refs.length) passages.append(el('p', `First indexed: ${refs[0]} · Last indexed: ${refs.at(-1)}`, 'explorer-note'));
         let lastBook = '';
         this.paged(refs, 5, ref => {
-          const wrap = el('div'); const book = ref.split('.')[0];
-          if (group === 'book' && book !== lastBook) wrap.append(el('h4', localStore.getBooks().find(b => b.osis.toLowerCase() === book.toLowerCase())?.name || book));
-          lastBook = book; wrap.append(this.verseCard(ref, `Verse link from the name index for ${name.name}.`));
+          const book = ref.split('.')[0];
+          const card = this.verseCard(ref, `Verse link from the name index for ${name.name}.`);
           const verse = localStore.getVerseByOsis(ref);
-          if (context && verse) {
-            const nearby = localStore.getChapterVerses(book, verse.chapter).filter(v => v.verse !== verse.verse && Math.abs(v.verse - verse.verse) <= context);
-            const details = document.createElement('details'); details.open = true; details.className = 'study-context'; details.append(el('summary','Surrounding passage'));
-            for (const v of nearby) details.append(this.verseCard(localStore.toOsisRef(v), 'Surrounding context; not an additional indexed occurrence.'));
-            wrap.append(details);
+          if (group === 'book' || (context && verse)) {
+            const wrap = el('div');
+            if (group === 'book' && book !== lastBook) wrap.append(el('h4', localStore.getBooks().find(b => b.osis.toLowerCase() === book.toLowerCase())?.name || book));
+            lastBook = book; wrap.append(card);
+            if (context && verse) {
+              const nearby = localStore.getChapterVerses(book, verse.chapter).filter(v => v.verse !== verse.verse && Math.abs(v.verse - verse.verse) <= context);
+              const details = document.createElement('details'); details.open = true; details.className = 'study-context'; details.append(el('summary','Surrounding passage'));
+              for (const v of nearby) details.append(this.verseCard(localStore.toOsisRef(v), 'Surrounding context; not an additional indexed occurrence.'));
+              wrap.append(details);
+            }
+            return wrap;
           }
-          return wrap;
+          return card;
         }, passages, page, next => show(section, next));
       } else {
         passages.append(el('p', 'Connected names occur in shared verses; the links do not by themselves establish a family or historical relationship.', 'explorer-note'));

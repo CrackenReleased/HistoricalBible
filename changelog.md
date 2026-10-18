@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.49] - 2026-10-17
+
+- **Search Results & Collection Explorer Placed Strictly Below Header Information on `/interact`**:
+  - Removed artificial `#study-workspace` container in `src/collectionExplorer.ts` that was reparenting `#name-search-detail` and `#collection-explorer` into a flex order 0 wrapper, which had caused search results (e.g. Jonah) and explorer tabs to unexpectedly leap to the very top of the page above the Interact hero banner and search input.
+  - Returned `#name-search-detail` to its canonical position in `interact.html` directly inside `<div class="collection-search">` beneath `<form id="collection-search-form">`, so search results now open naturally directly underneath the search input and below the hero.
+  - Added Playwright regression test `INT-27` in `tests/interact.spec.ts` locking in the exact vertical ordering: `#name-search-detail` and `#collection-explorer` are strictly below `.collection-hero` and `#search-input` (all 29/29 interact tests and 15/15 map tests pass).
+
 ## [00.01.48] - 2026-10-17
 
 - **Restored Deep Green Reading Palette on `/map` with Cohesive Map Key & Context Bar**:

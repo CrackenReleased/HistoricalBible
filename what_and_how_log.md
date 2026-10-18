@@ -1,3 +1,34 @@
+## 2026-10-17 21:40:00 — Search Results & Collection Explorer Placed Strictly Below Header on /interact (v00.01.49)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested:
+    "Also, we need the "search result" to stay below the "interact" header information. It is really confusing for it to go above. NO site ever does that."
+  - Root Cause & Diagnosis:
+    1. In commit `6716dc187` (`v00.01.33`), `src/collectionExplorer.ts` introduced a wrapper element `div#study-workspace` (`this.root.before(studyWorkspace); studyWorkspace.append(this.root); studyWorkspace.append(namePanel);`).
+    2. Because `this.root` (`#collection-explorer`) was a direct child of `.collection-intro > .wrap` (which is styled with `display: flex; flex-direction: column;`), the newly inserted `#study-workspace` became a direct flex child of `.wrap`.
+    3. While other children in `.wrap` had explicit flex orders (`.collection-masthead` { order: 0 }, `.collection-hero` { order: 1 }, `.collection-search` { order: 2 }, `.collection-stats` { order: 3 }), `#study-workspace` had no `order` defined and thus defaulted to flex order 0.
+    4. Consequently, whenever a name was searched (e.g., `?name=Jonah`), `#name-search-detail` was rendered inside `#study-workspace` at order 0, leaping to the very top of the page above the entire Interact hero banner ("Every passage opens a world.") and above the search input that produced the result.
+  - Decision Point:
+    1. Remove the unnecessary `#study-workspace` reparenting from `src/collectionExplorer.ts`.
+    2. Keep `#name-search-detail` in its canonical location in `interact.html` directly inside `<div class="collection-search">` beneath `<form id="collection-search-form">`, so search results open naturally directly underneath the search bar and below the hero.
+    3. Allow `#collection-explorer` to maintain its declared CSS rule (`order: 4` in `src/interact.css`), appearing directly below the collection totals (`order: 3`).
+    4. Write an automated regression test in `tests/interact.spec.ts` (`INT-27`) verifying that both `#name-search-detail` and `#collection-explorer` are strictly below `.collection-hero` and `#search-input`.
+
+- Decision Point & Implementation:
+  1. **Removed `#study-workspace` Reparenting (`src/collectionExplorer.ts`)**:
+     - Removed lines 53-55 where `#collection-explorer` and `#name-search-detail` were moved into `#study-workspace`.
+     - In `showName()` paged callback, returned `card` directly when not grouping by book or adding surrounding context, keeping DOM nesting clean.
+  2. **Step-Back Ritual (Sibling Scan)**:
+     - Checked `#collection-explorer` (the sibling panel opened by clicking the four stats totals). Verified it maintains `order: 4` below `.collection-stats` (`order: 3`) and never renders above the hero banner.
+  3. **Regression Test Addition (`tests/interact.spec.ts`)**:
+     - Added test `INT-27` which boots into the user's exact scenario (`/interact?name=Jonah&view=list&section=verses`), measures document bounding box offsets, and asserts that `#name-search-detail` is strictly below `.collection-hero` and `#search-input`, and `#collection-explorer` is strictly below the hero and stats.
+
+- Regression Verification:
+  - All 29 Playwright tests in `tests/interact.spec.ts` PASS.
+  - All 15 Playwright map tests PASS.
+  - Data integrity self-check (8/8 suites) PASS.
+  - Production build PASS.
+
 ## 2026-10-17 21:25:00 — Restored Deep Green Reading Palette on /map with Unified Map Key & Context Bar (v00.01.48)
 
 - User Request & Direct Root-Cause Diagnosis:

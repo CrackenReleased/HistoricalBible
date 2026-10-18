@@ -503,5 +503,46 @@ test.describe('HistoricalBible.com/Interact — Historical Synchrony & Canonical
     await expect(explorer).toBeVisible();
     await expect(explorer.locator('h2')).toContainText('Scripture speaks to Scripture');
   });
+
+  test('INT-27: Search result and collection explorer stay strictly below the Interact header information', async ({ page }) => {
+    // 1. Visit the user's exact URL with search results open
+    await page.goto('/interact?name=Jonah&view=list&section=verses');
+    await expect(page.locator('#name-search-detail')).toBeVisible();
+
+    // 2. Measure vertical positions in the document
+    const positions = await page.evaluate(() => {
+      const hero = document.querySelector('.collection-hero') as HTMLElement;
+      const searchInput = document.getElementById('search-input') as HTMLElement;
+      const nameDetail = document.getElementById('name-search-detail') as HTMLElement;
+      const heroRect = hero.getBoundingClientRect();
+      const searchInputRect = searchInput.getBoundingClientRect();
+      const nameDetailRect = nameDetail.getBoundingClientRect();
+      return {
+        heroBottom: heroRect.bottom + window.scrollY,
+        searchInputBottom: searchInputRect.bottom + window.scrollY,
+        nameDetailTop: nameDetailRect.top + window.scrollY,
+      };
+    });
+
+    // 3. Search result must be strictly BELOW the hero ("Every passage opens a world.") and search input
+    expect(positions.nameDetailTop).toBeGreaterThan(positions.heroBottom);
+    expect(positions.nameDetailTop).toBeGreaterThan(positions.searchInputBottom);
+
+    // 4. Sibling scan: Collection explorer must also stay strictly below the hero and stats when opened
+    await page.locator('[data-collection="books"]').click();
+    await expect(page.locator('#collection-explorer')).toBeVisible();
+    const explorerPositions = await page.evaluate(() => {
+      const hero = document.querySelector('.collection-hero') as HTMLElement;
+      const stats = document.querySelector('.collection-stats') as HTMLElement;
+      const explorer = document.getElementById('collection-explorer') as HTMLElement;
+      return {
+        heroBottom: hero.getBoundingClientRect().bottom + window.scrollY,
+        statsBottom: stats.getBoundingClientRect().bottom + window.scrollY,
+        explorerTop: explorer.getBoundingClientRect().top + window.scrollY,
+      };
+    });
+    expect(explorerPositions.explorerTop).toBeGreaterThan(explorerPositions.heroBottom);
+    expect(explorerPositions.explorerTop).toBeGreaterThan(explorerPositions.statsBottom);
+  });
 });
 
