@@ -1,3 +1,30 @@
+## 2026-10-17 21:25:00 — Restored Deep Green Reading Palette on /map with Unified Map Key & Context Bar (v00.01.48)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested:
+    "Oh no!!! I liked the deep green for the map page... I was talking about the map key"
+  - Root Cause & Diagnosis:
+    1. In the previous iteration (`v00.01.47`), the reading atlas palette (`.atlas-reading` in `src/interact.css`) was converted to the site-wide Obsidian and Gold dark theme (`#090c10` / `#0e1218`) based on an earlier prompt asking for site homogeneity.
+    2. The user clarified that the distinctive deep green and warm charcoal aesthetic (`#171a18` canvas, `#20241f` / `#232722` surfaces, `#e8dfcd` warm parchment detail drawer, and subtle sepia tile filter) was their desired design for the `/map` page; the request for UI/UX matching and homogeneity was specifically directed at the Map Key (`#atlas-legend`), making its swatches match the map symbols and enabling cross-page context awareness between `/bible`, `/interact`, and `/map`.
+  - Decision Point:
+    1. Restore the deep green / warm charcoal reading palette for `.atlas-reading` in `src/interact.css` (`#171a18` canvas, `#20241f` panels, `#e8dfcd` parchment detail drawer, `#c3a576` brass accents, and `filter: sepia(.12) saturate(.45)` on `.leaflet-tile-pane`).
+    2. Ensure the Map Key (`#atlas-legend`) and cross-page context awareness bar (`#atlas-context-bar`) are seamlessly integrated into this reading palette (neutral `#20241f` surface, numbered waypoint stop badge `.legend-stop-badge`, glowing shadows removed from legend dots).
+    3. Update the Playwright regression test in `tests/map-reading-experience.spec.ts` to assert the deep green reading palette and cross-page context awareness bar.
+
+- Decision Point & Implementation:
+  1. **Restored Deep Green Palette (`src/interact.css`)**:
+     - Reset `.atlas-reading` container, panels, and surfaces to `#171a18` canvas, `#20241f` / `#232722` card and control backgrounds.
+     - Restored `#e8dfcd` parchment detail drawer with dark ink typography (`#2d3029` text, `#5a4d36` meta, `#bfb49e` divider borders).
+     - Restored `filter: sepia(.12) saturate(.45)` on `.leaflet-tile-pane` and muted water labels (`rgba(155, 175, 181, 0.72)`).
+     - Styled `#atlas-context-bar` with `#20241f` background, `#484a40` border, and `#c3a576` brass accent, harmonizing perfectly with the deep green theme.
+  2. **Step-Back Ritual (Sibling Scan)**:
+     - Checked all interactive elements in `.atlas-reading` (layer toggles, journey buttons, slider, drawer, context bar) to verify contrast and styling coherence.
+     - Verified `#atlas-legend` swatches match their canvas counterparts (cities, empires, inscriptions, numbered stop badges).
+
+- Regression Verification:
+  - Updated Playwright test in `tests/map-reading-experience.spec.ts` verifying deep green body background (`rgb(23, 26, 24)`), sepia tile filter, `#e8dfcd` parchment drawer, and `#atlas-context-bar` reading session continuity.
+  - All 15/15 Playwright map tests PASS; `npm.cmd run test:selfcheck` (8/8 suites PASS); `npm.cmd run build` PASS.
+
 ## 2026-10-17 21:10:00 — Site-Wide Obsidian & Gold Visual Homogeneity & Cross-Page Context Awareness (v00.01.47)
 
 - User Request & Direct Root-Cause Diagnosis:

@@ -1,3 +1,9 @@
+## 2026-10-17 21:26:00 — Antigravity / HistoricalBible — Restored Deep Green Reading Palette on /map with Unified Map Key & Context Bar (v00.01.48)
+
+- Restored the distinctive deep green and warm charcoal reading atlas palette for `/map` (`.atlas-reading` in `src/interact.css`) per user preference: `#171a18` canvas, `#20241f` / `#232722` panels, `#e8dfcd` warm parchment detail drawer, `#c3a576` brass accents, and subtle sepia tile filter (`filter: sepia(.12) saturate(.45)`).
+- Kept the dynamic Map Key (`#atlas-legend`, rendered just above the map canvas when regions are enabled) and cross-page context bar (`#atlas-context-bar`) integrated cleanly within the deep green theme.
+- Updated Playwright regression test in `tests/map-reading-experience.spec.ts` (15/15 Playwright map tests pass; 8/8 `test:selfcheck` pass; `npm run build` passes). Pre-overhaul revert point remains anchored at `2213ba1` (`v00.01.44-pre-reading-map` / `backup/v00.01.44-pre-reading-map`).
+
 ## 2026-10-17 21:11:00 — Antigravity / HistoricalBible — Site-Wide Obsidian & Gold Visual Homogeneity & Cross-Page Context Awareness (v00.01.47)
 
 - Unified `/map` (`.atlas-reading` in `src/interact.css`) with the site-wide Historical Bible Obsidian & Gold design system (`#090c10` canvas, `#0e1218` surfaces and detail drawer, `#141a22` controls, `#d4af37` / `#f0cf65` gold accents, `Cinzel` display heading, `.legend-stop-badge` in `#atlas-legend`, and `filter: none` on `.leaflet-tile-pane`).

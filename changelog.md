@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.48] - 2026-10-17
+
+- **Restored Deep Green Reading Palette on `/map` with Cohesive Map Key & Context Bar**:
+  - Restored the distinctive deep green and warm charcoal reading atlas palette for `/map` (`.atlas-reading` in `src/interact.css`) per user design preference: `#171a18` canvas, `#20241f` / `#232722` control surfaces, `#e8dfcd` warm parchment detail drawer, `#c3a576` brass accents, and subtle sepia tile filter (`filter: sepia(.12) saturate(.45)`).
+  - Ensured the dynamic Map Key (`#atlas-legend`) and cross-page reading context bar (`#atlas-context-bar`) are seamlessly integrated into this reading palette with numbered waypoint stop badge (`.legend-stop-badge`), glowing box-shadows stripped on legend dots, and parchment contrast ratios exceeding WCAG AAA standards.
+  - Updated Playwright regression suite in `tests/map-reading-experience.spec.ts` locking in the deep green reading palette and cross-page context awareness (15/15 Playwright map tests pass).
+
 ## [00.01.47] - 2026-10-17
 
 - **Site-Wide Obsidian & Gold Visual Homogeneity & Cross-Page Context Continuity (`/bible` ↔ `/map` ↔ `/interact`)**:
