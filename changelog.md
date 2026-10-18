@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.47] - 2026-10-17
+
+- **Site-Wide Obsidian & Gold Visual Homogeneity & Cross-Page Context Continuity (`/bible` ↔ `/map` ↔ `/interact`)**:
+  - Unified `/map` (`.atlas-reading` in `src/interact.css`) with the site-wide Historical Bible Obsidian & Gold design system (`#090c10` canvas, `#0e1218` surfaces and detail drawer, `#141a22` controls, `#d4af37` / `#f0cf65` gold accents, `Cinzel` display heading, numbered `.legend-stop-badge` in `#atlas-legend`, and crisp un-filtered map tiles `filter: none`), eliminating the isolated olive/beige/sepia palette while maintaining 7.4:1–17.4:1 contrast.
+  - Added `src/store/userContextStore.ts` (`hb_user_context_v1`) and `#atlas-context-bar` (`map.html`, `src/atlasApp.ts`, `src/bibleReader.ts`, `src/studySession.ts`) so `/map` is self-aware of the user's active reading chapter in `/bible` or study subject in `/interact`, offers a one-click **`Focus Map on [Context]`** action, and live-updates cross-page links as the user explores the atlas.
+  - Added Playwright regression test in `tests/map-reading-experience.spec.ts` verifying site-wide visual homogeneity and `/bible` → `/map` context continuity (15/15 Playwright map tests pass).
+
 ## [00.01.46] - 2026-10-17
 
 - **Dynamic Map Key Above Map Canvas When Colored Regions Are Enabled**:

@@ -1,3 +1,31 @@
+## 2026-10-17 21:10:00 — Site-Wide Obsidian & Gold Visual Homogeneity & Cross-Page Context Awareness (v00.01.47)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested:
+    "And all the UI/UX matches the current?"
+    "yeah, we need a homogeneus site. It needs to gell VERY connected, and even self aware. It needs to be responsive to the user and their context."
+  - Root Cause & Diagnosis:
+    1. **Visual Disconnection**: In `v00.01.45`, Codex's `.atlas-reading` rules (`src/interact.css`) introduced an olive-charcoal background (`#171a18`), green-gray control surfaces (`#232722` / `#20241f`), a bright cream/beige side drawer (`#e8dfcd`), and a sepia map tile filter (`filter: sepia(.12) saturate(.45)`), making `/map` visually clash against the site-wide Historical Bible Obsidian & Gold design system (`#090c10` / `#0e1218` / `#141a22` / `#d4af37`) used on `/`, `/bible`, `/interact`, and `/contact`.
+    2. **Cross-Page Context Isolation**: Moving between `/bible`, `/interact`, and `/map` via the top header navigation lost the user's active reading/study context unless they clicked a specific deep-link button.
+  - Decision Point:
+    1. Unify `.atlas-reading` in `src/interact.css` with the canonical `:root` Obsidian & Gold design tokens (`--bg-canvas: #090c10`, `--bg-surface: #0e1218`, `--bg-card: #141a22`, `--border-subtle: #212936`, `--border-gold`, `--gold-primary: #d4af37`, `--gold-bright: #f0cf65`, `filter: none` on `.leaflet-tile-pane`) and update the `Biblical Journey Waypoint` swatch in `#atlas-legend` (`map.html`) to use a numbered gold-rimmed badge (`.legend-stop-badge`).
+    2. Create a shared cross-page user context store (`src/store/userContextStore.ts`, `hb_user_context_v1`) that records active reading passages in `src/bibleReader.ts` (mapping book/chapter to era, journey, and stop index), active Study Desk subjects in `src/studySession.ts`, and active map selections in `src/atlasApp.ts`, surfacing a live `#atlas-context-bar` on `/map` with one-click **`Focus Map on [Context]`** (`#atlas-context-apply`) and dynamic links back to `/bible` and `/interact`.
+
+- Decision Point & Implementation:
+  1. **Shared Cross-Page User Context Store (`src/store/userContextStore.ts`)**:
+     - Implemented `readUserContext()`, `writeUserContext()`, and `resolvePassageUserContext()` mapping any KJV book and chapter to its historical era (`CHRONOLOGICAL_ERAS`), matching biblical route (`BIBLICAL_ROUTES`), and stop index.
+  2. **Cross-Page Context Wiring (`src/bibleReader.ts`, `src/studySession.ts`, `src/atlasApp.ts`, `map.html`)**:
+     - Wired `BibleReader.renderCurrentChapter()` and `StudySessionBar.refresh()` to persist active reading/study context.
+     - Added `#atlas-context-bar` to `map.html` and wired `HistoricalAtlasApp` (`initContextContinuity`, `renderContextBar`, `applySavedContext`, and detail drawer handlers) so `/map` recognizes where the user came from and updates cross-page context as they explore.
+  3. **Site-Wide Obsidian & Gold Homogeneity (`src/interact.css`, `map.html`)**:
+     - Replaced the olive/beige/sepia `.atlas-reading` overrides with the site's obsidian-and-gold dark theme (`#090c10` canvas, `#0e1218` surfaces and side drawer, `#141a22` controls, `#d4af37`/`#f0cf65` gold accents, `Cinzel` display heading, and `filter: none` on `.leaflet-tile-pane`), maintaining 7.4:1 to 17.4:1 WCAG AAA contrast across all elements.
+  4. **Step-Back Ritual (Sibling Scan)**:
+     - Checked all 4 detail-selection handlers in `src/atlasApp.ts` (`showSiteDetail`, `showCityDetail`, `showEmpireDetail`, `showRouteDetail`) and both companion surfaces (`src/bibleReader.ts`, `src/studySession.ts`) to ensure consistent context persistence and valid `/bible` and `/interact` deep links.
+
+- Regression Verification:
+  - Added Playwright regression test `site-wide obsidian-and-gold visual homogeneity and cross-page reading context continuity (/bible -> /map)` in `tests/map-reading-experience.spec.ts`.
+  - All 15/15 Playwright tests across `tests/map-reading-experience.spec.ts`, `tests/map.spec.ts`, and `tests/map-chronology-compass.spec.ts` PASS; `npm.cmd run test:selfcheck` (8/8 PASS); `npm.cmd run build` PASS.
+
 ## 2026-10-17 20:35:00 — Dynamic Map Key Above Canvas When Colored Regions Enabled (v00.01.46)
 
 - User Request & Direct Root-Cause Diagnosis:

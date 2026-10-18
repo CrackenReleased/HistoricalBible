@@ -3,6 +3,7 @@ import { findStudySubject } from './data/studySubjects';
 import { localStore } from './store/localFirstStore';
 import { ARCHAEOLOGICAL_SITES, BIBLICAL_GEOGRAPHIC_ENTITIES, type BiblicalGeographicEntity } from './data/ancientMapData';
 import { addStudyBookmark, MAX_STUDY_BOOKMARKS, readStudyBookmarks, writeStudyBookmarks, type StudyBookmark } from './store/studyBookmarks';
+import { writeUserContext } from './store/userContextStore';
 
 type StudyState = InteractUrlState & { compare?: string | null; identity?: string | null };
 export type StudyMapTarget = { kind: 'geography'; key: string; entity: BiblicalGeographicEntity } | { kind: 'figure'; figureId: string };
@@ -92,6 +93,22 @@ export class StudySessionBar {
     this.linkInput.hidden = true;
     this.status.textContent = '';
     this.renderBookmarks();
+    if (!this.element.hidden && this.label.textContent) {
+      const matchedSite = state.figure ? ARCHAEOLOGICAL_SITES.find(s => s.figureId === state.figure) : undefined;
+      writeUserContext({
+        source: 'interact',
+        updatedAt: new Date().toISOString(),
+        label: this.label.textContent,
+        sublabel: 'Study Desk Subject',
+        eraId: state.era || undefined,
+        figureId: state.figure || undefined,
+        siteId: matchedSite?.id,
+        cityKey: state.name ? state.name.toLowerCase().trim() : undefined,
+        bibleHref: state.ref ? `/bible?ref=${encodeURIComponent(state.ref)}` : '/bible',
+        interactHref: `${window.location.pathname}${window.location.search}`,
+        mapHref: matchedSite ? `/map?site=${encodeURIComponent(matchedSite.id)}` : (state.era ? `/map?era=${encodeURIComponent(state.era)}` : '/map')
+      });
+    }
   }
 
   private async copyLink(): Promise<void> {

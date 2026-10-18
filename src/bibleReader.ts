@@ -30,6 +30,10 @@ import {
   lookupScriptureLexicon,
   prefetchStrongsReverse
 } from './data/scriptureLexicon';
+import {
+  resolvePassageUserContext,
+  writeUserContext
+} from './store/userContextStore';
 
 interface BookMeta {
   osis: string;
@@ -458,6 +462,19 @@ class BibleReader {
 
     this.versesContainer.innerHTML = rows.join('');
     this.updateUrl();
+
+    // Persist cross-page reading context so /map and /interact are aware of the active passage
+    writeUserContext(
+      resolvePassageUserContext({
+        bookOsis: book.osis,
+        bookName: book.name,
+        chapter: this.currentChapter,
+        verseNum: this.selectedVerseNum || 1,
+        eraId: chrono?.eventEraId,
+        eraName: chapterChrono ? chapterChrono.eraName : chrono?.eventEraName,
+        eventDateLabel: chapterChrono ? chapterChrono.eventDateLabel : chrono?.eventDateLabel
+      })
+    );
 
     // Render companion pane content
     const activeVerse = verses.find((v) => v.verse === this.selectedVerseNum) || verses[0];

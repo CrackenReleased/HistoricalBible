@@ -160,3 +160,40 @@ test('turning on World Empires reveals the Map Key directly above the map canvas
   await expect(legend).toBeHidden();
 });
 
+test('site-wide obsidian-and-gold visual homogeneity and cross-page reading context continuity (/bible -> /map)', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+
+  // 1. User reads Acts 13 in /bible
+  await page.goto('/bible?book=Acts&chapter=13');
+  await expect(page.locator('#reader-chapter-title')).toContainText('ACTS');
+
+  // 2. User clicks Map in the site header navigation
+  await page.locator('nav.site-nav a[href="/map"]').click();
+  await expect(page).toHaveURL(/\/map$/);
+  await expect(page.locator('#atlas-canvas-container .leaflet-tile-pane')).toBeAttached();
+
+  // 3. Verify /map shares the site-wide obsidian-and-gold dark theme (no beige drawer, no sepia tile filter)
+  const themeColors = await page.evaluate(() => {
+    const bodyBg = getComputedStyle(document.body).backgroundColor;
+    const tileFilter = getComputedStyle(document.querySelector('.leaflet-tile-pane')!).filter;
+    return { bodyBg, tileFilter };
+  });
+  expect(themeColors.bodyBg).toBe('rgb(9, 12, 16)');
+  expect(themeColors.tileFilter).toBe('none');
+
+  // 4. Verify #atlas-context-bar is visible and self-aware of the user's Acts 13 reading session
+  const contextBar = page.locator('#atlas-context-bar');
+  await expect(contextBar).toBeVisible();
+  await expect(contextBar).toContainText('Acts 13');
+  await expect(page.locator('#atlas-context-bible')).toHaveAttribute('href', /\/bible\?book=Acts&chapter=13/);
+
+  // 5. Clicking #atlas-context-apply focuses the map on the Apostolic Age & Paul's First Journey
+  await page.locator('#atlas-context-apply').click();
+  await expect(page.getByLabel('Choose a period')).toHaveValue('apostolic_church');
+  await expect(page.getByLabel('Choose a journey')).toHaveValue('paul-first-journey');
+  await expect(page.locator('#atlas-detail-drawer')).toBeVisible();
+
+  const drawerBg = await page.evaluate(() => getComputedStyle(document.getElementById('atlas-detail-drawer')!).backgroundColor);
+  expect(drawerBg).toBe('rgb(14, 18, 24)');
+});
+

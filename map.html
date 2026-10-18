@@ -44,6 +44,23 @@
           <p id="atlas-introduction">Look at the land. Find the coast. Choose a period, and follow one story at a time.</p>
         </div>
       </header>
+
+      <!-- LIVE CROSS-PAGE USER CONTEXT BAR (Connects Bible Reader, Map, and Interact Study Desk) -->
+      <section id="atlas-context-bar" class="atlas-context-bar" aria-label="Active study and reading context" hidden>
+        <div class="atlas-context-info">
+          <span id="atlas-context-badge" class="eyebrow">ACTIVE CONTEXT</span>
+          <div class="atlas-context-summary">
+            <strong id="atlas-context-title"></strong>
+            <span id="atlas-context-sub" class="atlas-context-sub"></span>
+          </div>
+        </div>
+        <div class="atlas-context-actions">
+          <button type="button" id="atlas-context-apply" class="atlas-context-btn primary" hidden>Focus Map on This Context</button>
+          <a id="atlas-context-bible" class="atlas-context-btn" href="/bible">Continue in Bible &rarr;</a>
+          <a id="atlas-context-interact" class="atlas-context-btn" href="/interact">Open in Interact &rarr;</a>
+        </div>
+      </section>
+
       <section class="atlas-reading-controls" aria-label="Explore the atlas">
         <div class="atlas-field">
           <label for="atlas-era">Choose a period</label>
@@ -131,8 +148,8 @@
           <span>Biblical City &amp; Hitchcock Meaning</span>
         </div>
         <div class="atlas-legend-item">
-          <span class="legend-swatch route-line" aria-hidden="true"></span>
-          <span>Biblical Journey (Abraham, Exodus, Paul)</span>
+          <span class="legend-stop-badge" aria-hidden="true">1</span>
+          <span>Biblical Journey Waypoint (Abraham, Exodus, Paul)</span>
         </div>
       </section>
 
@@ -169,7 +186,7 @@
   <footer class="wrap">
     <a class="footer-brand" href="/"><img src="/images/brand/logo-small.webp" alt="Historical Bible — Home" width="600" height="300" loading="lazy" /></a>
     <div>John 17:3 &mdash; &ldquo;And this is life eternal, that they might know thee the only true God, and Jesus Christ, whom thou hast sent.&rdquo;</div>
-    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Historical Bible Est. 2019 &middot; All Rights Reserved &middot; Map &middot; v00.01.46</div>
+    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Historical Bible Est. 2019 &middot; All Rights Reserved &middot; Map &middot; v00.01.47</div>
   </footer>
 
   <script type="module" src="/src/atlasApp.ts"></script>

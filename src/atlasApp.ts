@@ -20,6 +20,11 @@ import {
   type WorldEmpireRegion,
   type ChronologicalEra,
 } from './data/ancientMapData';
+import {
+  readUserContext,
+  writeUserContext,
+  type HistoricalBibleUserContext
+} from './store/userContextStore';
 
 class HistoricalAtlasApp {
   private mapCanvas: AncientMapCanvas | null = null;
@@ -28,6 +33,7 @@ class HistoricalAtlasApp {
   private activeStepperStopIndex = 0;
   private orientation = true;
   private showAllStops = false;
+  private pendingSavedContext: HistoricalBibleUserContext | null = null;
 
   public init(): void {
     const container = document.getElementById('atlas-canvas-container');
@@ -57,9 +63,90 @@ class HistoricalAtlasApp {
     this.bindControls();
     this.syncLayers();
     this.checkInitialUrlParams();
+    this.initContextContinuity();
+  }
+
+  private initContextContinuity(): void {
+    const saved = readUserContext();
+    if (!saved) return;
+    if (this.orientation) {
+      this.pendingSavedContext = saved;
+      this.renderContextBar(saved, true);
+    } else {
+      this.renderContextBar(saved, false);
+    }
+  }
+
+  private renderContextBar(ctx: HistoricalBibleUserContext, showApplyButton: boolean): void {
+    const bar = document.getElementById('atlas-context-bar');
+    if (!bar) return;
+    const badgeEl = document.getElementById('atlas-context-badge');
+    const titleEl = document.getElementById('atlas-context-title');
+    const subEl = document.getElementById('atlas-context-sub');
+    const applyBtn = document.getElementById('atlas-context-apply') as HTMLButtonElement | null;
+    const bibleLink = document.getElementById('atlas-context-bible') as HTMLAnchorElement | null;
+    const interactLink = document.getElementById('atlas-context-interact') as HTMLAnchorElement | null;
+
+    const sourceLabel =
+      ctx.source === 'bible'
+        ? 'ACTIVE READING CONTEXT · BIBLE READER'
+        : ctx.source === 'interact'
+          ? 'ACTIVE STUDY CONTEXT · INTERACT DESK'
+          : 'ACTIVE ATLAS CONTEXT';
+
+    if (badgeEl) badgeEl.textContent = sourceLabel;
+    if (titleEl) titleEl.textContent = ctx.label;
+    if (subEl) subEl.textContent = ctx.sublabel ? ` · ${ctx.sublabel}` : '';
+    if (applyBtn) {
+      applyBtn.hidden = !showApplyButton;
+      applyBtn.textContent = `Focus Map on ${ctx.label}`;
+    }
+    if (bibleLink) {
+      bibleLink.href = ctx.bibleHref;
+      bibleLink.textContent = ctx.source === 'bible' ? `Return to ${ctx.label} in Bible →` : `Open in Bible Reader →`;
+    }
+    if (interactLink) {
+      interactLink.href = ctx.interactHref;
+      interactLink.textContent = `Explore in Interact →`;
+    }
+    bar.hidden = false;
+  }
+
+  private applySavedContext(ctx: HistoricalBibleUserContext): void {
+    if (!this.mapCanvas) return;
+    this.pendingSavedContext = null;
+    if (ctx.siteId) {
+      const site = ARCHAEOLOGICAL_SITES.find(s => s.id === ctx.siteId);
+      if (site) {
+        this.orientation = false;
+        this.mapCanvas.layers.archaeology = true;
+        this.mapCanvas.showAllSites = true;
+        this.mapCanvas.render();
+        this.syncLayers();
+        this.showSiteDetail(site);
+        this.mapCanvas.animateToCoords(site.coords, 7);
+        return;
+      }
+    }
+    if (ctx.eraId && CHRONOLOGICAL_ERAS.some(e => e.id === ctx.eraId)) {
+      this.mapCanvas.setEra(ctx.eraId);
+    }
+    if (ctx.journeyId && BIBLICAL_ROUTES.some(r => r.id === ctx.journeyId)) {
+      this.chooseJourney(ctx.journeyId);
+      if (typeof ctx.stopIndex === 'number' && ctx.stopIndex > 0) {
+        this.activeStepperStopIndex = ctx.stopIndex;
+        this.updateSequence();
+      }
+    }
+    this.syncLayers();
   }
 
   private bindControls(): void {
+    document.getElementById('atlas-context-apply')?.addEventListener('click', () => {
+      if (this.pendingSavedContext) {
+        this.applySavedContext(this.pendingSavedContext);
+      }
+    });
     document.getElementById('atlas-era')?.addEventListener('change', event => {
       const id = (event.target as HTMLSelectElement).value;
       this.orientation = !id;
@@ -258,6 +345,20 @@ class HistoricalAtlasApp {
     }
 
     drawer.hidden = false;
+    const nextCtx: HistoricalBibleUserContext = {
+      source: 'map',
+      updatedAt: new Date().toISOString(),
+      label: site.artifactName,
+      sublabel: `${site.name} · ${site.scriptureRef}`,
+      eraId: this.mapCanvas?.activeEra.id,
+      siteId: site.id,
+      figureId: site.figureId,
+      bibleHref: `/bible?ref=${encodeURIComponent(site.scriptureOsis)}`,
+      interactHref: site.figureId ? `/interact?figure=${encodeURIComponent(site.figureId)}` : `/interact?ref=${encodeURIComponent(site.scriptureOsis)}`,
+      mapHref: `/map?site=${encodeURIComponent(site.id)}`
+    };
+    writeUserContext(nextCtx);
+    this.renderContextBar(nextCtx, false);
   }
 
   private showCityDetail(city: BiblicalCity): void {
@@ -277,9 +378,10 @@ class HistoricalAtlasApp {
     if (descEl) descEl.innerHTML = `Biblical Meaning: <em>&ldquo;${city.hitchcockMeaning}&rdquo;</em> (Hitchcock / Historical Bible index)`;
     if (sigEl) sigEl.textContent = `Scripture Anchor: ${city.scriptureAnchor}`;
 
+    const primaryRef = city.scriptureAnchor.split(',')[0].trim();
     if (scriptureLink) {
       scriptureLink.textContent = `Open in Bible Reader (${city.scriptureAnchor}) →`;
-      scriptureLink.href = `/bible?ref=${encodeURIComponent(city.scriptureAnchor.split(',')[0].trim())}`;
+      scriptureLink.href = `/bible?ref=${encodeURIComponent(primaryRef)}`;
     }
 
     if (studyDeskLink) {
@@ -297,6 +399,20 @@ class HistoricalAtlasApp {
     }
 
     drawer.hidden = false;
+    const nextCtx: HistoricalBibleUserContext = {
+      source: 'map',
+      updatedAt: new Date().toISOString(),
+      label: city.name,
+      sublabel: `${city.region} · ${city.scriptureAnchor}`,
+      eraId: this.mapCanvas?.activeEra.id,
+      cityKey: city.name.toLowerCase(),
+      figureId: city.figureIds?.[0],
+      bibleHref: `/bible?ref=${encodeURIComponent(primaryRef)}`,
+      interactHref: city.figureIds?.[0] ? `/interact?figure=${encodeURIComponent(city.figureIds[0])}` : `/interact?name=${encodeURIComponent(city.name)}`,
+      mapHref: `/map`
+    };
+    writeUserContext(nextCtx);
+    this.renderContextBar(nextCtx, false);
   }
 
   private showEmpireDetail(empire: WorldEmpireRegion): void {
@@ -363,9 +479,10 @@ class HistoricalAtlasApp {
         : 'Existing study annotation linked to ' + targetStop.scriptureRef + '. Dates (' + targetStop.dateLabel + ') and geographic placement are reconstructions, not Scripture quotations. ' + (targetStop.attestationSource || route.attestationSource || 'Independent historical sourcing remains to be reviewed.');
     }
 
+    const osisTarget = targetStop.scriptureOsis || route.scriptureOsis;
     if (scriptureLink) {
       scriptureLink.textContent = `Read Scripture (${targetStop.scriptureRef}) →`;
-      scriptureLink.href = `/bible?ref=${encodeURIComponent(targetStop.scriptureOsis || route.scriptureOsis)}`;
+      scriptureLink.href = `/bible?ref=${encodeURIComponent(osisTarget)}`;
     }
 
     if (studyDeskLink) {
@@ -391,6 +508,21 @@ class HistoricalAtlasApp {
     }
 
     drawer.hidden = false;
+    const nextCtx: HistoricalBibleUserContext = {
+      source: 'map',
+      updatedAt: new Date().toISOString(),
+      label: `${route.name} · ${targetStop.name}`,
+      sublabel: targetStop.scriptureRef,
+      eraId: this.mapCanvas?.activeEra.id,
+      journeyId: route.id,
+      stopIndex: idx,
+      figureId: route.figureId,
+      bibleHref: `/bible?ref=${encodeURIComponent(osisTarget)}`,
+      interactHref: `/interact?figure=${encodeURIComponent(route.figureId)}`,
+      mapHref: `/map?era=${encodeURIComponent(this.mapCanvas?.activeEra.id || 'apostolic_church')}&journey=${encodeURIComponent(route.id)}`
+    };
+    writeUserContext(nextCtx);
+    this.renderContextBar(nextCtx, false);
   }
 
   private hideDetailDrawer(): void {
