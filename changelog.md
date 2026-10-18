@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.54] - 2026-10-18
+
+- Added 106 Scripture story menu entries spanning Creation–Babel, major narratives, wisdom, late Judah, prophetic readings and Revelation alongside the 45 existing journeys.
+- Search now reaches all 66 KJV books, with complete verse pagination, exact reference handling, source-preserving display, place/discovery results and loading failure recovery.
+- Added reader compatibility for legacy atlas book codes; map study links open the cited passage instead of unrelated shared figure profiles.
+- Removed Jonah’s invented intermediate itinerary and mileage; label Job’s uncertain geography/dating and Peter’s Roman tradition honestly.
+- Verified 106 story citations, every route/stop/discovery anchor, two data tests, four new browser tests and 24 existing affected browser checks. Canonical corpus unchanged; build passes. Local release only, not deployed.
+
 ## [00.01.53] - 2026-10-18
 
 - **Root-Cause Hidden Entities Audit & Unrestricted Navigation**:
@@ -395,7 +403,8 @@ All notable changes to this project will be documented in this file.
 
 - Minimalist Map Compass Indicator (/map & /bible):
   - Completely replaced the bulky compass rose and loud banner with a sleek, minimalist compass needle visual aid.
-  - Features a crisp red North pointer (#ef4444 / #b91c1c) with a subtle red 'N', clean slate gray South pointer (#94a3b8 / #64748b), and faint subtle East & West horizontal wings/labels (gba(148, 163, 184, 0.4)).
+  - Features a crisp red North pointer (#ef4444 / #b91c1c) with a subtle red 'N', clean slate gray South pointer (#94a3b8 / #64748b), and faint subtle East & West horizontal wings/labels (
+gba(148, 163, 184, 0.4)).
   - Reduced footprint to a 34px x 42px translucent glass HUD tile tucked into the upper-right corner (	op: 12px; right: 12px;), eliminating map obscuration and allowing all geography, coastlines, and city labels to remain 100% visible.
   - Automated Regression Tests: Updated 	ests/map-chronology-compass.spec.ts locking down the minimalist compass needle and North indicator. All 44 tests pass.
 

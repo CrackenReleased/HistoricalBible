@@ -25,6 +25,8 @@ import {
   writeUserContext,
   type HistoricalBibleUserContext
 } from './store/userContextStore';
+import { localStore } from './store/localFirstStore';
+import { ATLAS_STORIES, ATLAS_STORY_PERIODS, type AtlasStory } from './data/atlasStories';
 
 class HistoricalAtlasApp {
   private mapCanvas: AncientMapCanvas | null = null;
@@ -66,6 +68,14 @@ class HistoricalAtlasApp {
       journeySelect.innerHTML = '<option value="">Choose a biblical journey…</option>' +
         BIBLICAL_ROUTES.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
       journeyField.hidden = false;
+    }
+    this.populateJourneyMenu('all', true);
+    const periodSelect = document.getElementById('atlas-era') as HTMLSelectElement;
+    for (const period of ATLAS_STORY_PERIODS) {
+      const option = new Option(period.name, period.id);
+      const before = period.id === 'primeval' ? 1 : period.id === 'last_kings'
+        ? [...periodSelect.options].findIndex(item => item.value === 'babylonian_exile') : periodSelect.options.length - 1;
+      periodSelect.add(option, before);
     }
     this.bindControls();
     this.syncLayers();
@@ -122,6 +132,9 @@ class HistoricalAtlasApp {
   private applySavedContext(ctx: HistoricalBibleUserContext): void {
     if (!this.mapCanvas) return;
     this.pendingSavedContext = null;
+    const storyId = new URL(ctx.mapHref, window.location.origin).searchParams.get('story');
+    const story = ATLAS_STORIES.find(item => item.id === storyId);
+    if (story) { this.chooseStory(story); return; }
     if (ctx.siteId) {
       const site = ARCHAEOLOGICAL_SITES.find(s => s.id === ctx.siteId);
       if (site) {
@@ -156,6 +169,12 @@ class HistoricalAtlasApp {
     });
     document.getElementById('atlas-era')?.addEventListener('change', event => {
       const id = (event.target as HTMLSelectElement).value;
+      if (ATLAS_STORY_PERIODS.some(period => period.id === id)) {
+        this.populateJourneyMenu(id);
+        const story = ATLAS_STORIES.find(item => item.eraId === id);
+        if (story) this.chooseStory(story);
+        return;
+      }
       this.orientation = !id;
       this.hideDetailDrawer();
       if (id) this.mapCanvas?.setEra(id);
@@ -171,12 +190,16 @@ class HistoricalAtlasApp {
           journeySelect.innerHTML = '<option value="">Choose a biblical journey…</option>' +
             BIBLICAL_ROUTES.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
         }
+        this.populateJourneyMenu('all', true);
         this.updateSequence();
       }
       this.syncLayers();
     });
     document.getElementById('atlas-journey')?.addEventListener('change', event => {
-      this.chooseJourney((event.target as HTMLSelectElement).value);
+      const id = (event.target as HTMLSelectElement).value;
+      const story = ATLAS_STORIES.find(item => `story:${item.id}` === id);
+      if (story) this.chooseStory(story);
+      else this.chooseJourney(id);
     });
     document.getElementById('atlas-sequence-slider')?.addEventListener('input', event => {
       this.activeStepperStopIndex = Number((event.target as HTMLInputElement).value);
@@ -239,7 +262,7 @@ class HistoricalAtlasApp {
     const KEYWORD_MAP: Record<string, string> = {
       'balaam-journey': 'donkey balak speaking donkey ass curse blessing angel sword vineyards moab pisgah peor star of jacob numbers balac',
       'jacob-padan-aram': 'rachel leah laban well haran padan-aram bethel ladder angels mahanaim peniel penuel wrestling thigh esau reconciliation succoth shechem ephrath bethlehem grave tomb genesis',
-      'jonah-prophet': 'jonah nineveh joppa tarshish fish whale deep tempest sea monster vomit vomited dry land shore 550 miles trek walk walking overland hamath euphrates tiphsah sackcloth repent repentance gourd worm wind',
+      'jonah-prophet': 'jonah nineveh joppa tarshish fish whale deep tempest vomit vomited dry land sackcloth repent repentance gourd worm wind',
       'gideon-judges': 'gideon jerubbaal ophrah threshing winepress midian midianites fleece dew harod spring of harod well of harod 300 lap lapping moreh pitchers torches trumpets jordan fords beth-barah oreb zeeb succoth penuel karkor zebah zalmunna',
       'samson-judges': 'samson lion timnath lehi jawbone ass gaza gates delilah dagon philistines pillars',
       'ruth-boaz': 'ruth naomi boaz moab bethlehem barley threshingfloor kinsman redeemer obed david',
@@ -250,7 +273,12 @@ class HistoricalAtlasApp {
       'elisha-ministry': 'elisha mantle jordan naaman leprosy axe head chariot hosts damascus shunammite'
     };
 
-    const performSearch = () => {
+    let searchRevision = 0;
+    let shownAnnotations = 8;
+    let scriptureOffset = 0;
+    const escape = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    const performSearch = async () => {
+      const revision = ++searchRevision;
       const query = searchInput.value.trim().toLowerCase();
       if (!query) {
         if (clearBtn) clearBtn.hidden = true;
@@ -260,7 +288,8 @@ class HistoricalAtlasApp {
       }
 
       if (clearBtn) clearBtn.hidden = false;
-      const tokens = query.split(/\s+/).filter(Boolean);
+      const tokens = query.replace(/[’']s\b/g, '').match(/[\p{L}\p{N}]+/gu) || [];
+      const referenceQuery = !!localStore.normalizeToOsis(query) || /^[1-3]?\s*[a-z][a-z\s.]*\s+\d+(?:[:.]\d+(?:[-–]\d+)?)?$/i.test(query);
 
       type MatchResult = {
         route: BiblicalRoute;
@@ -273,6 +302,7 @@ class HistoricalAtlasApp {
       const matches: MatchResult[] = [];
 
       for (const route of BIBLICAL_ROUTES) {
+        if (referenceQuery) continue;
         let score = 0;
         let matchedStopIndex = 0;
         let matchedSnippet = '';
@@ -330,6 +360,7 @@ class HistoricalAtlasApp {
             shortLower.includes(token) ||
             travelerLower.includes(token) ||
             summaryLower.includes(token) ||
+            scriptureLower.includes(token) ||
             keywords.includes(token) ||
             route.stops.some(s => s.name.toLowerCase().includes(token) || s.note.toLowerCase().includes(token));
           if (found) {
@@ -343,7 +374,7 @@ class HistoricalAtlasApp {
           score += 30;
         }
 
-        if (score > 0) {
+        if (score > 0 && allTokensFound) {
           const era = CHRONOLOGICAL_ERAS.find(e => e.id !== 'all' && e.activeRouteIds.includes(route.id));
           matches.push({
             route,
@@ -356,19 +387,25 @@ class HistoricalAtlasApp {
       }
 
       matches.sort((a, b) => b.score - a.score);
-      const topMatches = matches.slice(0, 8);
+      const topMatches = matches.slice(0, shownAnnotations);
+      const stories = ATLAS_STORIES.filter(story => {
+        const text = `${story.title} ${story.keywords} ${story.note} ${story.ref}`.toLowerCase();
+        return !referenceQuery && tokens.length > 0 && tokens.every(token => text.includes(token));
+      });
+      const places = BIBLICAL_CITIES.filter(city => !referenceQuery && tokens.length > 0 && tokens.every(token => `${city.name} ${city.ancientName || ''} ${city.region}`.toLowerCase().includes(token)));
+      const discoveries = ARCHAEOLOGICAL_SITES.filter(site => !referenceQuery && tokens.length > 0 && tokens.every(token => `${site.name} ${site.artifactName} ${site.description}`.toLowerCase().includes(token)));
 
       if (topMatches.length === 0) {
-        resultsContainer.innerHTML = `<div class="atlas-search-empty">No biblical journeys found for "${query}"</div>`;
+        resultsContainer.innerHTML = '';
       } else {
         resultsContainer.innerHTML = topMatches.map(m => `
           <button type="button" class="atlas-search-item" data-route-id="${m.route.id}" data-stop-index="${m.matchedStopIndex}">
             <div class="atlas-search-item-header">
-              <span class="atlas-search-item-title">${m.route.name}</span>
-              <span class="atlas-search-item-era">${m.eraName}</span>
+              <span class="atlas-search-item-title">${escape(m.route.name)}</span>
+              <span class="atlas-search-item-era">${escape(m.eraName)}</span>
             </div>
-            <div class="atlas-search-item-sub">${m.route.travelerName} · ${m.route.stops.length} stops · ${m.route.scriptureRef}</div>
-            ${m.matchedSnippet ? `<div class="atlas-search-item-match">${m.matchedSnippet}</div>` : ''}
+            <div class="atlas-search-item-sub">${escape(m.route.travelerName)} · ${m.route.stops.length} stops · ${escape(m.route.scriptureRef)}</div>
+            ${m.matchedSnippet ? `<div class="atlas-search-item-match">${escape(m.matchedSnippet)}</div>` : ''}
           </button>
         `).join('');
 
@@ -381,16 +418,105 @@ class HistoricalAtlasApp {
           });
         });
       }
-
+      for (const story of stories.slice(0, shownAnnotations)) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'atlas-search-item';
+        button.textContent = `${story.title} · Scripture story · ${story.ref}`;
+        button.addEventListener('click', () => {
+          this.chooseStory(story);
+          ++searchRevision;
+          resultsContainer.hidden = true;
+        });
+        resultsContainer.append(button);
+      }
+      if (matches.length > shownAnnotations || stories.length > shownAnnotations) {
+        const more = document.createElement('button');
+        more.type = 'button';
+        more.className = 'atlas-search-item';
+        more.textContent = `More stories & journeys (${matches.length + stories.length} matches)`;
+        more.onclick = () => { shownAnnotations += 8; void performSearch(); };
+        resultsContainer.append(more);
+      }
+      for (const place of places) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'atlas-search-item';
+        button.textContent = `${place.name} · Map place · ${place.region}`;
+        button.onclick = () => { this.showCityDetail(place); this.mapCanvas?.animateToCoords(place.coords, 7); resultsContainer.hidden = true; ++searchRevision; };
+        resultsContainer.append(button);
+      }
+      for (const site of discoveries) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'atlas-search-item';
+        button.textContent = `${site.name} · Archaeological annotation`;
+        button.onclick = () => { this.showSiteDetail(site); this.mapCanvas?.animateToCoords(site.coords, 7); resultsContainer.hidden = true; ++searchRevision; };
+        resultsContainer.append(button);
+      }
+      const scripture = document.createElement('section');
+      scripture.setAttribute('aria-label', 'KJV Scripture matches');
+      scripture.innerHTML = '<p class="atlas-search-empty" role="status">Searching the KJV text…</p>';
+      resultsContainer.append(scripture);
       resultsContainer.hidden = false;
+      try {
+        await localStore.initCritical();
+        if (revision !== searchRevision) return;
+        const result = localStore.searchScripture(query, scriptureOffset, 12);
+        scripture.replaceChildren();
+        const status = document.createElement('p');
+        status.className = 'atlas-search-empty';
+        status.setAttribute('role', 'status');
+        status.textContent = result.total
+          ? `KJV text · ${scriptureOffset + 1}–${Math.min(scriptureOffset + 12, result.total)} of ${result.total} verses. Text matches may refer to different people with the same name; they do not establish a map location.`
+          : matches.length || stories.length || places.length || discoveries.length ? 'No exact KJV text matches. Story titles and map annotations are editorial study aids.' : 'No matching story or KJV text. Try a KJV spelling, fewer words, or a reference such as John 3:16. This does not mean the subject is absent from Scripture.';
+        scripture.append(status);
+        for (const verse of result.verses) {
+          const link = document.createElement('a');
+          link.className = 'atlas-search-item';
+          link.href = `/bible?ref=${encodeURIComponent(localStore.toOsisRef(verse))}`;
+          const ref = document.createElement('strong');
+          ref.textContent = localStore.formatDisplayRef(verse);
+          const quote = document.createElement('span');
+          quote.innerHTML = localStore.formatCanonicalKjvHtml(verse.text);
+          link.append(ref, quote);
+          scripture.append(link);
+        }
+        for (const [label, delta] of [['Previous Scripture results', -12], ['More Scripture results', 12]] as const) {
+          if (delta < 0 ? scriptureOffset === 0 : scriptureOffset + 12 >= result.total) continue;
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'atlas-search-item';
+          button.textContent = label;
+          button.onclick = async () => {
+            scriptureOffset += delta;
+            await performSearch();
+            resultsContainer.querySelector<HTMLElement>('[aria-label="KJV Scripture matches"] .atlas-search-item')?.focus();
+          };
+          scripture.append(button);
+        }
+      } catch {
+        if (revision !== searchRevision) return;
+        scripture.innerHTML = '<p class="atlas-search-empty" role="status">KJV search could not load. Curated stories remain available.</p>';
+        const retry = document.createElement('button');
+        retry.className = 'atlas-search-item';
+        retry.textContent = 'Retry Scripture search';
+        retry.onclick = () => { void performSearch(); };
+        scripture.append(retry);
+      }
     };
 
-    searchInput.addEventListener('input', performSearch);
+    searchInput.addEventListener('input', () => {
+      shownAnnotations = 8;
+      scriptureOffset = 0;
+      void performSearch();
+    });
     searchInput.addEventListener('focus', () => {
       if (searchInput.value.trim()) performSearch();
     });
 
     clearBtn?.addEventListener('click', () => {
+      ++searchRevision;
       searchInput.value = '';
       clearBtn.hidden = true;
       resultsContainer.hidden = true;
@@ -400,6 +526,7 @@ class HistoricalAtlasApp {
 
     searchInput.addEventListener('keydown', event => {
       if (event.key === 'Escape') {
+        ++searchRevision;
         resultsContainer.hidden = true;
       } else if (event.key === 'ArrowDown') {
         event.preventDefault();
@@ -413,25 +540,31 @@ class HistoricalAtlasApp {
     });
 
     resultsContainer.addEventListener('keydown', event => {
-      const target = event.target as HTMLElement;
-      if (!target.classList.contains('atlas-search-item')) return;
+      const target = (event.target as HTMLElement).closest<HTMLElement>('.atlas-search-item');
+      if (!target) return;
+      const items = [...resultsContainer.querySelectorAll<HTMLElement>('.atlas-search-item')];
+      const index = items.indexOf(target);
 
       if (event.key === 'ArrowDown') {
         event.preventDefault();
-        (target.nextElementSibling as HTMLElement | null)?.focus();
+        items[index + 1]?.focus();
       } else if (event.key === 'ArrowUp') {
         event.preventDefault();
-        const prev = target.previousElementSibling as HTMLElement | null;
+        const prev = items[index - 1];
         if (prev) prev.focus();
         else searchInput.focus();
       } else if (event.key === 'Escape') {
+        ++searchRevision;
         resultsContainer.hidden = true;
         searchInput.focus();
       }
     });
 
     document.addEventListener('click', event => {
-      if (!searchInput.contains(event.target as Node) && !resultsContainer.contains(event.target as Node)) {
+      // Search actions replace their own button before this bubbling click arrives.
+      // The event path retains the original container even after the target is detached.
+      if (!event.composedPath().includes(searchInput) && !event.composedPath().includes(resultsContainer)) {
+        ++searchRevision;
         resultsContainer.hidden = true;
       }
     });
@@ -454,10 +587,7 @@ class HistoricalAtlasApp {
     this.orientation = false;
     (document.getElementById('atlas-era') as HTMLSelectElement).value = era.id;
     const routes = BIBLICAL_ROUTES.filter(r => era.id === 'all' || era.activeRouteIds.includes(r.id));
-    const select = document.getElementById('atlas-journey') as HTMLSelectElement;
-    select.replaceChildren(...routes.map(route => new Option(route.name +
-      (route.evidenceClass === 'EXTERNAL_HISTORICAL_ATTESTATION' ? ' · External tradition' : ''), route.id)));
-    document.getElementById('atlas-journey-field')!.hidden = routes.length === 0;
+    this.populateJourneyMenu(era.id);
     const introductory = routes.find(r => r.id === 'paul-first-journey' && era.id === 'apostolic_church')
       || routes.find(r => r.evidenceClass !== 'EXTERNAL_HISTORICAL_ATTESTATION');
     if (introductory) this.chooseJourney(introductory.id);
@@ -468,6 +598,73 @@ class HistoricalAtlasApp {
       this.hideDetailDrawer();
       this.updateSequence(false);
     }
+  }
+
+  private populateJourneyMenu(eraId: string, prompt = false): void {
+    const select = document.getElementById('atlas-journey') as HTMLSelectElement;
+    const era = CHRONOLOGICAL_ERAS.find(item => item.id === eraId);
+    const routes = BIBLICAL_ROUTES.filter(route => eraId === 'all' || era?.activeRouteIds.includes(route.id));
+    const stories = ATLAS_STORIES.filter(story => eraId === 'all' || story.eraId === eraId);
+    select.replaceChildren();
+    if (prompt) select.add(new Option('Choose a biblical journey or story…', ''));
+    for (const [label, options] of [
+      ['Journeys', routes.map(route => new Option(route.name + (route.evidenceClass === 'EXTERNAL_HISTORICAL_ATTESTATION' ? ' · External tradition' : ''), route.id))],
+      ['Scripture stories', stories.map(story => new Option(story.title, `story:${story.id}`))],
+    ] as const) {
+      if (!options.length) continue;
+      const group = document.createElement('optgroup');
+      group.label = label;
+      group.append(...options);
+      select.append(group);
+    }
+    document.getElementById('atlas-journey-field')!.hidden = routes.length + stories.length === 0;
+  }
+
+  private chooseStory(story: AtlasStory): void {
+    if (!this.mapCanvas) return;
+    const eraSelect = document.getElementById('atlas-era') as HTMLSelectElement;
+    const eraId = eraSelect.value === 'all' ? 'all' : story.eraId;
+    this.orientation = false;
+    const era = CHRONOLOGICAL_ERAS.find(item => item.id === eraId);
+    if (era) this.mapCanvas.setEra(eraId);
+    eraSelect.value = eraId;
+    this.populateJourneyMenu(eraId);
+    if (story.routeId) {
+      this.selectJourneyAndStop(story.routeId, story.stopIndex || 0);
+    } else {
+      this.activeStepperRouteId = null;
+      this.mapCanvas.activeRouteOverrideIds = [];
+      this.mapCanvas.activeRouteStopSelection = null;
+      this.mapCanvas.layers.routes = false;
+      this.mapCanvas.layers.empires = false;
+      this.mapCanvas.layers.archaeology = false;
+      this.mapCanvas.render();
+      this.updateSequence(false);
+      this.syncLayers();
+    }
+    (document.getElementById('atlas-journey') as HTMLSelectElement).value = `story:${story.id}`;
+    document.getElementById('drawer-title')!.textContent = story.title;
+    document.getElementById('drawer-meta')!.textContent = `${story.ref} · Editorial Scripture guide${story.routeId ? '' : ' · Reading only; no map location assigned'}`;
+    document.getElementById('drawer-desc')!.textContent = story.note;
+    document.getElementById('drawer-significance')!.textContent = story.routeId
+      ? 'Read the cited passage in context. The related journey uses approximate inherited geography; its coordinates and dates are not Scripture quotations.'
+      : 'Scripture reading entry. No map location or travel route is assigned to this story. The background map is geographic context only. This does not imply the event did not occur or had no place; the atlas has not established coordinates. Period groupings are editorial, not exact dates.';
+    const bible = document.getElementById('drawer-scripture-link') as HTMLAnchorElement;
+    bible.href = `/bible?ref=${encodeURIComponent(story.ref)}`;
+    bible.textContent = `Read Scripture (${story.ref}) →`;
+    const desk = document.getElementById('drawer-desk-link') as HTMLAnchorElement;
+    desk.hidden = false;
+    desk.href = `/interact?ref=${encodeURIComponent(story.ref)}`;
+    desk.textContent = 'Explore this passage in Interact →';
+    document.getElementById('drawer-museum-link')!.hidden = true;
+    document.getElementById('atlas-detail-drawer')!.hidden = false;
+    const context: HistoricalBibleUserContext = {
+      source: 'map', updatedAt: new Date().toISOString(), label: story.title,
+      sublabel: story.ref, bibleHref: bible.getAttribute('href')!, interactHref: desk.getAttribute('href')!,
+      mapHref: `/map?story=${encodeURIComponent(story.id)}`,
+    };
+    writeUserContext(context);
+    this.renderContextBar(context, false);
   }
 
   private chooseJourney(id: string): void {
@@ -542,6 +739,8 @@ class HistoricalAtlasApp {
       if (routeEra) this.mapCanvas?.setEra(routeEra.id);
     }
     if (route) this.chooseJourney(route.id);
+    const story = ATLAS_STORIES.find(item => item.id === params.get('story'));
+    if (story) this.chooseStory(story);
     const region = REGION_PRESETS.find(r => r.id === params.get('region'));
     if (region) this.mapCanvas?.jumpToPreset(region.id);
     const site = ARCHAEOLOGICAL_SITES.find(s => s.id === params.get('site'));
@@ -739,20 +938,8 @@ class HistoricalAtlasApp {
 
     if (studyDeskLink) {
       studyDeskLink.hidden = false;
-      studyDeskLink.href = `/interact?figure=${route.figureId}`;
-      const figureLabelMap: Record<string, string> = {
-        'jesus-christ': 'Jesus Christ',
-        'paul': 'Paul',
-        'peter': 'Peter & the Apostles',
-        'moses': 'Moses & Joshua',
-        'abraham': 'Abraham, Jacob & Joseph',
-        'david': 'David',
-        'hezekiah': 'Elijah, Elisha & Hezekiah',
-        'daniel': 'Daniel',
-        'ezra-nehemiah': 'Ezra & Nehemiah'
-      };
-      const figureLabel = figureLabelMap[route.figureId] || route.figureId;
-      studyDeskLink.textContent = `Explore ${figureLabel} in Interact →`;
+      studyDeskLink.href = `/interact?ref=${encodeURIComponent(localStore.normalizeToOsis(osisTarget) || osisTarget)}`;
+      studyDeskLink.textContent = 'Explore this passage in Interact →';
     }
 
     if (museumLink) {
@@ -768,9 +955,8 @@ class HistoricalAtlasApp {
       eraId: this.mapCanvas?.activeEra.id,
       journeyId: route.id,
       stopIndex: idx,
-      figureId: route.figureId,
       bibleHref: `/bible?ref=${encodeURIComponent(osisTarget)}`,
-      interactHref: `/interact?figure=${encodeURIComponent(route.figureId)}`,
+      interactHref: `/interact?ref=${encodeURIComponent(localStore.normalizeToOsis(osisTarget) || osisTarget)}`,
       mapHref: `/map?era=${encodeURIComponent(this.mapCanvas?.activeEra.id || 'apostolic_church')}&journey=${encodeURIComponent(route.id)}`
     };
     writeUserContext(nextCtx);

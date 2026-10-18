@@ -323,27 +323,25 @@ test('judges era and instant journey search allow jumping between Gideon, Balaam
   await expect(page.locator('#drawer-title')).toContainText('Haran');
   await expect(page.locator('#drawer-desc')).toContainText('Laban');
 
-  // 4. Journey search for "nineveh" finds Jonah's 550-mile trek
+  // 4. Journey search finds Jonah without inventing an intervening itinerary.
   await searchInput.fill('nineveh');
   await expect(searchResults).toBeVisible();
   const jonahResult = searchResults.locator('.atlas-search-item').first();
   await expect(jonahResult).toContainText('Jonah');
-  await expect(jonahResult).toContainText('550-Mile Trek');
+  await expect(jonahResult).toContainText('Great Fish');
   await jonahResult.click();
   await expect(searchResults).toBeHidden();
 
   // Route switches to Jonah and drawer reveals the great Assyrian capital / overland trek
   await expect(page.locator('#chrono-headline')).toContainText('Jonah');
   await expect(page.locator('#drawer-title')).toContainText('Nineveh');
-  await expect(page.locator('#drawer-desc')).toContainText('120,000');
+  await expect(page.locator('#drawer-desc')).toContainText('route by which Jonah reached Nineveh is not specified');
 
-  // Step backward to Mediterranean Shore vomit site
+  // Unknown landing places do not become fabricated map stops.
   await slider.focus();
-  await slider.press('ArrowLeft'); // Euphrates River Ford
-  await slider.press('ArrowLeft'); // Hamath Gap
-  await slider.press('ArrowLeft'); // Mediterranean Shore (Vomited onto Dry Land)
-  await expect(page.locator('#drawer-title')).toContainText('Mediterranean Shore');
-  await expect(page.locator('#drawer-desc')).toContainText('550 miles');
+  await slider.press('ArrowLeft');
+  await expect(page.locator('#drawer-title')).toContainText('Joppa');
+  await expect(page.locator('#drawer-desc')).toContainText('landing place are not specified');
 
   // 5. Clear search button resets search
   await searchInput.fill('test');

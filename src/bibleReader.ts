@@ -267,7 +267,7 @@ class BibleReader {
     }
 
     if (refParam) {
-      const parts = refParam.split('.');
+      const parts = (localStore.normalizeToOsis(refParam) || refParam).split('.');
       if (parts[0]) {
         const normRef = parts[0].toLowerCase().replace(/[\s_]+/g, '');
         const matched = this.books.find(

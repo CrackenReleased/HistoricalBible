@@ -156,6 +156,18 @@ for (const [book, osis] of Object.entries(BOOK_TO_OSIS)) {
   }
 }
 
+// Existing atlas links use USFM-style book codes; the reader's canonical index uses OSIS.
+const ATLAS_BOOK_CODES: Record<string, string> = Object.fromEntries([
+  ['EXO', 'Exod'], ['DEU', 'Deut'], ['JOS', 'Josh'], ['JDG', 'Judg'], ['RUT', 'Ruth'],
+  ['1SA', '1Sam'], ['2SA', '2Sam'], ['1KI', '1Kgs'], ['2KI', '2Kgs'], ['1CH', '1Chr'], ['2CH', '2Chr'],
+  ['EZR', 'Ezra'], ['EST', 'Esth'], ['PSA', 'Ps'], ['PRO', 'Prov'], ['ECC', 'Eccl'], ['SNG', 'Song'],
+  ['EZK', 'Ezek'], ['AMO', 'Amos'], ['OBA', 'Obad'], ['JON', 'Jonah'], ['MIC', 'Mic'], ['NAM', 'Nah'],
+  ['ZEP', 'Zeph'], ['HAG', 'Hag'], ['ZEC', 'Zech'], ['MAT', 'Matt'], ['MRK', 'Mark'], ['LUK', 'Luke'],
+  ['JHN', 'John'], ['ACT', 'Acts'], ['1CO', '1Cor'], ['2CO', '2Cor'], ['PHP', 'Phil'],
+  ['1TH', '1Thess'], ['2TH', '2Thess'], ['1TI', '1Tim'], ['2TI', '2Tim'], ['TIT', 'Titus'],
+  ['PHM', 'Phlm'], ['JAS', 'Jas'], ['1PE', '1Pet'], ['2PE', '2Pet'], ['1JN', '1John'], ['2JN', '2John'], ['3JN', '3John'], ['JUD', 'Jude'],
+]);
+
 export class LocalFirstStore {
   private cacheName = 'historical-bible-cache-v00.01.18-names';
   private network!: BibleNetwork;
@@ -439,7 +451,8 @@ export class LocalFirstStore {
 
     // Already OSIS format like "Gen.1.1" or "1Sam.16.13"
     if (/^[1-3]?[A-Za-z]+\.\d+\.\d+$/.test(trimmed)) {
-      return trimmed;
+      const [book, chapter, verse] = trimmed.split('.');
+      return `${ATLAS_BOOK_CODES[book.toUpperCase()] || book}.${chapter}.${verse}`;
     }
 
     // Human format like "Genesis 1:1", "1 Samuel 16:13", or "GENESIS {1:1}"
@@ -449,6 +462,7 @@ export class LocalFirstStore {
     const rawBook = match[1].trim().replace(/\s+/g, ' ');
     const chapter = Number(match[2]);
     const verse = Number(match[3]);
+    if (ATLAS_BOOK_CODES[rawBook.toUpperCase()]) return `${ATLAS_BOOK_CODES[rawBook.toUpperCase()]}.${chapter}.${verse}`;
 
     for (const [bookName, osis] of Object.entries(BOOK_TO_OSIS)) {
       if (bookName.toLowerCase() === rawBook.toLowerCase() || osis.toLowerCase() === rawBook.toLowerCase()) {
@@ -628,6 +642,45 @@ export class LocalFirstStore {
       }
     }
     return matches;
+  }
+
+  /** Atlas concordance: all words in a verse, quoted phrases, or an exact passage.
+   * Counts the whole corpus before paging; never turns a text match into a person identity.
+   * Search normalization is ephemeral and does not change the source text.
+   */
+  public searchScripture(query: string, offset = 0, limit = 12): { verses: KjvVerseData[]; total: number } {
+    const input = query.trim();
+    if (!input) return { verses: [], total: 0 };
+    const normalized = this.normalizeToOsis(input);
+    let matches: KjvVerseData[];
+    if (normalized) {
+      const verse = this.getVerseByOsis(normalized);
+      matches = verse ? [verse] : [];
+    } else {
+      const passage = input.match(/^([1-3]?\s*[a-z]+(?:\s+[a-z]+)*)[.\s]+(\d+)(?:[.:](\d+)(?:\s*[-–]\s*(\d+))?)?$/i);
+      if (passage) {
+        const raw = passage[1].replace(/\s+/g, ' ').toLowerCase();
+        const book = Object.entries(BOOK_TO_OSIS).find(([name, osis]) => name.toLowerCase() === raw || osis.toLowerCase() === raw);
+        const chapter = book ? this.getChapterVerses(book[1], Number(passage[2])) : [];
+        const first = passage[3] ? Number(passage[3]) : 1;
+        const last = passage[4] ? Number(passage[4]) : passage[3] ? first : Infinity;
+        matches = chapter.filter(v => v.verse >= first && v.verse <= last);
+        if (passage[3] && (!chapter.some(v => v.verse === first) || !chapter.some(v => v.verse === last))) matches = [];
+      } else {
+        const terms = input.match(/"[^"]+"|[\p{L}\p{N}]+(?:['’][\p{L}]+)?/gu) || [];
+        const patterns = terms.map(term => {
+          const plain = term.replace(/^"|"$/g, '').replace(/’/g, "'");
+          const escaped = plain.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+          return new RegExp(`\\b${escaped}\\b`, 'i');
+        });
+        matches = patterns.length ? this.verses.filter(v => {
+          const text = v.text.replace(/[\[\]]/g, '').replace(/’/g, "'");
+          return patterns.every(pattern => pattern.test(text));
+        }) : [];
+      }
+    }
+    const start = Math.max(0, Math.floor(offset));
+    return { verses: matches.slice(start, start + Math.max(1, Math.min(100, Math.floor(limit)))), total: matches.length };
   }
 
   public searchAll(query: string, maxVerses = 25): {

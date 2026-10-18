@@ -4574,6 +4574,9 @@ svg path:focus-visible,
   display: none;
 }
 .atlas-search-item {
+  min-height: 44px;
+  text-decoration: none;
+  overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;
   padding: 10px 14px;
@@ -4614,7 +4617,7 @@ svg path:focus-visible,
 .atlas-search-item-era {
   font-size: 11px;
   color: #c3a576;
-  white-space: nowrap;
+  text-align: right;
 }
 .atlas-search-item-sub {
   font-size: 12px;
@@ -4634,6 +4637,10 @@ svg path:focus-visible,
   font-size: 13px;
   font-style: italic;
 }
+.atlas-search-help { margin: 6px 0 0; font-size: 13px; line-height: 1.4; color: var(--atlas-muted); }
+.atlas-reading-controls { align-items: flex-start; }
+.atlas-search-results .kjv-divine-rest { font-size: 0.8em; }
+.atlas-search-results section > .atlas-search-item { gap: 5px; line-height: 1.5; }
 .atlas-disclosure { position: relative; flex: 1 1 100%; width: 100%; margin: 0; padding: 0; background: transparent; border: 0; border-radius: 0; }
 .atlas-disclosure[open] { flex-basis: 100%; }
 .atlas-reading summary { cursor: pointer; min-height: 44px; padding: 10px 18px; font-size: 14px; width: fit-content; display: inline-flex; align-items: center; }

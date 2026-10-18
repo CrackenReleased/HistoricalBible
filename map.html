@@ -88,10 +88,11 @@
         <div class="atlas-field atlas-search-field">
           <label for="atlas-journey-search">Search journeys &amp; stories</label>
           <div class="atlas-search-wrapper">
-            <input type="search" id="atlas-journey-search" placeholder="Search (e.g. Gideon, donkey, Rachel, Jonah, Nineveh)…" autocomplete="off" spellcheck="false" />
+            <input type="search" id="atlas-journey-search" placeholder="Person, story, KJV words, or John 3:16…" aria-describedby="atlas-search-help" autocomplete="off" spellcheck="false" />
             <button type="button" id="atlas-search-clear" class="atlas-search-clear-btn" aria-label="Clear search" hidden>&times;</button>
           </div>
-          <div id="atlas-search-results" class="atlas-search-results" hidden role="listbox" aria-label="Search results"></div>
+          <p id="atlas-search-help" class="atlas-search-help">All 66 KJV books · names, words, references, and map annotations.</p>
+          <div id="atlas-search-results" class="atlas-search-results" hidden role="region" aria-label="Search results"></div>
         </div>
         <details class="atlas-disclosure" id="atlas-visibility">
           <summary>What to show</summary>
@@ -197,7 +198,7 @@
   <footer class="wrap">
     <a class="footer-brand" href="/"><img src="/images/brand/logo-small.webp" alt="Historical Bible — Home" width="600" height="300" loading="lazy" /></a>
     <div>John 17:3 &mdash; &ldquo;And this is life eternal, that they might know thee the only true God, and Jesus Christ, whom thou hast sent.&rdquo;</div>
-    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Historical Bible Est. 2019 &middot; All Rights Reserved &middot; Map &middot; v00.01.51</div>
+    <div style="font-family: var(--font-mono); font-size: 0.75rem;">Historical Bible Est. 2019 &middot; All Rights Reserved &middot; Map &middot; v00.01.54</div>
   </footer>
 
   <script type="module" src="/src/atlasApp.ts"></script>

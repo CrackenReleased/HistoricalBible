@@ -42,7 +42,7 @@ export interface BiblicalCity {
   figureIds?: string[];
 }
 
-export type RouteEvidenceClass = 'SCRIPTURE_TEXT' | 'EXTERNAL_HISTORICAL_ATTESTATION';
+export type RouteEvidenceClass = 'SCRIPTURE_TEXT' | 'SCRIPTURAL_INFERENCE' | 'EXTERNAL_HISTORICAL_ATTESTATION';
 
 export interface BiblicalRouteStop {
   name: string;
@@ -1651,7 +1651,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 1929 – 1899 BC (Genesis Era)',
     scriptureRef: 'GENESIS {28:10}–{35:29}',
     scriptureOsis: 'GEN.28.10',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Fleeing Esau from Beersheba, Jacob dreams of the ladder at Bethel, reaches Haran where he meets Rachel at the well, serves 20 years for Rachel, Leah, and his flocks, departs secretly, makes covenant with Laban at Mount Gilead, wrestles with the Angel at Peniel (where he is named Israel), reconciles with Esau, and buries Rachel at Bethlehem on the way to Hebron.',
     stops: [
       {
@@ -1738,7 +1738,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 1915 – 1876 BC',
     scriptureRef: 'GENESIS {31:17}–{50:26}',
     scriptureOsis: 'GEN.37.28',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Jacob returns from Padan-Aram to wrestle with the Angel at Peniel, dwells at Hebron, and after Joseph is sold into Egypt and exalted as Vizier under Pharaoh, brings all 70 souls of Israel down to Goshen during the seven-year famine.',
     stops: [
       {
@@ -1793,7 +1793,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 1406 – 1399 BC',
     scriptureRef: 'JOSHUA {1:1}–{11:23}',
     scriptureOsis: 'JOS.3.14',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'After Moses views the Promised Land from Mount Nebo, Joshua leads Israel across the parted Jordan River to Gilgal, conquers Jericho and Ai, defends Gibeon in the southern campaign, and defeats Hazor in the north.',
     path: [
       { lat: 31.767, lng: 35.725 }, // Plains of Moab & Mount Nebo
@@ -1881,7 +1881,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 1407 BC (Wilderness Encampment in Moab)',
     scriptureRef: 'NUMBERS {22:1}–{24:25}, {31:8}, 2 PETER {2:15}–{2:16}',
     scriptureOsis: 'NUM.22.28',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Summoned by Balak king of Moab from Pethor by the Euphrates to curse Israel encamped on the plains of Moab, Balaam saddles his donkey. The Angel of the LORD with drawn sword opposes him in the vineyards; God opens the mouth of the donkey to speak; and from the heights of Pisgah and Peor, Balaam can only utter blessings and prophecies of the Star out of Jacob.',
     stops: [
       {
@@ -1944,7 +1944,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 1025 – 1003 BC',
     scriptureRef: '1 SAMUEL {16:1}–2 SAMUEL {5:10}',
     scriptureOsis: '1SA.16.13',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Anointed by Samuel at Bethlehem, David defeats Goliath in the Valley of Elah, endures years as a fugitive from Saul in Adullam and En-gedi, reigns seven years in Hebron, and establishes Jerusalem (Mount Zion) as Israel\'s united capital.',
     path: [
       { lat: 31.705, lng: 35.204 }, // Bethlehem Ephratah
@@ -2011,7 +2011,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 865 – 841 BC',
     scriptureRef: '1 KINGS {17:1}–2 KINGS {13:21}',
     scriptureOsis: '1KI.18.38',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'During the apostasy of Ahab, Jezebel, and Ahaziah, Elijah confronts Baal on Mount Carmel, hears the still small voice at Horeb, prophesies against Ahaziah (2 Kings 1), and ascends in a whirlwind across the Jordan as Elisha receives a double portion.',
     path: [
       { lat: 32.350, lng: 35.680 }, // Brook Cherith (East of Jordan / Gilead)
@@ -2092,7 +2092,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: '605 – 539 BC',
     scriptureRef: '2 KINGS {24:1}–{25:21}, DANIEL {1:1}–{6:28}',
     scriptureOsis: 'DAN.1.1',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'In three waves (605, 597, and 586 BC), Nebuchadnezzar II marches from Babylon up the Euphrates through Carchemish and Riblah to besiege Jerusalem, carrying Daniel, Ezekiel, King Jehoiachin, and Judah into 70 years of Babylonian captivity.',
     path: [
       { lat: 31.768, lng: 35.213 }, // Stop 1: Jerusalem
@@ -2183,7 +2183,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: '538 – 445 BC',
     scriptureRef: 'EZRA {1:1}–{8:36}, NEHEMIAH {1:1}–{6:16}',
     scriptureOsis: 'EZR.1.1',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Fulfilling Jeremiah\'s 70-year prophecy and Isaiah\'s naming of Cyrus, the Jewish remnant returns from Babylon and Susa in three waves under Zerubbabel (538 BC), Ezra (458 BC), and Nehemiah (445 BC) to rebuild the Second Temple and Jerusalem\'s walls.',
     stops: [
       {
@@ -2238,7 +2238,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. AD 26 – 29',
     scriptureRef: 'MATTHEW {3:1}–{3:17}, {11:2}–{11:14}, JOHN {1:19}–{1:36}, {3:22}–{3:36}, MARK {6:17}–{6:29}',
     scriptureOsis: 'JHN.1.28',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'In the 15th year of Tiberius Caesar (Luke 3:1), John the Baptist emerges in the Wilderness of Judea to prepare the way of the LORD, baptizes Jesus at Bethabara, ministers at Aenon near Salim simultaneously while Jesus ministers in Judea (John 3:22–24), and is imprisoned and martyred by Herod Antipas at Machaerus.',
     stops: [
       {
@@ -2293,7 +2293,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 6 BC – AD 8',
     scriptureRef: 'MATTHEW {1:18}–{2:23}, LUKE {1:26}–{2:52}',
     scriptureOsis: 'LUK.2.4',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'From Gabriel\'s announcement in Nazareth to the census birth in Bethlehem, presentation at the Jerusalem Temple, refuge in Egypt from Herod the Great, and childhood in Nazareth culminating in the Passover visit at age twelve.',
     stops: [
       {
@@ -2356,7 +2356,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'AD 26 – 27',
     scriptureRef: 'MATTHEW {3:13}–{4:12}, JOHN {1:29}–{4:54}',
     scriptureOsis: 'JHN.3.22',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Jesus is baptized by John the Baptist at the Jordan, overcomes Satan in the Judean Wilderness, turns water to wine at Cana, cleanses the Temple and teaches Nicodemus in Jerusalem, ministers in the Judean countryside simultaneously with John the Baptist at Aenon (John 3:22–24), and reveals Himself as Messiah to the Samaritan woman at Sychar.',
     stops: [
       {
@@ -2419,7 +2419,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'AD 28 – 29',
     scriptureRef: 'MATTHEW {4:13}–{18:35}, MARK {1:14}–{9:50}, LUKE {4:14}–{9:50}, JOHN {5:1}–{7:52}',
     scriptureOsis: 'MAT.4.13',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Making Capernaum His headquarters by the Sea of Galilee, Jesus calls the Twelve, preaches the Sermon on the Mount, calms the storm, raises the dead at Nain and Capernaum, feeds the 5,000 near Bethsaida, ministers in Tyre and Sidon, and is transfigured in glory near Caesarea Philippi.',
     path: [
       { lat: 32.701, lng: 35.303 }, // Nazareth
@@ -2525,7 +2525,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'AD 29 – 30 / 33',
     scriptureRef: 'LUKE {9:51}–{24:53}, JOHN {11:1}–{21:25}, MATTHEW {19:1}–{28:20}, ACTS {1:1}–{1:11}',
     scriptureOsis: 'MAT.28.6',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Setting His face steadfastly toward Jerusalem, Jesus ministers in Perea, raises Lazarus at Bethany, passes through Jericho, enters Jerusalem in triumph, suffers and dies on Golgotha for our sins, rises bodily from the tomb on the third day, appears in Emmaus, Jerusalem, and Galilee, and ascends from the Mount of Olives.',
     path: [
       { lat: 31.880, lng: 35.600 }, // Perea Beyond Jordan
@@ -2618,7 +2618,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'AD 33 – c. 67',
     scriptureRef: 'ACTS {2:1}–{12:19}, {15:7}–{15:11}, GALATIANS {2:11}, 1 PETER {1:1}, {5:13}',
     scriptureOsis: 'ACT.2.1',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'From the outpouring of the Holy Spirit at Pentecost in Jerusalem, the Gospel expands through Philip to Samaria and the Ethiopian treasurer on the Gaza road, and through Peter to Lydda, Joppa, Cornelius\'s Gentile household in Caesarea, Antioch, the Diaspora of Asia Minor, and Rome.',
     stops: [
       {
@@ -2670,12 +2670,14 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
         note: 'Peter visits the Gentile-Jewish church at Syrian Antioch and addresses his first epistle to the elect strangers scattered throughout Pontus, Galatia, Cappadocia, Asia, and Bithynia.'
       },
       {
-        name: 'Rome ("Babylon" — Final Testimony & Martyrdom)',
+        name: 'Rome (External tradition concerning Peter)',
         coords: { lat: 41.902, lng: 12.496 },
-        dateLabel: 'c. AD 64 – 67',
-        scriptureRef: '1 PETER {5:13}, 2 PETER {1:14}, JOHN {21:18}–{21:19}',
-        scriptureOsis: '1PE.5.13',
-        note: 'Writing with Silvanus and John Mark ("The church that is at Babylon, elected together with you, saluteth you; and so doth Marcus my son"), Peter fulfills Jesus\'s prophecy of his martyrdom in Rome under Nero (corroborated by Clement of Rome, 1 Clement 5, c. AD 95).'
+        dateLabel: 'Traditional dating, c. AD 64–67',
+        scriptureRef: '1 PETER {5:13}; JOHN {21:18}–{21:19}',
+        scriptureOsis: '1Pet.5.13',
+        evidenceClass: 'EXTERNAL_HISTORICAL_ATTESTATION',
+        attestationSource: 'Inherited Roman tradition; its historical evidence has not been independently reviewed in this atlas audit.',
+        note: 'First Peter 5:13 names Babylon and Marcus. The verse does not identify Babylon as Rome. John 21 foretells the manner of Peter’s death without naming Rome. This Roman marker represents an external tradition, not a location established by those verses.'
       }
     ]
   },
@@ -2689,7 +2691,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'AD 46 – 48',
     scriptureRef: 'ACTS {13:1}–{14:28}',
     scriptureOsis: 'ACT.13.2',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Set apart by the Holy Ghost at Syrian Antioch, Barnabas and Saul (Paul) sail to Cyprus, witness Proconsul Sergius Paulus\'s conversion at Paphos, cross the Taurus Mountains into Galatia, and plant enduring churches in Pisidian Antioch, Iconium, Lystra, and Derbe.',
     stops: [
       {
@@ -2768,7 +2770,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'AD 49 – 52',
     scriptureRef: 'ACTS {15:36}–{18:22}',
     scriptureOsis: 'ACT.15.36',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Paul and Silas depart Syrian Antioch after the Jerusalem Council, strengthen the churches in Asia Minor with Timothy, cross the Aegean after the Macedonian vision at Troas, and plant churches in Philippi, Thessalonica, Berea, Athens, and Corinth.',
     stops: [
       {
@@ -2871,7 +2873,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'AD 53 – 57',
     scriptureRef: 'ACTS {18:23}–{21:17}',
     scriptureOsis: 'ACT.19.1',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Passing through Galatia and Phrygia, Paul ministers for three years in Ephesus until all Asia hears the Word of the Lord, writes 1 & 2 Corinthians and Romans across Macedonia and Achaia, raises Eutychus at Troas, bids farewell to the Ephesian elders at Miletus, and goes up to Jerusalem.',
     stops: [
       {
@@ -2950,7 +2952,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'AD 59 – 62',
     scriptureRef: 'ACTS {23:31}–{28:31}',
     scriptureOsis: 'ACT.27.1',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'After two years imprisoned at Caesarea testifying before Felix, Festus, and King Agrippa II, Paul appeals to Caesar, sails across the stormy Mediterranean, survives the Euroclydon shipwreck on Malta with all 276 souls spared, and preaches the Kingdom of God in Rome.',
     stops: [
       {
@@ -3023,7 +3025,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
         dateLabel: 'AD 30 – 33 [Canonical Scripture]',
         scriptureRef: 'JOHN {11:16}, {14:5}–{14:6}, {20:24}–{20:29}, {21:2}, ACTS {1:13}',
         scriptureOsis: 'JHN.20.28',
-        evidenceClass: 'SCRIPTURE_TEXT',
+        evidenceClass: 'SCRIPTURAL_INFERENCE',
         note: 'CANONICAL SCRIPTURE: Eight days after the Resurrection in Jerusalem, the risen Christ shows Thomas His pierced hands and side; Thomas answers, "My Lord and my God!" Present by the Sea of Galilee (John 21:2) and in the Upper Room at Pentecost (Acts 1:13), where Jews from Parthia, Media, Elam, and Mesopotamia hear the Gospel (Acts 2:9).'
       },
       {
@@ -3098,7 +3100,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
         dateLabel: 'AD 30 – 49 [Canonical Scripture]',
         scriptureRef: 'JOHN {1:40}–{1:42}, ACTS {1:13}, {12:12}, {15:39}',
         scriptureOsis: 'ACT.12.12',
-        evidenceClass: 'SCRIPTURE_TEXT',
+        evidenceClass: 'SCRIPTURAL_INFERENCE',
         note: 'CANONICAL SCRIPTURE: Andrew serves among the Twelve in Jerusalem (Acts 1:13); the early Jerusalem church gathers for prayer in the house of Mary the mother of John Mark (Acts 12:12), and Barnabas takes Mark to evangelize Cyprus in AD 49 (Acts 15:39).'
       },
       {
@@ -3143,7 +3145,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. AD 68 – 96',
     scriptureRef: 'JOHN {19:26}–{19:27}, GALATIANS {2:9}, REVELATION {1:9}–{3:22}',
     scriptureOsis: 'REV.1.9',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'After serving as a pillar of the Jerusalem church alongside Peter and James, the Apostle John shepherds the churches of Roman Asia from Ephesus, is banished to the rocky Aegean island of Patmos for the Word of God and the testimony of Jesus Christ, and sends the Book of Revelation along the imperial postal circuit of the Seven Churches of Asia.',
     stops: [
       {
@@ -3199,64 +3201,64 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
   // --- EXPANDED ALL-CHARACTER CANONICAL ROUTES ---
   {
     id: 'job-land-of-uz',
-    name: "Job: Patriarchal Trials & Restoration in the Land of Uz",
-    shortBanner: "🏜️ JOB: TRIALS & RESTORATION IN UZ (c. 1900 BC)",
+    name: "Job: Trials & Restoration (Location of Uz Uncertain)",
+    shortBanner: "JOB: TRIALS & RESTORATION · DATING UNCERTAIN",
     travelerName: "Job of Uz",
-    figureId: 'abraham',
+    figureId: 'job',
     color: '#d97706',
-    dateRange: 'c. 2000 – 1800 BC (Patriarchal Age)',
+    dateRange: 'Calendar date not stated in Job',
     scriptureRef: 'JOB {1:1}–{42:17}, EZEKIEL {14:14}, JAMES {5:11}',
     scriptureOsis: 'JOB.1.1',
-    evidenceClass: 'SCRIPTURE_TEXT',
-    summary: 'Living in the Land of Uz on the Arabian-Edomite border, upright Job endures the catastrophic loss of his ten children and wealth through Sabean and Chaldean raids, disputes with Eliphaz of Teman, Bildad of Shuah, and Zophar of Naamath, and hears the LORD speak out of the whirlwind with double restoration.',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
+    summary: 'Living in the Land of Uz, whose precise location is not established here, upright Job endures the catastrophic loss of his ten children and wealth through Sabean and Chaldean raids, disputes with Eliphaz of Teman, Bildad of Shuah, and Zophar of Naamath, and hears the LORD speak out of the whirlwind with double restoration.',
     stops: [
       {
-        name: 'Land of Uz (Edom / Northern Arabian Margins)',
+        name: 'Land of Uz (Proposed region, not a verified site)',
         coords: { lat: 30.50, lng: 36.20 },
-        dateLabel: 'c. 1900 BC',
+        dateLabel: 'Calendar date not stated in Job',
         scriptureRef: 'JOB {1:1}–{1:5}, LAMENTATIONS {4:21}',
         scriptureOsis: 'JOB.1.1',
-        note: 'Upright and perfect Job fears God and eschews evil in Uz, offering regular burnt offerings for his seven sons and three daughters according to the number of them all.'
+        note: 'Geographic placement is conjectural; this is not a documented journey by Job. Upright and perfect Job fears God and eschews evil in Uz, offering regular burnt offerings for his seven sons and three daughters according to the number of them all.'
       },
       {
-        name: 'Southern Desert Border (The Sabean Raid)',
+        name: 'Sabean raid (Location not established)',
         coords: { lat: 28.50, lng: 37.50 },
-        dateLabel: 'Day of Trial, c. 1900 BC',
+        dateLabel: 'Calendar date not stated in Job',
         scriptureRef: 'JOB {1:14}–{1:15}',
         scriptureOsis: 'JOB.1.15',
-        note: 'Sabean desert raiders fall upon Job\'s 500 yoke of oxen and 500 she asses and slay the servants with the edge of the sword; only one escapes to report.'
+        note: 'Geographic placement is conjectural; this is not a documented journey by Job. Sabean desert raiders fall upon Job\'s 500 yoke of oxen and 500 she asses and slay the servants with the edge of the sword; only one escapes to report.'
       },
       {
-        name: 'Eastern Desert Border (The Chaldean Incursion)',
+        name: 'Chaldean raid (Location not established)',
         coords: { lat: 31.80, lng: 38.90 },
-        dateLabel: 'Day of Trial, c. 1900 BC',
+        dateLabel: 'Calendar date not stated in Job',
         scriptureRef: 'JOB {1:17}',
         scriptureOsis: 'JOB.1.17',
-        note: 'Three bands of Chaldeans carry away Job\'s 3,000 camels and slay the servants; a great wind from the wilderness strikes the four corners of his eldest son\'s house.'
+        note: 'Geographic placement is conjectural; this is not a documented journey by Job. Three bands of Chaldeans carry away Job\'s 3,000 camels and slay the servants; a great wind from the wilderness strikes the four corners of his eldest son\'s house.'
       },
       {
-        name: 'Teman (Highlands of Edom — Eliphaz arrives)',
+        name: 'Eliphaz the Temanite (Proposed geographic association)',
         coords: { lat: 30.70, lng: 35.60 },
-        dateLabel: 'Days of Mourning, c. 1900 BC',
+        dateLabel: 'Calendar date not stated in Job',
         scriptureRef: 'JOB {2:11}, {4:1}',
         scriptureOsis: 'JOB.2.11',
-        note: 'Eliphaz the Temanite journeys from the famed Edomite wisdom city of Teman (Jeremiah 49:7) to mourn with and comfort smitten Job.'
+        note: 'Geographic placement is conjectural; this is not a documented journey by Job. Eliphaz the Temanite journeys from the famed Edomite wisdom city of Teman (Jeremiah 49:7) to mourn with and comfort smitten Job.'
       },
       {
-        name: 'Shuah & Naamath (Eastern Margins — Bildad & Zophar)',
+        name: 'Bildad & Zophar (Locations not established)',
         coords: { lat: 31.30, lng: 36.60 },
-        dateLabel: 'Days of Mourning, c. 1900 BC',
+        dateLabel: 'Calendar date not stated in Job',
         scriptureRef: 'JOB {2:11}–{2:13}',
         scriptureOsis: 'JOB.2.11',
-        note: 'Bildad the Shuhite (descendant of Abraham and Keturah, Genesis 25:2) and Zophar the Naamathite sit seven days and seven nights in silence seeing his grief.'
+        note: 'Geographic placement is conjectural; this is not a documented journey by Job. Bildad the Shuhite (his ancestry is not stated here) and Zophar the Naamathite sit seven days and seven nights in silence seeing his grief.'
       },
       {
-        name: 'The Ash Heap of Uz (The Whirlwind & Double Blessing)',
+        name: 'Job’s restoration in Uz (Exact location not established)',
         coords: { lat: 30.50, lng: 36.20 },
-        dateLabel: 'Restoration, c. 1880 BC',
+        dateLabel: 'Calendar date not stated in Job',
         scriptureRef: 'JOB {38:1}–{38:4}, {42:10}–{42:17}',
         scriptureOsis: 'JOB.42.10',
-        note: 'The LORD answers Job out of the whirlwind: "Where wast thou when I laid the foundations of the earth?" Job repents in dust and ashes; God accepts his prayer for his friends and gives Job twice as much as he had before: 14,000 sheep, 6,000 camels, 1,000 yoke of oxen, 1,000 she asses, and seven sons and three daughters.'
+        note: 'Geographic placement is conjectural; this is not a documented journey by Job. The LORD answers Job out of the whirlwind: "Where wast thou when I laid the foundations of the earth?" Job repents in dust and ashes; God accepts his prayer for his friends and gives Job twice as much as he had before: 14,000 sheep, 6,000 camels, 1,000 yoke of oxen, 1,000 she asses, and seven sons and three daughters.'
       }
     ]
   },
@@ -3270,7 +3272,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 1191 – 1151 BC (Judges Era)',
     scriptureRef: 'JUDGES {6:1}–{8:35}, HEBREWS {11:32}',
     scriptureOsis: 'JDG.6.11',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Called while threshing wheat by the winepress in Ophrah to hide from Midian, Gideon casts down Baal\'s altar, tests the fleece, reduces his army to 300 men who lap water at the Spring of Harod, routes the Midianite camp at the Hill of Moreh with trumpets and torches in pitchers, and pursues kings Zebah and Zalmunna across the Jordan.',
     stops: [
       {
@@ -3341,7 +3343,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 1095 – 1075 BC',
     scriptureRef: 'JUDGES {13:1}–{16:31}, HEBREWS {11:32}',
     scriptureOsis: 'JDG.13.24',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Dedicated as a Nazarite from the womb, Samson tears a young lion at Timnath, slays 1,000 Philistines with the jawbone of an ass at Ramath-lehi, carries away the bronze gates of Gaza to the hill before Hebron, and brings down Dagon\'s temple in death.',
     stops: [
       {
@@ -3412,7 +3414,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 1120 – 1100 BC',
     scriptureRef: 'RUTH {1:1}–{4:22}, MATTHEW {1:5}',
     scriptureOsis: 'RUT.1.16',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Ruth forsakes the gods of Moab to cling to Naomi ("Thy people shall be my people, and thy God my God"), gleans in the barley fields of Boaz at Bethlehem, is redeemed at the city gate, and gives birth to Obed, grandfather of King David.',
     path: [
       { lat: 31.500, lng: 35.750 }, // Country of Moab
@@ -3479,7 +3481,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 1090 – 1015 BC',
     scriptureRef: '1 SAMUEL {1:1}–{25:1}, ACTS {3:24}, {13:20}',
     scriptureOsis: '1SA.3.19',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Dedicated by Hannah at Shiloh where God calls him as a boy, Samuel establishes the prophetic office, delivers Israel from the Philistines at Ebenezer, judges Israel in an annual circuit of Bethel, Gilgal, and Mizpah from Ramah, and anoints Saul and David.',
     stops: [
       {
@@ -3542,7 +3544,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 1050 – 1010 BC',
     scriptureRef: '1 SAMUEL {9:1}–{31:13}, 1 CHRONICLES {10:1}–{10:14}',
     scriptureOsis: '1SA.10.24',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'First king of Israel, reigning from his fortress at Gibeah of Benjamin, Saul relieves Jabesh-gilead and defeats Philistines at Michmash, but disobeys at Gilgal and Amalek, hunts fugitive David in the Judean wilderness, and falls on Mount Gilboa.',
     stops: [
       {
@@ -3605,7 +3607,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 970 – 931 BC',
     scriptureRef: '1 KINGS {1:1}–{11:43}, 2 CHRONICLES {1:1}–{9:31}',
     scriptureOsis: '1KI.3.12',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Blessed with unparalleled divine wisdom, Solomon builds the First Temple on Mount Moriah, establishes an ocean-going fleet with Hiram of Tyre at Ezion-geber on the Red Sea, fortifies royal chariot cities across Israel, and receives the Queen of Sheba.',
     path: [
       { lat: 31.848, lng: 35.185 }, // Gibeon
@@ -3719,7 +3721,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 865 – 851 BC',
     scriptureRef: '1 KINGS {17:1}–2 KINGS {2:12}',
     scriptureOsis: '1KI.18.38',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Confronting the Baal apostasy of King Ahab and Jezebel, Elijah announces drought, is fed by ravens at Cherith, raises the widow\'s son at Zarephath, calls down fire on Mount Carmel, hears the still small voice at Mount Horeb, and ascends to heaven in a chariot of fire.',
     path: [
       { lat: 32.390, lng: 35.730 }, // Tishbe in Gilead
@@ -3809,7 +3811,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 851 – 798 BC',
     scriptureRef: '1 KINGS {19:19}–2 KINGS {13:21}',
     scriptureOsis: '2KI.2.9',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Inheriting Elijah\'s mantle with a double portion of his spirit, Elisha heals Jericho\'s bitter waters, raises the Shunammite\'s dead son, heals Naaman the Syrian leper, and reveals the invisible fiery armies of God surrounding Dothan.',
     path: [
       { lat: 32.360, lng: 35.550 }, // Abel-meholah
@@ -3886,7 +3888,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 760 – 755 BC (Reign of Jeroboam II)',
     scriptureRef: 'AMOS {1:1}–{9:15}, ACTS {7:42}–{7:43}, {15:16}–{15:17}',
     scriptureOsis: 'AMO.7.14',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'A simple herdsman and gatherer of sycomore fruit from Tekoa in Judah, Amos is sent north to the golden calf sanctuary of Bethel, confronts high priest Amaziah, denounces the injustice and luxurious ease of Samaria, and prophesies the raising up of the fallen tabernacle of David.',
     stops: [
       {
@@ -3925,7 +3927,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 755 – 715 BC',
     scriptureRef: 'HOSEA {1:1}–{14:9}, MATTHEW {2:15}, ROMANS {9:25}–{9:26}',
     scriptureOsis: 'HOS.1.2',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Prophesying to the northern ten tribes during their final turbulent decades before Assyrian exile, Hosea\'s marriage to Gomer reflects God\'s broken yet relentless covenant love, promising future restoration where "in the place where it was said unto them, Ye are not my people, there it shall be said unto them, Ye are the sons of the living God."',
     stops: [
       {
@@ -3964,95 +3966,29 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
   },
   {
     id: 'jonah-prophet',
-    name: "Prophet Jonah: Joppa, the Deep & 550-Mile Trek to Nineveh",
-    shortBanner: "🐋 JONAH: JOPPA, SHORE TO NINEVEH TREK (c. 760 BC)",
-    travelerName: "Prophet Jonah Son of Amittai",
-    figureId: 'hezekiah',
+    name: "Prophet Jonah: Joppa, the Great Fish & Nineveh",
+    shortBanner: "JONAH: JOPPA & NINEVEH",
+    travelerName: "Jonah son of Amittai",
+    figureId: 'jonah',
     color: '#0ea5e9',
-    dateRange: 'c. 782 – 753 BC (Reign of Jeroboam II)',
-    scriptureRef: 'JONAH {1:1}–{4:11}, 2 KINGS {14:25}, MATTHEW {12:39}–{12:41}',
-    scriptureOsis: 'JON.1.1',
-    evidenceClass: 'SCRIPTURE_TEXT',
-    summary: 'Fleeing the LORD from Joppa toward Tarshish, Jonah is cast into the Mediterranean, preserved three days in the great fish, and vomited onto dry land. He then undertakes an arduous 550-mile overland walking trek across Syria and the Euphrates to Nineveh, where 120,000 repent in sackcloth.',
-    path: [
-      { lat: 32.741, lng: 35.328 }, // Gath-hepher
-      { lat: 32.054, lng: 34.752 }, // Joppa
-      { lat: 33.500, lng: 33.000 }, // Deep Mediterranean
-      { lat: 33.563, lng: 35.371 }, // Mediterranean Shore (Sidon / Zarephath coast)
-      { lat: 34.430, lng: 35.840 }, // Tripoli / Syrian coastal route
-      { lat: 34.730, lng: 36.710 }, // Homs Gap
-      { lat: 35.132, lng: 36.756 }, // Hamath on Orontes
-      { lat: 35.950, lng: 39.050 }, // Tiphsah (Euphrates River crossing)
-      { lat: 36.865, lng: 40.070 }, // Upper Mesopotamian steppe / Khabur basin
-      { lat: 36.800, lng: 42.000 }, // Approach to Tigris basin
-      { lat: 36.360, lng: 43.150 }, // Nineveh
-      { lat: 36.380, lng: 43.250 }  // East of Nineveh
-    ],
+    dateRange: 'Jeroboam II context; exact journey dates not stated',
+    scriptureRef: 'JONAH {1:1}–{4:11}; 2 KINGS {14:25}',
+    scriptureOsis: 'Jonah.1.1',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
+    summary: 'Jonah sails from Joppa toward Tarshish, is preserved in the great fish, and is brought onto dry land. He later preaches at Nineveh. The landing place, distance, travel time and intervening itinerary are not stated. Lines connect selected places schematically, not a recovered travel route.',
     stops: [
-      {
-        name: 'Gath-hepher in Galilee (Zebulun)',
-        coords: { lat: 32.741, lng: 35.328 },
-        dateLabel: 'c. 765 BC',
-        scriptureRef: 'JONAH {1:1}–{1:2}, 2 KINGS {14:25}',
-        scriptureOsis: 'JON.1.1',
-        note: 'Jonah son of Amittai from Gath-hepher (Galilee) receives the divine commission: "Arise, go to Nineveh, that great city, and cry against it; for their wickedness is come up before me."'
-      },
-      {
-        name: 'Joppa (Mediterranean Port)',
-        coords: { lat: 32.054, lng: 34.752 },
-        dateLabel: 'c. 760 BC',
-        scriptureRef: 'JONAH {1:3}',
-        scriptureOsis: 'JON.1.3',
-        note: 'Jonah goes down to Joppa, pays the fare of a ship going to Tarshish (Spain), and sails to flee from the presence of the LORD.'
-      },
-      {
-        name: 'The Deep (Eastern Mediterranean Tempest)',
-        coords: { lat: 33.500, lng: 33.000 },
-        dateLabel: 'c. 760 BC',
-        scriptureRef: 'JONAH {1:4}–{2:9}, MATTHEW {12:40}',
-        scriptureOsis: 'JON.2.1',
-        note: 'A mighty tempest strikes; lots fall upon Jonah; cast into the sea which ceases from raging; swallowed by a prepared great fish; prays from the belly of hell during three days and three nights (the sign of Jonah).'
-      },
-      {
-        name: 'Mediterranean Shore (Vomited onto Dry Land)',
-        coords: { lat: 33.563, lng: 35.371 },
-        dateLabel: 'c. 760 BC',
-        scriptureRef: 'JONAH {2:10}–{3:2}',
-        scriptureOsis: 'JON.2.10',
-        note: 'The LORD speaks unto the fish, and it vomits out Jonah upon dry land. Stranded on the Phoenician shore over 550 miles (c. 900 km) from Nineveh, Jonah receives the word of the LORD the second time: "Arise, go unto Nineveh, that great city, and preach unto it."'
-      },
-      {
-        name: 'Hamath Gap & Northern Syrian Highway',
-        coords: { lat: 35.132, lng: 36.756 },
-        dateLabel: 'c. 760 BC (Overland Trek)',
-        scriptureRef: 'JONAH {3:3}',
-        scriptureOsis: 'JON.3.3',
-        note: 'Jonah begins the grueling overland walking journey through the Homs-Hamath gap along ancient caravan highways, ascending toward upper Syria and the Syrian desert border—a month of arduous foot travel.'
-      },
-      {
-        name: 'Euphrates River Ford at Tiphsah',
-        coords: { lat: 35.950, lng: 39.050 },
-        dateLabel: 'c. 760 BC (Mesopotamian Crossing)',
-        scriptureRef: 'JONAH {3:3}',
-        scriptureOsis: 'JON.3.3',
-        note: 'Fording the formidable Euphrates River into Upper Mesopotamia (Aram-Naharaim), traversing hundreds of miles of arid desert plateau toward the Tigris—a total walking expedition exceeding 550 miles that took weeks of stamina and obedience.'
-      },
-      {
-        name: 'Nineveh (The Great Assyrian Capital)',
-        coords: { lat: 36.360, lng: 43.150 },
-        dateLabel: 'c. 760 BC',
-        scriptureRef: 'JONAH {3:3}–{3:10}',
-        scriptureOsis: 'JON.3.4',
-        note: 'Arriving at last, Jonah enters Nineveh, a metropolis of three days\' journey; preaches: "Yet forty days, and Nineveh shall be overthrown!" The king of Nineveh arises from his throne, covers himself with sackcloth, and sits in ashes; all 120,000 citizens and cattle fast; God repents of the evil.'
-      },
-      {
-        name: 'East of Nineveh (The Gourd & Vehement East Wind)',
-        coords: { lat: 36.380, lng: 43.250 },
-        dateLabel: 'c. 760 BC',
-        scriptureRef: 'JONAH {4:1}–{4:11}',
-        scriptureOsis: 'JON.4.11',
-        note: 'Sits in a booth on the east side of the city; God prepares a gourd for shade, then a worm and an east wind; teaches Jonah divine compassion for more than sixscore thousand persons that cannot discern between their right hand and left.'
-      }
+      { name: 'Gath-hepher (Jonah’s home)', coords: { lat: 32.741, lng: 35.328 },
+        dateLabel: 'Jeroboam II context', scriptureRef: '2 KINGS {14:25}', scriptureOsis: '2Kgs.14.25',
+        note: 'Second Kings identifies Jonah son of Amittai with Gath-hepher. It does not state that his Nineveh journey began here. The marker is an approximate identification.' },
+      { name: 'Joppa (Mediterranean port)', coords: { lat: 32.054, lng: 34.752 },
+        dateLabel: 'Exact date not stated', scriptureRef: 'JONAH {1:3}; {1:17}; {2:10}', scriptureOsis: 'Jonah.1.3',
+        note: 'Jonah boards a ship for Tarshish at Joppa. After the storm and three days and nights in the great fish, he is brought onto dry land. The sea position and landing place are not specified and are not pinned here; the identity of Tarshish is not settled by this passage.' },
+      { name: 'Nineveh (The Great Assyrian Capital)', coords: { lat: 36.360, lng: 43.150 },
+        dateLabel: 'Exact date not stated', scriptureRef: 'JONAH {3:3}–{3:10}', scriptureOsis: 'Jonah.3.3',
+        note: 'Jonah goes to Nineveh and announces judgment. The people believe God, fast and turn from their evil way. The king proclaims a fast including animals. Jonah 4:11 speaks of more than sixscore thousand persons unable to discern right hand from left; it does not give an exact total population. The route by which Jonah reached Nineveh is not specified.' },
+      { name: 'East of Nineveh (Approximate narrative area)', coords: { lat: 36.380, lng: 43.250 },
+        dateLabel: 'Exact date not stated', scriptureRef: 'JONAH {4:5}–{4:11}', scriptureOsis: 'Jonah.4.5',
+        note: 'Jonah sits east of the city. The LORD teaches him through a gourd, a worm and an east wind. The marker indicates a general direction; no exact site is established.' }
     ]
   },
   {
@@ -4065,7 +4001,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 740 – 681 BC',
     scriptureRef: 'ISAIAH {1:1}–{66:24}, 2 KINGS {18:1}–{20:21}',
     scriptureOsis: 'ISA.6.1',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Called in the Temple in the year King Uzziah died seeing the Holy One of Israel high and lifted up, Isaiah announces the virgin birth of Immanuel to King Ahaz, ministers beside King Hezekiah through the Assyrian siege where 185,000 soldiers fall, and pens the supreme prophecies of the Suffering Servant and New Jerusalem.',
     stops: [
       {
@@ -4112,7 +4048,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: '627 – 580 BC',
     scriptureRef: 'JEREMIAH {1:1}–{52:34}',
     scriptureOsis: 'JER.1.5',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Ordained a prophet to the nations before birth, Jeremiah preaches unheeded in the Temple gate, breaks the potter\'s bottle in Hinnom, survives the miry cistern dungeon of Malchiah, witnesses the burning of Jerusalem, and is taken into Egypt.',
     stops: [
       {
@@ -4175,7 +4111,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: '605 – 536 BC',
     scriptureRef: 'DANIEL {1:1}–{12:13}, EZEKIEL {14:14}, {28:3}, MATTHEW {24:15}',
     scriptureOsis: 'DAN.1.1',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Taken captive from Jerusalem as a royal youth in 605 BC, Daniel serves in the imperial court of Babylon under Nebuchadnezzar, Belshazzar, Darius the Mede, and Cyrus the Persian, survives the den of lions, and receives panoramic apocalypses of world history and the coming everlasting Kingdom of the Son of Man.',
     stops: [
       {
@@ -4246,7 +4182,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: '593 – 571 BC',
     scriptureRef: 'EZEKIEL {1:1}–{48:35}',
     scriptureOsis: 'EZK.1.1',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'A priest deported with King Jehoiachin in 597 BC, Ezekiel witnesses the cosmic chariot-throne of God by the River Chebar in Babylonia, enacts the siege of Jerusalem with a tile and iron pan, prophesies life to the dry bones, and diagrams the Millennial Temple.',
     stops: [
       {
@@ -4293,7 +4229,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. 483 – 473 BC (Reign of Ahasuerus / Xerxes I)',
     scriptureRef: 'ESTHER {1:1}–{10:3}',
     scriptureOsis: 'EST.4.14',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Set in the winter capital of Shushan (Susa) of the Persian Empire, orphaned Hadassah (Esther) is crowned Queen, Mordecai uncovers palace treason, Haman plots Jewish extermination, Esther risks her life entering unsummoned, Haman is hanged on his own 50-cubit gallows, and the Feast of Purim is established across 127 provinces.',
     stops: [
       {
@@ -4348,7 +4284,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: '458 BC (7th Year of Artaxerxes I)',
     scriptureRef: 'EZRA {7:1}–{10:44}',
     scriptureOsis: 'EZR.7.10',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'A ready scribe in the Law of Moses whose heart was prepared to seek the Law of the LORD, to do it, and to teach in Israel statutes and judgments, Ezra leads the second return from Babylon, proclaims a fast at the River Ahava without royal troops, and leads a great national spiritual reformation in Jerusalem.',
     stops: [
       {
@@ -4395,7 +4331,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: '445 – 432 BC (20th Year of Artaxerxes I)',
     scriptureRef: 'NEHEMIAH {1:1}–{13:31}',
     scriptureOsis: 'NEH.2.17',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Serving as cupbearer to King Artaxerxes I in Susa, Nehemiah mourns over Jerusalem\'s broken walls, receives royal letters and cavalry escort, performs a secret night inspection of the ruins, organizes all families to rebuild the ten gates with a trowel in one hand and sword in the other in 52 days, and leads the wall dedication.',
     stops: [
       {
@@ -4450,7 +4386,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. AD 34 – 37',
     scriptureRef: 'ACTS {6:1}–{8:40}, {21:8}',
     scriptureOsis: 'ACT.6.5',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Chosen among the seven deacons full of faith and the Holy Ghost, Stephen preaches before the Sanhedrin seeing the Son of Man standing at God\'s right hand and is stoned outside Jerusalem, while Philip carries the Gospel to the city of Samaria and baptizes the Ethiopian royal treasurer on the desert road to Gaza.',
     stops: [
       {
@@ -4497,7 +4433,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. AD 33 – 46',
     scriptureRef: 'ACTS {9:1}–{9:30}, {11:25}–{11:26}, GALATIANS {1:11}–{1:24}',
     scriptureOsis: 'ACT.9.3',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'From his birth in Tarsus and rabbinic training under Gamaliel in Jerusalem to his dramatic conversion by the risen Christ on the road to Damascus, retreat into the Nabataean desert of Arabia, midnight basket escape from Damascus, and return to Antioch with Barnabas.',
     stops: [
       {
@@ -4576,7 +4512,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     dateRange: 'c. AD 45 – 52',
     scriptureRef: 'ACTS {4:36}–{4:37}, {11:22}–{11:26}, {13:1}–{13:13}, {15:36}–{15:39}, 2 TIMOTHY {4:11}',
     scriptureOsis: 'ACT.11.24',
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Joseph Barnabas ("Son of Consolation"), a Levite of Cyprus, sells his land for the early church, brings Saul into the apostolic circle, mentors his nephew John Mark through Antioch and Cyprus, and after a temporary parting, sees Mark fully restored as profitable for Paul\'s ministry.',
     stops: [
       {
@@ -5734,7 +5670,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['abraham-call'],
     focusCenter: { lat: 33.2, lng: 40.5 },
     focusZoom: 5,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Abram\'s covenant journey from Ur of the Chaldees through Haran to Shechem, Bethel, Hebron, Egypt, Beersheba, and Mount Moriah.'
   },
   {
@@ -5746,7 +5682,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['jacob-padan-aram'],
     focusCenter: { lat: 33.5, lng: 37.0 },
     focusZoom: 6,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Jacob\'s flight to Haran, meeting Rachel at the well, 20-year service, covenant heap with Laban at Mount Gilead, wrestling at Peniel, and Rachel\'s tomb at Bethlehem.'
   },
   {
@@ -5758,7 +5694,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['jacob-joseph-egypt'],
     focusCenter: { lat: 33.0, lng: 35.5 },
     focusZoom: 6,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Jacob\'s return from Padan-Aram via Peniel and Joseph\'s sale from Dothan into Egypt, culminating in Israel\'s descent to Goshen.'
   },
   // Exodus & Conquest
@@ -5771,7 +5707,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['exodus-route'],
     focusCenter: { lat: 29.5, lng: 33.1 },
     focusZoom: 7,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Israel\'s departure from Rameses through Succoth, the Red Sea crossing, Marah, Elim, and Rephidim to the giving of the Law at Mount Sinai.'
   },
   {
@@ -5783,7 +5719,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['balaam-journey'],
     focusCenter: { lat: 33.0, lng: 36.8 },
     focusZoom: 6,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Balaam summoned from Pethor on the Euphrates to Moab; the speaking donkey and Angel with drawn sword; and the prophecies of the Star out of Jacob on Pisgah and Peor.'
   },
   {
@@ -5795,7 +5731,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['joshua-conquest'],
     focusCenter: { lat: 32.15, lng: 35.42 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'From Mount Nebo and the parted Jordan River to Gilgal, Jericho, Ai, Gibeon, Hazor, and the Tabernacle at Shiloh.'
   },
   // Monarchy & Prophets
@@ -5808,7 +5744,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['david-exile-throne'],
     focusCenter: { lat: 31.65, lng: 35.20 },
     focusZoom: 9,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'David\'s anointing at Bethlehem, victory in the Valley of Elah, wilderness refuge at Adullam and En-gedi, reign at Hebron, and enthronement in Jerusalem.'
   },
   {
@@ -5820,7 +5756,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['elijah-elisha-ministry'],
     focusCenter: { lat: 31.6, lng: 35.1 },
     focusZoom: 6,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Elijah\'s prophetic circuit from Brook Cherith and Zarephath to Mount Carmel, Mount Horeb, Samaria (2 Kings 1), and his whirlwind ascension by the Jordan.'
   },
   // Exile & Restoration
@@ -5833,7 +5769,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['babylonian-deportation-daniel'],
     focusCenter: { lat: 33.8, lng: 40.0 },
     focusZoom: 5,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Deportation waves from Jerusalem and Lachish through Riblah and Carchemish to Ezekiel\'s Tel-abib by the River Chebar and Daniel\'s witness in Babylon.'
   },
   {
@@ -5845,7 +5781,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['ezra-nehemiah-return'],
     focusCenter: { lat: 33.5, lng: 41.8 },
     focusZoom: 5,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Return of the Jewish exiles from Babylon and Susa (Shushan) across the Euphrates to rebuild the Second Temple and the walls of Jerusalem.'
   },
   // Gospels & Life of Christ (accessible in BOTH Christ & Rome AND Apostolic Age!)
@@ -5858,7 +5794,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['john-baptist-ministry', 'jesus-early-ministry'],
     focusCenter: { lat: 32.08, lng: 35.42 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Displays John the Baptist\'s wilderness, Bethabara, Aenon near Salim, and Machaerus imprisonment side-by-side with Jesus\'s baptism, Cana miracle, Judean ministry (John 3:22–24), and Samaritan journey.'
   },
   {
@@ -5870,7 +5806,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['john-baptist-ministry'],
     focusCenter: { lat: 31.95, lng: 35.48 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'John the Baptist\'s birth in the Judean hill country, preaching in the Wilderness of Judea, baptism of Jesus at Bethabara, parallel baptizing at Aenon near Salim, and imprisonment/martyrdom at Machaerus.'
   },
   {
@@ -5882,7 +5818,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['jesus-nativity-youth'],
     focusCenter: { lat: 31.65, lng: 33.90 },
     focusZoom: 7,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Annunciation in Nazareth, birth in Bethlehem, Temple presentation, refuge in Egypt from Herod, childhood in Nazareth, and Passover in the Temple at age 12.'
   },
   {
@@ -5894,7 +5830,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['jesus-early-ministry'],
     focusCenter: { lat: 32.25, lng: 35.38 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Baptism at Bethabara, 40 days in the Judean wilderness, water into wine at Cana, First Passover & Nicodemus in Jerusalem, Judean ministry parallel to John at Aenon, and the woman at the well in Sychar.'
   },
   {
@@ -5906,7 +5842,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['jesus-galilean-ministry'],
     focusCenter: { lat: 32.92, lng: 35.50 },
     focusZoom: 9,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Capernaum HQ, Sermon on the Mount, raising the widow\'s son at Nain, calming the storm to Gadara, feeding the 5,000 at Bethsaida, Tyre & Sidon, and Peter\'s confession & Transfiguration at Caesarea Philippi.'
   },
   {
@@ -5918,7 +5854,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['jesus-passion-resurrection'],
     focusCenter: { lat: 32.15, lng: 35.35 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Perean ministry, raising Lazarus at Bethany, Jericho, crucifixion at Golgotha & bodily resurrection in Jerusalem, Road to Emmaus, Sea of Galilee appearance, and Ascension from the Mount of Olives.'
   },
   {
@@ -5935,7 +5871,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     ],
     focusCenter: { lat: 32.1, lng: 35.2 },
     focusZoom: 7,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'All 27 chronological stops of Jesus\'s earthly life from Nazareth, Bethlehem, and Egypt through Galilee, Samaria, and Judea to His Resurrection and Ascension.'
   },
   // Apostolic Missions (accessible in Apostolic Age, Christ & Rome, and All)
@@ -5948,7 +5884,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['peter-philip-missions'],
     focusCenter: { lat: 35.5, lng: 25.5 },
     focusZoom: 5,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Pentecost in Jerusalem, Philip in Samaria and on the Gaza road with the Ethiopian treasurer, Peter at Lydda, Joppa, Cornelius\'s house in Caesarea, Antioch, and final testimony in Rome.'
   },
   {
@@ -5960,7 +5896,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['paul-first-journey'],
     focusCenter: { lat: 36.8, lng: 33.0 },
     focusZoom: 6,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Paul and Barnabas sail from Syrian Antioch to Cyprus (Paphos / Proconsul Sergius Paulus) and plant churches in Pisidian Antioch, Iconium, Lystra, and Derbe (Acts 13–14).'
   },
   {
@@ -5972,7 +5908,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['paul-second-journey'],
     focusCenter: { lat: 38.0, lng: 28.5 },
     focusZoom: 5,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Paul, Silas, Timothy, and Luke travel from Antioch through Galatia and Troas into Philippi, Thessalonica, Berea, Athens (Mars\' Hill), Corinth, and Ephesus (Acts 15:36–18:22).'
   },
   {
@@ -5984,7 +5920,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['paul-third-journey'],
     focusCenter: { lat: 37.8, lng: 28.5 },
     focusZoom: 5,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Three years in Ephesus (Acts 19), ministry across Macedonia and Corinth (writing 1 & 2 Corinthians and Romans), raising Eutychus at Troas, Miletus farewell, and arrest in Jerusalem (Acts 18:23–21:17).'
   },
   {
@@ -5996,7 +5932,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['paul-voyage-rome'],
     focusCenter: { lat: 37.2, lng: 22.5 },
     focusZoom: 5,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'From Caesarea Maritima past Crete through the Euroclydon storm and shipwreck on Malta (Melita) to Syracuse, Puteoli, and two years of house arrest in Rome (Acts 27–28).'
   },
   {
@@ -6008,7 +5944,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['john-seven-churches-patmos'],
     focusCenter: { lat: 37.8, lng: 27.6 },
     focusZoom: 6,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Apostle John\'s ministry from Jerusalem to Ephesus, the Seven Churches postal circuit (Ephesus, Smyrna, Pergamos, Thyatira, Sardis, Philadelphia, Laodicea), and exile on the Isle of Patmos (Revelation 1–3).'
   },
   {
@@ -6045,7 +5981,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['job-land-of-uz'],
     focusCenter: { lat: 30.6, lng: 36.5 },
     focusZoom: 6,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Follow Job\'s upright life in the land of Uz, catastrophic Sabean and Chaldean raids, disputes with his three comforters, and God\'s majestic whirlwind speech bringing double restoration.'
   },
   {
@@ -6057,7 +5993,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['gideon-judges'],
     focusCenter: { lat: 32.4, lng: 35.5 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Trace Gideon from the oak in Ophrah to the water lapping test at Harod Spring, the midnight attack with trumpets and pitchers at Moreh, and the pursuit to Karkor.'
   },
   {
@@ -6069,7 +6005,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['samson-judges'],
     focusCenter: { lat: 31.65, lng: 34.8 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Samson\'s Nazarite exploits from Zorah and Timnath to the jawbone victory at Lehi, the midnight carrying of the gates of Gaza, and the final overthrow of Dagon\'s temple.'
   },
   {
@@ -6081,7 +6017,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['ruth-boaz'],
     focusCenter: { lat: 31.6, lng: 35.4 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Ruth\'s faithful journey from the plains of Moab to the barley fields and threshingfloor of Boaz at Bethlehem, bringing Obed into the royal ancestry of David.'
   },
   {
@@ -6093,7 +6029,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['samuel-circuit'],
     focusCenter: { lat: 31.9, lng: 35.2 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Samuel\'s lifelong prophetic ministry from childhood at Shiloh to the Ebenezer stone at Mizpah, the annual judicial circuit (Bethel, Gilgal, Mizpah), and the anointings of Saul and David.'
   },
   {
@@ -6105,7 +6041,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['saul-reign'],
     focusCenter: { lat: 32.1, lng: 35.3 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'First king of Israel: reigning from Gibeah fortress, defeating Philistines at Michmash Pass, consulting the medium at Endor, and falling on Mount Gilboa.'
   },
   {
@@ -6117,7 +6053,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['solomon-glory'],
     focusCenter: { lat: 31.8, lng: 35.4 },
     focusZoom: 7,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Solomon\'s golden age: the dream at Gibeon, dedicating the First Temple in Jerusalem, building the Red Sea fleet to Ophir at Ezion-geber, fortifying chariot cities, and greeting the Queen of Sheba.'
   },
   {
@@ -6129,7 +6065,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['elijah-prophet'],
     focusCenter: { lat: 32.1, lng: 35.4 },
     focusZoom: 7,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Prophet Elijah\'s complete personal route: confronting Ahab at Tishbe, ravens at Cherith, widow\'s meal at Zarephath, fire on Mount Carmel, still small voice at Horeb, and ascension in chariot of fire by the Jordan.'
   },
   {
@@ -6141,7 +6077,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['elisha-ministry'],
     focusCenter: { lat: 32.4, lng: 35.3 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Prophet Elisha\'s miraculous ministry: parting the Jordan, healing Jericho\'s waters, raising the Shunammite\'s son, cleansing Naaman, and revealing chariots of fire at Dothan.'
   },
   {
@@ -6153,7 +6089,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['amos-prophet'],
     focusCenter: { lat: 31.95, lng: 35.2 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Tekoa herdsman Amos sent north to the royal golden calf sanctuary at Bethel, confronting high priest Amaziah and denouncing the luxurious ease of Samaria.'
   },
   {
@@ -6165,7 +6101,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['hosea-prophet'],
     focusCenter: { lat: 32.4, lng: 35.3 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Prophet Hosea\'s living parable of redeeming unfaithful Gomer to mirror God\'s unwavering covenant love for Israel in the twilight of the Northern Kingdom.'
   },
   {
@@ -6177,7 +6113,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['jonah-prophet'],
     focusCenter: { lat: 34.5, lng: 38.5 },
     focusZoom: 5,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Jonah\'s journey from Galilee to Joppa, the raging Mediterranean sea and great fish, the repentance of 120,000 souls in Nineveh, and the lesson of the withered gourd.'
   },
   {
@@ -6189,7 +6125,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['isaiah-ministry'],
     focusCenter: { lat: 31.78, lng: 35.23 },
     focusZoom: 10,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Isaiah\'s throne vision in the Temple, Immanuel prophecy to King Ahaz at the Upper Pool, deliverance of Jerusalem from Sennacherib, and the Suffering Servant songs.'
   },
   {
@@ -6201,7 +6137,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['jeremiah-ministry'],
     focusCenter: { lat: 31.5, lng: 34.5 },
     focusZoom: 7,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Jeremiah\'s call at Anathoth, the Temple Gate sermon, the shattered bottle in Hinnom, the miry cistern dungeon, and the final prophecy at Tahpanhes in Egypt.'
   },
   {
@@ -6213,7 +6149,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['daniel-exile'],
     focusCenter: { lat: 32.5, lng: 44.5 },
     focusZoom: 6,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Daniel\'s 70-year witness from captive youth in Jerusalem to the colossal statue dream, the fiery furnace, Belshazzar\'s feast, the lions\' den, and apocalypses at Susa and the Tigris.'
   },
   {
@@ -6225,7 +6161,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['ezekiel-exile'],
     focusCenter: { lat: 32.2, lng: 44.8 },
     focusZoom: 6,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Ezekiel\'s visions among the exiles: the chariot throne with burning coals and wheels full of eyes by the River Chebar, the valley of dry bones raised to life, and the Millennial Temple.'
   },
   {
@@ -6237,7 +6173,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['esther-mordecai'],
     focusCenter: { lat: 32.19, lng: 48.24 },
     focusZoom: 9,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'The providential deliverance of the Jewish people in the Persian winter capital of Shushan: Esther crowned queen, Mordecai in the King\'s Gate, Haman\'s defeat on his own gallows, and Purim.'
   },
   {
@@ -6249,7 +6185,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['ezra-journey'],
     focusCenter: { lat: 33.5, lng: 41.5 },
     focusZoom: 6,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Ezra the ready scribe leading 1,500 families from Babylon, fasting at the River Ahava without royal soldiers, and arriving in Jerusalem to restore the Law of God.'
   },
   {
@@ -6261,7 +6197,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['nehemiah-walls'],
     focusCenter: { lat: 31.78, lng: 35.23 },
     focusZoom: 9,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Nehemiah cupbearer to Artaxerxes arriving from Susa with cavalry, inspecting the ruins by night, organizing builders with sword and trowel, and finishing the walls in 52 days.'
   },
   {
@@ -6273,7 +6209,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['stephen-philip-deacons'],
     focusCenter: { lat: 31.8, lng: 34.8 },
     focusZoom: 8,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Stephen\'s angelic witness and martyrdom outside Jerusalem, Philip\'s revival in Samaria, and the baptism of the Ethiopian royal treasurer on the desert road to Gaza.'
   },
   {
@@ -6285,7 +6221,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['paul-conversion-early'],
     focusCenter: { lat: 33.5, lng: 35.5 },
     focusZoom: 6,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Paul\'s dramatic Damascus road conversion by the risen Christ, Ananias on Straight Street, three years of revelation in Arabia, midnight basket escape, and return to Antioch.'
   },
   {
@@ -6297,7 +6233,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     routeIds: ['barnabas-mark'],
     focusCenter: { lat: 35.5, lng: 34.0 },
     focusZoom: 7,
-    evidenceClass: 'SCRIPTURE_TEXT',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
     summary: 'Barnabas the son of consolation mentoring young John Mark through Antioch and Cyprus, standing by Mark through departure, and seeing him restored as profitable for ministry.'
   },
 
