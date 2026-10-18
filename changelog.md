@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.51] - 2026-10-18
+
+- **'What to show' Menu Sits on Dedicated Line on `/map`**:
+  - Moved `#atlas-visibility` (`.atlas-disclosure`) to its own dedicated full-width flex line (`flex: 1 1 100%`) directly beneath the period and journey dropdowns and strictly above the journey timeline sequence slider (`#atlas-sequence`).
+  - Sized desktop `<summary>` button as `width: fit-content; display: inline-flex; align-items: center` with left alignment, and gave `.atlas-disclosure-body` its own clean top border and margin so expanding/collapsing options never causes layout jumps.
+- **Expansive Screen-Filling Map Canvas**:
+  - Increased `.atlas-reading .atlas-canvas-card` height from `clamp(420px, 56vh, 660px)` to `clamp(580px, 78vh, 960px)` and widened `.atlas-reading .atlas-page-layout` to `max-width: min(1840px, 100%)` with tighter container padding (`clamp(16px, 2vw, 36px)`).
+  - Eliminates the large empty black void beneath the map on standard desktop screens (1080p / 1440p) and lets the map and detail drawer fill the screen with rich visual presence.
+- **Removed Ukrainian Flag from Map Attribution**:
+  - Overrode default Leaflet attribution prefix in `src/engine/ancientMap.ts` using `map.attributionControl.setPrefix('<a href="https://leafletjs.com" ...>Leaflet</a>')` and hid `.leaflet-attribution-flag` via CSS. Maintains neutral, purely biblical focus while preserving all required Leaflet and Esri copyright attributions.
+- **Regression Tests**:
+  - Added Playwright regression tests in `tests/map-reading-experience.spec.ts` locking in the dedicated line positioning, expanded canvas dimensions (height >= 650px), and flag absence. (All 16/16 Playwright map tests and 12/12 collection self-checks pass; `npm run build` passes).
+
 ## [00.01.50] - 2026-10-17
 
 - **Collection Statistics Totals & Provenance Placed Strictly Above Search Bar on `/interact`**:

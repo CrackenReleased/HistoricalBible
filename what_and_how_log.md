@@ -1,3 +1,27 @@
+## 2026-10-18 01:58:00 — 'What to show' on Dedicated Line, Expansive Map Canvas Sizing, and Ukrainian Flag Removed (v00.01.51)
+
+- User Request & Direct Root-Cause Diagnosis:
+  - User requested:
+    1. "In HistoricalBible.com/map For the 'what to show' menu, We need that to be on it's own line just below the period and above the timeline slider." (User provided annotated screenshot with yellow arrow moving 'What to show' down and to the left under 'Choose a period').
+    2. "Also the map should fill in much more of the screen, it is too narrow." (User provided annotated screenshot with green lines along screen margins and 3 downward arrows into the empty void).
+    3. "And lastly, we want to remove the ukranian flag from the map source reference. It is dumb and unneeded. And in today's market implies that I have taken a side in the Ukraininan Russian war... but we are just a Bible site... no sides taken" (User provided annotated screenshot crossing out the Ukrainian flag SVG in the Leaflet attribution).
+  - Root Cause & Diagnosis:
+    1. In `src/interact.css`, `.atlas-disclosure` had `flex: 0 0 auto`, causing it to sit inline on row 1 on the far right beside the period and journey dropdowns when closed. It only wrapped when `[open]` because of `.atlas-disclosure[open] { flex-basis: 100% }`, creating an awkward jump when toggled.
+    2. In `src/interact.css`, `.atlas-canvas-card` height was clamped to `clamp(420px, 56vh, 660px)`, which left a massive empty black void of 300px+ on standard desktop viewports (e.g. 1080p). Furthermore, `.atlas-reading .atlas-page-layout` was constrained to `max-width: 1580px` with 64px container padding, preventing the map from expanding generously across the screen.
+    3. Leaflet 1.9.4 injects a default attribution prefix containing an SVG Ukrainian flag (`.leaflet-attribution-flag`) alongside the Leaflet link.
+  - Decision Point & Implementation:
+    1. In `src/interact.css`, assigned `.atlas-disclosure` permanent `flex: 1 1 100%; width: 100%` so it always occupies its own dedicated line beneath the period and journey pickers and strictly above `#atlas-sequence`. Sized `.atlas-reading summary` with `width: fit-content; display: inline-flex; align-items: center` on desktop (and `width: 100%` on mobile `< 760px`) and gave `.atlas-disclosure-body` its own distinct top border and margin (`margin-top: 8px; border-radius: 3px`) so clicking it does not shift the button position or break panel borders.
+    2. In `src/interact.css`, expanded `.atlas-reading .atlas-canvas-card` height to `clamp(580px, 78vh, 960px)` and widened `.atlas-reading .atlas-page-layout` to `max-width: min(1840px, 100%)` with tighter container padding (`clamp(16px, 2vw, 36px)`), allowing the map canvas and detail drawer to generously fill the desktop viewport and eliminate the bottom void.
+    3. In `src/engine/ancientMap.ts`, called `this.map.attributionControl.setPrefix('<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>')` to completely omit the political flag SVG from DOM generation, and reinforced in `src/interact.css` with `.atlas-reading .leaflet-attribution-flag { display: none !important; visibility: hidden !important; width: 0 !important; height: 0 !important; }`.
+    4. Added comprehensive Playwright regression test in `tests/map-reading-experience.spec.ts` asserting:
+       - 'What to show' summary top is strictly below both `#atlas-era` and `#atlas-journey`.
+       - 'What to show' summary bottom is strictly above `#atlas-sequence`.
+       - 'What to show' summary is left-aligned with controls.
+       - Map canvas container height is >= 650px on standard desktop (measured at 702px for 900px viewport, filling 78vh).
+       - `.leaflet-attribution-flag` is not visible/present while retaining complete Leaflet and Esri attribution text.
+       - Captured screenshot proof: `test-results/leaflet-attribution.png`, `test-results/atlas-reading-entry-desktop.png`, `test-results/atlas-reading-apostolic-desktop.png`, `test-results/atlas-reading-show-all-desktop.png`.
+    5. Bumped version to `00.01.51` across `package.json`, `map.html`. All 16/16 Playwright map tests and 12/12 collection self-checks pass; `npm run build` passes cleanly.
+
 ## 2026-10-17 21:50:00 — Header Statistics Positioned Above Search Bar on /interact (v00.01.50)
 
 - User Request & Direct Root-Cause Diagnosis:

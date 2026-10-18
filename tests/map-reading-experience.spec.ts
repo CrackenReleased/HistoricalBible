@@ -197,3 +197,71 @@ test('deep green reading atlas theme and cross-page reading context continuity (
   expect(drawerBg).toBe('rgb(232, 223, 205)');
 });
 
+test('what to show is on its own line, map fills screen generously, and leaflet attribution has no flag', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/map');
+
+  // Select a period so both Choose a period and Choose a journey are visible alongside What to show
+  await page.getByLabel('Choose a period').selectOption('patriarchs');
+  await expect(page.getByLabel('Choose a journey')).toBeVisible();
+
+  // 1. Verify 'What to show' is on its own line below the period/journey fields and above timeline slider
+  const positions = await page.evaluate(() => {
+    const eraRect = document.getElementById('atlas-era')!.getBoundingClientRect();
+    const journeyRect = document.getElementById('atlas-journey')!.getBoundingClientRect();
+    const visibilityRect = document.getElementById('atlas-visibility')!.getBoundingClientRect();
+    const summaryRect = document.querySelector('#atlas-visibility > summary')!.getBoundingClientRect();
+    const sequenceRect = document.getElementById('atlas-sequence')!.getBoundingClientRect();
+    const controlsRect = document.querySelector('.atlas-reading-controls')!.getBoundingClientRect();
+
+    return {
+      eraBottom: eraRect.bottom,
+      journeyBottom: journeyRect.bottom,
+      summaryTop: summaryRect.top,
+      summaryBottom: summaryRect.bottom,
+      summaryLeft: summaryRect.left,
+      controlsLeft: controlsRect.left,
+      sequenceTop: sequenceRect.top
+    };
+  });
+
+  // What to show summary must be strictly below period and journey pickers
+  expect(positions.summaryTop).toBeGreaterThanOrEqual(positions.eraBottom);
+  expect(positions.summaryTop).toBeGreaterThanOrEqual(positions.journeyBottom);
+
+  // What to show summary must be strictly above the sequence timeline slider
+  expect(positions.summaryBottom).toBeLessThanOrEqual(positions.sequenceTop);
+
+  // What to show must be left-aligned on its own line, not pushed to the far right
+  expect(positions.summaryLeft - positions.controlsLeft).toBeLessThanOrEqual(20);
+
+  // 2. Verify map fills much more of the screen vertically and horizontally
+  const mapGeometry = await page.evaluate(() => {
+    const card = document.querySelector('.atlas-canvas-card')!.getBoundingClientRect();
+    const canvas = document.getElementById('atlas-canvas-container')!.getBoundingClientRect();
+    return {
+      cardHeight: card.height,
+      canvasHeight: canvas.height,
+      viewportHeight: window.innerHeight
+    };
+  });
+
+  // At 900px viewport, map height must fill at least 70% of viewport (> 630px, e.g. ~700px)
+  expect(mapGeometry.canvasHeight).toBeGreaterThanOrEqual(650);
+
+  // 3. Verify Leaflet attribution does not display Ukrainian flag
+  const flagElements = page.locator('.leaflet-attribution-flag');
+  const flagCount = await flagElements.count();
+  if (flagCount > 0) {
+    const isVisible = await flagElements.first().isVisible();
+    expect(isVisible).toBe(false);
+  }
+
+  // Attribution text remains complete for Leaflet and Esri
+  const attribText = await page.locator('.leaflet-control-attribution').innerText();
+  expect(attribText).toContain('Leaflet');
+  expect(attribText).toContain('Esri');
+  await page.locator('.leaflet-control-attribution').screenshot({ path: 'test-results/leaflet-attribution.png' });
+});
+
+

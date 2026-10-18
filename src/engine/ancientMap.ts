@@ -260,6 +260,10 @@ export class AncientMapCanvas {
       attributionControl: !!options.readingMode
     });
 
+    if (this.map.attributionControl) {
+      this.map.attributionControl.setPrefix('<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>');
+    }
+
     // 2. High-Resolution Basemap: Esri World Dark Gray Base (clean, dark, watermark-free)
     this.tileLayer = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 15,
