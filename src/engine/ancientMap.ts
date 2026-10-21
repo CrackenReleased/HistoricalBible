@@ -24,13 +24,16 @@ import {
   GRANULAR_TIMELINE_FILTERS,
   REGION_PRESETS,
   WATER_FEATURES,
+  CONTESTED_FRONTIER_ZONES,
   calculatePolygonGeodesicArea,
+  doPolygonsOverlap,
   type GeoCoordinate,
   type ArchaeologicalSite,
   type BiblicalCity,
   type BiblicalRoute,
   type BiblicalRouteStop,
   type WorldEmpireRegion,
+  type ContestedFrontierZone,
   type ChronologicalEra,
   type GranularTimelineFilter,
   type BiblicalGeographicEntity,
@@ -1862,6 +1865,21 @@ export class AncientMapCanvas {
         return calculatePolygonGeodesicArea(b.approximateBounds) - calculatePolygonGeodesicArea(a.approximateBounds);
       });
 
+      // Identify active empires that have contested boundaries or overlap with other active realms
+      const activeEmpiresWithContestedBorders = new Set<string>();
+      for (const empire of sortedEmpires) {
+        if (empire.contestedBorder || empire.dashArray) {
+          activeEmpiresWithContestedBorders.add(empire.id);
+          continue;
+        }
+        for (const other of sortedEmpires) {
+          if (other.id !== empire.id && doPolygonsOverlap(empire.approximateBounds, other.approximateBounds)) {
+            activeEmpiresWithContestedBorders.add(empire.id);
+            activeEmpiresWithContestedBorders.add(other.id);
+          }
+        }
+      }
+
       const badgeMap: Record<FactionType, { text: string; bg: string; color: string; border: string }> = {
         covenant: { text: 'COVENANT NATION · ROYAL DAVIDIC LINE', bg: 'rgba(234, 179, 8, 0.2)', color: '#fde047', border: 'rgba(234, 179, 8, 0.5)' },
         israel: { text: 'NORTHERN KINGDOM · 10 TRIBES', bg: 'rgba(34, 197, 94, 0.2)', color: '#86efac', border: 'rgba(34, 197, 94, 0.5)' },
@@ -1874,13 +1892,16 @@ export class AncientMapCanvas {
         const smoothed = smoothPolygonCoordinates(empire.approximateBounds, 2);
         const latLngs = smoothed.map(b => [b.lat, b.lng] as L.LatLngTuple);
         const isCompact = !!this.options.compact;
+        const hasContestedBorder = activeEmpiresWithContestedBorders.has(empire.id);
+        const dashStyle = hasContestedBorder ? (empire.dashArray || '6, 5') : undefined;
 
-        // Soft Outer Cartographic Halo (Water-color border wash)
+        // Soft Outer Cartographic Halo (Water-color border wash; dashed if boundary is contested/overlapping)
         const haloStyle: L.PathOptions = {
           pane: 'empirePane',
           color: empire.color,
           weight: isCompact ? 4.5 : 5.5,
           opacity: isCompact ? 0.18 : 0.25,
+          dashArray: hasContestedBorder ? '8, 6' : undefined,
           fill: false,
           interactive: false,
           lineCap: 'round',
@@ -1897,6 +1918,7 @@ export class AncientMapCanvas {
           fillOpacity: isCompact ? 0.10 : 0.14,
           weight: isCompact ? 1.4 : 1.6,
           opacity: isCompact ? 0.82 : 0.88,
+          dashArray: dashStyle,
           lineCap: 'round',
           lineJoin: 'round'
         };
@@ -1907,6 +1929,7 @@ export class AncientMapCanvas {
           fillOpacity: isCompact ? 0.22 : 0.26,
           weight: isCompact ? 2.2 : 2.6,
           opacity: 1.0,
+          dashArray: dashStyle,
           lineCap: 'round',
           lineJoin: 'round'
         };
@@ -2015,6 +2038,95 @@ export class AncientMapCanvas {
           this.bindManagedTooltip(capMarker, capitalTooltipHtml, { direction: 'top', offset: [0, -12] });
           this.empireLayerGroup.addLayer(capMarker);
         }
+      }
+
+      // 1.5. Canonical Contested / Argued Frontier Zones (Overlapping Disputed Borderlands)
+      // Rendered with prominent dashed lines (dashArray: '6, 6') denoting shared/contested sovereignty.
+      const isCompact = !!this.options.compact;
+      const activeEmpireIds = new Set(targetEmpires.map(e => e.id));
+      const relevantContestedZones = CONTESTED_FRONTIER_ZONES.filter(zone => {
+        const isEraMatch = zone.eraIds.includes(this.activeEra.id) || zone.eraIds.includes('all');
+        if (!isEraMatch) return false;
+        return zone.claimedByEmpireIds.some(empId => activeEmpireIds.has(empId));
+      });
+
+      for (const zone of relevantContestedZones) {
+        const smoothed = smoothPolygonCoordinates(zone.bounds, 2);
+        const latLngs = smoothed.map(b => [b.lat, b.lng] as L.LatLngTuple);
+        const closedLatLngs = latLngs.concat([latLngs[0]]);
+
+        // Contested Outer Halo with Dashed Cartographic Stroke
+        const contestedHalo = L.polyline(closedLatLngs, {
+          pane: 'empirePane',
+          color: '#f59e0b',
+          weight: isCompact ? 5.0 : 6.0,
+          opacity: 0.22,
+          dashArray: '8, 6',
+          fill: false,
+          interactive: false,
+          lineCap: 'round',
+          lineJoin: 'round'
+        });
+        this.empireLayerGroup.addLayer(contestedHalo);
+
+        // Contested Argued Territory Polygon with Distinctive Dashed Border
+        const contestedPolyStyle: L.PathOptions = {
+          pane: 'empirePane',
+          color: '#f59e0b',
+          fillColor: 'rgba(245, 158, 11, 0.14)',
+          fillOpacity: isCompact ? 0.16 : 0.20,
+          weight: isCompact ? 1.8 : 2.2,
+          opacity: 0.95,
+          dashArray: '6, 6',
+          lineCap: 'round',
+          lineJoin: 'round'
+        };
+        const contestedHoverStyle: L.PathOptions = {
+          pane: 'empirePane',
+          color: '#fbbf24',
+          fillColor: 'rgba(251, 191, 36, 0.26)',
+          fillOpacity: isCompact ? 0.28 : 0.32,
+          weight: isCompact ? 2.6 : 3.0,
+          opacity: 1.0,
+          dashArray: '6, 6',
+          lineCap: 'round',
+          lineJoin: 'round'
+        };
+
+        const contestedPoly = L.polygon(latLngs, contestedPolyStyle);
+
+        contestedPoly.on('mouseover', () => {
+          contestedPoly.setStyle(contestedHoverStyle);
+        });
+        contestedPoly.on('mouseout', () => {
+          contestedPoly.setStyle(contestedPolyStyle);
+        });
+
+        const claimingNames = zone.claimedByEmpireIds
+          .map(id => WORLD_EMPIRES_GEO.find(e => e.id === id)?.name || id)
+          .join(' · ');
+
+        const contestedTooltipHtml = `
+          <div class="map-tooltip-inner contested-tooltip" style="min-width: 240px; max-width: 320px;">
+            <span class="tooltip-badge" style="background: rgba(245, 158, 11, 0.25); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.6); font-size: 0.68rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">⚔️ CONTESTED FRONTIER · ARGUED BORDERLAND</span>
+            <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin-top: 3px; margin-bottom: 4px;">${zone.name}</div>
+            <div style="font-size: 0.78rem; color: #f1f5f9; margin-bottom: 5px;">
+              <strong style="color: #fbbf24;">Claimed By:</strong> ${claimingNames}
+            </div>
+            <div style="font-size: 0.74rem; color: #e2e8f0; line-height: 1.35; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px;">
+              <strong style="color: #ffd700;">✦ Biblical Record:</strong> ${zone.biblicalRecord}
+            </div>
+            <div style="font-size: 0.72rem; color: #a89f91; margin-top: 4px; line-height: 1.3;">
+              <strong>Historical Setting:</strong> ${zone.historicalContext}
+            </div>
+            <div class="tooltip-cta" style="margin-top: 5px; color: #c99738; font-size: 0.72rem; border-top: 1px dashed rgba(212, 175, 55, 0.2); padding-top: 4px; font-weight: 500;">
+              Dashed borders denote historically argued territorial sovereignty &rarr;
+            </div>
+          </div>
+        `;
+
+        this.bindManagedTooltip(contestedPoly, contestedTooltipHtml, { direction: 'top', offset: [0, -10] });
+        this.empireLayerGroup.addLayer(contestedPoly);
       }
     }
 

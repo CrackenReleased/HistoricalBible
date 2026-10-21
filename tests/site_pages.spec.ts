@@ -185,7 +185,7 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
     await page.locator('.bible-verse-row[data-verse="3"]').click();
     await expect(page.locator('.bible-verse-row[data-verse="3"]')).toHaveClass(/active-verse/);
     await expect(page.locator('#companion-tab-xrefs-content .companion-verse-ref')).toContainText('GENESIS {2:3}');
-    await expect(page.locator('#companion-tab-xrefs-content > .companion-xrefs-list')).toBeVisible();
+    await expect(page.locator('#companion-tab-xrefs-content .xref-archive')).toBeVisible();
 
     // Word-for-word inspection: clicking any word activates Word Inspector in companion panel
     const firstWord = page.locator('.bible-verse-row[data-verse="3"] .kjv-word').first();

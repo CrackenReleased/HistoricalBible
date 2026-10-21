@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.61] - 2026-10-21
+
+- **Kingdom of Kush / Nubia Territorial Realignment**:
+  - Expanded `kush_nubia` from an unnaturally narrow 30-mile Nile cataract ribbon into its full historical regional extent (~850,000–1,200,000 km²).
+  - Encompassed the vital **"Island of Meroë" (the Butana plain)** between the Nile, the Atbara River, and the Blue Nile, reaching eastward toward Kassala (`lng: 36.2`) and Ethiopian approaches.
+  - Encompassed major inland Meroitic temple cities of **Naga** and **Musawwarat es-Sufra** (`lat: 16.42, lng: 33.32`) situated 25 miles inland from the Nile.
+  - Included the Eastern Desert gold mining districts along Wadi Allaqi and Wadi Gabgaba reaching toward the Red Sea hills (`lng: 34.2` to `37.25`).
+  - Included the western savanna margin along the ancient Wadi Howar corridor ("Yellow Nile") connecting ancient Chad/Darfur savannas to the Nile (`lng: 27.5` to `29.5`).
+  - Extended chronological span to `c. 2000 BC – AD 350 (Kerma, Napata & Meroë · 25th Nubian Dynasty)` so the realm is historically active in Genesis 47 (Patriarchs) through the New Testament (Acts 8:27 Candace).
+- **Dashed Boundaries for Overlapping & Contested Territorial Frontiers**:
+  - Identified and rendered historically argued and overlapping territorial borderlands throughout biblical history with distinct cartographic **dashed lines** (`dashArray: '6, 5'` boundary stroke and `dashArray: '8, 6'` halo) rather than solid lines.
+  - Dynamic polygon intersection detection (`doPolygonsOverlap`) dynamically marks and renders contested frontier regions.
+  - Added formal `CONTESTED_FRONTIER_ZONES` catalog exporting 8 canonical biblical frontier zones:
+    1. *Lower Nubia / Wawat* (Egypt & Kush) — Buhen, Semna, and cataract forts.
+    2. *Northern Benjamin Buffer / Bethel Corridor* (Judah & Israel) — Baasha & Asa Ramah/Mizpah frontier (1 Kings 15:17).
+    3. *Gilead & Ramoth-Gilead* (Israel & Aram-Damascus) — Ahab & Ben-hadad border wars (1 Kings 22:3).
+    4. *Plains of Moab & Medeba Plateau / Mishor* (Israel & Moab) — Mesha Stele / Omride contested territory (2 Kings 3:4).
+    5. *Shephelah Foothill Buffer* (Philistia & Judah) — Beth-shemesh, Libnah, Azekah contested border (1 Samuel 6:12).
+    6. *Sinai & Negev Wilderness Frontier* (Egypt, Judah, Nabataea) — Kadesh-barnea & Way of Shur.
+    7. *Coele-Syria & Palestine Corridor* (Seleucid & Ptolemaic Empires) — Syrian Wars & Antiochus III (Daniel 11:15).
+    8. *Alluvial Babylonian Borderland* (Assyria & Babylonia) — Dur-Kurigalzu, Nippur, and marsh frontiers.
+  - Interactive external callouts on hover detail argued sovereign claims, rival powers, and Scripture citations.
+- **Verification & Regression Suite**:
+  - Added new regression suite `tests/territorial-boundaries-overlap-regression.ts` (4/4 passing) asserting Kush area >= 750,000 km², Butana/Naga/gold-fields inclusion, Egypt/Kush overlap, Judah/Israel overlap, and exported frontier zones.
+  - All 79 Node.js regression tests passing (`tests/*-regression.ts`, `tests/data-integrity-selfcheck.ts`).
+  - All Playwright browser integration tests passing (including `companion-map-callout-regression.spec.ts`).
+  - 100% canonical KJV corpus verified (31,102 verses). Clean Vite production build.
+
+
 ## [00.01.60] - 2026-10-21
 
 - **Atlas Theme Color Realignment for External Popups**:

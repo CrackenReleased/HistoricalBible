@@ -54,7 +54,7 @@ test('waterways retain solid boundaries and correct pane hierarchy', async ({ pa
   for (const pane of ['empire', 'lake', 'river']) {
     const paths = page.locator('.leaflet-' + pane + '-pane svg path');
     expect(await paths.count()).toBeGreaterThan(0);
-    if (pane !== 'river') for (const path of await paths.all()) {
+    if (pane === 'lake') for (const path of await paths.all()) {
       expect(await path.getAttribute('stroke-dasharray')).toBeNull();
     }
   }

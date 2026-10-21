@@ -12,14 +12,14 @@ test('Epoch 1: Jacob narrative passages wire to sequential stops on jacob-padan-
   const route = BIBLICAL_ROUTES.find(r => r.id === 'jacob-padan-aram');
   assert.ok(route, 'jacob-padan-aram route must exist');
   assert.equal(route.figureId, 'jacob');
-  assert.equal(route.stops.length, 9, 'Must have 9 sequential narrative stops');
+  assert.equal(route.stops.length, 11, 'Must have 11 sequential narrative stops');
 
-  // Stop 0: Beersheba (Gen 28:10)
+  // Stop 0: Beersheba & Isaac's Tents (Gen 28:10)
   const s0 = getJourneyStopForPassage('Gen', 28, 10);
   assert.ok(s0);
   assert.equal(s0.route.id, 'jacob-padan-aram');
   assert.equal(s0.stopIndex, 0);
-  assert.match(s0.stop.name, /Beersheba/i);
+  assert.match(s0.stop.name, /Beer-sheba|Isaac/i);
 
   // Stop 1: Bethel / Luz (Gen 28:12)
   const s1 = getJourneyStopForPassage('Gen', 28, 12);

@@ -87,6 +87,18 @@ export interface WorldEmpireRegion {
   populationEstimate: string;
   approximateArea: string;
   eraIds?: string[];
+  contestedBorder?: boolean;
+  dashArray?: string;
+}
+
+export interface ContestedFrontierZone {
+  id: string;
+  name: string;
+  claimedByEmpireIds: string[];
+  bounds: GeoCoordinate[];
+  eraIds: string[];
+  biblicalRecord: string;
+  historicalContext: string;
 }
 
 export interface MapRegionPreset {
@@ -1638,7 +1650,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
   },
   {
     id: 'jacob-padan-aram',
-    name: "Jacob's Journey: From Isaac's Tents to Padan-Aram & Return",
+    name: "Jacob's Journey: From Isaac's Tents to Rachel in Padan-Aram & Return",
     shortBanner: "🌾 JACOB'S JOURNEY: BIRTH, BETHEL, HARAN & GOSHEN (c. 2006–1859 BC)",
     travelerName: "Patriarch Jacob (Israel)",
     figureId: 'jacob',
@@ -4687,6 +4699,8 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 930 – 586 BC',
     capital: { name: 'Jerusalem', coords: { lat: 31.768, lng: 35.213 } },
     approximateBounds: [
+      { lat: 31.930, lng: 35.220 }, // Bethel / Jeshanah (contested border with Israel, 2 Chron 13:19)
+      { lat: 31.880, lng: 35.340 }, // Michmash pass / Geba of Benjamin
       { lat: 31.850, lng: 35.480 }, // Jordan River crossing east of Jericho
       { lat: 31.835, lng: 35.340 }, // Ascent of Adummim
       { lat: 31.810, lng: 35.260 }, // Anathoth / Mount Scopus
@@ -4708,12 +4722,15 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
       { lat: 31.455, lng: 35.385 }, // Ein Gedi (Dead Sea cliffs & oasis - strictly on land)
       { lat: 31.725, lng: 35.450 }, // Qumran / Ras Feshkha cliffs
       { lat: 31.782, lng: 35.490 }, // Jordan River delta western bank
-      { lat: 31.850, lng: 35.480 }  // Back to Jordan crossing
+      { lat: 31.850, lng: 35.480 }, // Back to Jordan crossing
+      { lat: 31.930, lng: 35.220 }  // Back to Bethel
     ],
     biblicalIntersection: 'The Davidic royal line ruling from Mount Zion; Solomon\'s Temple; outlasted the Northern Kingdom until the Babylonian exile in 586 BC.',
     factionCategory: 'covenant',
     populationEstimate: '~350,000 – 450,000',
-    approximateArea: '~15,000 km²'
+    approximateArea: '~15,000 km²',
+    contestedBorder: true,
+    dashArray: '6, 5'
   },
   {
     id: 'israel_kingdom',
@@ -4737,6 +4754,7 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
       { lat: 31.880, lng: 35.520 }, // Jordan valley opposite Jericho
       { lat: 31.930, lng: 35.220 }, // Bethel (Jeroboam's golden calf sanctuary)
       { lat: 31.850, lng: 35.210 }, // Ramah of Benjamin
+      { lat: 31.810, lng: 35.240 }, // Geba / Mizpah (contested southern frontier fortified by Baasha, 1 Kgs 15)
       { lat: 31.880, lng: 35.120 }, // Beth-horon the nether
       { lat: 31.840, lng: 34.980 }, // Valley of Aijalon (Judah border)
       { lat: 32.050, lng: 34.850 }, // Sharon plain / Joppa border
@@ -4749,7 +4767,9 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     biblicalIntersection: 'The northern ten tribes established under Jeroboam; capital at Samaria until exile by Assyria in 722 BC.',
     factionCategory: 'israel',
     populationEstimate: '~700,000 – 900,000',
-    approximateArea: '~24,000 km²'
+    approximateArea: '~24,000 km²',
+    contestedBorder: true,
+    dashArray: '6, 5'
   },
   {
     id: 'phoenicia',
@@ -4809,7 +4829,9 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     biblicalIntersection: 'Rebelled against Israel following King Ahab\'s death (2 Kings 1:1, 3:4–27); recorded on the Mesha Stele.',
     factionCategory: 'hostile',
     populationEstimate: '~150,000 – 250,000',
-    approximateArea: '~5,000 km²'
+    approximateArea: '~5,000 km²',
+    contestedBorder: true,
+    dashArray: '6, 5'
   },
   {
     id: 'aram_damascus',
@@ -4835,7 +4857,9 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     biblicalIntersection: 'Aramean adversary of Israel under Ben-hadad and Hazael (1 Kings 20, 2 Kings 6–8, 16); crushed by Assyria in 732 BC.',
     factionCategory: 'hostile',
     populationEstimate: '~500,000 – 700,000',
-    approximateArea: '~45,000 km²'
+    approximateArea: '~45,000 km²',
+    contestedBorder: true,
+    dashArray: '6, 5'
   },
   {
     id: 'philistia',
@@ -4861,7 +4885,9 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     biblicalIntersection: 'Five coastal royal cities (Gaza, Ashkelon, Ashdod, Gath, Ekron); cult of Baal-zebub at Ekron in 2 Kings 1:2.',
     factionCategory: 'hostile',
     populationEstimate: '~200,000 – 300,000',
-    approximateArea: '~3,500 km²'
+    approximateArea: '~3,500 km²',
+    contestedBorder: true,
+    dashArray: '6, 5'
   },
   {
     id: 'edom_kingdom',
@@ -5115,6 +5141,12 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
       { lat: 24.800, lng: 33.400 }, // Desert margins of Kom Ombo
       { lat: 24.480, lng: 33.000 }, // Ombos east bank
       { lat: 24.080, lng: 32.900 }, // First Cataract at Aswan / Elephantine (border with Kush)
+      { lat: 23.500, lng: 33.200 }, // Beit el-Wali / Lower Nubia (Wawat contested frontier)
+      { lat: 22.340, lng: 31.620 }, // Abu Simbel temples (Ramesses II southern seat)
+      { lat: 21.900, lng: 31.300 }, // Second Cataract at Buhen (fortress of Senusret III)
+      { lat: 21.450, lng: 30.950 }, // Semna / Kumma southern border fortress
+      { lat: 22.400, lng: 30.600 }, // Toshka western depression
+      { lat: 23.200, lng: 31.200 }, // Western desert plateau
       { lat: 24.090, lng: 32.860 }, // West bank of First Cataract
       { lat: 24.500, lng: 32.880 }, // Kom Ombo west bank
       { lat: 24.980, lng: 32.820 }, // Edfu (Apollinopolis Magna) west bank
@@ -5139,7 +5171,9 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     biblicalIntersection: 'Shelter for Abraham and Jacob; slavery and 10 plagues of Exodus; Merneptah Stele (1208 BC) earliest extrabiblical mention of Israel.',
     factionCategory: 'hostile',
     populationEstimate: '~4,500,000 – 6,000,000',
-    approximateArea: '~1,000,000 km²'
+    approximateArea: '~1,000,000 km²',
+    contestedBorder: true,
+    dashArray: '6, 5'
   },
   {
     id: 'saite_egypt',
@@ -5211,42 +5245,39 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     name: 'Kingdom of Kush & 25th Nubian Dynasty (Ethiopia / Upper Nile)',
     color: '#c084fc',
     fillColor: 'rgba(192, 132, 252, 0.18)',
-    dateRange: 'c. 1070 BC – AD 350',
+    dateRange: 'c. 2000 BC – AD 350 (Kerma, Napata & Meroë · 25th Nubian Dynasty)',
     capital: { name: 'Napata & Meroë', coords: { lat: 16.94, lng: 33.75 } },
     approximateBounds: [
-      { lat: 24.08, lng: 32.90 }, // First Cataract (Aswan / Philae)
-      { lat: 23.50, lng: 33.20 }, // Lake Nubia / Beit el-Wali
-      { lat: 22.34, lng: 31.62 }, // Abu Simbel
-      { lat: 21.90, lng: 31.30 }, // Second Cataract at Buhen / Wadi Halfa
-      { lat: 21.45, lng: 30.95 }, // Mirgissa / Semna fortress
-      { lat: 20.60, lng: 30.55 }, // Sai Island & Amara West
-      { lat: 20.10, lng: 30.40 }, // Soleb temple
-      { lat: 19.60, lng: 30.42 }, // Third Cataract at Kerma
-      { lat: 19.18, lng: 30.47 }, // Dongola Reach
-      { lat: 18.25, lng: 30.75 }, // Old Dongola
-      { lat: 18.05, lng: 31.35 }, // Debba bend
-      { lat: 18.53, lng: 31.83 }, // Fourth Cataract at Gebel Barkal & Napata
-      { lat: 19.20, lng: 32.50 }, // Bayuda desert loop
-      { lat: 19.53, lng: 33.32 }, // Abu Hamed bend
-      { lat: 18.00, lng: 33.95 }, // Fifth Cataract at Berber
-      { lat: 17.68, lng: 33.98 }, // Confluence of Atbara River (Black Nile)
-      { lat: 16.94, lng: 33.73 }, // Royal City & Pyramids of Meroë
-      { lat: 16.40, lng: 33.25 }, // Wad ben Naga
-      { lat: 16.20, lng: 32.60 }, // Sixth Cataract (Sabloka Gorge)
-      { lat: 15.60, lng: 32.53 }, // Confluence of Blue & White Niles (Khartoum / Soba)
-      { lat: 15.30, lng: 32.40 }, // White Nile western bank
-      { lat: 16.00, lng: 31.80 }, // Bayuda western margin
-      { lat: 17.00, lng: 31.00 }, // Wadi Muqaddam approach
-      { lat: 18.00, lng: 30.20 }, // Western desert ridge of Dongola
-      { lat: 19.50, lng: 29.80 }, // Kerma western desert
-      { lat: 21.50, lng: 30.50 }, // Semna western plateau
-      { lat: 22.80, lng: 31.20 }, // Toshka depression western border
+      { lat: 24.08, lng: 32.90 }, // First Cataract (Aswan / Elephantine borderland)
+      { lat: 23.80, lng: 34.20 }, // Wadi Allaqi gold-mining route
+      { lat: 23.20, lng: 35.40 }, // Eastern Desert gold fields & Wadi Gabgaba
+      { lat: 22.00, lng: 36.50 }, // Red Sea hills near Gebel Elba
+      { lat: 20.50, lng: 37.00 }, // Red Sea hills north of Port Sudan
+      { lat: 19.20, lng: 37.25 }, // Suakin / Badi coastal trade corridor
+      { lat: 18.50, lng: 36.80 }, // Sinkat / Red Sea coastal pass
+      { lat: 17.50, lng: 36.20 }, // Upper Atbara River basin (eastern limit of Butana plain)
+      { lat: 16.50, lng: 36.00 }, // Eastern Butana savanna grasslands
+      { lat: 15.60, lng: 36.20 }, // Kassala / Gash river alluvial approaches
+      { lat: 14.80, lng: 35.30 }, // Gedaref fertile savanna
+      { lat: 13.80, lng: 34.00 }, // Sennar / Blue Nile southern savanna reach
+      { lat: 14.20, lng: 32.80 }, // Gezira fertile plain
+      { lat: 14.50, lng: 30.80 }, // Kordofan savanna pastures
+      { lat: 15.50, lng: 29.50 }, // Northern Kordofan caravan route
+      { lat: 16.80, lng: 28.50 }, // Lower Wadi Howar savanna approach
+      { lat: 18.20, lng: 27.80 }, // Wadi Howar ("Yellow Nile") central paleochannel
+      { lat: 19.80, lng: 27.50 }, // Ennedi / Darfur northern trade junction
+      { lat: 21.20, lng: 28.00 }, // Kerma western desert oasis route
+      { lat: 22.40, lng: 29.50 }, // Semna western plateau
+      { lat: 23.40, lng: 31.00 }, // Toshka depression western approach
+      { lat: 23.80, lng: 31.80 }, // Lower Nubia western desert plateau
       { lat: 24.08, lng: 32.86 }  // Back to First Cataract west bank
     ],
-    biblicalIntersection: 'Pharaoh Tirhakah (Taharqa) marched against Sennacherib (2 Kings 19:9, Isaiah 37:9); Queen Candace\'s treasurer baptized in Acts 8:27.',
+    biblicalIntersection: 'Pharaoh Tirhakah (Taharqa) marched against Sennacherib (2 Kings 19:9, Isaiah 37:9); Queen Candace\'s treasurer baptized in Acts 8:27; Moses took an Ethiopian wife (Numbers 12:1).',
     factionCategory: 'global_power',
-    populationEstimate: '~2,000,000 – 3,500,000',
-    approximateArea: '~1,200,000 km²'
+    populationEstimate: '~2,500,000 – 4,000,000',
+    approximateArea: '~1,200,000 km²',
+    contestedBorder: true,
+    dashArray: '6, 5'
   },
   {
     id: 'china_zhou',
@@ -5442,6 +5473,142 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     factionCategory: 'hostile',
     populationEstimate: '~54,000,000 – 65,000,000',
     approximateArea: '~5,000,000 km²'
+  }
+];
+
+// Canonical Historical & Biblical Contested Frontier Zones (Argued Overlapping Territories)
+// Rendered on the cartographic canvas with dashed lines (dashArray: '6, 6') to represent contested sovereignty.
+export const CONTESTED_FRONTIER_ZONES: ContestedFrontierZone[] = [
+  {
+    id: 'contested-lower-nubia',
+    name: 'Lower Nubia / Wawat (The Cataract Frontier)',
+    claimedByEmpireIds: ['egypt', 'kush_nubia'],
+    eraIds: ['patriarchs', 'exodus', 'judges', 'divided_monarchy_prophets', '2kings_jehu', '2kings_fall_samaria', 'assyrian_siege', 'all'],
+    biblicalRecord: 'Pharaoh Tirhakah (Taharqa) of Kush marched against Sennacherib to defend Jerusalem (2 Kings 19:9, Isaiah 37:9). Heavily fortified with 12 Egyptian and Nubian border fortresses (Buhen, Semna, Mirgissa).',
+    historicalContext: 'Argued buffer between Egypt and the Kingdom of Kush from the 1st Cataract (Aswan) to the 2nd Cataract (Buhen/Semna). Contested across two millennia between Egyptian Middle/New Kingdom expansion and Kushite resurgence (Kerma culture and 25th Nubian Dynasty).',
+    bounds: [
+      { lat: 24.08, lng: 32.90 }, // First Cataract (Aswan east bank)
+      { lat: 23.50, lng: 33.30 }, // Beit el-Wali
+      { lat: 22.34, lng: 32.20 }, // Abu Simbel eastern approach
+      { lat: 21.90, lng: 31.40 }, // Second Cataract (Buhen fortress)
+      { lat: 21.45, lng: 30.95 }, // Semna / Kumma southern border fortress of Senusret III
+      { lat: 21.75, lng: 30.60 }, // Mirgissa west plateau
+      { lat: 22.50, lng: 30.90 }, // Toshka depression west bank
+      { lat: 23.50, lng: 31.60 }, // Lower Nubia west bank
+      { lat: 24.08, lng: 32.86 }, // Aswan west bank
+      { lat: 24.08, lng: 32.90 }
+    ]
+  },
+  {
+    id: 'contested-benjamin',
+    name: 'Northern Benjamin Frontier (Ramah & Bethel Corridor)',
+    claimedByEmpireIds: ['judah', 'israel_kingdom'],
+    eraIds: ['divided_monarchy_prophets', '2kings_jehu', '2kings_fall_samaria', 'all'],
+    biblicalRecord: 'King Baasha of Israel went up against Judah, and built Ramah, that he might not suffer any to go out or come in to Asa king of Judah; Asa used the stones of Ramah to fortify Geba and Mizpah (1 Kings 15:16–22).',
+    historicalContext: 'Hotly contested 10-mile frontier north of Jerusalem where the northern ten tribes met Judah, with sovereignty shifting repeatedly back and forth between Samaria and Zion.',
+    bounds: [
+      { lat: 31.95, lng: 35.10 }, // Beth-horon pass
+      { lat: 31.95, lng: 35.25 }, // Bethel sanctuary
+      { lat: 31.92, lng: 35.45 }, // Jericho northern plain
+      { lat: 31.82, lng: 35.45 }, // Jordan crossing
+      { lat: 31.81, lng: 35.24 }, // Geba / Mizpah / Anathoth
+      { lat: 31.84, lng: 34.98 }, // Valley of Aijalon
+      { lat: 31.95, lng: 35.10 }
+    ]
+  },
+  {
+    id: 'contested-gilead-ramoth',
+    name: 'Gilead & Ramoth-Gilead Frontier',
+    claimedByEmpireIds: ['israel_kingdom', 'aram_damascus'],
+    eraIds: ['divided_monarchy_prophets', '2kings_jehu', 'all'],
+    biblicalRecord: 'King Ahab of Israel and King Jehoshaphat of Judah went to Ramoth-gilead to battle against the king of Syria; Ahab struck by an arrow drawn at a venture (1 Kings 22:1–37, 2 Kings 8:28).',
+    historicalContext: 'Transjordan fortress corridor and fertile heights of Gilead repeatedly disputed between Israel and the Arameans of Damascus under Ben-hadad and Hazael.',
+    bounds: [
+      { lat: 32.95, lng: 35.75 }, // Yarmouk River canyon
+      { lat: 32.95, lng: 36.15 }, // Bashan steppe
+      { lat: 32.45, lng: 36.15 }, // Ramoth-gilead eastern approach
+      { lat: 32.35, lng: 35.70 }, // Jabbok River gorge
+      { lat: 32.65, lng: 35.65 }, // Sea of Galilee southeast heights
+      { lat: 32.95, lng: 35.75 }
+    ]
+  },
+  {
+    id: 'contested-plains-of-moab',
+    name: 'The Mishor / Plains of Moab & Medeba Plateau',
+    claimedByEmpireIds: ['israel_kingdom', 'moab_kingdom'],
+    eraIds: ['divided_monarchy_prophets', '2kings_jehu', 'all'],
+    biblicalRecord: 'Mesha king of Moab rebelled against the king of Israel after the death of Ahab (2 Kings 1:1, 3:4–27). Mesha Stele: "Omri king of Israel humbled Moab many days... but I have triumphed over his house."',
+    historicalContext: 'Fertile agricultural tableland north of the Arnon River disputed between the Israelite tribe of Reuben/Gad and the kings of Moab.',
+    bounds: [
+      { lat: 31.85, lng: 35.60 }, // Plains of Moab opposite Jericho
+      { lat: 31.85, lng: 35.95 }, // Medeba / Nebo plateau
+      { lat: 31.46, lng: 35.95 }, // Upper Arnon canyon
+      { lat: 31.46, lng: 35.58 }, // Mouth of River Arnon at Dead Sea
+      { lat: 31.70, lng: 35.58 }, // Dead Sea northeast coast
+      { lat: 31.85, lng: 35.60 }
+    ]
+  },
+  {
+    id: 'contested-shephelah',
+    name: 'The Shephelah Foothills Buffer (Valley of Elah & Gath)',
+    claimedByEmpireIds: ['philistia', 'judah'],
+    eraIds: ['judges', 'united_monarchy', 'divided_monarchy_prophets', '2kings_jehu', 'all'],
+    biblicalRecord: 'David defeated Goliath of Gath between Shochoh and Azekah in the Valley of Elah (1 Samuel 17). Border contested throughout Judges and Monarchy.',
+    historicalContext: 'Lowland limestone foothills between the coastal Philistine Pentapolis and the Judean hill country, serving as an active military frontier.',
+    bounds: [
+      { lat: 31.85, lng: 34.82 }, // Timnah
+      { lat: 31.85, lng: 34.98 }, // Beth-shemesh
+      { lat: 31.48, lng: 34.90 }, // Lachish western hills
+      { lat: 31.48, lng: 34.70 }, // Eglon lowland border
+      { lat: 31.70, lng: 34.78 }, // Gath approach
+      { lat: 31.85, lng: 34.82 }
+    ]
+  },
+  {
+    id: 'contested-sinai-negev',
+    name: 'Sinai & Negev Borderland (Brook of Egypt / Wadi el-Arish)',
+    claimedByEmpireIds: ['egypt', 'judah', 'united_israel', 'nabataea'],
+    eraIds: ['patriarchs', 'exodus', 'united_monarchy', 'roman_christ', 'all'],
+    biblicalRecord: 'The Brook of Egypt (Wadi el-Arish) marks the south-western biblical boundary of the Promised Land (Numbers 34:5, Joshua 15:4, 1 Kings 8:65).',
+    historicalContext: 'Desert transit corridor between Egypt and Canaan, claimed and contested by Pharaohs, Judean kings, Edomites, and Nabataean trade caravans.',
+    bounds: [
+      { lat: 31.35, lng: 34.15 }, // Mediterranean coast at Raphia / Brook of Egypt
+      { lat: 31.35, lng: 34.85 }, // Gerar / Beersheba western approach
+      { lat: 30.60, lng: 34.85 }, // Kadesh-barnea / Wilderness of Zin
+      { lat: 30.60, lng: 34.15 }, // Central Sinai plateau / Wadi el-Arish
+      { lat: 31.35, lng: 34.15 }
+    ]
+  },
+  {
+    id: 'contested-coele-syria',
+    name: 'Coele-Syria & Levantine Littoral',
+    claimedByEmpireIds: ['greece_seleucid', 'ptolemaic_egypt'],
+    eraIds: ['persian_restoration', 'roman_christ', 'all'],
+    biblicalRecord: 'Daniel 11 prophesied the six Syrian Wars between the King of the North (Seleucids) and King of the South (Ptolemies) over control of Judea and Jerusalem.',
+    historicalContext: 'The disputed corridor of Judea, Samaria, Phoenicia, and the Bekaa Valley, fought over in six major Syrian Wars (274–168 BC) until Antiochus IV Epiphanes seized the Temple.',
+    bounds: [
+      { lat: 34.50, lng: 35.80 }, // Tripolis / Lebanon coast
+      { lat: 34.50, lng: 36.60 }, // Orontes valley
+      { lat: 31.50, lng: 35.50 }, // Judean frontier
+      { lat: 31.50, lng: 34.50 }, // Gaza coast
+      { lat: 33.00, lng: 35.00 }, // Acre coast
+      { lat: 34.50, lng: 35.80 }
+    ]
+  },
+  {
+    id: 'contested-mesopotamia-alluvial',
+    name: 'Central Tigris & Diyala Frontier (Babylon-Assyria Border)',
+    claimedByEmpireIds: ['assyria', 'babylon'],
+    eraIds: ['divided_monarchy_prophets', '2kings_fall_samaria', 'assyrian_siege', 'all'],
+    biblicalRecord: 'Sennacherib of Assyria destroyed Babylon in 689 BC; Nabopolassar of Babylon allied with the Medes to overthrow Nineveh in 612 BC (Nahum 1–3).',
+    historicalContext: 'Contested alluvial borderland in central Mesopotamia between the northern militaristic Assyrian empire and southern Babylonia.',
+    bounds: [
+      { lat: 34.50, lng: 43.50 }, // Samarra / central Tigris
+      { lat: 34.80, lng: 45.20 }, // Diyala River gorge
+      { lat: 33.20, lng: 45.50 }, // Tigris-Diyala confluence
+      { lat: 33.20, lng: 44.00 }, // Northern Babylonia / Sippar
+      { lat: 34.50, lng: 43.50 }
+    ]
   }
 ];
 
@@ -5851,7 +6018,7 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     id: 'filter-jacob-padan-aram',
     eraIds: ['patriarchs', 'all'],
     categoryLabel: 'Patriarchs',
-    label: "🌾 Jacob: Isaac's Tents to Padan-Aram",
+    label: "🌾 Jacob: Isaac's Tents to Rachel in Padan-Aram",
     dateLabel: 'c. 2006–1859 BC',
     routeIds: ['jacob-padan-aram'],
     focusCenter: { lat: 32.5, lng: 36.0 },
@@ -7043,6 +7210,72 @@ export function calculatePolygonGeodesicArea(coords: Array<{ lat: number; lng: n
   return (Math.abs(sum) / 2) * 111.32 * 110.574;
 }
 
+/**
+ * Standard ray-casting point-in-polygon test.
+ */
+export function isPointInPolygon(
+  point: { lat: number; lng: number },
+  polygon: Array<{ lat: number; lng: number }>
+): boolean {
+  if (!polygon || polygon.length < 3) return false;
+  const x = point.lng;
+  const y = point.lat;
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const xi = polygon[i].lng;
+    const yi = polygon[i].lat;
+    const xj = polygon[j].lng;
+    const yj = polygon[j].lat;
+    const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+/**
+ * Checks if two geodesic line segments intersect.
+ */
+function doSegmentsIntersect(
+  p1: { lat: number; lng: number },
+  p2: { lat: number; lng: number },
+  p3: { lat: number; lng: number },
+  p4: { lat: number; lng: number }
+): boolean {
+  const ccw = (a: { lat: number; lng: number }, b: { lat: number; lng: number }, c: { lat: number; lng: number }) => {
+    return (c.lat - a.lat) * (b.lng - a.lng) > (b.lat - a.lat) * (c.lng - a.lng);
+  };
+  return ccw(p1, p3, p4) !== ccw(p2, p3, p4) && ccw(p1, p2, p3) !== ccw(p1, p2, p4);
+}
+
+/**
+ * Checks if two 2D polygons geographically overlap.
+ * Returns true if any vertex of A is inside B, or any vertex of B is inside A,
+ * or any edge of A intersects any edge of B.
+ */
+export function doPolygonsOverlap(
+  polyA: Array<{ lat: number; lng: number }>,
+  polyB: Array<{ lat: number; lng: number }>
+): boolean {
+  if (!polyA || !polyB || polyA.length < 3 || polyB.length < 3) return false;
+
+  for (const pt of polyA) {
+    if (isPointInPolygon(pt, polyB)) return true;
+  }
+  for (const pt of polyB) {
+    if (isPointInPolygon(pt, polyA)) return true;
+  }
+  for (let i = 0; i < polyA.length; i++) {
+    const a1 = polyA[i];
+    const a2 = polyA[(i + 1) % polyA.length];
+    for (let j = 0; j < polyB.length; j++) {
+      const b1 = polyB[j];
+      const b2 = polyB[(j + 1) % polyB.length];
+      if (doSegmentsIntersect(a1, a2, b1, b2)) return true;
+    }
+  }
+  return false;
+}
+
 export interface PassageJourneyMatch {
   route: BiblicalRoute;
   stop: BiblicalRouteStop;
@@ -7546,7 +7779,26 @@ export function resolveBiblicalEntity(
   passageContext?: { bookOsis?: string; chapter?: number; verse?: number }
 ): ResolvedBiblicalEntity | null {
   const clean = (rawWord || '').toLowerCase().trim().replace(/[^a-z']/g, '');
-  if (!clean) return null;
+  if (!clean || clean.length < 2) return null;
+
+  const COMMON_VOCAB = new Set([
+    'a', 'about', 'above', 'after', 'again', 'against', 'all', 'also', 'am', 'an', 'and', 'any', 'are', 'as', 'at',
+    'be', 'because', 'been', 'before', 'being', 'below', 'between', 'both', 'but', 'by',
+    'can', 'could', 'did', 'do', 'does', 'doing', 'down', 'during',
+    'each', 'few', 'for', 'from', 'further',
+    'had', 'has', 'have', 'having', 'he', 'her', 'here', 'hers', 'herself', 'him', 'himself', 'his', 'how',
+    'i', 'if', 'in', 'into', 'is', 'it', 'its', 'itself',
+    'just', 'me', 'more', 'most', 'my', 'myself',
+    'no', 'nor', 'not', 'now',
+    'of', 'off', 'on', 'once', 'only', 'or', 'other', 'our', 'ours', 'ourselves', 'out', 'over', 'own',
+    'same', 'she', 'should', 'so', 'some', 'such',
+    'than', 'that', 'the', 'their', 'theirs', 'them', 'themselves', 'then', 'there', 'these', 'they', 'this', 'those', 'through', 'to', 'too',
+    'under', 'until', 'up', 'very',
+    'was', 'we', 'were', 'what', 'when', 'where', 'which', 'while', 'who', 'whom', 'why', 'with', 'without', 'would',
+    'you', 'your', 'yours', 'yourself', 'yourselves',
+    'god', 'lord', 'blessed', 'created', 'made', 'said', 'went', 'came', 'saw', 'gave', 'took', 'son', 'sons', 'day', 'days', 'year', 'years', 'man', 'men', 'heaven', 'earth'
+  ]);
+  if (COMMON_VOCAB.has(clean)) return null;
 
   const book = (passageContext?.bookOsis || '').toLowerCase().replace(/[\s_]+/g, '');
   const chapter = passageContext?.chapter || 1;
@@ -7719,7 +7971,7 @@ export function resolveBiblicalEntity(
       relatedRouteId: isEgypt ? 'joseph-egypt' : 'jacob-padan-aram',
       stopIndex: isEgypt ? 4 : 0,
       entityKind: 'person',
-      connectedNarrativePath: isEgypt ? "Joseph: From Canaan's Pit to Ruler of Egypt (Israel in Goshen)" : "Jacob's Journey: From Isaac's Tents to Padan-Aram & Return",
+      connectedNarrativePath: isEgypt ? "Joseph: From Canaan's Pit to Ruler of Egypt (Israel in Goshen)" : "Jacob's Journey: From Isaac's Tents to Rachel in Padan-Aram & Return",
       biblicalSettingAndNarrative: isEgypt
         ? 'Jacob arrived in Goshen to embrace his lost son Joseph, was presented before Pharaoh and blessed him, dwelling in the land 17 years until his death.'
         : 'Jacob was born at Isaac\'s tents, obtained Esau\'s birthright and Isaac\'s blessing, fled to Haran where he served Laban 20 years, and returned to Canaan.'
@@ -7766,10 +8018,11 @@ export function resolveBiblicalEntity(
   }
 
   // 4. World Empires & Realms
+  const cleanRegex = new RegExp(`\\b${clean}\\b`, 'i');
   const emp = WORLD_EMPIRES_GEO.find(
     e =>
       e.id.toLowerCase() === clean ||
-      e.name.toLowerCase().includes(clean) ||
+      cleanRegex.test(e.name) ||
       (clean === 'egyptian' && e.id === 'egypt') ||
       (clean === 'egyptians' && e.id === 'egypt') ||
       (clean === 'assyrian' && e.id === 'assyria') ||
@@ -7803,9 +8056,9 @@ export function resolveBiblicalEntity(
   // 5. Archaeological Sites
   const site = ARCHAEOLOGICAL_SITES.find(
     s =>
-      s.id.includes(clean) ||
-      s.artifactName.toLowerCase().includes(clean) ||
-      s.name.toLowerCase().includes(clean)
+      s.id.toLowerCase() === clean ||
+      cleanRegex.test(s.artifactName) ||
+      cleanRegex.test(s.name)
   );
   if (site) {
     return {

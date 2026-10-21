@@ -181,7 +181,7 @@ test('deep green reading atlas theme and cross-page reading context continuity (
   const contextBar = page.locator('#atlas-context-bar');
   await expect(contextBar).toBeVisible();
   await expect(contextBar).toContainText('Acts 13');
-  await expect(page.locator('#atlas-context-bible')).toHaveAttribute('href', /\/bible\?book=Acts&chapter=13/);
+  await expect(page.locator('#atlas-context-bible')).toHaveAttribute('href', /\/bible.*book=Acts&chapter=13/);
 
   // 5. Clicking #atlas-context-apply focuses the map on the Apostolic Age & Paul's First Journey
   await page.locator('#atlas-context-apply').click();

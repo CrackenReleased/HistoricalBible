@@ -81,4 +81,22 @@ test.describe('Bible Companion Map - Organic Polygons & External Leader Line Cal
     const pathPointCount = (firstPathD!.match(/L/g) || []).length;
     expect(pathPointCount).toBeGreaterThanOrEqual(15);
   });
+
+  test('overlapping and contested territorial frontiers render with dashed lines (stroke-dasharray) denoting argued sovereignty', async ({ page }) => {
+    await page.goto('/bible?book=Genesis&chapter=47&tab=map', { waitUntil: 'networkidle' });
+
+    const mapContainer = page.locator('#bible-companion-map-container');
+    await expect(mapContainer).toBeVisible({ timeout: 10000 });
+
+    // In Genesis 47 (Patriarchs era with Egypt and Kush active in Lower Nubia),
+    // verify that SVG paths with stroke-dasharray exist in the empirePane denoting argued frontiers
+    const dashedPaths = mapContainer.locator('.leaflet-pane.leaflet-empire-pane svg path[stroke-dasharray]:not([d="M0 0"])');
+    await expect(dashedPaths.first()).toBeVisible({ timeout: 7000 });
+    const dashedCount = await dashedPaths.count();
+    expect(dashedCount).toBeGreaterThanOrEqual(1);
+
+    const dashVal = await dashedPaths.first().getAttribute('stroke-dasharray');
+    expect(dashVal).toBeTruthy();
+    expect(dashVal).toMatch(/\d+,\s*\d+/);
+  });
 });

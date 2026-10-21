@@ -18,9 +18,9 @@ test.describe('Historical World Context - Epochs Expansion (Pentateuch, Exile & 
     const journeyCard = chronoContent.locator('.reviewed-journey-stop-card');
     await expect(journeyCard).toBeVisible();
     await expect(journeyCard).toContainText('ALONG THIS JOURNEY · NARRATIVE SEQUENCE');
-    await expect(journeyCard).toContainText("Jacob's Travels");
+    await expect(journeyCard).toContainText("Jacob's Journey");
     await expect(journeyCard).toContainText('Bethel / Luz');
-    await expect(journeyCard).toContainText('Stop 2 of 9');
+    await expect(journeyCard).toContainText('Stop 2 of 11');
 
     // View Stop on Map link
     const mapLink = journeyCard.locator('a');

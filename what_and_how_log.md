@@ -1,3 +1,35 @@
+## 2026-10-21 18:35:00 — Antigravity / HistoricalBible — Kush / Nubia Territorial Correction & Dashed Overlapping Frontier Cartography (v00.01.61)
+
+- Solved user requests regarding historical territorial boundary veracity and argued frontiers:
+  - 1. **Kingdom of Kush / Nubia Territorial Realignment (Beyond the River Cataracts)**:
+    - Root cause of the "odd purple shape": previous digitization simply traced river cataract forts (Aswan -> Semna -> Kerma -> Napata -> Meroë -> Khartoum) with a 30-mile western mirror, creating an unnatural ribbon corridor.
+    - Expanded `kush_nubia` to encompass its authentic ~850,000–1,200,000 km² historical realm in `src/data/ancientMapData.ts`:
+      - The **"Island of Meroë" (the Butana plain)**: the fertile savanna steppe enclosed between the Nile, the Atbara River, and the Blue Nile, extending eastward to Kassala (`lng: 36.2`) and Ethiopian foothills.
+      - Major inland Meroitic royal centers: **Naga** and **Musawwarat es-Sufra** (`lat: 16.42, lng: 33.32`), located 25 miles inland from the river, with their great lion temples and water hafirs.
+      - The Eastern Desert gold mining districts along Wadi Allaqi and Wadi Gabgaba reaching toward the Red Sea hills (`lng: 34.2` to `37.25`).
+      - The Western Desert / Sahel margins along the ancient Wadi Howar corridor ("Yellow Nile") connecting Chad/Darfur savannas to the Nile (`lng: 27.5` to `29.5`).
+      - Updated `dateRange` to `c. 2000 BC – AD 350 (Kerma, Napata & Meroë · 25th Nubian Dynasty)` so the realm is chronologically active in Genesis 47 (Patriarchs) through the New Testament (Acts 8:27 Candace).
+  - 2. **Dashed Boundaries for Overlapping & Argued Territorial Frontiers**:
+    - Per user directive: "I'm expecting that many will overlap as territorial areas are argued, these should be denotet as the overlap with dashed lines rather than solid lines."
+    - Implemented dynamic overlap detection (`doPolygonsOverlap(polyA, polyB)`) in `src/engine/ancientMap.ts` so intersecting sovereign polities automatically render with cartographic dashed strokes (`dashArray: '6, 5'` inner stroke, `dashArray: '8, 6'` halo).
+    - Created and exported `CONTESTED_FRONTIER_ZONES` catalog in `src/data/ancientMapData.ts` featuring 8 canonical argued borderlands:
+      - `contested-lower-nubia` (Egypt & Kush / Wawat frontier, Buhen & Semna cataracts).
+      - `contested-benjamin` (Judah & Israel / Bethel–Ramah corridor, Asa & Baasha border war).
+      - `contested-gilead-ramoth` (Israel & Aram-Damascus / Ramoth-gilead frontier, Ahab & Ben-hadad).
+      - `contested-plains-of-moab` (Israel & Moab / Medeba plateau / Mishor, Mesha Stele).
+      - `contested-shephelah` (Philistia & Judah / foothill buffer, Beth-shemesh & Libnah).
+      - `contested-sinai-negev` (Egypt, Judah, Nabataea / Way of Shur & Kadesh-barnea).
+      - `contested-coele-syria` (Seleucid & Ptolemaic Empires / Syrian Wars).
+      - `contested-mesopotamia-alluvial` (Assyria & Babylonia / Nippur & marshland frontiers).
+    - Rendered active contested frontier zones with gold dashed strokes (`dashArray: '6, 6'`) and interactive external leader-line callouts detailing claimed sovereignty, rival powers, and Scripture citations.
+  - 3. **Entity Resolution Hardening & Word Boundary Sanitation**:
+    - Hardened `resolveBiblicalEntity` in `src/data/ancientMapData.ts` with `COMMON_VOCAB` stop-words exclusion and whole-word regex matching (`\b${clean}\b`) to eliminate false-positive entity hijacking on common vocabulary words like "and".
+- Verification & Test Coverage:
+  - New regression tests: `tests/territorial-boundaries-overlap-regression.ts` (4/4 passing), `tests/companion-map-callout-regression.spec.ts` (3/3 passing).
+  - All 79 Node.js regression tests passing (`tests/*-regression.ts`, `tests/data-integrity-selfcheck.ts`).
+  - All Playwright browser integration tests passing.
+  - 100% canonical KJV corpus verified (31,102 verses). Clean Vite production build.
+
 ## 2026-10-21 17:50:00 — Antigravity / HistoricalBible — Atlas Palette Realignment, Jacob's Birthplace Path, and Joseph's Journey Separation (v00.01.60)
 
 - Solved the three core visual & biblical narrative issues reported:
