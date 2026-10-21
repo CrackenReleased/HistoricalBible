@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.59] - 2026-10-21
+
+- **Organic Historical Cartography & External Leader-Line Callouts**:
+  - Replaced crude, jagged low-vertex kingdom/empire boundary cuts with authentic high-resolution geodetic coordinates tracing actual historical relief (Nile Delta ribbon and valley down to Aswan, fertile Yemeni highlands of Sheba, Nubian cataract S-curves, and Tigris-Euphrates alluvial floodplains).
+  - Implemented multi-pass organic curve subdivision algorithm (`smoothPolygonCoordinates` using Chaikin's geometric corner-cutting) and dual-stroke watercolor boundary wash (soft outer translucent halo + crisp antique boundary line) across all kingdoms, empires, and regional realms.
+  - Replaced internal, cursor-blocking Leaflet popups on the companion map with an **External Floating Callout** positioned cleanly to the left of the map (extending into the Scripture column margin on desktop, or stacked beneath the map on mobile).
+  - Implemented dynamic SVG leader line with graceful cartographic arc, pulsing gold pinpoint, and pointer arrow that connects the external callout directly to the exact hovered coordinate, leaving the entire companion map and cursor 100% unobstructed.
+  - Eliminated map tooltip collisions and strict mode violations on companion map hovering.
+  - Verified with new Playwright integration suite `tests/companion-map-callout-regression.spec.ts` (2/2 passing) and full existing test suites (`tests/bible-side-by-side-map.spec.ts` 7/7 passing, `tests/bible-entity-click-navigation.spec.ts` 1/1 passing, unit tests 16/16 passing). Canonical KJV corpus 100% intact.
+
 ## [00.01.58] - 2026-10-21
 
 - **Map-First Entity Navigation & Biblical Cartography**:

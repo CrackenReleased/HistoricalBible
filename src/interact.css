@@ -3810,6 +3810,47 @@ svg path:focus-visible,
   margin-top: 4px;
 }
 
+/* External Floating Callout & Leader Pointer Line */
+.map-external-callout {
+  position: fixed !important;
+  z-index: 99999 !important;
+  pointer-events: none !important;
+  background: rgba(14, 18, 25, 0.98) !important;
+  border: 1px solid rgba(212, 175, 55, 0.75) !important;
+  border-radius: 8px !important;
+  padding: 12px 16px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.92), 0 0 20px rgba(212, 175, 55, 0.22) !important;
+  backdrop-filter: blur(14px) !important;
+  color: #f4efe6 !important;
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif) !important;
+  width: max-content !important;
+  max-width: 320px !important;
+  line-height: 1.4 !important;
+  box-sizing: border-box !important;
+  animation: fadeInExternalCallout 0.16s ease-out;
+}
+
+@keyframes fadeInExternalCallout {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.map-callout-connector-svg {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  pointer-events: none !important;
+  z-index: 99998 !important;
+}
+
+.map-leaflet-tooltip-shadow {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 /* Artifact Discovery Drawer inside Bible Companion Map */
 .bible-companion-artifact-drawer {
   margin: 0.75rem 0 1rem;

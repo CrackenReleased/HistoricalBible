@@ -4811,17 +4811,21 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 911 – 609 BC',
     capital: { name: 'Nineveh', coords: { lat: 36.360, lng: 43.150 } },
     approximateBounds: [
-      { lat: 38.50, lng: 40.00 }, // Taurus Mountains (Armenia/Urartu border)
-      { lat: 38.20, lng: 44.50 }, // Lake Urmia basin
-      { lat: 36.80, lng: 45.20 }, // Zagros mountain crest
-      { lat: 35.00, lng: 46.00 }, // Media border
-      { lat: 33.20, lng: 44.50 }, // Northern Babylonian border
-      { lat: 34.00, lng: 41.50 }, // Middle Euphrates
-      { lat: 35.20, lng: 38.20 }, // Syrian steppe
+      { lat: 38.40, lng: 42.80 }, // Lake Van southern mountains (Urartu border)
+      { lat: 38.00, lng: 44.20 }, // Zagros crest east of Nineveh
+      { lat: 37.00, lng: 44.80 }, // Upper Zab gorge / Rowanduz
+      { lat: 36.19, lng: 44.01 }, // Arbela (Erbil)
+      { lat: 35.47, lng: 44.39 }, // Kirkuk (ancient Arrapha)
+      { lat: 34.90, lng: 44.90 }, // Lower Zab confluence with Tigris
+      { lat: 34.20, lng: 44.00 }, // Tigris south of Assur (Babylonian border)
+      { lat: 34.45, lng: 41.95 }, // Euphrates bend at Anah / Hindanu
+      { lat: 35.15, lng: 40.45 }, // Confluence of Khabur and Euphrates (Circesium)
+      { lat: 35.95, lng: 39.05 }, // Balikh river valley at Raqqa (Tuttul)
       { lat: 36.83, lng: 38.01 }, // Carchemish on the Euphrates
-      { lat: 37.00, lng: 36.20 }, // Cilicia / Amanus mountains
-      { lat: 37.80, lng: 37.50 }, // Commagene
-      { lat: 38.50, lng: 40.00 }  // Back to Taurus highlands
+      { lat: 37.10, lng: 36.15 }, // Amanus mountains / Cilician Gates
+      { lat: 37.55, lng: 38.48 }, // Commagene (Samsat)
+      { lat: 37.91, lng: 40.23 }, // Upper Tigris at Amida (Diyarbakir)
+      { lat: 38.40, lng: 42.80 }  // Back to Lake Van
     ],
     biblicalIntersection: 'Exiled the Northern Kingdom (722 BC); invaded Judah and besieged Hezekiah in Jerusalem (701 BC; Taylor Prism).',
     factionCategory: 'hostile',
@@ -4837,11 +4841,14 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     capital: { name: 'Babylon', coords: { lat: 32.542, lng: 44.421 } },
     approximateBounds: [
       { lat: 36.83, lng: 38.01 }, // Carchemish (Nebuchadnezzar defeated Necho, 605 BC)
-      { lat: 36.36, lng: 43.15 }, // Conquered Assyrian heartland
+      { lat: 36.36, lng: 43.15 }, // Conquered Assyrian heartland / Nineveh
+      { lat: 35.47, lng: 44.39 }, // Arrapha / Kirkuk
       { lat: 34.50, lng: 45.50 }, // Zagros foothills
+      { lat: 33.15, lng: 45.85 }, // Der / Elam frontier
       { lat: 32.19, lng: 48.25 }, // Susa / Elam border
       { lat: 29.98, lng: 48.55 }, // Persian Gulf / Shatt al-Arab
       { lat: 30.50, lng: 46.50 }, // Ur / Chaldean marshlands
+      { lat: 30.96, lng: 46.10 }, // Ur of the Chaldees
       { lat: 31.50, lng: 43.00 }, // Arabian desert perimeter
       { lat: 33.00, lng: 39.00 }, // Syrian desert transit
       { lat: 34.50, lng: 36.50 }, // Riblah in the land of Hamath (2 Kgs 25:6)
@@ -4861,13 +4868,29 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 1894 – 1155 BC',
     capital: { name: 'Babylon & Ur', coords: { lat: 32.542, lng: 44.421 } },
     approximateBounds: [
-      { lat: 35.00, lng: 41.50 }, // Mari and middle Euphrates
-      { lat: 35.50, lng: 44.50 }, // Nuzi / Arrapha
-      { lat: 33.00, lng: 47.00 }, // Lower Tigris
-      { lat: 29.80, lng: 48.50 }, // Head of Persian Gulf
-      { lat: 30.50, lng: 46.00 }, // Ur of the Chaldees
-      { lat: 32.00, lng: 42.50 }, // Shinar desert margin
-      { lat: 35.00, lng: 41.50 }
+      { lat: 34.45, lng: 40.90 }, // Mari on the Euphrates
+      { lat: 34.80, lng: 42.10 }, // Hit / middle Euphrates
+      { lat: 34.60, lng: 43.68 }, // Tikrit / Tigris valley
+      { lat: 34.00, lng: 44.35 }, // Samarra / lower Tigris
+      { lat: 33.55, lng: 44.75 }, // Diyala river confluence
+      { lat: 33.15, lng: 45.85 }, // Der / Zagros foothills (Elam border)
+      { lat: 32.20, lng: 47.50 }, // Tigris marshlands north of Susa
+      { lat: 31.00, lng: 47.80 }, // Euphrates-Tigris confluence (Qurna)
+      { lat: 30.00, lng: 48.50 }, // Head of Persian Gulf marshlands
+      { lat: 30.40, lng: 47.20 }, // Southern desert frontier
+      { lat: 30.82, lng: 45.98 }, // Eridu (most ancient sanctuary of Enki)
+      { lat: 30.96, lng: 46.10 }, // Ur of the Chaldees (Birthplace of Abraham)
+      { lat: 31.25, lng: 45.85 }, // Larsa
+      { lat: 31.32, lng: 45.64 }, // Uruk (Biblical Erech)
+      { lat: 31.70, lng: 45.20 }, // Isin
+      { lat: 32.12, lng: 45.23 }, // Nippur (religious heart of Sumer & Akkad)
+      { lat: 32.38, lng: 44.35 }, // Borsippa (Tower of Babel tradition)
+      { lat: 32.54, lng: 44.42 }, // Royal City of Babylon
+      { lat: 32.55, lng: 44.60 }, // Kish
+      { lat: 33.05, lng: 44.25 }, // Sippar (Tell Abu Habbah)
+      { lat: 33.40, lng: 43.30 }, // Ramadi / Lake Habbaniyah
+      { lat: 34.10, lng: 42.40 }, // Anah on the Euphrates
+      { lat: 34.45, lng: 40.90 }  // Back to Mari
     ],
     biblicalIntersection: 'Land of Shinar (Genesis 10–11); Tower of Babel; origin of Abram called out of Ur of the Chaldees.',
     factionCategory: 'hostile',
@@ -4983,24 +5006,47 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     capital: { name: 'Thebes & Memphis', coords: { lat: 25.718, lng: 32.657 } },
     approximateBounds: [
       { lat: 31.200, lng: 29.900 }, // Alexandria / Canopic coast
-      { lat: 31.420, lng: 30.400 }, // Rosetta mouth
-      { lat: 31.400, lng: 31.800 }, // Damietta mouth
-      { lat: 31.200, lng: 32.200 }, // Lake Manzala south coast
-      { lat: 31.050, lng: 32.550 }, // Pelusium (Sin) on Mediterranean shore
-      { lat: 30.500, lng: 32.350 }, // Lake Timsah / Bitter Lakes
-      { lat: 29.970, lng: 32.500 }, // Suez isthmus
-      { lat: 29.800, lng: 32.300 }, // Ain Sokhna coast (west of Suez)
-      { lat: 29.500, lng: 32.350 }, // Zafarana coast
-      { lat: 28.500, lng: 32.850 }, // Ras Gharib (Egyptian desert coast)
-      { lat: 27.250, lng: 33.700 }, // Hurghada / Red Sea west coast
-      { lat: 25.720, lng: 32.700 }, // Thebes (Luxor / Karnak)
+      { lat: 31.320, lng: 30.080 }, // Abu Qir Bay
+      { lat: 31.460, lng: 30.420 }, // Rosetta mouth of Nile
+      { lat: 31.580, lng: 30.850 }, // Lake Burullus northern spit
+      { lat: 31.560, lng: 31.250 }, // Baltim coastal ridge
+      { lat: 31.520, lng: 31.840 }, // Damietta mouth of Nile
+      { lat: 31.280, lng: 32.180 }, // Lake Manzala barrier
+      { lat: 31.100, lng: 32.550 }, // Pelusium (Sin) eastern gate
+      { lat: 30.850, lng: 32.320 }, // Sile / Ways of Horus
+      { lat: 30.580, lng: 32.280 }, // Lake Timsah / Wadi Tumilat
+      { lat: 30.320, lng: 32.360 }, // Great Bitter Lake
+      { lat: 29.970, lng: 32.550 }, // Suez isthmus
+      { lat: 29.600, lng: 32.350 }, // Ain Sokhna coast
+      { lat: 29.100, lng: 32.650 }, // Zafarana promontory
+      { lat: 28.350, lng: 33.100 }, // Ras Gharib / Red Sea hills
+      { lat: 27.800, lng: 33.500 }, // Zeit Bay / Gebel Zeit
+      { lat: 27.250, lng: 33.820 }, // Hurghada coast
+      { lat: 26.750, lng: 33.940 }, // Safaga port approach
+      { lat: 26.100, lng: 34.280 }, // Quseir (Wadi Hammamat port)
+      { lat: 25.600, lng: 33.800 }, // Eastern hills of Upper Egypt
+      { lat: 24.800, lng: 33.400 }, // Desert margins of Kom Ombo
+      { lat: 24.480, lng: 33.000 }, // Ombos east bank
       { lat: 24.080, lng: 32.900 }, // First Cataract at Aswan / Elephantine (border with Kush)
-      { lat: 24.100, lng: 32.700 }, // West bank of First Cataract
-      { lat: 26.180, lng: 31.850 }, // Abydos / western desert oases approach
-      { lat: 27.180, lng: 31.100 }, // Asyut west bank
-      { lat: 29.850, lng: 31.150 }, // Memphis / Saqqara pyramid plateau
-      { lat: 30.010, lng: 31.100 }, // Giza pyramid plateau
-      { lat: 30.400, lng: 30.300 }, // Wadi Natrun (western desert border)
+      { lat: 24.090, lng: 32.860 }, // West bank of First Cataract
+      { lat: 24.500, lng: 32.880 }, // Kom Ombo west bank
+      { lat: 24.980, lng: 32.820 }, // Edfu (Apollinopolis Magna) west bank
+      { lat: 25.290, lng: 32.520 }, // Esna (Latopolis)
+      { lat: 25.740, lng: 32.580 }, // Thebes (Valley of the Kings / Luxor west bank)
+      { lat: 26.050, lng: 32.200 }, // Nag Hammadi bend
+      { lat: 26.190, lng: 31.900 }, // Abydos / western desert approach
+      { lat: 26.560, lng: 31.700 }, // Akhmim / Sohag west bank
+      { lat: 27.190, lng: 31.150 }, // Asyut (Lycopolis) west bank
+      { lat: 27.650, lng: 30.880 }, // Hermopolis Magna / Amarna
+      { lat: 28.110, lng: 30.740 }, // Minya
+      { lat: 29.070, lng: 31.080 }, // Beni Suef (Herakleopolis)
+      { lat: 29.300, lng: 30.600 }, // Fayum Oasis depression (Lake Moeris)
+      { lat: 29.500, lng: 30.400 }, // Crocodilopolis / Karanis
+      { lat: 29.850, lng: 31.180 }, // Memphis / Dahshur / Saqqara plateau
+      { lat: 29.980, lng: 31.120 }, // Giza pyramid plateau
+      { lat: 30.350, lng: 30.400 }, // Wadi Natrun western desert margin
+      { lat: 30.700, lng: 30.000 }, // Western Delta ridge
+      { lat: 31.050, lng: 29.750 }, // Lake Mareotis southern shore
       { lat: 31.200, lng: 29.900 }  // Back to Alexandria
     ],
     biblicalIntersection: 'Shelter for Abraham and Jacob; slavery and 10 plagues of Exodus; Merneptah Stele (1208 BC) earliest extrabiblical mention of Israel.',
@@ -5017,19 +5063,27 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     capital: { name: 'Sais & Memphis', coords: { lat: 30.96, lng: 30.77 } },
     approximateBounds: [
       { lat: 31.200, lng: 29.900 },
-      { lat: 31.420, lng: 30.400 },
-      { lat: 31.400, lng: 31.800 },
-      { lat: 31.200, lng: 32.200 },
-      { lat: 31.050, lng: 32.550 },
-      { lat: 29.970, lng: 32.500 },
-      { lat: 29.800, lng: 32.300 },
-      { lat: 29.500, lng: 32.350 },
-      { lat: 27.250, lng: 33.700 },
+      { lat: 31.320, lng: 30.080 },
+      { lat: 31.460, lng: 30.420 },
+      { lat: 31.580, lng: 30.850 },
+      { lat: 31.520, lng: 31.840 },
+      { lat: 31.280, lng: 32.180 },
+      { lat: 31.100, lng: 32.550 },
+      { lat: 30.850, lng: 32.320 },
+      { lat: 30.580, lng: 32.280 },
+      { lat: 29.970, lng: 32.550 },
+      { lat: 29.600, lng: 32.350 },
+      { lat: 28.350, lng: 33.100 },
+      { lat: 27.250, lng: 33.820 },
+      { lat: 26.100, lng: 34.280 },
       { lat: 24.080, lng: 32.900 },
-      { lat: 24.100, lng: 32.700 },
-      { lat: 27.180, lng: 31.100 },
-      { lat: 29.850, lng: 31.150 },
-      { lat: 30.400, lng: 30.300 },
+      { lat: 24.090, lng: 32.860 },
+      { lat: 25.740, lng: 32.580 },
+      { lat: 27.190, lng: 31.150 },
+      { lat: 28.110, lng: 30.740 },
+      { lat: 29.300, lng: 30.600 },
+      { lat: 29.850, lng: 31.180 },
+      { lat: 30.700, lng: 30.000 },
       { lat: 31.200, lng: 29.900 }
     ],
     biblicalIntersection: 'Pharaoh Necho slew King Josiah at Megiddo (2 Kings 23:29); Jeremiah taken to Tahpanhes in Egypt.',
@@ -5045,20 +5099,20 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: '305 – 30 BC',
     capital: { name: 'Alexandria', coords: { lat: 31.20, lng: 29.91 } },
     approximateBounds: [
-      { lat: 32.00, lng: 20.00 }, // Cyrenaica / Libya
+      { lat: 32.000, lng: 20.000 }, // Cyrenaica / Libya
       { lat: 31.200, lng: 29.900 }, // Alexandria
-      { lat: 31.420, lng: 30.400 }, // Rosetta coast
-      { lat: 31.400, lng: 31.800 }, // Damietta mouth
-      { lat: 31.200, lng: 32.200 }, // Lake Manzala south coast
-      { lat: 31.050, lng: 32.550 }, // Pelusium
-      { lat: 29.970, lng: 32.500 }, // Suez isthmus
+      { lat: 31.460, lng: 30.420 }, // Rosetta
+      { lat: 31.580, lng: 30.850 }, // Burullus
+      { lat: 31.520, lng: 31.840 }, // Damietta
+      { lat: 31.100, lng: 32.550 }, // Pelusium
+      { lat: 29.970, lng: 32.550 }, // Suez isthmus
       { lat: 29.850, lng: 31.250 }, // Memphis
-      { lat: 27.180, lng: 31.185 }, // Asyut
-      { lat: 25.720, lng: 32.650 }, // Thebes / Luxor
-      { lat: 24.080, lng: 32.900 }, // Aswan
-      { lat: 24.100, lng: 32.700 }, // Aswan west bank
-      { lat: 29.00, lng: 25.00 }, // Siwa oasis
-      { lat: 32.00, lng: 20.00 }
+      { lat: 27.190, lng: 31.150 }, // Asyut
+      { lat: 25.740, lng: 32.580 }, // Thebes / Luxor
+      { lat: 24.080, lng: 32.900 }, // Aswan First Cataract
+      { lat: 24.090, lng: 32.860 }, // Aswan west bank
+      { lat: 29.200, lng: 25.500 }, // Siwa Oasis
+      { lat: 32.000, lng: 20.000 }  // Back to Cyrenaica
     ],
     biblicalIntersection: 'Daniel 11 ("King of the South"); commissioned the Septuagint (LXX) translation of the Hebrew Scriptures into Greek.',
     factionCategory: 'allied',
@@ -5073,15 +5127,34 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 1070 BC – AD 350',
     capital: { name: 'Napata & Meroë', coords: { lat: 16.94, lng: 33.75 } },
     approximateBounds: [
-      { lat: 24.08, lng: 32.90 }, // First Cataract at Aswan
-      { lat: 22.00, lng: 36.50 }, // Red Sea coast of Nubia
-      { lat: 16.00, lng: 39.00 }, // Eritrean hills
-      { lat: 13.50, lng: 37.00 }, // Lake Tana / Ethiopian highlands
-      { lat: 12.00, lng: 33.00 }, // Blue Nile
-      { lat: 12.50, lng: 29.50 }, // Kordofan
-      { lat: 18.00, lng: 28.50 }, // Nubian desert west bank
-      { lat: 22.50, lng: 30.50 }, // Second Cataract
-      { lat: 24.08, lng: 32.90 }
+      { lat: 24.08, lng: 32.90 }, // First Cataract (Aswan / Philae)
+      { lat: 23.50, lng: 33.20 }, // Lake Nubia / Beit el-Wali
+      { lat: 22.34, lng: 31.62 }, // Abu Simbel
+      { lat: 21.90, lng: 31.30 }, // Second Cataract at Buhen / Wadi Halfa
+      { lat: 21.45, lng: 30.95 }, // Mirgissa / Semna fortress
+      { lat: 20.60, lng: 30.55 }, // Sai Island & Amara West
+      { lat: 20.10, lng: 30.40 }, // Soleb temple
+      { lat: 19.60, lng: 30.42 }, // Third Cataract at Kerma
+      { lat: 19.18, lng: 30.47 }, // Dongola Reach
+      { lat: 18.25, lng: 30.75 }, // Old Dongola
+      { lat: 18.05, lng: 31.35 }, // Debba bend
+      { lat: 18.53, lng: 31.83 }, // Fourth Cataract at Gebel Barkal & Napata
+      { lat: 19.20, lng: 32.50 }, // Bayuda desert loop
+      { lat: 19.53, lng: 33.32 }, // Abu Hamed bend
+      { lat: 18.00, lng: 33.95 }, // Fifth Cataract at Berber
+      { lat: 17.68, lng: 33.98 }, // Confluence of Atbara River (Black Nile)
+      { lat: 16.94, lng: 33.73 }, // Royal City & Pyramids of Meroë
+      { lat: 16.40, lng: 33.25 }, // Wad ben Naga
+      { lat: 16.20, lng: 32.60 }, // Sixth Cataract (Sabloka Gorge)
+      { lat: 15.60, lng: 32.53 }, // Confluence of Blue & White Niles (Khartoum / Soba)
+      { lat: 15.30, lng: 32.40 }, // White Nile western bank
+      { lat: 16.00, lng: 31.80 }, // Bayuda western margin
+      { lat: 17.00, lng: 31.00 }, // Wadi Muqaddam approach
+      { lat: 18.00, lng: 30.20 }, // Western desert ridge of Dongola
+      { lat: 19.50, lng: 29.80 }, // Kerma western desert
+      { lat: 21.50, lng: 30.50 }, // Semna western plateau
+      { lat: 22.80, lng: 31.20 }, // Toshka depression western border
+      { lat: 24.08, lng: 32.86 }  // Back to First Cataract west bank
     ],
     biblicalIntersection: 'Pharaoh Tirhakah (Taharqa) marched against Sennacherib (2 Kings 19:9, Isaiah 37:9); Queen Candace\'s treasurer baptized in Acts 8:27.',
     factionCategory: 'global_power',
@@ -5167,9 +5240,26 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 1200 BC – AD 275',
     capital: { name: 'Marib', coords: { lat: 15.42, lng: 45.34 } },
     approximateBounds: [
-      { lat: 17.50, lng: 42.50 }, { lat: 18.50, lng: 46.50 }, { lat: 17.50, lng: 53.50 },
-      { lat: 14.50, lng: 51.00 }, { lat: 12.80, lng: 45.00 }, { lat: 12.80, lng: 43.30 },
-      { lat: 15.00, lng: 42.80 }, { lat: 17.50, lng: 42.50 }
+      { lat: 17.50, lng: 44.20 }, // Najran oasis (northern frontier)
+      { lat: 17.10, lng: 44.70 }, // Wadi Najran eastern reach
+      { lat: 16.50, lng: 45.10 }, // Jawf valley / Baraqish (ancient Yathill)
+      { lat: 15.85, lng: 45.30 }, // Ma'in kingdom frontier
+      { lat: 15.42, lng: 45.34 }, // Great Dam & Oasis of Ma'rib (Sabaean capital)
+      { lat: 15.15, lng: 45.80 }, // Harib oasis
+      { lat: 14.85, lng: 47.05 }, // Shabwah (Hadramawt royal border)
+      { lat: 14.30, lng: 47.60 }, // Wadi Hadhramaut approaches
+      { lat: 13.98, lng: 48.30 }, // Qana / Bir Ali (ancient frankincense port)
+      { lat: 13.50, lng: 46.80 }, // Ahwar coastal plain
+      { lat: 12.80, lng: 45.03 }, // Port of Aden (Arabia Felix)
+      { lat: 12.65, lng: 43.45 }, // Bab-el-Mandeb strait (Strait of Tears)
+      { lat: 13.32, lng: 43.25 }, // Mocha (Al Mukha) coastal terrace
+      { lat: 14.00, lng: 43.10 }, // Zabid / Tihama coastal plain
+      { lat: 14.80, lng: 42.95 }, // Al Hudaydah Red Sea coast
+      { lat: 15.60, lng: 42.85 }, // Midi / Asir coastal border
+      { lat: 16.90, lng: 42.55 }, // Jizan coastal terrace
+      { lat: 17.30, lng: 43.10 }, // Sarawat mountain ascent
+      { lat: 17.50, lng: 43.80 }, // Sa'dah mountain basin
+      { lat: 17.50, lng: 44.20 }  // Back to Najran
     ],
     biblicalIntersection: '1 Kings 10:1–13 — Queen of Sheba journeyed to Jerusalem with frankincense, gold, and gems to test Solomon with hard questions.',
     factionCategory: 'global_power',

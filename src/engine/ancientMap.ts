@@ -199,6 +199,33 @@ function getEmpireRelevanceNote(empireId: string, eraId: string, empire: WorldEm
   return empire.biblicalIntersection;
 }
 
+/**
+ * Smooths polygon coordinates using Chaikin's corner-cutting algorithm.
+ * Converts angular, low-vertex borders into organic, curvilinear historical frontiers.
+ */
+export function smoothPolygonCoordinates(coords: GeoCoordinate[], iterations: number = 2): GeoCoordinate[] {
+  if (!coords || coords.length < 3) return coords || [];
+  let current = coords;
+  for (let iter = 0; iter < iterations; iter++) {
+    const next: GeoCoordinate[] = [];
+    const len = current.length;
+    for (let i = 0; i < len; i++) {
+      const p0 = current[i];
+      const p1 = current[(i + 1) % len];
+      next.push({
+        lat: 0.75 * p0.lat + 0.25 * p1.lat,
+        lng: 0.75 * p0.lng + 0.25 * p1.lng
+      });
+      next.push({
+        lat: 0.25 * p0.lat + 0.75 * p1.lat,
+        lng: 0.25 * p0.lng + 0.75 * p1.lng
+      });
+    }
+    current = next;
+  }
+  return current;
+}
+
 export { calculatePolygonGeodesicArea };
 
 export class AncientMapCanvas {
@@ -364,7 +391,173 @@ export class AncientMapCanvas {
   private activeHoveredPolygon: { poly: L.Polygon; defaultStyle: L.PathOptions } | null = null;
   private labelDeconflictTimer: number | null = null;
 
+  // ---------------------------------------------------------------------------
+  // External Floating Callout & Pointer Line
+  // (Prevents popups from trapping inside the map or covering the cursor)
+  // ---------------------------------------------------------------------------
+  private static sharedCalloutEl: HTMLElement | null = null;
+  private static sharedConnectorSvg: SVGSVGElement | null = null;
+  private activeCalloutLayer: L.Layer | null = null;
+
+  private getOrCreateExternalCallout(): { card: HTMLElement; svg: SVGSVGElement } {
+    if (!AncientMapCanvas.sharedCalloutEl) {
+      const card = document.createElement('div');
+      card.id = 'map-external-floating-callout';
+      card.className = 'map-external-callout leaflet-tooltip map-leaflet-tooltip';
+      card.setAttribute('role', 'tooltip');
+      card.setAttribute('aria-hidden', 'true');
+      card.style.display = 'none';
+      document.body.appendChild(card);
+      AncientMapCanvas.sharedCalloutEl = card;
+    }
+
+    if (!AncientMapCanvas.sharedConnectorSvg) {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('id', 'map-callout-connector-svg');
+      svg.setAttribute('class', 'map-callout-connector-svg');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.style.position = 'fixed';
+      svg.style.inset = '0';
+      svg.style.width = '100vw';
+      svg.style.height = '100vh';
+      svg.style.pointerEvents = 'none';
+      svg.style.zIndex = '99998';
+      svg.style.display = 'none';
+      svg.innerHTML = `
+        <defs>
+          <filter id="map-callout-glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <path class="map-connector-curve" fill="none" stroke="#d4af37" stroke-width="1.8" stroke-dasharray="4, 3" filter="url(#map-callout-glow)" />
+        <circle class="map-connector-dot" r="4.5" fill="#ffd700" stroke="#ffffff" stroke-width="1.5" />
+        <circle class="map-connector-ring" r="9" fill="none" stroke="#ffd700" stroke-width="1.2" opacity="0.6" />
+        <polygon class="map-connector-arrow" fill="#ffd700" />
+      `;
+      document.body.appendChild(svg);
+      AncientMapCanvas.sharedConnectorSvg = svg;
+    }
+
+    return { card: AncientMapCanvas.sharedCalloutEl, svg: AncientMapCanvas.sharedConnectorSvg };
+  }
+
+  public showExternalCallout(contentHtml: string, clientX: number, clientY: number, accentColor?: string): void {
+    if (typeof document === 'undefined') return;
+    const { card, svg } = this.getOrCreateExternalCallout();
+    card.innerHTML = contentHtml;
+    card.style.display = 'block';
+    card.setAttribute('aria-hidden', 'false');
+    svg.style.display = 'block';
+
+    const curve = svg.querySelector('.map-connector-curve') as SVGPathElement;
+    const dot = svg.querySelector('.map-connector-dot') as SVGCircleElement;
+    const ring = svg.querySelector('.map-connector-ring') as SVGCircleElement;
+    const arrow = svg.querySelector('.map-connector-arrow') as SVGPolygonElement;
+
+    const col = accentColor || '#ffd700';
+    if (curve) curve.setAttribute('stroke', col);
+    if (dot) dot.setAttribute('fill', col);
+    if (ring) ring.setAttribute('stroke', col);
+    if (arrow) arrow.setAttribute('fill', col);
+
+    this.updateExternalCallout(clientX, clientY);
+  }
+
+  public updateExternalCallout(clientX: number, clientY: number): void {
+    if (!AncientMapCanvas.sharedCalloutEl || !AncientMapCanvas.sharedConnectorSvg) return;
+    if (AncientMapCanvas.sharedCalloutEl.style.display === 'none') return;
+
+    const card = AncientMapCanvas.sharedCalloutEl;
+    const svg = AncientMapCanvas.sharedConnectorSvg;
+    const mapRect = this.container.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const cardWidth = Math.min(320, cardRect.width || 300);
+    const cardHeight = cardRect.height || 220;
+
+    const spaceOnLeft = mapRect.left;
+    let cardLeft: number;
+    let cardTop: number;
+    let anchorX: number;
+    let anchorY: number;
+
+    if (spaceOnLeft >= 260) {
+      // Desktop / Companion Layout: Float the callout cleanly to the LEFT of the map container!
+      // This covers the Scripture margin/edge on the left, leaving the entire map and cursor 100% uncovered!
+      cardLeft = Math.max(16, mapRect.left - cardWidth - 18);
+      cardTop = Math.max(70, Math.min(window.innerHeight - cardHeight - 20, clientY - (cardHeight / 2)));
+      anchorX = cardLeft + cardWidth;
+      anchorY = Math.max(cardTop + 24, Math.min(cardTop + cardHeight - 24, clientY));
+    } else {
+      // Mobile / Stacked Layout: Float directly beneath the map
+      cardLeft = Math.max(12, Math.min(window.innerWidth - cardWidth - 12, mapRect.left));
+      cardTop = Math.min(window.innerHeight - cardHeight - 12, mapRect.bottom + 12);
+      anchorX = clientX;
+      anchorY = cardTop;
+    }
+
+    card.style.left = `${cardLeft}px`;
+    card.style.top = `${cardTop}px`;
+
+    // Dynamic Leader Line from card anchor to cursor target
+    const targetX = clientX;
+    const targetY = clientY;
+
+    const curve = svg.querySelector('.map-connector-curve') as SVGPathElement;
+    const dot = svg.querySelector('.map-connector-dot') as SVGCircleElement;
+    const ring = svg.querySelector('.map-connector-ring') as SVGCircleElement;
+    const arrow = svg.querySelector('.map-connector-arrow') as SVGPolygonElement;
+
+    if (curve) {
+      if (spaceOnLeft >= 260) {
+        // Horizontal Bezier curve from card right-edge to cursor with elegant arc lift
+        const dx = targetX - anchorX;
+        const arcLift = Math.min(24, Math.max(8, Math.abs(dx) * 0.08));
+        const c1x = anchorX + (dx * 0.45);
+        const c1y = anchorY - arcLift;
+        const c2x = targetX - (dx * 0.45);
+        const c2y = targetY - arcLift;
+        curve.setAttribute('d', `M ${anchorX} ${anchorY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${targetX} ${targetY}`);
+      } else {
+        // Vertical curve from card top-edge to cursor
+        const dy = targetY - anchorY;
+        curve.setAttribute('d', `M ${anchorX} ${anchorY} C ${anchorX} ${anchorY + dy * 0.5}, ${targetX} ${targetY - dy * 0.5}, ${targetX} ${targetY}`);
+      }
+    }
+
+    if (dot) {
+      dot.setAttribute('cx', String(targetX));
+      dot.setAttribute('cy', String(targetY));
+    }
+    if (ring) {
+      ring.setAttribute('cx', String(targetX));
+      ring.setAttribute('cy', String(targetY));
+    }
+    if (arrow) {
+      if (spaceOnLeft >= 260) {
+        arrow.setAttribute('points', `${targetX},${targetY} ${targetX - 7},${targetY - 4} ${targetX - 7},${targetY + 4}`);
+      } else {
+        arrow.setAttribute('points', `${targetX},${targetY} ${targetX - 4},${targetY + 7} ${targetX + 4},${targetY + 7}`);
+      }
+    }
+  }
+
+  public hideExternalCallout(): void {
+    if (AncientMapCanvas.sharedCalloutEl) {
+      AncientMapCanvas.sharedCalloutEl.style.display = 'none';
+      AncientMapCanvas.sharedCalloutEl.setAttribute('aria-hidden', 'true');
+    }
+    if (AncientMapCanvas.sharedConnectorSvg) {
+      AncientMapCanvas.sharedConnectorSvg.style.display = 'none';
+    }
+    this.activeCalloutLayer = null;
+  }
+
   public closeActiveTooltip(): void {
+    this.hideExternalCallout();
     if (this.activeHoveredPolygon) {
       try {
         this.activeHoveredPolygon.poly.setStyle(this.activeHoveredPolygon.defaultStyle);
@@ -394,6 +587,44 @@ export class AncientMapCanvas {
   }
 
   public bindManagedTooltip(layer: L.Layer, content: string, options?: L.TooltipOptions): void {
+    const isCompact = !!this.options.compact;
+
+    if (isCompact) {
+      const getAccent = (): string => {
+        if (layer instanceof L.Polygon) {
+          return (layer.options.color as string) || '#ffd700';
+        }
+        return '#ffd700';
+      };
+
+      layer.on('mouseover', (e: L.LeafletEvent) => {
+        const mouseEvt = e as L.LeafletMouseEvent;
+        const orig = mouseEvt.originalEvent;
+        const cx = orig && orig.clientX ? orig.clientX : (this.container.getBoundingClientRect().left + 150);
+        const cy = orig && orig.clientY ? orig.clientY : (this.container.getBoundingClientRect().top + 100);
+        this.activeCalloutLayer = layer;
+        this.showExternalCallout(content, cx, cy, getAccent());
+      });
+
+      layer.on('mousemove', (e: L.LeafletEvent) => {
+        const mouseEvt = e as L.LeafletMouseEvent;
+        if (mouseEvt.originalEvent && this.activeCalloutLayer === layer) {
+          this.updateExternalCallout(mouseEvt.originalEvent.clientX, mouseEvt.originalEvent.clientY);
+        }
+      });
+
+      layer.on('mouseout', () => {
+        if (this.activeCalloutLayer === layer) {
+          this.hideExternalCallout();
+        }
+      });
+
+      layer.on('click', () => {
+        this.hideExternalCallout();
+      });
+      return;
+    }
+
     const defaultOptions: L.TooltipOptions = {
       className: 'map-leaflet-tooltip',
       opacity: 0.98,
@@ -1638,25 +1869,44 @@ export class AncientMapCanvas {
       };
 
       for (const empire of sortedEmpires) {
-        const latLngs = empire.approximateBounds.map(b => [b.lat, b.lng] as L.LatLngTuple);
+        const smoothed = smoothPolygonCoordinates(empire.approximateBounds, 2);
+        const latLngs = smoothed.map(b => [b.lat, b.lng] as L.LatLngTuple);
         const isCompact = !!this.options.compact;
+
+        // Soft Outer Cartographic Halo (Water-color border wash)
+        const haloStyle: L.PathOptions = {
+          pane: 'empirePane',
+          color: empire.color,
+          weight: isCompact ? 4.5 : 5.5,
+          opacity: isCompact ? 0.18 : 0.25,
+          fill: false,
+          interactive: false,
+          lineCap: 'round',
+          lineJoin: 'round'
+        };
+        const closedLatLngs = latLngs.concat([latLngs[0]]);
+        const halo = L.polyline(closedLatLngs, haloStyle);
+        this.empireLayerGroup.addLayer(halo);
+
         const defaultStyle: L.PathOptions = {
           pane: 'empirePane',
           color: empire.color,
           fillColor: empire.fillColor || empire.color,
-          fillOpacity: isCompact ? 0.07 : 0.12,
-          weight: isCompact ? 1.0 : 1.2,
-          opacity: isCompact ? 0.50 : 0.65,
-          dashArray: undefined
+          fillOpacity: isCompact ? 0.10 : 0.14,
+          weight: isCompact ? 1.4 : 1.6,
+          opacity: isCompact ? 0.82 : 0.88,
+          lineCap: 'round',
+          lineJoin: 'round'
         };
         const hoverStyle: L.PathOptions = {
           pane: 'empirePane',
           color: empire.color,
           fillColor: empire.fillColor || empire.color,
-          fillOpacity: 0.24,
-          weight: 2.2,
-          opacity: 0.95,
-          dashArray: undefined
+          fillOpacity: isCompact ? 0.22 : 0.26,
+          weight: isCompact ? 2.2 : 2.6,
+          opacity: 1.0,
+          lineCap: 'round',
+          lineJoin: 'round'
         };
 
         const polygon = L.polygon(latLngs, defaultStyle);

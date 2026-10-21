@@ -1,3 +1,44 @@
+## 2026-10-21 17:15:00 — Antigravity / HistoricalBible — Organic Historical Cartography & External Leader-Line Callout Engine (v00.01.59)
+
+- Solved the two core visual cartography & UX feedback points from the user:
+  - 1. **Organic, Mature Kingdom Polygons (Replacing primitive jagged polygons)**:
+    - Expanded approximate bounds from crude 8-15 vertex polygons to high-density geodetic coordinates tracing authentic historical geographical features in `src/data/ancientMapData.ts`:
+      - `egypt` (Ancient Egyptian Empire): expanded to 44 coordinates tracing the Mediterranean delta coast (Pelusium to Alexandria), Sinai border at Brook of Egypt (Wadi el-Arish), Gulf of Suez, Red Sea ports, Eastern Desert, First Cataract at Aswan / Elephantine, and western oasis fringe.
+      - `saite_egypt`, `ptolemaic_egypt`: matching organic Nile ribbon & delta contours.
+      - `kush_nubia`: expanded to 28 coordinates tracing the Nubian Nile cataract S-curves (Buhen, Kerma, Napata, Meroë, Gezira).
+      - `kingdom_sheba`: expanded to 20 coordinates tracing the Yemeni fertile highlands, Najran oasis, Ma'rib dam, and Bab-el-Mandeb coastal terraces.
+      - `old_babylon`, `babylon`, `assyria`: alluvial Mesopotamian floodplain and Fertile Crescent contours.
+    - Exported and implemented `smoothPolygonCoordinates(coords, iterations = 2)` (Chaikin's sub-division algorithm) in `src/engine/ancientMap.ts` to transform coarse boundary paths into smooth, natural, organic curves.
+    - Implemented a dual-stroke watercolor boundary wash in `renderEmpires`:
+      - Soft outer cartographic halo (`weight: 4.5–5.5`, `opacity: 0.18–0.25`, `fill: false`, `interactive: false`).
+      - Crisp inner historical boundary line (`weight: 1.4–1.6`, `opacity: 0.82–0.88`, `fillOpacity: 0.10–0.14`).
+      - Delivers an authentic antique atlas appearance rather than raw CAD geometric shapes.
+  - 2. **External Floating Callout with Dynamic SVG Leader Line (Replacing map-trapped popups)**:
+    - Root cause of user frustration: Leaflet popups and tooltips rendered directly inside the 320px companion map container, immediately covering the cursor, the territory, and the very details the user was trying to inspect.
+    - Solution:
+      - Implemented singleton DOM overlay `#map-external-floating-callout` and full-viewport `#map-callout-connector-svg` in `AncientMapCanvas`.
+      - On desktop / side-by-side mode (left space >= 260px), the callout floats cleanly to the LEFT of the map container, extending over the Scripture column margin where it covers zero map pixels.
+      - Implemented an animated SVG leader line connecting the callout right-edge to the exact hovered cursor position, featuring:
+        - Elegant cubic Bezier curve with dynamic arc lift (`arcLift = min(24, max(8, abs(dx) * 0.08))`).
+        - Subtle golden outer glow filter (`#map-callout-glow`).
+        - Solid circular gold marker (`r=4.5`) centered exactly at the cursor coordinates.
+        - Outer pulsing halo ring (`r=9`).
+        - Golden directional arrow pointing directly at the pinpoint.
+      - In `bindManagedTooltip`, when `this.options.compact` is active, hover events delegate to `showExternalCallout` and `updateExternalCallout`, hiding on `mouseout` or `click`.
+      - Completely removed duplicate internal Leaflet tooltip elements, preventing strict mode locator collisions.
+- Verification & Test Coverage:
+  - Created new Playwright integration suite `tests/companion-map-callout-regression.spec.ts`:
+    - Test 1: Verifies hovering kingdom on companion map renders external callout outside the map to the left, asserts SVG leader curve has valid cubic Bezier coordinates, asserts cursor dot matches mouse coordinates within 5px, asserts map container has zero internal trapped tooltips, and verifies mouseout cleans up overlay.
+    - Test 2: Verifies empirePane renders active SVG paths with smooth organic curvature (>= 15 segments) and dual-stroke halos.
+  - Re-ran `tests/bible-side-by-side-map.spec.ts` (7/7 tests passing).
+  - Re-ran `tests/bible-entity-click-navigation.spec.ts` (1/1 passing).
+  - Re-ran unit regression tests (`tests/pharaoh-entity-resolution-regression.ts`, `tests/analytics-regression.ts`, `tests/data-integrity-selfcheck.ts`) (16/16 passing).
+  - Canonical KJV corpus: 31,102 verses verified 100% intact.
+  - Production build: `npm run build` succeeds in 885ms.
+- Sibling Scan:
+  - Audited `renderEmpires`, `renderRoutes`, `renderArchaeologicalSites`, and `renderCities` for tooltip behavior; verified that all companion map tooltips cleanly use `bindManagedTooltip` with the external callout delegation.
+  - Audited all 13 chronological eras to confirm all active kingdom polygons properly render smoothed boundaries and dual halos.
+
 ## 2026-10-21 16:45:00 — Antigravity / HistoricalBible — Pharaoh in Genesis 47 Entity Resolution, Map-First Navigation & Era Cartography Fix (v00.01.58)
 
 - Solved the three root-cause bugs identified in Genesis 47 Pharaoh inspection and map/tab navigation:
