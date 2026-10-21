@@ -5482,8 +5482,8 @@ export const CONTESTED_FRONTIER_ZONES: ContestedFrontierZone[] = [
   {
     id: 'contested-lower-nubia',
     name: 'Lower Nubia / Wawat (The Cataract Frontier)',
-    claimedByEmpireIds: ['egypt', 'kush_nubia'],
-    eraIds: ['patriarchs', 'exodus', 'judges', 'divided_monarchy_prophets', '2kings_jehu', '2kings_fall_samaria', 'assyrian_siege', 'all'],
+    claimedByEmpireIds: ['egypt', 'saite_egypt', 'kush_nubia'],
+    eraIds: ['patriarchs', 'exodus', 'judges', 'united_monarchy', 'divided_monarchy_prophets', '2kings_jehu', '2kings_fall_samaria', 'assyrian_siege', 'babylonian_exile', 'all'],
     biblicalRecord: 'Pharaoh Tirhakah (Taharqa) of Kush marched against Sennacherib to defend Jerusalem (2 Kings 19:9, Isaiah 37:9). Heavily fortified with 12 Egyptian and Nubian border fortresses (Buhen, Semna, Mirgissa).',
     historicalContext: 'Argued buffer between Egypt and the Kingdom of Kush from the 1st Cataract (Aswan) to the 2nd Cataract (Buhen/Semna). Contested across two millennia between Egyptian Middle/New Kingdom expansion and Kushite resurgence (Kerma culture and 25th Nubian Dynasty).',
     bounds: [
@@ -5567,8 +5567,8 @@ export const CONTESTED_FRONTIER_ZONES: ContestedFrontierZone[] = [
   {
     id: 'contested-sinai-negev',
     name: 'Sinai & Negev Borderland (Brook of Egypt / Wadi el-Arish)',
-    claimedByEmpireIds: ['egypt', 'judah', 'united_israel', 'nabataea'],
-    eraIds: ['patriarchs', 'exodus', 'united_monarchy', 'roman_christ', 'all'],
+    claimedByEmpireIds: ['egypt', 'judah', 'united_israel', 'nabataea', 'rome'],
+    eraIds: ['patriarchs', 'exodus', 'united_monarchy', 'roman_christ', 'apostolic_church', 'all'],
     biblicalRecord: 'The Brook of Egypt (Wadi el-Arish) marks the south-western biblical boundary of the Promised Land (Numbers 34:5, Joshua 15:4, 1 Kings 8:65).',
     historicalContext: 'Desert transit corridor between Egypt and Canaan, claimed and contested by Pharaohs, Judean kings, Edomites, and Nabataean trade caravans.',
     bounds: [
@@ -5582,7 +5582,7 @@ export const CONTESTED_FRONTIER_ZONES: ContestedFrontierZone[] = [
   {
     id: 'contested-coele-syria',
     name: 'Coele-Syria & Levantine Littoral',
-    claimedByEmpireIds: ['greece_seleucid', 'ptolemaic_egypt'],
+    claimedByEmpireIds: ['greece_seleucid', 'ptolemaic_egypt', 'rome'],
     eraIds: ['persian_restoration', 'roman_christ', 'all'],
     biblicalRecord: 'Daniel 11 prophesied the six Syrian Wars between the King of the North (Seleucids) and King of the South (Ptolemies) over control of Judea and Jerusalem.',
     historicalContext: 'The disputed corridor of Judea, Samaria, Phoenicia, and the Bekaa Valley, fought over in six major Syrian Wars (274–168 BC) until Antiochus IV Epiphanes seized the Temple.',

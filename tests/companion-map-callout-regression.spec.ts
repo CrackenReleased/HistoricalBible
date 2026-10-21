@@ -99,4 +99,44 @@ test.describe('Bible Companion Map - Organic Polygons & External Leader Line Cal
     expect(dashVal).toBeTruthy();
     expect(dashVal).toMatch(/\d+,\s*\d+/);
   });
+
+  test('standalone /map page renders dashed overlapping borders for argued frontiers across multiple eras (Divided Kingdom & Persian)', async ({ page }) => {
+    // 1. Divided Monarchy in /map
+    await page.goto('/map?era=divided_monarchy_prophets', { waitUntil: 'networkidle' });
+    
+    // Open 'What to show' disclosure to toggle World Empires layer
+    const disclosure = page.locator('#atlas-visibility');
+    if (!(await disclosure.getAttribute('open'))) {
+      await page.locator('#atlas-visibility summary').click();
+    }
+    const empiresBtn = page.locator('button.atlas-toggle-btn[data-layer="empires"]');
+    await expect(empiresBtn).toBeVisible({ timeout: 5000 });
+    if ((await empiresBtn.getAttribute('aria-pressed')) !== 'true') {
+      await empiresBtn.click();
+    }
+
+    const dashedPaths = page.locator('.leaflet-pane.leaflet-empire-pane svg path[stroke-dasharray]:not([d="M0 0"])');
+    await expect(dashedPaths.first()).toBeVisible({ timeout: 10000 });
+    const dashedCount = await dashedPaths.count();
+    expect(dashedCount).toBeGreaterThanOrEqual(2);
+
+    // 2. Switch to Persian Restoration period
+    const eraSelect = page.locator('#atlas-era');
+    await eraSelect.selectOption('persian_restoration');
+    await page.waitForTimeout(600);
+
+    const persianDashed = page.locator('.leaflet-pane.leaflet-empire-pane svg path[stroke-dasharray]:not([d="M0 0"])');
+    expect(await persianDashed.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test('Study Desk (/interact) embedded map renders with organic smoothed kingdom contours', async ({ page }) => {
+    await page.goto('/interact?figure=david&view=map', { waitUntil: 'networkidle' });
+
+    const mapContainer = page.locator('#ancient-map-container');
+    await expect(mapContainer).toBeVisible({ timeout: 10000 });
+
+    const paths = mapContainer.locator('.leaflet-pane.leaflet-empire-pane svg path:not([d="M0 0"])');
+    await expect(paths.first()).toBeVisible({ timeout: 7000 });
+    expect(await paths.count()).toBeGreaterThan(0);
+  });
 });

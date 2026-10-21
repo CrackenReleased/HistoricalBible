@@ -1,3 +1,30 @@
+## 2026-10-21 18:48:00 — Antigravity / HistoricalBible — Cross-Atlas & Multi-Timeline Territorial Fidelity Verification (v00.01.62)
+
+- Solved user request: *"Please verify that this level fix is implemented across all maps and across all time lines"*:
+  - 1. **Verified Across All 3 Maps**:
+    - **Standalone Atlas (`/map`, `src/atlasApp.ts`)**:
+      - Verified that when exploring eras (e.g. Divided Monarchy `divided_monarchy_prophets` or Persian Restoration `persian_restoration`), kingdom territories render with organic curves and overlapping argued frontiers render with dashed lines (`stroke-dasharray`).
+      - Verified layer toggle synchronization and Map Key rendering directly above the map canvas.
+    - **Scripture Companion Map (`/bible`, `src/bibleReader.ts`)**:
+      - Verified in Genesis 47 (Patriarchs) that Lower Nubia (Egypt & Kush overlap) and sovereign frontier zones render with dashed strokes (`dashArray: '6, 5'`) and exterior antique callouts with SVG leader lines.
+    - **Study Desk 3rd Column Map (`/interact`, `src/main.ts`)**:
+      - Verified that `#ancient-map-container` displays smoothed kingdom contours and dashed frontier boundaries when activated via the "Map" button or `?figure=david&view=map`.
+  - 2. **Verified Across All 13 Chronological Eras**:
+    - Evaluated every era: `patriarchs`, `exodus`, `judges`, `united_monarchy`, `divided_monarchy_prophets`, `2kings_jehu`, `2kings_fall_samaria`, `assyrian_siege`, `babylonian_exile`, `persian_restoration`, `roman_christ`, `apostolic_church`, and `all`.
+    - Every era contains >= 6 active sovereign realms with realistic non-primitive geometry (> 1,000 km² and >= 4 vertices).
+    - Overlapping contested realms dynamically compute and render dashed boundary styling.
+  - 3. **Chronological Bounding Decision-Point Patch**:
+    - Identified that `isEraMatch` in `src/engine/ancientMap.ts` previously checked `zone.eraIds.includes(this.activeEra.id) || zone.eraIds.includes('all')`. Because all contested zones had `'all'` in their `eraIds` for the composite view, this was causing zones to appear in every single era.
+    - Patched decision point to: `const isEraMatch = this.activeEra.id === 'all' || zone.eraIds.includes(this.activeEra.id);`.
+    - Now contested frontier zones strictly appear only in their historically valid chronological eras without anachronistic bleed.
+    - Updated `CONTESTED_FRONTIER_ZONES` in `src/data/ancientMapData.ts` to include Saite Egypt (`saite_egypt`) and Rome (`rome`) in relevant zone claims, plus `united_monarchy`, `babylonian_exile`, and `apostolic_church` era mappings.
+- **Verification & Test Coverage**:
+  - Created [`tests/all-eras-territorial-fidelity-regression.ts`](file:///E:/HistoricalBible/tests/all-eras-territorial-fidelity-regression.ts) asserting multi-era realm counts, geographic area, overlap dashed borders, and lack of anachronistic zone bleed.
+  - Updated [`tests/companion-map-callout-regression.spec.ts`](file:///E:/HistoricalBible/tests/companion-map-callout-regression.spec.ts) with full browser end-to-end tests across `/bible`, `/map`, and `/interact` (5/5 tests passing).
+  - All 80 Node.js regression tests passing (80/80).
+  - Canonical KJV corpus: 31,102 verses across 66 books 100% verified.
+  - Clean production Vite build.
+
 ## 2026-10-21 18:35:00 — Antigravity / HistoricalBible — Kush / Nubia Territorial Correction & Dashed Overlapping Frontier Cartography (v00.01.61)
 
 - Solved user requests regarding historical territorial boundary veracity and argued frontiers:

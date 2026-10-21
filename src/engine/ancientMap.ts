@@ -2045,7 +2045,7 @@ export class AncientMapCanvas {
       const isCompact = !!this.options.compact;
       const activeEmpireIds = new Set(targetEmpires.map(e => e.id));
       const relevantContestedZones = CONTESTED_FRONTIER_ZONES.filter(zone => {
-        const isEraMatch = zone.eraIds.includes(this.activeEra.id) || zone.eraIds.includes('all');
+        const isEraMatch = this.activeEra.id === 'all' || zone.eraIds.includes(this.activeEra.id);
         if (!isEraMatch) return false;
         return zone.claimedByEmpireIds.some(empId => activeEmpireIds.has(empId));
       });

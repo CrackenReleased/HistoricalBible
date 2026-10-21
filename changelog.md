@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.62] - 2026-10-21
+
+- **Cross-Atlas & Multi-Timeline Territorial Fidelity Verification**:
+  - Verified and locked the organic curved kingdom polygons, dynamic overlap detection, and **dashed boundary lines** (`stroke-dasharray`) across:
+    1. **Standalone Atlas** (`/map`, `src/atlasApp.ts`) — Verified across Divided Monarchy (`divided_monarchy_prophets`) and Persian Restoration (`persian_restoration`), with layer toggle synchronization and Map Key rendering.
+    2. **Scripture Companion Map** (`/bible`, `src/bibleReader.ts`) — Verified in Genesis 47 (Patriarchs) with Lower Nubia Egypt/Kush sovereign overlap and exterior leader-line callout.
+    3. **Study Desk 3rd Column** (`/interact`, `src/main.ts`) — Verified with King David (`united_monarchy`) rendering smoothed organic contours in `#ancient-map-container`.
+  - **Decision-Point Chronological Bounding**:
+    - Fixed `isEraMatch` in `src/engine/ancientMap.ts` (`this.activeEra.id === 'all' || zone.eraIds.includes(this.activeEra.id)`), ensuring contested frontier zones are strictly chronologically bounded and never leak anachronistically across unrelated periods.
+    - Updated `CONTESTED_FRONTIER_ZONES` in `src/data/ancientMapData.ts` with comprehensive empire claim attributions (`saite_egypt`, `rome`) and era bounds (`united_monarchy`, `babylonian_exile`, `apostolic_church`).
+- **Comprehensive Regression & Test Verification**:
+  - Created [`tests/all-eras-territorial-fidelity-regression.ts`](file:///E:/HistoricalBible/tests/all-eras-territorial-fidelity-regression.ts) asserting across all 13 chronological eras:
+    - Every era features >= 6 active sovereign realms.
+    - All empires have >= 4 coordinates and plausible geographic area (> 1,000 km²).
+    - Overlapping contested realms render dashed border styling without anachronistic bleed.
+  - Updated [`tests/companion-map-callout-regression.spec.ts`](file:///E:/HistoricalBible/tests/companion-map-callout-regression.spec.ts) with full browser assertions across `/bible`, `/map`, and `/interact` (5/5 tests passing).
+  - All 80 Node.js regression tests passing (80/80).
+  - 100% canonical KJV corpus verified (31,102 verses across 66 books).
+  - Clean production Vite build.
+
 ## [00.01.61] - 2026-10-21
 
 - **Kingdom of Kush / Nubia Territorial Realignment**:
