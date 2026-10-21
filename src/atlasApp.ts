@@ -32,6 +32,7 @@ import { getDatedEvent, type DatedEvent } from './data/datedEvents.ts';
 import { getRelationshipForPassage, type HistoricalRelationship } from './data/historicalRelationships.ts';
 import { getWorldHorizonItem, isWorldItemInDateInterval, HISTORICAL_WORLD_ITEMS, type WorldHorizonItem } from './data/historicalWorldItems.ts';
 import { createEvidenceReceiptElement, getArtifactDisplay, getEvidenceReceipt } from './data/evidenceReceipts';
+import { trackMapLayerToggle, trackMapPreset, trackMapDossierView } from './analytics';
 
 class HistoricalAtlasApp {
   private mapCanvas: AncientMapCanvas | null = null;
@@ -227,13 +228,18 @@ class HistoricalAtlasApp {
         if (!this.mapCanvas) return;
         const key = btn.dataset.layer!;
         this.mapCanvas.layers[key] = !this.mapCanvas.layers[key];
+        trackMapLayerToggle(key, this.mapCanvas.layers[key]);
         this.mapCanvas.render();
         this.syncLayers();
         this.updateSequence(false);
       });
     });
     document.querySelectorAll<HTMLButtonElement>('.atlas-preset-btn').forEach(btn => {
-      btn.addEventListener('click', () => this.mapCanvas?.jumpToPreset(btn.dataset.preset!));
+      btn.addEventListener('click', () => {
+        const preset = btn.dataset.preset!;
+        this.mapCanvas?.jumpToPreset(preset);
+        trackMapPreset(preset);
+      });
     });
     document.getElementById('atlas-drawer-close')?.addEventListener('click', () => this.hideDetailDrawer());
     this.setupJourneySearch();
@@ -989,6 +995,7 @@ class HistoricalAtlasApp {
     }
 
     drawer.hidden = false;
+    trackMapDossierView(site.artifactName || site.siteName, 'archaeological_site', site.biblicalAttestation);
     const nextCtx: HistoricalBibleUserContext = {
       source: 'map',
       updatedAt: new Date().toISOString(),
@@ -1043,6 +1050,7 @@ class HistoricalAtlasApp {
     }
 
     drawer.hidden = false;
+    trackMapDossierView(city.name, 'biblical_city', city.scriptureRef);
     const nextCtx: HistoricalBibleUserContext = {
       source: 'map',
       updatedAt: new Date().toISOString(),
@@ -1090,6 +1098,7 @@ class HistoricalAtlasApp {
     }
 
     drawer.hidden = false;
+    trackMapDossierView(empire.name, 'world_empire');
   }
 
   private showRouteDetail(route: BiblicalRoute, stop?: BiblicalRouteStop, stopIndex?: number): void {

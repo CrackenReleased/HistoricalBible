@@ -2,7 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## [00.01.57] - 2026-10-20
+## [00.01.58] - 2026-10-21
+
+- **Map-First Entity Navigation & Biblical Cartography**:
+  - Implemented smart entity resolution in `src/data/ancientMapData.ts` (`resolveBiblicalEntity`) for rulers (Pharaoh, Caesar, Nebuchadnezzar, Cyrus, Sennacherib, Pilate, Herod), places (Goshen, Rameses, Memphis, Zoan, Haran, Ur, Dothan, etc.), figures, empires, and routes.
+  - Clicking any Person, Place, Time, Ruler, or Realm in the Scripture text now switches directly to the Map tab, zooms into the relevant region, displays approximate year, kingdom region of power, allies & contemporaries, and connected narrative paths.
+  - Word Inspector is reserved for non-entity vocabulary or explicit right-clicks.
+  - Fixed Genesis 47 / Patriarchs era cartography: removed out-of-period Nabonidus Cylinder (c. 550 BC) artifact marker from 2000 BC Patriarchs era, centered map on the Canaan–Egypt corridor, and wired Genesis 37–50 to the `jacob-joseph-egypt` narrative journey stop at the Land of Goshen / Avaris.
+  - Verified with new regression test `tests/pharaoh-entity-resolution-regression.ts` (13/13 unit tests pass) and browser test `tests/bible-entity-click-navigation.spec.ts` (15/15 Playwright tests pass).
+
+## [00.01.57] - 2026-10-21
+
+- Integrated dedicated Google Analytics 4 (GA4) telemetry (`G-P4HE0VJJC9`) across all public pages (`index.html`, `bible.html`, `map.html`, `interact.html`, `contact.html`, `tapestry.html`) and created `src/analytics.ts` for deep custom event tracking (scripture chapters, verse selection, companion tabs, map layers, presets, dossiers, figures, curiosity doors, and contact inquiries). Tested via `tests/analytics-regression.ts` (68/68 node regressions passed) and `tests/analytics-tracking.spec.ts` (4/4 browser tests passed).
 
 - Added an evidence receipt and source register for all 20 existing atlas artifacts, with corrected source IDs, bounded claims, date ranges, limitations, and `attested`/`inferred`/`proposed`/`disputed` connections. Corrected the Soloi map point to Cyprus and removed false figure links and object links.
 - Connected a sourced Gallio → Acts 18:12 reader/map route and separately sourced Seneca literary context; added two passage-specific chronology synchronies with an honest undated state elsewhere.

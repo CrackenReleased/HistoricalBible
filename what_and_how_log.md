@@ -1,3 +1,61 @@
+## 2026-10-21 16:45:00 — Antigravity / HistoricalBible — Pharaoh in Genesis 47 Entity Resolution, Map-First Navigation & Era Cartography Fix (v00.01.58)
+
+- Solved the three root-cause bugs identified in Genesis 47 Pharaoh inspection and map/tab navigation:
+  - Root Cause 1 (Why only Nabonidus Cylinder appeared on Genesis 47 map):
+    - In `CHRONOLOGICAL_ERAS`, the `patriarchs` era (c. 2100–1800 BC) erroneously contained `activeSiteIds: ['nabonidus-cylinder']` (a c. 550 BC Neo-Babylonian artifact from Ur, over 1,300 years later) and focused on `{ lat: 33.0, lng: 42.0 }` in the Iraqi desert.
+    - Removed `nabonidus-cylinder` from `patriarchs.activeSiteIds` (`activeSiteIds: []`), eliminating the false gold halo and intrusive marker.
+    - Updated `patriarchs.focusCenter` to `{ lat: 31.5, lng: 35.0 }`, `focusZoom: 6`, properly framing the biblical Levant, Canaan, and the Nile Delta corridor.
+  - Root Cause 2 (Why clicking Pharaoh did not trigger the map or zoom to Egypt):
+    - `getJourneyStopForPassage` in `src/data/ancientMapData.ts` had omitted Genesis 37–50 (`jacob-joseph-egypt`). Genesis 47 was returning `undefined`, causing the map to fall back to the generic era view with routes muted.
+    - Wired Genesis 37–50 to `jacob-joseph-egypt` (Gen 37 Dothan, Gen 39–45 Egypt, Gen 46 Beersheba/Goshen, Gen 47–50 Land of Goshen/Avaris).
+    - Added comprehensive entity resolver `resolveBiblicalEntity` in `src/data/ancientMapData.ts`:
+      - Context-aware ruler resolution: `pharaoh` in Genesis resolves to Pharaoh of Egypt (Middle Kingdom · Dynasty 12, c. 1876–1800 BC), centered on Lower Egypt / Goshen / Nile Delta (`{ lat: 30.2, lng: 31.5 }`, zoom 7), displaying Region of Power (`Kingdom of Egypt`), Allies & Contemporaries (`Middle Kingdom Egypt, Cush/Nubia, Old Babylonian Empire, Canaanite city-states`), and connected path (`jacob-joseph-egypt`).
+      - Added key geographic entities to `BIBLICAL_GEOGRAPHIC_ENTITIES`: `pharaoh`, `goshen`, `rameses`, `raamses`, `memphis`, `noph`, `zoan`, `tanis`, `on`, `heliopolis`, `canaan`, `haran`, `charran`, `ur`, `dothan`, `peniel`, `penuel`, `sinai`, `horeb`, `midian`, `machpelah`, `gerar`, `succoth`.
+  - Root Cause 3 (Why clicking people/places/times opened Word Inspector instead of Map):
+    - In `src/bibleReader.ts`, `inspectWord` previously called `this.switchTab('word')` unconditionally on left-clicks for non-map views.
+    - Fixed decision point: When left-clicking ANY Person, Place, Ruler, Realm, Route, or Biblical Entity, the reader now automatically transitions to the **Map** tab (`this.switchTab('map')`), zooms and centers the Leaflet canvas, renders a non-blocking luminous pulsing pin, displays the empire/route layers, and renders a rich dossier card in `#bible-companion-artifact-drawer` beneath the map.
+    - Generic vocabulary words (e.g. "shepherds", "flocks", "famine"):
+      - When clicked while on the Map tab, respects active tab lock without hijacking (sets subtle yellow dot on Word Inspector tab).
+      - When clicked while on X-Refs/Word, opens Word Inspector.
+      - Right-clicking any word continues to open Word Inspector directly.
+- Verification & Test Coverage:
+  - Regression test: `tests/pharaoh-entity-resolution-regression.ts` (5/5 passing).
+  - Playwright integration test: `tests/bible-entity-click-navigation.spec.ts` (1/1 passing in 3.8s).
+  - All existing Playwright test suites (37 browser tests total) passing.
+  - Canonical KJV corpus 100% verified (31,102 verses, 66 books, 1,189 chapters).
+  - Production build: `npm run build` succeeds in 960ms.
+- Sibling Scan:
+  - Audited all 13 chronological eras in `CHRONOLOGICAL_ERAS` for active site chronological compatibility; confirmed no other era has out-of-period active artifacts.
+  - Audited `getJourneyStopForPassage` across all 66 books: confirmed coverage of all 14 reviewed narrative journeys from Genesis to Revelation.
+
+## 2026-10-21 14:38:00 — Antigravity / HistoricalBible — Dedicated GA4 Tracking Architecture & Custom Event Telemetry (app remains v00.01.57)
+
+- Built out isolated, dedicated Google Analytics 4 (GA4) property tracking for `HistoricalBible.com` under Measurement ID `G-P4HE0VJJC9`:
+  - Installed official Google tag (`gtag.js`) across all public site pages (`index.html`, `bible.html`, `map.html`, `interact.html`, `contact.html`, `tapestry.html`).
+  - Created centralized, typed, defensive telemetry module `src/analytics.ts`:
+    - Handles safe runtime event dispatching with automatic fallback to `window.dataLayer`.
+    - Never throws, crashes, or blocks user interaction if ad-blockers, tracking prevention, or offline states are present.
+    - Captures deep custom engagement events:
+      - `bible_chapter_read`: book name, chapter number, verse count, full reference.
+      - `bible_verse_select`: specific verse reference, chapter, verse number.
+      - `companion_tab_switch`: companion drawer tab switching (`xrefs`, `word`, `chrono`, `map`).
+      - `companion_map_layer_toggle`: sidebar map layer chip toggles (`cities`, `empires`, `archaeology`, `routes`).
+      - `concordance_inspect`: word-level inspection in Scripture text.
+      - `atlas_layer_toggle`: Atlas map layer visibility changes.
+      - `atlas_preset_jump`: quick jumps to geographic regions (Jerusalem, Galilee, Egypt, Mesopotamia, Rome).
+      - `map_dossier_view`: site, city, empire, and route stop dossier views with scripture references.
+      - `historical_figure_select`: historical figure profile selection in the study desk.
+      - `historical_empire_filter` & `historical_era_filter`: world empire and era filtering.
+      - `curiosity_door_click`: Front Door curiosity cards (Hezekiah, Daniel, Moses, thread start).
+      - `contact_form_submit`: inquiries submitted with email list opt-in state.
+      - `bible_pdf_download`: canonical 1,162-page KJV Bible PDF download clicks.
+- Verification & Test Coverage:
+  - Regression test: `tests/analytics-regression.ts` (node test suite verifies tag injection across all 6 HTML files, Measurement ID export, and defensive payload construction).
+  - Browser integration test: `tests/analytics-tracking.spec.ts` (Playwright suite verifies dataLayer initialization, curiosity door click tracking, Bible chapter view and verse click tracking, companion tab switching, atlas presets, and contact submission).
+  - Node test suite: 68/68 passing.
+  - Playwright test suite: 4/4 passing.
+  - Production build: `npm run build` succeeds in 961ms.
+
 ## 2026-10-21 14:10:00 — Antigravity / HistoricalBible — Sidebar Map UI/UX Overlay Decluttering & Interactive Layer Chips (app remains v00.01.57)
 
 - Solved overlay overcrowding and cognitive overload in the Bible Reader Companion Map tab according to user directive ("Too much information is no information. But too little information is frustrating"):

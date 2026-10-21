@@ -37,6 +37,8 @@ import {
   BIBLICAL_GEOGRAPHIC_ENTITIES,
   WORLD_EMPIRES_GEO,
   getJourneyStopForPassage,
+  resolveBiblicalEntity,
+  type ResolvedBiblicalEntity,
   type PassageJourneyMatch,
   type ArchaeologicalSite,
   type BiblicalGeographicEntity,
@@ -53,6 +55,14 @@ import {
   resolvePassageUserContext,
   writeUserContext
 } from './store/userContextStore';
+
+import {
+  trackBibleChapterView,
+  trackBibleVerseSelect,
+  trackCompanionTabSwitch,
+  trackCompanionLayerToggle,
+  trackConcordanceInspect
+} from './analytics';
 
 interface BookMeta {
   osis: string;
@@ -124,6 +134,7 @@ class BibleReader {
           .then(() => {
             const book = this.getActiveBook();
             const verses = localStore.getChapterVerses(book.osis, this.currentChapter);
+    trackBibleChapterView(book.name, this.currentChapter, verses.length);
             const activeVerse = verses.find((v) => v.verse === this.selectedVerseNum) || verses[0];
             if (activeVerse) {
               this.renderCompanionXrefs(activeVerse);
@@ -411,6 +422,7 @@ class BibleReader {
     const chrono = getBookChronology(book.osis);
     const chapterChrono = getChapterChronology(book.osis, this.currentChapter);
     const verses = localStore.getChapterVerses(book.osis, this.currentChapter);
+    trackBibleChapterView(book.name, this.currentChapter, verses.length);
 
     if (this.chapterTitle) {
       this.chapterTitle.textContent = book.name.toUpperCase();
@@ -525,6 +537,7 @@ class BibleReader {
     this.selectedVerseNum = verseNum;
     const book = this.getActiveBook();
     const verses = localStore.getChapterVerses(book.osis, this.currentChapter);
+    trackBibleChapterView(book.name, this.currentChapter, verses.length);
     const verseObj = verses.find((v) => v.verse === verseNum);
 
     // Update active row class
@@ -552,12 +565,17 @@ class BibleReader {
     }
   }
 
-  public inspectWord(wordText: string, isRightClick = false): void {
+  public inspectWord(
+    wordText: string,
+    isRightClick = false,
+    wordOptions?: { isSupplied?: boolean; isDivine?: boolean; surface?: string }
+  ): void {
     const clean = wordText.trim().toLowerCase().replace(/[^a-z']/g, '');
     if (!clean) return;
 
     this.selectedWord = clean;
     this.updateUrl();
+    trackConcordanceInspect(clean);
 
     // Update active word styling across chapter
     const allWords = this.versesContainer.querySelectorAll('.kjv-word');
@@ -571,57 +589,72 @@ class BibleReader {
     });
 
     // Render word inspector in background so data is ready when opened
-    this.renderWordInspector(clean);
+    this.renderWordInspector(clean, wordOptions);
 
     // Subtle badge on Word Inspector tab indicating inspected word without hijacking
     if (this.tabBtnWord && !isRightClick && this.activeTab !== 'word') {
       this.tabBtnWord.innerHTML = `Word Inspector <span class="tab-word-indicator" style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#ffd700; margin-left:4px; vertical-align:middle;" title="Word: ${clean}"></span>`;
     }
 
-    // Geographic Entity Sync if user is currently viewing the Map tab
-    if (this.activeTab === 'map') {
-      const geoEntity = BIBLICAL_GEOGRAPHIC_ENTITIES[clean];
-      if (geoEntity) {
-        if (this.companionMapCanvas) {
-          this.companionMapCanvas.highlightGeographicPlace(geoEntity);
-        }
-        this.renderArtifactDrawer(null, geoEntity);
-      } else {
-        const site = ARCHAEOLOGICAL_SITES.find(
-          (s) =>
-            s.id.includes(clean) ||
-            s.artifactName.toLowerCase().includes(clean) ||
-            s.name.toLowerCase().includes(clean) ||
-            (s.figureId && s.figureId.toLowerCase().includes(clean))
-        );
-        if (site) {
-          if (this.companionMapCanvas) {
-            this.companionMapCanvas.focusOnSite(site.id);
-          }
-          this.renderArtifactDrawer(site);
-        } else {
-          const empire = WORLD_EMPIRES_GEO.find(
-            (e) =>
-              e.id.toLowerCase() === clean ||
-              e.name.toLowerCase().includes(clean) ||
-              e.capital?.name.toLowerCase().includes(clean)
-          );
-          if (empire) {
-            if (this.companionMapCanvas && empire.capital?.coords) {
-              this.companionMapCanvas.map.flyTo([empire.capital.coords.lat, empire.capital.coords.lng], 6, { duration: 0.8 });
-            }
-            this.renderArtifactDrawer(null, undefined, empire);
-          }
-        }
+    // Resolve if clicked word is a Biblical Entity (Person, Place, Ruler, Realm, Route, or Artifact)
+    const entity = resolveBiblicalEntity(clean, {
+      bookOsis: this.currentBookOsis,
+      chapter: this.currentChapter,
+      verse: this.selectedVerseNum
+    });
+
+    if (entity && !isRightClick) {
+      // User clicked a Person / Place / Ruler / Empire / Entity!
+      // In accordance with user preference: ALWAYS open the Map first!
+      if (this.activeTab !== 'map') {
+        this.switchTab('map');
       }
 
-      // If user left-clicked on Map, respect active tab lock! Do NOT hijack away to Word Inspector!
-      if (!isRightClick) {
-        return;
+      if (this.companionMapCanvas) {
+        // Fly/zoom to entity location
+        this.companionMapCanvas.map.flyTo([entity.coords.lat, entity.coords.lng], entity.zoom || 7, { duration: 0.8 });
+
+        // Highlight with luminous pulsing pin
+        this.companionMapCanvas.highlightGeographicPlace({
+          name: entity.name,
+          ancientRegion: entity.ancientRegion,
+          coords: entity.coords,
+          zoom: entity.zoom,
+          note: entity.context,
+          scriptureRef: entity.scriptureRef
+        });
+
+        // Ensure empire layer is active if entity is linked to a realm
+        if (entity.relatedEmpireId) {
+          this.companionMapCanvas.layers.empires = true;
+        }
+
+        // Spotlight related narrative route and stop if present
+        if (entity.relatedRouteId) {
+          this.companionMapCanvas.activeRouteOverrideIds = [entity.relatedRouteId];
+          if (typeof entity.stopIndex === 'number') {
+            this.companionMapCanvas.activeRouteStopSelection = {
+              routeId: entity.relatedRouteId,
+              stopIndex: entity.stopIndex
+            };
+          }
+          this.companionMapCanvas.layers.routes = true;
+          this.companionMapCanvas.renderActiveEra();
+        }
+
+        this.syncLayerChips();
       }
+
+      this.renderArtifactDrawer(null, undefined, undefined, undefined, undefined, undefined, entity);
+      return;
     }
 
-    // If user left-clicked while viewing Chronology, respect active tab lock!
+    // If user clicked while viewing Map, respect active tab lock! Do NOT hijack away to Word Inspector!
+    if (this.activeTab === 'map' && !isRightClick) {
+      return;
+    }
+
+    // If user clicked while viewing Chronology, respect active tab lock!
     if (this.activeTab === 'chrono' && !isRightClick) {
       return;
     }
@@ -636,12 +669,13 @@ class BibleReader {
     empire?: WorldEmpireRegion,
     route?: BiblicalRoute,
     stop?: BiblicalRouteStop,
-    stopIndex?: number
+    stopIndex?: number,
+    resolvedEntity?: ResolvedBiblicalEntity
   ): void {
     const drawerEl = document.getElementById('bible-companion-artifact-drawer');
     if (!drawerEl) return;
 
-    if (!site && !geoEntity && !empire && !route) {
+    if (!site && !geoEntity && !empire && !route && !resolvedEntity) {
       drawerEl.hidden = true;
       drawerEl.innerHTML = '';
       return;
@@ -744,6 +778,53 @@ class BibleReader {
         </div>
         <div class="artifact-drawer-desc">
           <strong>Journey Overview (${route.dateRange}):</strong> ${route.summary}
+        </div>
+      `;
+    } else if (resolvedEntity) {
+      drawerEl.hidden = false;
+      const kindLabel = resolvedEntity.entityKind === 'ruler'
+        ? `BIBLICAL RULER · ${resolvedEntity.ancientRegion.toUpperCase()}`
+        : resolvedEntity.entityKind === 'person'
+        ? `BIBLICAL FIGURE · ${resolvedEntity.ancientRegion.toUpperCase()}`
+        : `BIBLICAL GEOGRAPHY · ${resolvedEntity.ancientRegion.toUpperCase()}`;
+
+      drawerEl.innerHTML = `
+        <div class="artifact-drawer-header">
+          <div>
+            <span class="eyebrow" style="font-size: 0.68rem; color: #ffd700;">${kindLabel}</span>
+            <h4 class="artifact-drawer-title">${resolvedEntity.name}</h4>
+          </div>
+          <button type="button" class="artifact-drawer-close" aria-label="Dismiss entity card">&times;</button>
+        </div>
+        <div class="artifact-drawer-meta">
+          ${resolvedEntity.approximateYear ? `<span><strong>🗓️ Approximate Year:</strong> ${resolvedEntity.approximateYear}</span>` : ''}
+          ${resolvedEntity.dateRange ? `<span><strong>⏳ Era:</strong> ${resolvedEntity.dateRange}</span>` : ''}
+          ${resolvedEntity.scriptureRef ? `<span><strong>📖 Scripture Anchor:</strong> ${resolvedEntity.scriptureRef}</span>` : ''}
+        </div>
+        ${
+          resolvedEntity.regionOfPower
+            ? `<div class="artifact-drawer-meta" style="color: #fbbf24; margin-top: 0.25rem;">
+                 <span><strong>👑 Region of Power:</strong> ${resolvedEntity.regionOfPower}</span>
+               </div>`
+            : ''
+        }
+        ${
+          resolvedEntity.alliesAndContemporaries
+            ? `<div class="artifact-drawer-meta" style="color: #38bdf8; margin-top: 0.25rem;">
+                 <span><strong>🤝 Allies & Contemporaries:</strong> ${resolvedEntity.alliesAndContemporaries}</span>
+               </div>`
+            : ''
+        }
+        ${
+          resolvedEntity.relatedRouteId
+            ? `<div class="artifact-drawer-meta" style="color: #4ade80; margin-top: 0.25rem;">
+                 <span><strong>🚶 Connected Narrative Path:</strong> Jacob & Joseph in Egypt (Goshen Stop)</span>
+               </div>`
+            : ''
+        }
+        <div class="artifact-drawer-connection" style="margin-top: 0.5rem;">
+          <strong>✦ Biblical Setting & Narrative:</strong><br/>
+          ${resolvedEntity.context}
         </div>
       `;
     }
@@ -1088,13 +1169,16 @@ class BibleReader {
     });
   }
 
-  private renderWordInspector(word: string): void {
+  private renderWordInspector(
+    word: string,
+    options?: { isSupplied?: boolean; isDivine?: boolean; surface?: string }
+  ): void {
     if (!this.tabContentWord) return;
 
     if (!isStrongsReverseReady()) {
       void prefetchStrongsReverse().then(() => {
         if (this.selectedWord === word && isStrongsReverseReady()) {
-          this.renderWordInspector(word);
+          this.renderWordInspector(word, options);
         }
       });
     }
@@ -1104,10 +1188,11 @@ class BibleReader {
       word,
       this.currentBookOsis,
       this.currentChapter,
-      this.selectedVerseNum || 1
+      this.selectedVerseNum || 1,
+      options
     );
 
-    const titleCase = lexicon.word.toUpperCase();
+    const titleCase = lexicon.word === 'Lord' ? 'Lord' : lexicon.word.toUpperCase();
 
     // 1. Definition / Name Meaning Section
     const defLabel = lexicon.nameMeaning ? 'NAME MEANING' : 'WORD DEFINITION';
@@ -1217,6 +1302,7 @@ class BibleReader {
 
   private switchTab(tab: 'xrefs' | 'word' | 'chrono' | 'map'): void {
     this.activeTab = tab;
+    trackCompanionTabSwitch(tab);
     this.updateUrl();
 
     if (this.tabBtnXrefs) {
@@ -1405,6 +1491,7 @@ class BibleReader {
           if (!layer || !this.companionMapCanvas) return;
           const nextState = !this.companionMapCanvas.layers[layer];
           this.companionMapCanvas.layers[layer] = nextState;
+          trackCompanionLayerToggle(layer, nextState);
           chip.classList.toggle('active', nextState);
           chip.setAttribute('aria-pressed', String(nextState));
           this.companionMapCanvas.renderActiveEra();
@@ -1507,7 +1594,10 @@ class BibleReader {
         const row = wordEl.closest('.bible-verse-row') as HTMLElement | null;
         if (row) this.selectVerse(Number(row.dataset.verse), false);
         const wordText = wordEl.getAttribute('data-word') || wordEl.textContent || '';
-        this.inspectWord(wordText, false);
+        const isSupplied = !!wordEl.closest('.kjv-italics');
+        const isDivine = !!wordEl.closest('.kjv-divine-name');
+        const surface = (wordEl.textContent || '').trim();
+        this.inspectWord(wordText, false, { isSupplied, isDivine, surface });
         return;
       }
 
@@ -1527,7 +1617,10 @@ class BibleReader {
         const row = wordEl.closest('.bible-verse-row') as HTMLElement | null;
         if (row) this.selectVerse(Number(row.dataset.verse), false);
         const wordText = wordEl.getAttribute('data-word') || wordEl.textContent || '';
-        this.inspectWord(wordText, true);
+        const isSupplied = !!wordEl.closest('.kjv-italics');
+        const isDivine = !!wordEl.closest('.kjv-divine-name');
+        const surface = (wordEl.textContent || '').trim();
+        this.inspectWord(wordText, true, { isSupplied, isDivine, surface });
       }
     });
 

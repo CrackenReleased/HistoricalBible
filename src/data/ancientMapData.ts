@@ -5294,8 +5294,8 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     endYear: -1800,
     rulingEmpireId: 'egypt',
     additionalRegionIds: ['old_babylon', 'kush_nubia', 'china_zhou', 'scythia_steppes', 'kingdom_sheba'],
-    focusCenter: { lat: 33.0, lng: 42.0 },
-    focusZoom: 5,
+    focusCenter: { lat: 31.5, lng: 35.0 },
+    focusZoom: 6,
     headline: 'The Call of Abraham · Jacob & Joseph in Egypt',
     historicalSummary: 'God calls Abram out of Ur of the Chaldees, through Haran, into Canaan, and preserves Israel through Jacob and Joseph in Egypt. The Middle Kingdom of Egypt and Old Babylon rule the wider ancient world.',
     activeRouteIds: [
@@ -5304,7 +5304,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
       'jacob-joseph-egypt',
       'job-land-of-uz'
     ],
-    activeSiteIds: ['nabonidus-cylinder'],
+    activeSiteIds: [],
     activeFigureIds: ['abraham', 'isaac', 'jacob', 'joseph', 'job']
   },
   {
@@ -6651,6 +6651,190 @@ export const BIBLICAL_GEOGRAPHIC_ENTITIES: Record<string, BiblicalGeographicEnti
     zoom: 9,
     note: 'Roman administrative capital of Judea built by Herod the Great; discovery site of the Pilate Stone, home of Cornelius (Acts 10), and site of Paul\'s two-year imprisonment (Acts 23–26).',
     scriptureRef: 'ACTS 10:1, 23:23, 25:13'
+  },
+  pharaoh: {
+    name: 'Pharaoh (King of Egypt)',
+    ancientRegion: 'Kingdom of Egypt / Nile Delta',
+    coords: { lat: 30.200, lng: 31.500 },
+    zoom: 7,
+    note: 'Royal sovereign of Egypt; granted the fertile land of Goshen (the best of the land of Rameses) to Jacob and his sons during the seven-year famine.',
+    scriptureRef: 'GENESIS 47:1–11, EXODUS 1:11'
+  },
+  goshen: {
+    name: 'Land of Goshen (Rameses)',
+    ancientRegion: 'Eastern Nile Delta / Lower Egypt',
+    coords: { lat: 30.787, lng: 31.821 },
+    zoom: 8,
+    note: 'Fertile pastureland in the eastern Nile Delta granted by Pharaoh to Jacob and his sons to dwell with their flocks during the seven years of famine.',
+    scriptureRef: 'GENESIS 45:10, 46:28, 47:4, EXODUS 8:22'
+  },
+  rameses: {
+    name: 'Land of Rameses (Pi-Ramesses)',
+    ancientRegion: 'Eastern Nile Delta / Lower Egypt',
+    coords: { lat: 30.787, lng: 31.821 },
+    zoom: 8,
+    note: 'The best of the land granted to Israel in Genesis 47:11; later fortified as a treasure city and departure point of the Exodus.',
+    scriptureRef: 'GENESIS 47:11, EXODUS 1:11, 12:37'
+  },
+  raamses: {
+    name: 'Land of Rameses (Pi-Ramesses)',
+    ancientRegion: 'Eastern Nile Delta / Lower Egypt',
+    coords: { lat: 30.787, lng: 31.821 },
+    zoom: 8,
+    note: 'Treasure city built by the children of Israel in Egypt; alternate spelling of Rameses.',
+    scriptureRef: 'EXODUS 1:11'
+  },
+  memphis: {
+    name: 'Memphis (Noph / Men-nefer)',
+    ancientRegion: 'Lower Egypt (Apex of Nile Delta)',
+    coords: { lat: 29.850, lng: 31.250 },
+    zoom: 8,
+    note: 'Ancient royal capital of Lower Egypt; administrative and court center during the Middle and New Kingdoms.',
+    scriptureRef: 'HOSEA 9:6, ISAIAH 19:13, JEREMIAH 2:16, 44:1'
+  },
+  noph: {
+    name: 'Memphis (Noph / Men-nefer)',
+    ancientRegion: 'Lower Egypt (Apex of Nile Delta)',
+    coords: { lat: 29.850, lng: 31.250 },
+    zoom: 8,
+    note: 'Biblical Hebrew name for Memphis, ancient capital of Lower Egypt.',
+    scriptureRef: 'ISAIAH 19:13, JEREMIAH 2:16'
+  },
+  zoan: {
+    name: 'Zoan (Tanis)',
+    ancientRegion: 'Northeastern Nile Delta',
+    coords: { lat: 30.970, lng: 31.880 },
+    zoom: 8,
+    note: 'Ancient Delta royal residence built seven years after Hebron; site of Pharaoh\'s court and the wonders in the field of Zoan.',
+    scriptureRef: 'NUMBERS 13:22, PSALMS 78:12, 78:43, ISAIAH 19:11'
+  },
+  tanis: {
+    name: 'Zoan (Tanis)',
+    ancientRegion: 'Northeastern Nile Delta',
+    coords: { lat: 30.970, lng: 31.880 },
+    zoom: 8,
+    note: 'Classical name for biblical Zoan in the eastern Nile Delta.',
+    scriptureRef: 'PSALMS 78:12'
+  },
+  on: {
+    name: 'On (Heliopolis / City of the Sun)',
+    ancientRegion: 'Lower Egypt',
+    coords: { lat: 30.130, lng: 31.310 },
+    zoom: 8,
+    note: 'Center of learning and priesthood where Joseph married Asenath, daughter of Potipherah priest of On.',
+    scriptureRef: 'GENESIS 41:45, 46:20'
+  },
+  heliopolis: {
+    name: 'On (Heliopolis / City of the Sun)',
+    ancientRegion: 'Lower Egypt',
+    coords: { lat: 30.130, lng: 31.310 },
+    zoom: 8,
+    note: 'Greek name for biblical On, city of Potipherah priest of On.',
+    scriptureRef: 'GENESIS 41:45'
+  },
+  canaan: {
+    name: 'Land of Canaan (Promised Land)',
+    ancientRegion: 'Levant / Promised Land',
+    coords: { lat: 31.900, lng: 35.200 },
+    zoom: 7,
+    note: 'The covenant land promised to Abraham, Isaac, and Jacob; bounded by the Mediterranean, Jordan Valley, and Negev.',
+    scriptureRef: 'GENESIS 12:5, 17:8, 47:1'
+  },
+  haran: {
+    name: 'Haran (Padan-Aram)',
+    ancientRegion: 'Upper Mesopotamia / Balikh Valley',
+    coords: { lat: 36.865, lng: 39.031 },
+    zoom: 8,
+    note: 'Trade metropolis where Terah died, where Abraham departed for Canaan, and where Jacob served Laban for 20 years.',
+    scriptureRef: 'GENESIS 11:31, 12:4, 28:10'
+  },
+  charran: {
+    name: 'Haran (Charran / Padan-Aram)',
+    ancientRegion: 'Upper Mesopotamia',
+    coords: { lat: 36.865, lng: 39.031 },
+    zoom: 8,
+    note: 'New Testament Greek spelling of Haran in Stephen\'s defense before the Sanhedrin.',
+    scriptureRef: 'ACTS 7:2, 7:4'
+  },
+  ur: {
+    name: 'Ur of the Chaldees',
+    ancientRegion: 'Southern Mesopotamia (Euphrates)',
+    coords: { lat: 30.962, lng: 46.103 },
+    zoom: 8,
+    note: 'Great Sumerian city and ancestral home of Terah and Abram whence God called Abraham to Canaan.',
+    scriptureRef: 'GENESIS 11:28, 15:7, NEHEMIAH 9:7'
+  },
+  dothan: {
+    name: 'Dothan',
+    ancientRegion: 'Northern Samaria / Jezreel Pass',
+    coords: { lat: 32.414, lng: 35.239 },
+    zoom: 9,
+    note: 'Pasturelands where Joseph found his brothers and was cast into the pit before being sold into Egypt (Genesis 37:17).',
+    scriptureRef: 'GENESIS 37:17, 2 KINGS 6:13'
+  },
+  peniel: {
+    name: 'Peniel (Penuel / Face of God)',
+    ancientRegion: 'River Jabbok / Transjordan',
+    coords: { lat: 32.192, lng: 35.702 },
+    zoom: 9,
+    note: 'Ford on the Jabbok where Jacob wrestled with the Angel and his name was changed to Israel (Genesis 32:30).',
+    scriptureRef: 'GENESIS 32:30, JUDGES 8:8'
+  },
+  penuel: {
+    name: 'Peniel (Penuel / Face of God)',
+    ancientRegion: 'River Jabbok / Transjordan',
+    coords: { lat: 32.192, lng: 35.702 },
+    zoom: 9,
+    note: 'Alternate biblical spelling of Peniel.',
+    scriptureRef: 'GENESIS 32:31'
+  },
+  sinai: {
+    name: 'Mount Sinai (Horeb / Mountain of God)',
+    ancientRegion: 'Sinai Peninsula',
+    coords: { lat: 28.539, lng: 33.975 },
+    zoom: 8,
+    note: 'Sacred mount where God revealed His glory, gave the Ten Commandments to Moses, and spoke to Elijah in a still small voice.',
+    scriptureRef: 'EXODUS 19:1–2, 20:1, 1 KINGS 19:8'
+  },
+  horeb: {
+    name: 'Mount Sinai (Horeb / Mountain of God)',
+    ancientRegion: 'Sinai Peninsula',
+    coords: { lat: 28.539, lng: 33.975 },
+    zoom: 8,
+    note: 'The mountain of God where Moses saw the burning bush and Elijah found refuge.',
+    scriptureRef: 'EXODUS 3:1, 1 KINGS 19:8'
+  },
+  midian: {
+    name: 'Land of Midian',
+    ancientRegion: 'Arabian Gulf of Aqaba Coast',
+    coords: { lat: 28.200, lng: 35.500 },
+    zoom: 7,
+    note: 'Desert realm of Jethro the priest of Midian; sanctuary for Moses during his 40-year shepherd exile.',
+    scriptureRef: 'EXODUS 2:15, 3:1, NUMBERS 31:1'
+  },
+  machpelah: {
+    name: 'Cave of Machpelah (Mamre / Hebron)',
+    ancientRegion: 'Judean Highlands',
+    coords: { lat: 31.524, lng: 35.111 },
+    zoom: 10,
+    note: 'The patriarchal sepulchre purchased by Abraham from Ephron the Hittite; final resting place of Abraham, Sarah, Isaac, Rebekah, Leah, and Jacob.',
+    scriptureRef: 'GENESIS 23:9, 25:9, 49:30, 50:13'
+  },
+  gerar: {
+    name: 'Gerar (Besor Basin)',
+    ancientRegion: 'Western Negev / Philistine Border',
+    coords: { lat: 31.360, lng: 34.600 },
+    zoom: 9,
+    note: 'Pasturelands of King Abimelech where Abraham and Isaac dwelt and made covenants of peace.',
+    scriptureRef: 'GENESIS 20:1, 26:1'
+  },
+  succoth: {
+    name: 'Succoth (Booths)',
+    ancientRegion: 'Jordan Valley / East of Jordan',
+    coords: { lat: 32.185, lng: 35.610 },
+    zoom: 9,
+    note: 'Settlement where Jacob built booths for his cattle (Genesis 33:17); also the first encampment of the children of Israel in Egypt (Exodus 12:37).',
+    scriptureRef: 'GENESIS 33:17, EXODUS 12:37'
   }
 };
 
@@ -6744,6 +6928,25 @@ export function getJourneyStopForPassage(bookOsis: string, chapter: number, vers
         const v = verse || 1;
         if (v <= 20) return { route: jacobRoute, stop: jacobRoute.stops[7], stopIndex: 7 }; // Bethlehem / Rachel's Grave
         return { route: jacobRoute, stop: jacobRoute.stops[8], stopIndex: 8 }; // Hebron / Mamre
+      }
+    }
+
+    // Jacob & Joseph in Egypt (jacob-joseph-egypt, 5 stops)
+    const egyptRoute = BIBLICAL_ROUTES.find(r => r.id === 'jacob-joseph-egypt');
+    if (egyptRoute && egyptRoute.stops.length >= 5) {
+      if (chapter === 37) {
+        return { route: egyptRoute, stop: egyptRoute.stops[2], stopIndex: 2 }; // Dothan
+      }
+      if (chapter >= 39 && chapter <= 45) {
+        return { route: egyptRoute, stop: egyptRoute.stops[4], stopIndex: 4 }; // Goshen / Delta
+      }
+      if (chapter === 46) {
+        const v = verse || 1;
+        if (v <= 7) return { route: egyptRoute, stop: egyptRoute.stops[3], stopIndex: 3 }; // Beersheba
+        return { route: egyptRoute, stop: egyptRoute.stops[4], stopIndex: 4 }; // Goshen / Delta
+      }
+      if (chapter >= 47 && chapter <= 50) {
+        return { route: egyptRoute, stop: egyptRoute.stops[4], stopIndex: 4 }; // Land of Goshen / Avaris
       }
     }
   }
@@ -7127,4 +7330,303 @@ export function getJourneyStopForPassage(bookOsis: string, chapter: number, vers
   }
 
   return undefined;
+}
+
+export interface ResolvedBiblicalEntity {
+  name: string;
+  ancientRegion: string;
+  coords: GeoCoordinate;
+  zoom?: number;
+  dateRange: string;
+  approximateYear?: string;
+  scriptureRef: string;
+  context: string;
+  regionOfPower?: string;
+  alliesAndContemporaries?: string;
+  relatedEmpireId?: string;
+  relatedRouteId?: string;
+  stopIndex?: number;
+  entityKind: 'ruler' | 'place' | 'person' | 'empire' | 'artifact' | 'route';
+  geoEntity?: BiblicalGeographicEntity;
+  empire?: WorldEmpireRegion;
+  route?: BiblicalRoute;
+  site?: ArchaeologicalSite;
+}
+
+export function resolveBiblicalEntity(
+  rawWord: string,
+  passageContext?: { bookOsis?: string; chapter?: number; verse?: number }
+): ResolvedBiblicalEntity | null {
+  const clean = (rawWord || '').toLowerCase().trim().replace(/[^a-z']/g, '');
+  if (!clean) return null;
+
+  const book = (passageContext?.bookOsis || '').toLowerCase().replace(/[\s_]+/g, '');
+  const chapter = passageContext?.chapter || 1;
+  const verse = passageContext?.verse || 1;
+
+  // 1. Context-Aware Biblical Rulers & Sovereign Titles
+  if (clean === 'pharaoh') {
+    if (book === 'exod' || book === 'exo' || book === 'exodus') {
+      return {
+        name: 'Pharaoh (King of Egypt)',
+        ancientRegion: 'Kingdom of Egypt / Nile Delta',
+        coords: { lat: 30.200, lng: 31.500 },
+        zoom: 7,
+        dateRange: 'c. 1446 BC (New Kingdom · 18th Dynasty)',
+        approximateYear: 'c. 1446 BC',
+        scriptureRef: `EXODUS ${chapter}:${verse}`,
+        context: 'Pharaoh hardened his heart against God’s command to "let my people go", bringing 10 devastating plagues upon Egypt until Israel was delivered through the Red Sea.',
+        regionOfPower: 'Kingdom of Egypt (Lower & Upper Egypt, Nile Delta, Goshen, Nubian border)',
+        alliesAndContemporaries: 'New Kingdom Egypt, Canaanite vassals, Mitanni, Kassite Babylon',
+        relatedEmpireId: 'egypt',
+        relatedRouteId: 'exodus-route',
+        stopIndex: 0,
+        entityKind: 'ruler'
+      };
+    }
+    // Default to Patriarchal / Genesis context (c. 1876–1800 BC Middle Kingdom)
+    return {
+      name: 'Pharaoh (King of Egypt)',
+      ancientRegion: 'Kingdom of Egypt / Nile Delta',
+      coords: { lat: 30.200, lng: 31.500 },
+      zoom: 7,
+      dateRange: 'c. 1876 – 1800 BC (Middle Kingdom · Dynasty 12)',
+      approximateYear: 'c. 1876 – 1800 BC',
+      scriptureRef: book.startsWith('gen') ? `GENESIS ${chapter}:${verse}` : 'GENESIS 47:1–11',
+      context: 'Pharaoh received Joseph’s father Jacob and his brethren into Egypt, inquiring of their occupation and granting them the fertile land of Goshen (the best of the land of Rameses) to dwell in with their flocks during the seven years of famine.',
+      regionOfPower: 'Kingdom of Egypt (Lower & Upper Egypt, Nile Delta, Goshen, Sinai trade border)',
+      alliesAndContemporaries: 'Middle Kingdom Egypt, Cush/Nubia, Old Babylonian Empire, Canaanite city-states',
+      relatedEmpireId: 'egypt',
+      relatedRouteId: 'jacob-joseph-egypt',
+      stopIndex: 4,
+      entityKind: 'ruler'
+    };
+  }
+
+  if (['caesar', 'augustus', 'tiberius', 'nero', 'claudius'].includes(clean)) {
+    return {
+      name: `${clean.charAt(0).toUpperCase() + clean.slice(1)} (Roman Caesar)`,
+      ancientRegion: 'Roman Empire / Italy',
+      coords: { lat: 41.902, lng: 12.496 },
+      zoom: 6,
+      dateRange: 'c. 27 BC – AD 68 (Julio-Claudian Dynasty)',
+      approximateYear: '1st Century AD',
+      scriptureRef: passageContext?.bookOsis ? `${passageContext.bookOsis.toUpperCase()} ${chapter}:${verse}` : 'LUKE 2:1, ACTS 25:11',
+      context: 'Imperial Caesar ruling the Roman Empire from the Palatine Hill in Rome; established Roman peace (Pax Romana), roads, and provincial governors across the biblical world.',
+      regionOfPower: 'Roman Empire (spanning Britannia, Gaul, Hispania, Italy, Greece, Asia Minor, Syria, Judea, Egypt)',
+      alliesAndContemporaries: 'Herodian client kings, Roman provincial proconsuls/procurators, Parthian Empire (eastern rival)',
+      relatedEmpireId: 'rome',
+      entityKind: 'ruler'
+    };
+  }
+
+  if (['nebuchadnezzar', 'belshazzar'].includes(clean)) {
+    return {
+      name: `${clean.charAt(0).toUpperCase() + clean.slice(1)} (King of Babylon)`,
+      ancientRegion: 'Neo-Babylonian Empire / Mesopotamia',
+      coords: { lat: 32.542, lng: 44.421 },
+      zoom: 7,
+      dateRange: '605 – 539 BC (Neo-Babylonian Empire)',
+      approximateYear: 'c. 605 – 539 BC',
+      scriptureRef: passageContext?.bookOsis ? `${passageContext.bookOsis.toUpperCase()} ${chapter}:${verse}` : '2 KINGS 25:1, DANIEL 5:1',
+      context: 'Babylonian monarch ruling from the Euphrates palaces; destroyed Solomon’s Temple in 586 BC and exiled Judah into 70 years of captivity.',
+      regionOfPower: 'Neo-Babylonian Empire (Mesopotamia, Syria, Levant, Palestine to the border of Egypt)',
+      alliesAndContemporaries: 'Median Empire, Late Dynastic Egypt, Lydian Empire',
+      relatedEmpireId: 'babylon',
+      entityKind: 'ruler'
+    };
+  }
+
+  if (['cyrus', 'darius', 'ahasuerus', 'artaxerxes', 'xerxes'].includes(clean)) {
+    return {
+      name: `${clean.charAt(0).toUpperCase() + clean.slice(1)} (King of Persia)`,
+      ancientRegion: 'Achaemenid Persian Empire / Elam',
+      coords: { lat: 32.190, lng: 48.257 },
+      zoom: 7,
+      dateRange: '539 – 331 BC (Achaemenid Dynasty)',
+      approximateYear: 'c. 539 – 450 BC',
+      scriptureRef: passageContext?.bookOsis ? `${passageContext.bookOsis.toUpperCase()} ${chapter}:${verse}` : 'EZRA 1:1, ESTHER 1:1',
+      context: 'Persian Great King ruling 127 provinces "from India even unto Ethiopia" from royal citadels at Susa and Persepolis.',
+      regionOfPower: 'Achaemenid Medo-Persian Empire (from the Indus River to the Aegean Sea and the Nile)',
+      alliesAndContemporaries: 'Jewish Restoration Community under Zerubbabel/Ezra/Nehemiah, Classical Greek City-States',
+      relatedEmpireId: 'persia',
+      entityKind: 'ruler'
+    };
+  }
+
+  if (['sennacherib', 'shalmaneser', 'sargon', 'tiglathpileser', 'pul'].includes(clean)) {
+    return {
+      name: `${clean.charAt(0).toUpperCase() + clean.slice(1)} (King of Assyria)`,
+      ancientRegion: 'Neo-Assyrian Empire / Tigris',
+      coords: { lat: 36.360, lng: 43.150 },
+      zoom: 7,
+      dateRange: 'c. 850 – 681 BC (Neo-Assyrian Empire)',
+      approximateYear: 'c. 745 – 701 BC',
+      scriptureRef: passageContext?.bookOsis ? `${passageContext.bookOsis.toUpperCase()} ${chapter}:${verse}` : '2 KINGS 18:13, 19:36',
+      context: 'Assyrian emperor ruling from Nineveh, Calah, and Dur-Sharrukin; conquered the Northern Kingdom of Israel and besieged Jerusalem under Hezekiah.',
+      regionOfPower: 'Neo-Assyrian Empire (Upper Tigris, Euphrates, Syria, Phoenicia, Northern Israel, reaching Egypt)',
+      alliesAndContemporaries: 'Kingdom of Judah (tributary/resisting), Kingdom of Israel (conquered 722 BC), Kingdom of Urartu, Elam',
+      relatedEmpireId: 'assyria',
+      entityKind: 'ruler'
+    };
+  }
+
+  if (clean === 'pilate') {
+    return {
+      name: 'Pontius Pilate (Prefect of Judea)',
+      ancientRegion: 'Roman Judea / Caesarea Maritima',
+      coords: { lat: 32.500, lng: 34.890 },
+      zoom: 9,
+      dateRange: 'AD 26 – 36',
+      approximateYear: 'c. AD 30 – 33',
+      scriptureRef: 'LUKE 3:1, 23:1–25, JOHN 18:29',
+      context: 'Roman equestrian governor presiding over Judea from the seaside palace at Caesarea; presided at the trial and crucifixion of Jesus Christ; independently attested by the Pilate Stone.',
+      regionOfPower: 'Roman Province of Judea and Samaria under Emperor Tiberius',
+      alliesAndContemporaries: 'Emperor Tiberius (Rome), Herod Antipas (Tetrarch of Galilee), High Priest Caiaphas',
+      relatedEmpireId: 'rome',
+      entityKind: 'ruler'
+    };
+  }
+
+  // 2. Biblical Figures & Patriarchs
+  if (clean === 'joseph') {
+    return {
+      name: 'Joseph (Vizier of Egypt / Son of Jacob)',
+      ancientRegion: 'Kingdom of Egypt / Eastern Nile Delta',
+      coords: { lat: 30.787, lng: 31.821 },
+      zoom: 8,
+      dateRange: 'c. 1898 – 1805 BC',
+      approximateYear: 'c. 1876 BC',
+      scriptureRef: 'GENESIS 41:40, 47:11',
+      context: 'Sold into Egypt as a youth, interpreted Pharaoh’s dreams, and was exalted to second ruler over all Egypt, preserving Israel through the famine in Goshen.',
+      regionOfPower: 'Royal Administration of Egypt under Pharaoh (Memphis, Avaris, Goshen)',
+      alliesAndContemporaries: 'Pharaoh of Egypt, Patriarch Jacob, Brothers of Joseph',
+      relatedEmpireId: 'egypt',
+      relatedRouteId: 'jacob-joseph-egypt',
+      stopIndex: 4,
+      entityKind: 'person'
+    };
+  }
+
+  if (clean === 'jacob' || clean === 'israel') {
+    const isEgypt = (book.startsWith('gen') && chapter >= 46);
+    return {
+      name: 'Jacob (Israel / Patriarch)',
+      ancientRegion: isEgypt ? 'Land of Goshen / Nile Delta' : 'Canaan / Beersheba & Hebron',
+      coords: isEgypt ? { lat: 30.787, lng: 31.821 } : { lat: 31.532, lng: 35.099 },
+      zoom: 8,
+      dateRange: 'c. 2006 – 1859 BC',
+      approximateYear: isEgypt ? 'c. 1876 BC' : 'c. 1929 BC',
+      scriptureRef: isEgypt ? 'GENESIS 46:1–5, 47:7–10' : 'GENESIS 28:10, 32:28',
+      context: isEgypt
+        ? 'Jacob departed Beersheba for Egypt at God’s promise, was reunited with Joseph, blessed Pharaoh, and settled his household in fertile Goshen.'
+        : 'Son of Isaac and grandson of Abraham; wrestled with the Angel of the LORD at Peniel where his name became Israel.',
+      regionOfPower: 'Patriarchal Household of the 12 Tribes',
+      alliesAndContemporaries: 'Joseph Vizier of Egypt, Pharaoh of Egypt, Isaac, Laban in Padan-Aram',
+      relatedEmpireId: isEgypt ? 'egypt' : undefined,
+      relatedRouteId: 'jacob-joseph-egypt',
+      stopIndex: isEgypt ? 4 : 3,
+      entityKind: 'person'
+    };
+  }
+
+  // 3. Biblical Geographic Entities
+  const geo = BIBLICAL_GEOGRAPHIC_ENTITIES[clean];
+  if (geo) {
+    let relatedEmp: string | undefined;
+    let relatedRt: string | undefined;
+    let stopIdx: number | undefined;
+
+    if (['goshen', 'rameses', 'raamses', 'memphis', 'noph', 'zoan', 'tanis', 'on', 'heliopolis', 'egypt', 'pharaoh'].includes(clean)) {
+      relatedEmp = 'egypt';
+      relatedRt = 'jacob-joseph-egypt';
+      stopIdx = 4;
+    } else if (['rome', 'corinth', 'athens', 'philippi', 'thessalonica', 'ephesus', 'colossae', 'galatia', 'caesarea'].includes(clean)) {
+      relatedEmp = 'rome';
+    } else if (['babylon', 'ur'].includes(clean)) {
+      relatedEmp = 'old_babylon';
+    } else if (['susa', 'shushan'].includes(clean)) {
+      relatedEmp = 'persia';
+    } else if (['nineveh'].includes(clean)) {
+      relatedEmp = 'assyria';
+    }
+
+    return {
+      name: geo.name,
+      ancientRegion: geo.ancientRegion,
+      coords: geo.coords,
+      zoom: geo.zoom || 8,
+      dateRange: 'Biblical Antiquity',
+      scriptureRef: geo.scriptureRef || (passageContext?.bookOsis ? `${passageContext.bookOsis.toUpperCase()} ${chapter}:${verse}` : 'Scripture Anchor'),
+      context: geo.note,
+      regionOfPower: relatedEmp ? `Region of ${geo.ancientRegion}` : undefined,
+      alliesAndContemporaries: relatedEmp ? `Contemporary ancient power: ${relatedEmp}` : undefined,
+      relatedEmpireId: relatedEmp,
+      relatedRouteId: relatedRt,
+      stopIndex: stopIdx,
+      geoEntity: geo,
+      entityKind: 'place'
+    };
+  }
+
+  // 4. World Empires & Realms
+  const emp = WORLD_EMPIRES_GEO.find(
+    e =>
+      e.id.toLowerCase() === clean ||
+      e.name.toLowerCase().includes(clean) ||
+      (clean === 'egyptian' && e.id === 'egypt') ||
+      (clean === 'egyptians' && e.id === 'egypt') ||
+      (clean === 'assyrian' && e.id === 'assyria') ||
+      (clean === 'assyrians' && e.id === 'assyria') ||
+      (clean === 'babylonian' && e.id === 'babylon') ||
+      (clean === 'babylonians' && e.id === 'babylon') ||
+      (clean === 'roman' && e.id === 'rome') ||
+      (clean === 'romans' && e.id === 'rome') ||
+      (clean === 'persian' && e.id === 'persia') ||
+      (clean === 'persians' && e.id === 'persia') ||
+      (clean === 'philistines' && e.id === 'philistia') ||
+      (clean === 'philistine' && e.id === 'philistia')
+  );
+  if (emp) {
+    return {
+      name: emp.name,
+      ancientRegion: emp.name,
+      coords: emp.capital.coords,
+      zoom: 6,
+      dateRange: emp.dateRange,
+      scriptureRef: emp.biblicalIntersection || 'Biblical Synchrony',
+      context: emp.biblicalIntersection || `Capital at ${emp.capital.name}.`,
+      regionOfPower: `Kingdom Extent: ${emp.approximateArea} (Est. Population: ${emp.populationEstimate})`,
+      alliesAndContemporaries: emp.biblicalIntersection,
+      relatedEmpireId: emp.id,
+      empire: emp,
+      entityKind: 'empire'
+    };
+  }
+
+  // 5. Archaeological Sites
+  const site = ARCHAEOLOGICAL_SITES.find(
+    s =>
+      s.id.includes(clean) ||
+      s.artifactName.toLowerCase().includes(clean) ||
+      s.name.toLowerCase().includes(clean)
+  );
+  if (site) {
+    return {
+      name: site.artifactName,
+      ancientRegion: site.ancientRegion,
+      coords: site.coords,
+      zoom: 9,
+      dateRange: site.artifactDate,
+      scriptureRef: site.scriptureRef,
+      context: site.description,
+      regionOfPower: `Discovered at ${site.name} (${site.ancientRegion})`,
+      alliesAndContemporaries: site.significance,
+      relatedEmpireId: site.empireId,
+      site,
+      entityKind: 'artifact'
+    };
+  }
+
+  return null;
 }

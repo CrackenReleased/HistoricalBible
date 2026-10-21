@@ -1,6 +1,7 @@
 // src/data/scriptureLexicon.ts
 import { localStore } from '../store/localFirstStore';
 import { CURATED_LEXICON, LexiconEntry } from './scriptureLexiconData';
+import { getReviewedWordOccurrence } from './reviewedWordOccurrences';
 
 export type { LexiconEntry, LexiconUntranslated } from './scriptureLexiconData';
 
@@ -78,11 +79,71 @@ if (typeof window !== 'undefined') {
 export function lookupScriptureLexicon(
   rawWord: string,
   bookOsis?: string,
-  _chapter?: number,
-  _verse?: number
+  chapter?: number,
+  verse?: number,
+  options?: { isSupplied?: boolean; isDivine?: boolean; surface?: string }
 ): LexiconEntry {
   const clean = rawWord.trim().toLowerCase().replace(/[^a-z']/g, '');
   const titleCase = clean.charAt(0).toUpperCase() + clean.slice(1);
+  const isOt = bookOsis ? isOtBook(bookOsis) : true;
+
+  // 0a. Translator-Supplied Words (Italics)
+  if (options?.isSupplied) {
+    return {
+      word: rawWord,
+      definition: 'Translator-supplied English word added for clarity and grammatical flow.',
+      untranslated: {
+        language: isOt ? 'Ancient Hebrew' : 'Koine Greek',
+        lemma: '—',
+        transliteration: '',
+        pronunciation: '',
+        strongsId: '',
+        derivation: 'Translator-supplied English word added by the KJV translators for grammatical clarity; not present as a distinct original-language token in the underlying Hebrew/Greek manuscript.',
+        etymology: 'Translator-supplied English.'
+      },
+      modernMeaning: 'In the King James Version, words in brackets or italics are translator-supplied words added to complete the sense in English where the original language text implied the meaning without an explicit word.'
+    };
+  }
+
+  // 0b. Reviewed Occurrence Check (e.g. Gen 1:2 Spirit)
+  if (bookOsis && chapter && verse) {
+    const osisRef = `${bookOsis}.${chapter}.${verse}`;
+    const reviewedOcc = getReviewedWordOccurrence(osisRef, clean, options?.surface || rawWord, !!options?.isSupplied);
+    if (reviewedOcc) {
+      return {
+        word: reviewedOcc.surface || rawWord,
+        definition: `Reviewed canonical occurrence in ${osisRef}: ${reviewedOcc.reviewNote}`,
+        untranslated: {
+          language: isOt ? 'Ancient Hebrew' : 'Koine Greek',
+          lemma: reviewedOcc.lemma,
+          transliteration: reviewedOcc.transliteration,
+          pronunciation: '',
+          strongsId: reviewedOcc.strongsId,
+          derivation: reviewedOcc.reviewNote,
+          etymology: undefined
+        },
+        modernMeaning: reviewedOcc.reviewNote
+      };
+    }
+  }
+
+  // 0c. Unreviewed Divine Names or Title-Case "Lord"
+  if (options?.surface === 'Lord' && !options?.isDivine) {
+    return {
+      word: 'Lord',
+      definition: 'Title of honor or mastery (Lord); in this passage, not aligned to a specific Hebrew or Greek token.',
+      untranslated: {
+        language: isOt ? 'Ancient Hebrew' : 'Koine Greek',
+        lemma: '—',
+        transliteration: 'Lord',
+        pronunciation: '',
+        strongsId: '',
+        derivation: 'Title of lordship or address (Lord); not aligned to a specific Hebrew or Greek token in this unreviewed occurrence.',
+        etymology: 'Old English hlāfweard (keeper of the bread).'
+      },
+      modernMeaning: 'Master, ruler, or sovereign title (Lord).'
+    };
+  }
 
   // 1. Direct Curated Lexicon Match (Instant, zero latency)
   if (CURATED_LEXICON[clean]) {
@@ -147,7 +208,6 @@ export function lookupScriptureLexicon(
   }
 
   // 5. Intelligent Fallback (Synthesizes biblical & linguistic origin)
-  const isOt = bookOsis ? isOtBook(bookOsis) : true;
   return {
     word: clean,
     definition: `Scriptural word appearing in the King James Version text.`,

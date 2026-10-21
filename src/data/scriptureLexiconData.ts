@@ -24,11 +24,11 @@ export const CURATED_LEXICON: Record<string, LexiconEntry> = {
     "definition": "1. Lacking; not having; destitute of (e.g. Genesis 1:2 \"without form\"). 2. Outside; on the exterior; out of doors (e.g. Genesis 9:22 \"told his two brethren without\").",
     "untranslated": {
       "language": "Ancient Hebrew",
-      "lemma": "תֹּהוּ / אַיִן",
-      "transliteration": "tôhûw / ʼayin",
-      "pronunciation": "to'-hoo / ah'-yin",
-      "strongsId": "H8414 / H369",
-      "derivation": "From an unused root meaning to lie waste; desolation, formlessness, an empty place; also Hebrew אַיִן (ʼayin) meaning non-existence, absence, lack.",
+      "lemma": "—",
+      "transliteration": "",
+      "pronunciation": "",
+      "strongsId": "",
+      "derivation": "English preposition translating the Hebrew concept of formlessness; not aligned to a specific Hebrew or Greek token.",
       "etymology": "Old English wið-ūtan (from wið \"against/with\" + ūtan \"outside\") — literally \"on the outside; lacking.\""
     },
     "modernMeaning": "Lacking or absent; not possessing something; or physically located on the outside. In Genesis 1:2, \"without form\" describes raw, unorganized matter in a chaotic state before God spoke shape and order into the universe."

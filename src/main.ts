@@ -18,6 +18,7 @@ import { StudySessionBar, getStudyMapTarget } from './studySession';
 import { findStudySubject } from './data/studySubjects';
 import { getIdentityRefs } from './data/nameIdentities';
 import { createEvidenceReceiptElement, getEvidenceReceipt } from './data/evidenceReceipts';
+import { trackHistoricalFigureSelect, trackHistoricalEmpireSelect, trackHistoricalEraSelect, trackSearchQuery } from './analytics';
 
 class HistoricalInteractApp {
   private selectedEraId: string = 'all';
@@ -165,6 +166,7 @@ class HistoricalInteractApp {
     allBtn.textContent = 'All periods';
     allBtn.addEventListener('click', () => {
       this.selectedEraId = 'all';
+      trackHistoricalEraSelect('all');
       this.selectedEmpireId = null;
       this.renderEraFilterBar();
       this.renderDualStreamSpine();
@@ -283,6 +285,7 @@ class HistoricalInteractApp {
     const target = sync.figures.find(f => f.id === figureId);
     if (!target) return;
     this.activeFigure = target;
+    trackHistoricalFigureSelect(figureId, target.name);
     if (this.selectedEraId !== 'all' && target.eraId !== this.selectedEraId) this.selectedEraId = 'all';
     if (this.selectedEmpireId && !target.secularContemporaries.some(c => c.empireId === this.selectedEmpireId)) this.selectedEmpireId = null;
     if (this.trail.at(-1) !== figureId) this.trail.push(figureId);
@@ -465,6 +468,7 @@ class HistoricalInteractApp {
   private selectEmpire(id: string, reveal = true): void {
     const sync = localStore.getSynchrony(), empire = sync.empires.find(empire => empire.id === id);
     if (!empire) return;
+    trackHistoricalEmpireSelect(id);
     this.selectPassageStudy(empire.name, [], empire.biblicalIntersection, { subject: `empire:${id}` }, reveal);
     this.selectedEmpireId = id;
     this.renderEraFilterBar(); this.renderDualStreamSpine();
