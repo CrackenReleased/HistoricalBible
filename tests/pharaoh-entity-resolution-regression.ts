@@ -20,10 +20,10 @@ test('Patriarchs era does NOT falsely highlight 550 BC Nabonidus Cylinder in 200
   );
 });
 
-test('Genesis 47 journey resolution maps to Jacob & Joseph in Egypt stop at Goshen', () => {
+test('Genesis 47 journey resolution maps to Joseph in Egypt stop at Goshen', () => {
   const match = getJourneyStopForPassage('Gen', 47, 1);
   assert.ok(match, 'Genesis 47:1 must map to narrative journey stop');
-  assert.equal(match.route.id, 'jacob-joseph-egypt');
+  assert.equal(match.route.id, 'joseph-egypt');
   assert.equal(match.stopIndex, 4);
   assert.match(match.stop.name, /Goshen/i);
   assert.ok(match.stop.coords.lat >= 30.5 && match.stop.coords.lat <= 31.0);
@@ -40,11 +40,35 @@ test('Clicking Pharaoh in Genesis 47 resolves to Egypt, approx year c. 1876-1800
   assert.match(resolved.regionOfPower, /Egypt/i);
   assert.ok(resolved.alliesAndContemporaries, 'Must include allies and contemporaries');
   assert.equal(resolved.relatedEmpireId, 'egypt');
-  assert.equal(resolved.relatedRouteId, 'jacob-joseph-egypt');
+  assert.equal(resolved.relatedRouteId, 'joseph-egypt');
   assert.equal(resolved.stopIndex, 4);
   // Coords must focus on Egypt / Nile Delta
   assert.ok(resolved.coords.lat >= 29.5 && resolved.coords.lat <= 31.0);
   assert.ok(resolved.coords.lng >= 31.0 && resolved.coords.lng <= 32.5);
+});
+
+test('Jacob path begins at Isaac\'s tents (Beer-sheba / Lahai-roi) where brothers were born and birthright sold', () => {
+  const match25 = getJourneyStopForPassage('Gen', 25, 26);
+  assert.ok(match25, 'Genesis 25:26 must map to Jacob\'s journey');
+  assert.equal(match25.route.id, 'jacob-padan-aram');
+  assert.equal(match25.stopIndex, 0);
+  assert.match(match25.stop.name, /Tents of Isaac|Lahai-roi|Beer-sheba/i);
+  assert.match(match25.stop.note, /born at Isaac's tents/i);
+  assert.match(match25.stop.note, /birthright/i);
+  assert.match(match25.stop.note, /blessing/i);
+
+  const match27 = getJourneyStopForPassage('Gen', 27, 30);
+  assert.ok(match27, 'Genesis 27:30 must map to Jacob\'s journey stop 0');
+  assert.equal(match27.stopIndex, 0);
+});
+
+test('Clicking Joseph resolves to Joseph: From Canaan\'s Pit to Ruler of Egypt', () => {
+  const resolved = resolveBiblicalEntity('joseph', { bookOsis: 'Gen', chapter: 47, verse: 1 });
+  assert.ok(resolved, 'Joseph must resolve');
+  assert.match(resolved.name, /Joseph/i);
+  assert.match(resolved.name, /Grand Vizier/i);
+  assert.equal(resolved.relatedRouteId, 'joseph-egypt');
+  assert.equal(resolved.stopIndex, 4);
 });
 
 test('Geographic places in Egypt & Patriarchal narrative are resolved as entities', () => {

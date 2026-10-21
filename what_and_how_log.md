@@ -1,3 +1,25 @@
+## 2026-10-21 17:50:00 — Antigravity / HistoricalBible — Atlas Palette Realignment, Jacob's Birthplace Path, and Joseph's Journey Separation (v00.01.60)
+
+- Solved the three core visual & biblical narrative issues reported:
+  - 1. **Popup Color Scheme Realignment with Map (Atlas) Aesthetic**:
+    - Replaced legacy neon colors (cyan `#38bdf8`, `#7dd3fc`, bright orange `#fb923c`, etc.) in `.map-external-callout`, companion map tooltips, and SVG leader line components with the rich obsidian (`rgba(18, 16, 12, 0.97)`), antique gold (`#d4af37`, `#c99738`), warm parchment (`#fdfbf7`, `#f4efe6`), and muted stone earth tones of the Atlas map page.
+    - Updated waypoint tooltips, kingdom tooltips, route line hover badges, and discovery callouts in `src/engine/ancientMap.ts` and `src/interact.css` so they feel completely native to the antique cartography without high-contrast neon dissonance.
+  - 2. **Jacob's Path Corrected from Birthplace**:
+    - Jacob's journey (`jacob-padan-aram` in `src/data/ancientMapData.ts`) previously started at Haran in Mesopotamia, omitting his birth and early life in Canaan.
+    - Added Stop 0: *Tents of Isaac: Beer-sheba & Well Lahai-roi (Birth of Jacob & Esau, Birthright & Blessing)* (`GENESIS {25:19}–{28:10}`, `{ lat: 31.245, lng: 34.798 }`).
+    - Chronicled key foundational events: birth of the twin brothers, Esau selling his birthright for red pottage, Isaac's patriarchal blessing in goat skins, Esau's death vow, and Jacob being sent to Padan-aram.
+    - Path now accurately covers all 11 biblical stops from Isaac's tents to Bethel, Haran, Gilead, Mahanaim, Peniel, Succoth & Shechem, Bethlehem, Hebron, Goshen, and Machpelah burial.
+  - 3. **Joseph's Journey Created & Separated from Jacob on Pharaoh**:
+    - Addressed user finding where clicking Pharaoh displayed Jacob's path instead of Joseph's path.
+    - Joseph is who was exalted in Egypt under Pharaoh (Genesis 41–50) to preserve life during the famine, not Jacob his father.
+    - Created dedicated narrative path `joseph-egypt`: *"Joseph: From Canaan's Pit to Ruler of Egypt"* (`c. 1898 – 1805 BC`, 6 stops: Hebron coat of many colours -> Dothan pit -> Memphis/Prison -> Royal Court of Pharaoh -> Goshen sustenance of Israel -> Death & oath of his bones).
+    - Updated entity resolver `resolveBiblicalEntity('pharaoh')` to connect directly to `joseph-egypt` (Stop 4: Goshen & Royal Court) and dynamic route name resolution in `src/bibleReader.ts`.
+- Verification & Test Coverage:
+  - Node regressions: `tests/pharaoh-entity-resolution-regression.ts` (7/7 passing), `tests/data-integrity-selfcheck.ts` (8/8 passing).
+  - Playwright test suites: `tests/bible-entity-click-navigation.spec.ts` (1/1 passing), `tests/companion-map-callout-regression.spec.ts` (2/2 passing), `tests/bible-side-by-side-map.spec.ts` (7/7 passing). Total: 10/10 Playwright tests passing.
+  - Canonical KJV corpus: 31,102 verses verified 100% intact.
+  - Production build: `npm run build` succeeds in 898ms.
+
 ## 2026-10-21 17:15:00 — Antigravity / HistoricalBible — Organic Historical Cartography & External Leader-Line Callout Engine (v00.01.59)
 
 - Solved the two core visual cartography & UX feedback points from the user:

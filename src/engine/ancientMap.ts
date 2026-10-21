@@ -458,7 +458,7 @@ export class AncientMapCanvas {
     const ring = svg.querySelector('.map-connector-ring') as SVGCircleElement;
     const arrow = svg.querySelector('.map-connector-arrow') as SVGPolygonElement;
 
-    const col = accentColor || '#ffd700';
+    const col = (accentColor && !['#fb923c', '#60a5fa', '#38bdf8'].includes(accentColor.toLowerCase())) ? accentColor : '#d4af37';
     if (curve) curve.setAttribute('stroke', col);
     if (dot) dot.setAttribute('fill', col);
     if (ring) ring.setAttribute('stroke', col);
@@ -1362,7 +1362,7 @@ export class AncientMapCanvas {
           <span class="tooltip-badge">BIBLICAL GEOGRAPHY · ${entity.ancientRegion.toUpperCase()}</span>
           <div style="color: #d4af37; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin: 3px 0 2px;">${entity.name}</div>
           <p style="font-size: 0.78rem; color: #f1f5f9; margin: 4px 0 6px; line-height: 1.45;">${entity.note}</p>
-          ${entity.scriptureRef ? `<div style="font-size: 0.72rem; color: #38bdf8; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px;"><strong>Scripture:</strong> ${entity.scriptureRef}</div>` : ''}
+          ${entity.scriptureRef ? `<div style="font-size: 0.72rem; color: #d4af37; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px;"><strong>Scripture:</strong> ${entity.scriptureRef}</div>` : ''}
         </div>
       `;
 
@@ -1444,6 +1444,8 @@ export class AncientMapCanvas {
 
       const routeBannerCoords: Record<string, GeoCoordinate> = {
         'abraham-call': { lat: 35.65, lng: 39.95 },
+        'jacob-padan-aram': { lat: 32.80, lng: 36.20 },
+        'joseph-egypt': { lat: 30.85, lng: 32.20 },
         'jacob-joseph-egypt': { lat: 30.85, lng: 32.20 },
         'exodus-route': { lat: 29.35, lng: 33.35 },
         'joshua-conquest': { lat: 32.45, lng: 35.55 },
@@ -1506,10 +1508,10 @@ export class AncientMapCanvas {
         const targetStop = stop || route.stops[0];
         const popupHtml = `
           <div class="map-tooltip-inner" style="min-width: 240px; max-width: 300px;">
-            <span class="tooltip-badge" style="color: ${route.color}; border-color: ${route.color};">${route.name.toUpperCase()} · STOP ${idx + 1} OF ${route.stops.length}</span>
-            <div style="color: #ffd700; font-weight: 700; font-size: 1.1rem; margin: 3px 0 4px;">${idx + 1}. ${targetStop.name}</div>
-            <div style="font-size: 0.76rem; color: #fef08a; margin-bottom: 3px;"><strong>🗓️ When:</strong> ${targetStop.dateLabel}</div>
-            <div style="font-size: 0.76rem; color: #7dd3fc; margin-bottom: 5px;"><strong>📖 Scripture:</strong> ${targetStop.scriptureRef}</div>
+            <span class="tooltip-badge" style="background: rgba(26, 22, 17, 0.95); color: #d4af37; border: 1px solid rgba(212, 175, 55, 0.45); font-family: var(--font-mono, monospace); font-size: 0.65rem; font-weight: 600; padding: 2px 7px; border-radius: 4px;">${route.name.toUpperCase()} · STOP ${idx + 1} OF ${route.stops.length}</span>
+            <div style="color: #fdfbf7; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin: 4px 0 4px;">${idx + 1}. ${targetStop.name}</div>
+            <div style="font-size: 0.76rem; color: #f5efe6; margin-bottom: 3px;"><strong>🗓️ When:</strong> ${targetStop.dateLabel}</div>
+            <div style="font-size: 0.76rem; color: #d4af37; margin-bottom: 5px;"><strong>📖 Scripture:</strong> ${targetStop.scriptureRef}</div>
             <p style="font-size: 0.76rem; color: #e2e8f0; margin: 0; line-height: 1.4;">${targetStop.note}</p>
           </div>
         `;
@@ -1601,23 +1603,23 @@ export class AncientMapCanvas {
         const routeTooltipHtml = `
           <div class="map-tooltip-inner route-tooltip" style="min-width: 240px; max-width: 315px;">
             <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
-              <span class="tooltip-badge" style="background: rgba(15, 23, 42, 0.9); color: ${route.color}; border: 1px solid ${route.color}; font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">
+              <span class="tooltip-badge" style="background: rgba(26, 22, 17, 0.95); color: #d4af37; border: 1px solid rgba(212, 175, 55, 0.45); font-family: var(--font-mono, monospace); font-size: 0.65rem; font-weight: 600; padding: 2px 7px; border-radius: 4px;">
                 ${evidenceBadgeText}
               </span>
-              <span style="font-size: 0.72rem; color: #fef08a; font-family: var(--font-mono, monospace); font-weight: 600;">${route.dateRange}</span>
+              <span style="font-size: 0.72rem; color: #f5efe6; font-family: var(--font-mono, monospace); font-weight: 600;">${route.dateRange}</span>
             </div>
-            <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin-bottom: 4px;">
+            <div class="tooltip-title" style="color: #fdfbf7; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin-bottom: 4px;">
               ${route.name}
             </div>
-            <div style="font-size: 0.77rem; color: #cbd5e1; margin-bottom: 5px; display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; line-height: 1.35;">
-              <span style="color: #94a3b8;">🧭 Traveler:</span><strong style="color: #f8fafc;">${route.travelerName}</strong>
-              <span style="color: #94a3b8;">📖 Scripture:</span><strong style="color: #7dd3fc;">${route.scriptureRef}</strong>
-              ${route.attestationSource ? `<span style="color: #94a3b8;">🏛️ Sources:</span><span style="color: #fdba74; font-size: 0.72rem;">${route.attestationSource}</span>` : ''}
+            <div style="font-size: 0.76rem; color: #d8cfc0; margin-bottom: 5px; display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; line-height: 1.35; background: rgba(22, 19, 15, 0.85); padding: 5px 8px; border-radius: 4px; border: 1px solid rgba(212, 175, 55, 0.2); border-left: 3px solid #d4af37;">
+              <span style="color: #a89f91;">🧭 Traveler:</span><strong style="color: #f5efe6;">${route.travelerName}</strong>
+              <span style="color: #a89f91;">📖 Scripture:</span><strong style="color: #d4af37;">${route.scriptureRef}</strong>
+              ${route.attestationSource ? `<span style="color: #a89f91;">🏛️ Sources:</span><span style="color: #c99738; font-size: 0.72rem;">${route.attestationSource}</span>` : ''}
             </div>
-            <div style="color: #e2e8f0; font-size: 0.75rem; line-height: 1.4; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px;">
+            <div style="color: #e2e8f0; font-size: 0.76rem; line-height: 1.4; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 4px;">
               ${route.summary}
             </div>
-            <div class="tooltip-cta" style="margin-top: 5px; color: #38bdf8; font-size: 0.72rem; border-top: 1px dashed rgba(255, 255, 255, 0.12); padding-top: 4px;">
+            <div class="tooltip-cta" style="margin-top: 5px; color: #c99738; font-size: 0.72rem; border-top: 1px dashed rgba(212, 175, 55, 0.2); padding-top: 4px;">
               Hover or click any numbered stop (1–${route.stops.length}) for dates &amp; events &rarr;
             </div>
           </div>
@@ -1686,23 +1688,23 @@ export class AncientMapCanvas {
           const stopTooltipHtml = `
             <div class="map-tooltip-inner route-stop-tooltip" style="min-width: 235px; max-width: 310px;">
               <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap;">
-                <span class="tooltip-badge" style="background: rgba(15, 23, 42, 0.9); color: ${route.color}; border: 1px solid ${route.color}; font-size: 0.66rem; font-weight: 700; padding: 2px 6px; border-radius: 3px;">
+                <span class="tooltip-badge" style="background: rgba(26, 22, 17, 0.95); color: #d4af37; border: 1px solid rgba(212, 175, 55, 0.45); font-family: var(--font-mono, monospace); font-size: 0.65rem; font-weight: 600; padding: 2px 7px; border-radius: 4px;">
                   ${route.name.toUpperCase()} · STOP ${stopNum} OF ${route.stops.length}
                 </span>
               </div>
-              <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.12rem; margin-bottom: 4px;">
+              <div class="tooltip-title" style="color: #fdfbf7; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin-bottom: 5px; line-height: 1.25;">
                 Stop ${stopNum}: ${stop.name}
               </div>
-              <div style="font-size: 0.77rem; color: #cbd5e1; margin-bottom: 6px; display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; line-height: 1.35; background: rgba(15, 23, 42, 0.72); padding: 5px 8px; border-radius: 4px; border-left: 2px solid ${route.color};">
-                <span style="color: #94a3b8;">🗓️ When:</span><strong style="color: #fef08a;">${stop.dateLabel}</strong>
-                <span style="color: #94a3b8;">🧭 Traveler:</span><span style="color: #f8fafc;">${route.travelerName}</span>
-                <span style="color: #94a3b8;">📖 Scripture:</span><strong style="color: #7dd3fc;">${stop.scriptureRef}</strong>
-                ${isExternalStop && (stop.attestationSource || route.attestationSource) ? `<span style="color: #94a3b8;">🏛️ Attestation:</span><span style="color: #fdba74; font-size: 0.72rem;">${stop.attestationSource || route.attestationSource}</span>` : ''}
+              <div style="font-size: 0.76rem; color: #d8cfc0; margin-bottom: 6px; display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; line-height: 1.4; background: rgba(22, 19, 15, 0.85); padding: 6px 9px; border-radius: 4px; border: 1px solid rgba(212, 175, 55, 0.22); border-left: 3px solid #d4af37;">
+                <span style="color: #a89f91;">🗓️ When:</span><strong style="color: #f5efe6;">${stop.dateLabel}</strong>
+                <span style="color: #a89f91;">🧭 Traveler:</span><span style="color: #f5efe6;">${route.travelerName}</span>
+                <span style="color: #a89f91;">📖 Scripture:</span><strong style="color: #d4af37;">${stop.scriptureRef}</strong>
+                ${isExternalStop && (stop.attestationSource || route.attestationSource) ? `<span style="color: #a89f91;">🏛️ Attestation:</span><span style="color: #c99738; font-size: 0.72rem;">${stop.attestationSource || route.attestationSource}</span>` : ''}
               </div>
-              <div style="color: #e2e8f0; font-size: 0.76rem; line-height: 1.42;">
+              <div style="color: #e2e8f0; font-size: 0.77rem; line-height: 1.45;">
                 ${stop.note}
               </div>
-              <div class="tooltip-cta" style="margin-top: 6px; color: #38bdf8; font-size: 0.72rem; border-top: 1px dashed rgba(255, 255, 255, 0.12); padding-top: 4px;">
+              <div class="tooltip-cta" style="margin-top: 6px; color: #c99738; font-size: 0.72rem; border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 5px; font-weight: 500;">
                 Click waypoint to inspect full journey itinerary &amp; Scripture &rarr;
               </div>
             </div>
@@ -1768,7 +1770,7 @@ export class AncientMapCanvas {
         const biblicalSubtitle = sea.biblicalLabel || 'Biblical Water Body';
         this.bindManagedTooltip(
           seaPoly,
-          `<div class="map-tooltip-inner"><strong style="color: #7dd3fc; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.05rem;">${sea.name}</strong><br/><span style="font-size: 0.72rem; color: #94a3b8; font-style: italic;">${biblicalSubtitle}</span></div>`,
+          `<div class="map-tooltip-inner"><strong style="color: #e2d9c8; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.05rem;">${sea.name}</strong><br/><span style="font-size: 0.72rem; color: #a89f91; font-style: italic;">${biblicalSubtitle}</span></div>`,
           { direction: 'top' }
         );
         this.waterLayerGroup.addLayer(seaPoly);
@@ -1796,10 +1798,10 @@ export class AncientMapCanvas {
           riverLine.setStyle(defaultStyle);
         });
 
-        const scriptureSub = river.scriptureAnchor ? `<br/><span style="font-size: 0.70rem; color: #38bdf8; font-family: var(--font-mono, monospace);">${river.scriptureAnchor}</span>` : '';
+        const scriptureSub = river.scriptureAnchor ? `<br/><span style="font-size: 0.70rem; color: #d4af37; font-family: var(--font-mono, monospace);">${river.scriptureAnchor}</span>` : '';
         this.bindManagedTooltip(
           riverLine,
-          `<div class="map-tooltip-inner"><strong style="color: #7dd3fc; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.02rem;">${river.name}</strong>${scriptureSub}<br/><span style="font-size: 0.72rem; color: #94a3b8;">Biblical River Course</span></div>`,
+          `<div class="map-tooltip-inner"><strong style="color: #e2d9c8; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.02rem;">${river.name}</strong>${scriptureSub}<br/><span style="font-size: 0.72rem; color: #a89f91;">Biblical River Course</span></div>`,
           { direction: 'top' }
         );
         this.waterLayerGroup.addLayer(riverLine);
@@ -1864,7 +1866,7 @@ export class AncientMapCanvas {
         covenant: { text: 'COVENANT NATION · ROYAL DAVIDIC LINE', bg: 'rgba(234, 179, 8, 0.2)', color: '#fde047', border: 'rgba(234, 179, 8, 0.5)' },
         israel: { text: 'NORTHERN KINGDOM · 10 TRIBES', bg: 'rgba(34, 197, 94, 0.2)', color: '#86efac', border: 'rgba(34, 197, 94, 0.5)' },
         hostile: { text: 'HOSTILE EMPIRE / ENEMY', bg: 'rgba(239, 68, 68, 0.2)', color: '#fca5a5', border: 'rgba(239, 68, 68, 0.5)' },
-        allied: { text: 'ALLIED / FRIENDLY REGION', bg: 'rgba(56, 189, 248, 0.2)', color: '#7dd3fc', border: 'rgba(56, 189, 248, 0.5)' },
+        allied: { text: 'ALLIED / FRIENDLY REGION', bg: 'rgba(212, 175, 55, 0.18)', color: '#d4af37', border: 'rgba(212, 175, 55, 0.45)' },
         global_power: { text: 'CONTEMPORARY WORLD CIVILIZATION', bg: 'rgba(192, 132, 252, 0.2)', color: '#e9d5ff', border: 'rgba(192, 132, 252, 0.5)' }
       };
 
@@ -1949,11 +1951,11 @@ export class AncientMapCanvas {
               <strong style="color: #ffd700;">Chapter Relevance:</strong> ${relevance}
             </div>
             ${empire.biblicalIntersection && empire.biblicalIntersection !== relevance ? `
-              <div style="margin-top: 4px; padding-top: 4px; border-top: 1px dashed rgba(255, 255, 255, 0.1); font-size: 0.72rem; color: #93c5fd; line-height: 1.3;">
+              <div style="margin-top: 4px; padding-top: 4px; border-top: 1px dashed rgba(212, 175, 55, 0.2); font-size: 0.72rem; color: #d4af37; line-height: 1.3;">
                 <strong>✦ Scripture Connection:</strong> ${empire.biblicalIntersection}
               </div>
             ` : ''}
-            <div class="tooltip-cta" style="margin-top: 5px; color: #38bdf8; font-size: 0.72rem; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 4px;">
+            <div class="tooltip-cta" style="margin-top: 5px; color: #c99738; font-size: 0.72rem; border-top: 1px dashed rgba(212, 175, 55, 0.2); padding-top: 4px; font-weight: 500;">
               Click kingdom to view historical dossier in drawer &rarr;
             </div>
           </div>
@@ -2006,7 +2008,7 @@ export class AncientMapCanvas {
               <div style="color: #cbd5e1; font-size: 0.78rem;">Imperial Seat of ${empire.name}</div>
               <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 3px;">👥 Population: ${empire.populationEstimate}</div>
               <div style="font-size: 0.75rem; color: #94a3b8;">📐 Kingdom Extent: ${empire.approximateArea}</div>
-              <div style="font-size: 0.73rem; color: #38bdf8; margin-top: 4px; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px;"><strong>✦ Biblical Connection:</strong> ${empire.biblicalIntersection}</div>
+              <div style="font-size: 0.73rem; color: #d4af37; margin-top: 4px; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px;"><strong>✦ Biblical Connection:</strong> ${empire.biblicalIntersection}</div>
             </div>
           `;
 
@@ -2165,7 +2167,7 @@ export class AncientMapCanvas {
               <strong>✦ Scripture Connection:</strong><br/>
               ${display.connection}
             </div>
-            <span class="tooltip-cta" style="margin-top: 6px; display: block; color: #38bdf8; font-size: 0.74rem;">Click to view discovery card in companion panel &rarr;</span>
+            <span class="tooltip-cta" style="margin-top: 6px; display: block; color: #c99738; font-size: 0.74rem; font-weight: 500;">Click to view discovery card in companion panel &rarr;</span>
           </div>
         `;
         this.bindManagedTooltip(marker, siteTooltipHtml, { direction: 'top', offset: [0, -14] });

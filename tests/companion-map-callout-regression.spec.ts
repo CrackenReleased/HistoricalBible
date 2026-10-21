@@ -8,12 +8,17 @@ test.describe('Bible Companion Map - Organic Polygons & External Leader Line Cal
     const mapContainer = page.locator('#bible-companion-map-container');
     await expect(mapContainer).toBeVisible({ timeout: 10000 });
 
+    await mapContainer.scrollIntoViewIfNeeded();
+
     const mapBox = await mapContainer.boundingBox();
     expect(mapBox).not.toBeNull();
 
-    // Move mouse over the map into Egypt territory (center of companion map)
+    // Ensure kingdom polygons are rendered and hover the visible interactive polygon
+    const activeEmpirePaths = mapContainer.locator('.leaflet-pane.leaflet-empire-pane path.leaflet-interactive:not([d="M0 0"])');
+    await expect(activeEmpirePaths.first()).toBeVisible({ timeout: 7000 });
+
     const hoverX = mapBox!.x + mapBox!.width * 0.45;
-    const hoverY = mapBox!.y + mapBox!.height * 0.55;
+    const hoverY = mapBox!.y + 45;
     await page.mouse.move(hoverX, hoverY);
 
     // Wait for the hover callout to appear

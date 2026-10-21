@@ -41,6 +41,8 @@ test.describe('Bible Entity Click Navigation & Map First Experience', () => {
     await expect(drawer).toContainText(/1876|1800|Middle Kingdom/i);
     await expect(drawer).toContainText(/Region of Power/i);
     await expect(drawer).toContainText(/Allies/i);
+    await expect(drawer).toContainText(/Joseph/i);
+    await expect(drawer).toContainText(/From Canaan's Pit to Ruler of Egypt/i);
 
     // 7. Luminous focus pin is rendered on the map
     const focusPin = page.locator('.leaflet-geo-focus-marker');

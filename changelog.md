@@ -2,7 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
-## [00.01.59] - 2026-10-21
+## [00.01.60] - 2026-10-21
+
+- **Atlas Theme Color Realignment for External Popups**:
+  - Completely replaced neon colors (`#38bdf8`, `#7dd3fc`, bright orange `#fb923c`) across floating external callouts, map tooltips, and leader line connectors with the warm antique gold (`#d4af37`, `#c99738`), deep obsidian (`rgba(18, 16, 12, 0.97)`), warm parchment (`#fdfbf7`, `#f4efe6`), and muted stone earth tones of the Atlas.
+  - Waypoint tooltips, kingdom polygons, leader line arc, and discovery site callouts now seamlessly match the antique map aesthetic.
+- **Jacob's Path Corrected from Birthplace**:
+  - Fixed Jacob's journey (`jacob-padan-aram`) which previously began incorrectly in Haran.
+  - Jacob's first stop is now Stop 0 at the Tents of Isaac (Beer-sheba & Well Lahai-roi, Genesis 25:19–28:10), capturing the birth of Jacob & Esau, Esau selling his birthright for red pottage, Isaac's blessing stolen in goat skins, Esau's vow, and Jacob being sent to Padan-aram.
+- **Joseph's Journey Created & Pharaoh Attribution Fixed**:
+  - Joseph is who was in lead in Egypt under Pharaoh, not Jacob his father.
+  - Created dedicated biblical journey `joseph-egypt`: *"Joseph: From Canaan's Pit to Ruler of Egypt"* (`c. 1898 – 1805 BC`, 6 stops: Hebron coat of many colours -> Dothan pit -> Memphis/Prison -> Royal Court of Pharaoh -> Goshen sustenance of Israel -> Death & oath of his bones).
+  - Clicking Pharaoh in Genesis 47 (or clicking Joseph) now spotlights Joseph's path in Egypt rather than Jacob's path.
+  - Resolved dynamic narrative path naming in the companion artifact drawer.
+- **Verification & Regression Coverage**:
+  - All 10 Playwright tests passing (`tests/bible-entity-click-navigation.spec.ts`, `tests/companion-map-callout-regression.spec.ts`, `tests/bible-side-by-side-map.spec.ts`).
+  - All 15 unit/regression tests passing (`tests/pharaoh-entity-resolution-regression.ts`, `tests/data-integrity-selfcheck.ts`).
+  - Canonical KJV corpus: 31,102 verses verified 100% intact.
+  - Clean production build (`npm run build` in 898ms).
 
 - **Organic Historical Cartography & External Leader-Line Callouts**:
   - Replaced crude, jagged low-vertex kingdom/empire boundary cuts with authentic high-resolution geodetic coordinates tracing actual historical relief (Nile Delta ribbon and valley down to Aswan, fertile Yemeni highlands of Sheba, Nubian cataract S-curves, and Tigris-Euphrates alluvial floodplains).

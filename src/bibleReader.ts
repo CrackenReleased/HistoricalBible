@@ -35,6 +35,7 @@ import {
 import {
   ARCHAEOLOGICAL_SITES,
   BIBLICAL_GEOGRAPHIC_ENTITIES,
+  BIBLICAL_ROUTES,
   WORLD_EMPIRES_GEO,
   getJourneyStopForPassage,
   resolveBiblicalEntity,
@@ -816,15 +817,19 @@ class BibleReader {
             : ''
         }
         ${
-          resolvedEntity.relatedRouteId
+          resolvedEntity.connectedNarrativePath || resolvedEntity.relatedRouteId
             ? `<div class="artifact-drawer-meta" style="color: #4ade80; margin-top: 0.25rem;">
-                 <span><strong>🚶 Connected Narrative Path:</strong> Jacob & Joseph in Egypt (Goshen Stop)</span>
+                 <span><strong>🚶 Connected Narrative Path:</strong> ${
+                   resolvedEntity.connectedNarrativePath
+                     ? resolvedEntity.connectedNarrativePath
+                     : (BIBLICAL_ROUTES.find((r) => r.id === resolvedEntity.relatedRouteId)?.name || 'Biblical Journey')
+                 }</span>
                </div>`
             : ''
         }
         <div class="artifact-drawer-connection" style="margin-top: 0.5rem;">
           <strong>✦ Biblical Setting & Narrative:</strong><br/>
-          ${resolvedEntity.context}
+          ${resolvedEntity.biblicalSettingAndNarrative || resolvedEntity.context}
         </div>
       `;
     }

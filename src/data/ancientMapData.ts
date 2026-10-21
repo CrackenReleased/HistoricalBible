@@ -1638,24 +1638,24 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
   },
   {
     id: 'jacob-padan-aram',
-    name: "Jacob's Travels: To & From Rachel in Padan-Aram",
-    shortBanner: "🌾 JACOB'S JOURNEY: RACHEL & PADAN-ARAM (c. 1929 BC)",
+    name: "Jacob's Journey: From Isaac's Tents to Padan-Aram & Return",
+    shortBanner: "🌾 JACOB'S JOURNEY: BIRTH, BETHEL, HARAN & GOSHEN (c. 2006–1859 BC)",
     travelerName: "Patriarch Jacob (Israel)",
     figureId: 'jacob',
-    color: '#f59e0b',
-    dateRange: 'c. 1929 – 1899 BC (Genesis Era)',
-    scriptureRef: 'GENESIS {28:10}–{35:29}',
-    scriptureOsis: 'GEN.28.10',
+    color: '#d4af37',
+    dateRange: 'c. 2006 – 1859 BC (Genesis Era)',
+    scriptureRef: 'GENESIS {25:19}–{50:14}',
+    scriptureOsis: 'GEN.25.26',
     evidenceClass: 'SCRIPTURAL_INFERENCE',
-    summary: 'Fleeing Esau from Beersheba, Jacob dreams of the ladder at Bethel, reaches Haran where he meets Rachel at the well, serves 20 years for Rachel, Leah, and his flocks, departs secretly, makes covenant with Laban at Mount Gilead, wrestles with the Angel at Peniel (where he is named Israel), reconciles with Esau, and buries Rachel at Bethlehem on the way to Hebron.',
+    summary: 'Born at Isaac\'s tents by the well Lahai-roi, Jacob acquires Esau\'s birthright for red pottage and receives Isaac\'s blessing clothed in goat skins. Fleeing Esau from Beersheba, he dreams of the ladder at Bethel, reaches Haran where he serves 20 years for Rachel and Leah, makes covenant with Laban at Mount Gilead, wrestles with the Angel at Peniel (where he is named Israel), reconciles with Esau, buries Rachel at Bethlehem, and in his old age descends into Egypt to be reunited with Joseph.',
     stops: [
       {
-        name: 'Beersheba (Departure)',
+        name: 'Tents of Isaac: Beer-sheba & Well Lahai-roi (Birth of Jacob & Esau, Birthright & Blessing)',
         coords: { lat: 31.245, lng: 34.798 },
-        dateLabel: 'c. 1929 BC',
-        scriptureRef: 'GENESIS {28:10}',
-        scriptureOsis: 'GEN.28.10',
-        note: 'Jacob departs Beersheba after receiving Isaac\'s blessing, directed to flee from Esau and take a wife from the daughters of Laban his mother\'s brother in Padan-Aram.'
+        dateLabel: 'c. 2006 – 1929 BC',
+        scriptureRef: 'GENESIS {25:19}–{28:10}',
+        scriptureOsis: 'GEN.25.26',
+        note: 'Jacob and his twin brother Esau are born at Isaac\'s tents by the well Lahai-roi. Esau sells his birthright to Jacob for red pottage. Directed by Rebekah and clothed in Esau\'s garments with goat skins, Jacob receives the blessing of the firstborn from his aged father Isaac. Facing Esau\'s vow to slay him, Jacob is sent away from Beer-sheba toward Haran in Padan-Aram.'
       },
       {
         name: 'Bethel / Luz (Jacob\'s Ladder)',
@@ -1720,61 +1720,148 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
         scriptureRef: 'GENESIS {35:27}–{35:29}',
         scriptureOsis: 'GEN.35.27',
         note: 'Jacob arrives safely at Mamre unto Kirjath-arba (Hebron) where Abraham and Isaac sojourned, and with Esau buries his father Isaac at age 180.'
+      },
+      {
+        name: 'Beer-sheba to Goshen (Descent into Egypt to Meet Joseph)',
+        coords: { lat: 30.787, lng: 31.821 },
+        dateLabel: 'c. 1876 BC',
+        scriptureRef: 'GENESIS {46:1}–{47:11}',
+        scriptureOsis: 'GEN.46.1',
+        note: 'Hearing that Joseph is alive and ruler over Egypt, Jacob offers sacrifices at Beersheba. God promises, "Fear not to go down into Egypt; for I will there make of thee a great nation." Israel arrives in Goshen, falls on Joseph\'s neck and weeps a good while, and blesses Pharaoh.'
+      },
+      {
+        name: 'Goshen to Machpelah (Blessing the Twelve Tribes & Burial in Canaan)',
+        coords: { lat: 31.524, lng: 35.111 },
+        dateLabel: 'c. 1859 BC',
+        scriptureRef: 'GENESIS {47:28}–{50:14}',
+        scriptureOsis: 'GEN.49.28',
+        note: 'Jacob lives 17 years in Egypt; blesses Ephraim and Manasseh and his twelve sons before his death at age 147. Joseph, his brethren, and the elders of Pharaoh escort his body back to Canaan to bury him with Abraham and Isaac in the Cave of Machpelah.'
+      }
+    ]
+  },
+  {
+    id: 'joseph-egypt',
+    name: "Joseph: From Canaan's Pit to Ruler of Egypt",
+    shortBanner: "🌾 JOSEPH: FROM CANAAN TO RULER OF EGYPT (c. 1898–1805 BC)",
+    travelerName: 'Joseph (Zaphnath-paaneah · Grand Vizier of Egypt)',
+    figureId: 'joseph',
+    color: '#d4af37',
+    dateRange: 'c. 1898 – 1805 BC (Patriarchs & Middle Kingdom Egypt)',
+    scriptureRef: 'GENESIS {37:1}–{50:26}',
+    scriptureOsis: 'GEN.41.41',
+    evidenceClass: 'SCRIPTURAL_INFERENCE',
+    summary: 'Beloved son of Jacob given the coat of many colors; sold by his brothers at Dothan into Egyptian slavery; rises from Potiphar\'s house and the royal prison to become Grand Vizier under Pharaoh, interpreting dreams and saving Egypt and the seed of Israel through seven years of famine.',
+    stops: [
+      {
+        name: 'Hebron / Vale of Hebron (The Coat of Many Colours & Dreams of Rule)',
+        coords: { lat: 31.530, lng: 35.100 },
+        dateLabel: 'c. 1898 BC (Joseph Age 17)',
+        scriptureRef: 'GENESIS {37:1}–{37:14}',
+        scriptureOsis: 'GEN.37.3',
+        note: 'Jacob loves Joseph more than all his children and makes him a coat of many colours. Joseph dreams of the sheaves and the sun, moon, and eleven stars bowing to him; Jacob sends him from the vale of Hebron to seek his brothers at Shechem.'
+      },
+      {
+        name: 'Dothan (Cast into the Pit & Sold for 20 Pieces of Silver)',
+        coords: { lat: 32.414, lng: 35.239 },
+        dateLabel: 'c. 1898 BC',
+        scriptureRef: 'GENESIS {37:15}–{37:36}',
+        scriptureOsis: 'GEN.37.28',
+        note: 'Finding his brothers at Dothan, they conspire against him, strip his coat of colours, and cast him into an empty pit. Judah proposes selling him to Midianite/Ishmaelite merchant caravans bound for Egypt for 20 pieces of silver.'
+      },
+      {
+        name: 'Memphis & On / Heliopolis (Potiphar\'s House & The Royal Prison)',
+        coords: { lat: 29.850, lng: 31.250 },
+        dateLabel: 'c. 1898 – 1885 BC',
+        scriptureRef: 'GENESIS {39:1}–{40:23}',
+        scriptureOsis: 'GEN.39.2',
+        note: 'The LORD was with Joseph in the house of Potiphar, captain of Pharaoh\'s guard, who makes him overseer of all he had. Falsely accused by Potiphar\'s wife, Joseph is cast into the king\'s prison, where the LORD gives him favor and he interprets the dreams of Pharaoh\'s chief butler and baker.'
+      },
+      {
+        name: 'The Royal Court of Pharaoh (Exalted Ruler over All Egypt)',
+        coords: { lat: 30.150, lng: 31.350 },
+        dateLabel: 'c. 1885 – 1876 BC (Joseph Age 30)',
+        scriptureRef: 'GENESIS {41:14}–{41:57}',
+        scriptureOsis: 'GEN.41.41',
+        note: 'Brought before Pharaoh, Joseph interprets Pharaoh\'s dreams of 7 fat and 7 lean cattle: "God hath shewed Pharaoh what he is about to do." Pharaoh sets Joseph over all Egypt: "Only in the throne will I be greater than thou." Arrayed in fine linen with a gold chain, named Zaphnath-paaneah, Joseph stores grain through seven years of plenteousness.'
+      },
+      {
+        name: 'Land of Goshen / Avaris (Joseph Presents Jacob to Pharaoh & Sustains Israel)',
+        coords: { lat: 30.787, lng: 31.821 },
+        dateLabel: 'c. 1876 – 1859 BC',
+        scriptureRef: 'GENESIS {45:1}–{47:27}',
+        scriptureOsis: 'GEN.47.1',
+        note: 'Joseph reveals himself to his weeping brothers: "God did send me before you to preserve life." In Genesis 47, Joseph presents his brethren and father Jacob before Pharaoh, who grants them the fertile land of Goshen (Rameses) to dwell in, while Joseph sustains all Israel with bread through the seven years of famine.'
+      },
+      {
+        name: 'Goshen / Egypt (Joseph\'s Faith & The Oath of his Bones)',
+        coords: { lat: 30.820, lng: 31.850 },
+        dateLabel: 'c. 1805 BC (Joseph Age 110)',
+        scriptureRef: 'GENESIS {50:22}–{50:26}, HEBREWS {11:22}',
+        scriptureOsis: 'GEN.50.24',
+        note: 'Joseph lives 110 years, seeing Ephraim\'s children unto the third generation. By faith when he died, Joseph made mention of the departing of the children of Israel and gave commandment concerning his bones: "God will surely visit you, and ye shall carry up my bones from hence." Embalmed and placed in a coffin in Egypt until the Exodus.'
       }
     ]
   },
   {
     id: 'jacob-joseph-egypt',
-    name: "Jacob's Sojourn & Joseph in Egypt",
-    shortBanner: "🌾 JACOB & JOSEPH TO EGYPT (c. 1915–1876 BC)",
-    travelerName: 'Patriarchs Jacob (Israel) & Joseph',
+    name: "Joseph: From Canaan's Pit to Ruler of Egypt",
+    shortBanner: "🌾 JOSEPH: FROM CANAAN TO RULER OF EGYPT (c. 1898–1805 BC)",
+    travelerName: 'Joseph (Zaphnath-paaneah · Grand Vizier of Egypt)',
     figureId: 'joseph',
-    color: '#fb923c',
-    dateRange: 'c. 1915 – 1876 BC',
-    scriptureRef: 'GENESIS {31:17}–{50:26}',
-    scriptureOsis: 'GEN.37.28',
+    color: '#d4af37',
+    dateRange: 'c. 1898 – 1805 BC (Patriarchs & Middle Kingdom Egypt)',
+    scriptureRef: 'GENESIS {37:1}–{50:26}',
+    scriptureOsis: 'GEN.41.41',
     evidenceClass: 'SCRIPTURAL_INFERENCE',
-    summary: 'Jacob returns from Padan-Aram to wrestle with the Angel at Peniel, dwells at Hebron, and after Joseph is sold into Egypt and exalted as Vizier under Pharaoh, brings all 70 souls of Israel down to Goshen during the seven-year famine.',
+    summary: 'Beloved son of Jacob given the coat of many colors; sold by his brothers at Dothan into Egyptian slavery; rises from Potiphar\'s house and the royal prison to become Grand Vizier under Pharaoh, interpreting dreams and saving Egypt and the seed of Israel through seven years of famine.',
     stops: [
       {
-        name: 'Haran (Padan-Aram)',
-        coords: { lat: 36.865, lng: 39.031 },
-        dateLabel: 'c. 1929 BC',
-        scriptureRef: 'GENESIS {31:17}–{31:21}',
-        scriptureOsis: 'GEN.31.17',
-        note: 'After 20 years serving Laban, Jacob departs Padan-Aram at God\'s command with Rachel, Leah, his children, and flocks.'
-      },
-      {
-        name: 'Peniel / Jabbok River',
-        coords: { lat: 32.192, lng: 35.702 },
-        dateLabel: 'c. 1929 BC',
-        scriptureRef: 'GENESIS {32:22}–{32:32}',
-        scriptureOsis: 'GEN.32.24',
-        note: 'Jacob wrestles with a Man until daybreak; his name is changed from Jacob to Israel ("Prince with God").'
-      },
-      {
-        name: 'Dothan',
-        coords: { lat: 32.414, lng: 35.239 },
+        name: 'Hebron / Vale of Hebron (The Coat of Many Colours & Dreams of Rule)',
+        coords: { lat: 31.530, lng: 35.100 },
         dateLabel: 'c. 1898 BC (Joseph Age 17)',
-        scriptureRef: 'GENESIS {37:17}–{37:28}',
-        scriptureOsis: 'GEN.37.17',
-        note: 'Joseph is cast into a pit by his brothers at Dothan and sold for 20 pieces of silver to Ishmaelite/Midianite merchants bound for Egypt.'
+        scriptureRef: 'GENESIS {37:1}–{37:14}',
+        scriptureOsis: 'GEN.37.3',
+        note: 'Jacob loves Joseph more than all his children and makes him a coat of many colours. Joseph dreams of the sheaves and the sun, moon, and eleven stars bowing to him; Jacob sends him from the vale of Hebron to seek his brothers at Shechem.'
       },
       {
-        name: 'Hebron & Beersheba',
-        coords: { lat: 31.245, lng: 34.841 },
-        dateLabel: 'c. 1876 BC',
-        scriptureRef: 'GENESIS {46:1}–{46:5}',
-        scriptureOsis: 'GEN.46.1',
-        note: 'Hearing that Joseph is alive and ruler over Egypt, Jacob offers sacrifices at Beersheba; God promises, "I will go down with thee into Egypt; and I will also surely bring thee up again."'
+        name: 'Dothan (Cast into the Pit & Sold for 20 Pieces of Silver)',
+        coords: { lat: 32.414, lng: 35.239 },
+        dateLabel: 'c. 1898 BC',
+        scriptureRef: 'GENESIS {37:15}–{37:36}',
+        scriptureOsis: 'GEN.37.28',
+        note: 'Finding his brothers at Dothan, they conspire against him, strip his coat of colours, and cast him into an empty pit. Judah proposes selling him to Midianite/Ishmaelite merchant caravans bound for Egypt for 20 pieces of silver.'
       },
       {
-        name: 'Land of Goshen / Avaris (Eastern Nile Delta)',
+        name: 'Memphis & On / Heliopolis (Potiphar\'s House & The Royal Prison)',
+        coords: { lat: 29.850, lng: 31.250 },
+        dateLabel: 'c. 1898 – 1885 BC',
+        scriptureRef: 'GENESIS {39:1}–{40:23}',
+        scriptureOsis: 'GEN.39.2',
+        note: 'The LORD was with Joseph in the house of Potiphar, captain of Pharaoh\'s guard, who makes him overseer of all he had. Falsely accused by Potiphar\'s wife, Joseph is cast into the king\'s prison, where the LORD gives him favor and he interprets the dreams of Pharaoh\'s chief butler and baker.'
+      },
+      {
+        name: 'The Royal Court of Pharaoh (Exalted Ruler over All Egypt)',
+        coords: { lat: 30.150, lng: 31.350 },
+        dateLabel: 'c. 1885 – 1876 BC (Joseph Age 30)',
+        scriptureRef: 'GENESIS {41:14}–{41:57}',
+        scriptureOsis: 'GEN.41.41',
+        note: 'Brought before Pharaoh, Joseph interprets Pharaoh\'s dreams of 7 fat and 7 lean cattle: "God hath shewed Pharaoh what he is about to do." Pharaoh sets Joseph over all Egypt: "Only in the throne will I be greater than thou." Arrayed in fine linen with a gold chain, named Zaphnath-paaneah, Joseph stores grain through seven years of plenteousness.'
+      },
+      {
+        name: 'Land of Goshen / Avaris (Joseph Presents Jacob to Pharaoh & Sustains Israel)',
         coords: { lat: 30.787, lng: 31.821 },
-        dateLabel: 'c. 1876 – 1805 BC',
-        scriptureRef: 'GENESIS {46:28}–{47:11}, {50:24}',
-        scriptureOsis: 'GEN.46.28',
-        note: 'Joseph meets his father Israel in Goshen and nourishes his family through the famine; before dying at age 110, Joseph makes Israel swear to carry up his bones in the Exodus.'
+        dateLabel: 'c. 1876 – 1859 BC',
+        scriptureRef: 'GENESIS {45:1}–{47:27}',
+        scriptureOsis: 'GEN.47.1',
+        note: 'Joseph reveals himself to his weeping brothers: "God did send me before you to preserve life." In Genesis 47, Joseph presents his brethren and father Jacob before Pharaoh, who grants them the fertile land of Goshen (Rameses) to dwell in, while Joseph sustains all Israel with bread through the seven years of famine.'
+      },
+      {
+        name: 'Goshen / Egypt (Joseph\'s Faith & The Oath of his Bones)',
+        coords: { lat: 30.820, lng: 31.850 },
+        dateLabel: 'c. 1805 BC (Joseph Age 110)',
+        scriptureRef: 'GENESIS {50:22}–{50:26}, HEBREWS {11:22}',
+        scriptureOsis: 'GEN.50.24',
+        note: 'Joseph lives 110 years, seeing Ephraim\'s children unto the third generation. By faith when he died, Joseph made mention of the departing of the children of Israel and gave commandment concerning his bones: "God will surely visit you, and ye shall carry up my bones from hence." Embalmed and placed in a coffin in Egypt until the Exodus.'
       }
     ]
   },
@@ -5391,6 +5478,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
     activeRouteIds: [
       'abraham-call',
       'jacob-padan-aram',
+      'joseph-egypt',
       'jacob-joseph-egypt',
       'job-land-of-uz'
     ],
@@ -5673,6 +5761,7 @@ export const CHRONOLOGICAL_ERAS: ChronologicalEra[] = [
       'abraham-call',
       'jacob-padan-aram',
       'job-land-of-uz',
+      'joseph-egypt',
       'jacob-joseph-egypt',
       'exodus-route',
       'balaam-journey',
@@ -5762,25 +5851,25 @@ export const GRANULAR_TIMELINE_FILTERS: GranularTimelineFilter[] = [
     id: 'filter-jacob-padan-aram',
     eraIds: ['patriarchs', 'all'],
     categoryLabel: 'Patriarchs',
-    label: '🌾 Jacob: Rachel, Haran & Peniel',
-    dateLabel: 'c. 1929–1899 BC',
+    label: "🌾 Jacob: Isaac's Tents to Padan-Aram",
+    dateLabel: 'c. 2006–1859 BC',
     routeIds: ['jacob-padan-aram'],
-    focusCenter: { lat: 33.5, lng: 37.0 },
+    focusCenter: { lat: 32.5, lng: 36.0 },
     focusZoom: 6,
     evidenceClass: 'SCRIPTURAL_INFERENCE',
-    summary: 'Jacob\'s flight to Haran, meeting Rachel at the well, 20-year service, covenant heap with Laban at Mount Gilead, wrestling at Peniel, and Rachel\'s tomb at Bethlehem.'
+    summary: "Jacob and Esau's birth at Isaac's tents by the well Lahai-roi, Esau selling his birthright, Isaac's blessing, Jacob's ladder at Bethel, serving Laban in Padan-Aram, wrestling at Peniel, and descent into Egypt."
   },
   {
-    id: 'filter-jacob-joseph',
+    id: 'filter-joseph-egypt',
     eraIds: ['patriarchs', 'all'],
     categoryLabel: 'Patriarchs',
-    label: '🌾 Jacob & Joseph: Haran to Goshen',
-    dateLabel: 'c. 1929–1876 BC',
-    routeIds: ['jacob-joseph-egypt'],
-    focusCenter: { lat: 33.0, lng: 35.5 },
-    focusZoom: 6,
+    label: "🌾 Joseph: Canaan's Pit to Ruler of Egypt",
+    dateLabel: 'c. 1898–1805 BC',
+    routeIds: ['joseph-egypt', 'jacob-joseph-egypt'],
+    focusCenter: { lat: 30.5, lng: 32.0 },
+    focusZoom: 7,
     evidenceClass: 'SCRIPTURAL_INFERENCE',
-    summary: 'Jacob\'s return from Padan-Aram via Peniel and Joseph\'s sale from Dothan into Egypt, culminating in Israel\'s descent to Goshen.'
+    summary: "Joseph's sale at Dothan into Egypt, rising from Potiphar's house and prison to Grand Vizier under Pharaoh, interpreting dreams, and saving Egypt and Israel through the seven-year famine."
   },
   // Exodus & Conquest
   {
@@ -6992,16 +7081,19 @@ export function getJourneyStopForPassage(bookOsis: string, chapter: number, vers
       }
     }
 
-    // Jacob's travels to and from Padan-Aram (jacob-padan-aram, 9 stops)
+    // Jacob's Journey: From Isaac's Tents to Padan-Aram & Return (jacob-padan-aram, 11 stops)
     const jacobRoute = BIBLICAL_ROUTES.find(r => r.id === 'jacob-padan-aram');
-    if (jacobRoute && jacobRoute.stops.length >= 9) {
+    if (jacobRoute && jacobRoute.stops.length >= 10) {
+      if (chapter >= 25 && chapter <= 27) {
+        return { route: jacobRoute, stop: jacobRoute.stops[0], stopIndex: 0 }; // Tents of Isaac (Birth, Birthright & Blessing)
+      }
       if (chapter === 28) {
         const v = verse || 10;
-        if (v === 10) return { route: jacobRoute, stop: jacobRoute.stops[0], stopIndex: 0 }; // Beersheba
+        if (v <= 10) return { route: jacobRoute, stop: jacobRoute.stops[0], stopIndex: 0 }; // Tents of Isaac / Beersheba
         return { route: jacobRoute, stop: jacobRoute.stops[1], stopIndex: 1 }; // Bethel / Luz
       }
       if (chapter === 29 || chapter === 30) {
-        return { route: jacobRoute, stop: jacobRoute.stops[2], stopIndex: 2 }; // Haran
+        return { route: jacobRoute, stop: jacobRoute.stops[2], stopIndex: 2 }; // Well of Haran
       }
       if (chapter === 31) {
         return { route: jacobRoute, stop: jacobRoute.stops[3], stopIndex: 3 }; // Mount Gilead / Galeed
@@ -7021,22 +7113,26 @@ export function getJourneyStopForPassage(bookOsis: string, chapter: number, vers
       }
     }
 
-    // Jacob & Joseph in Egypt (jacob-joseph-egypt, 5 stops)
-    const egyptRoute = BIBLICAL_ROUTES.find(r => r.id === 'jacob-joseph-egypt');
-    if (egyptRoute && egyptRoute.stops.length >= 5) {
+    // Joseph: From Canaan's Pit to Ruler of Egypt (joseph-egypt, 6 stops)
+    const josephRoute = BIBLICAL_ROUTES.find(r => r.id === 'joseph-egypt') || BIBLICAL_ROUTES.find(r => r.id === 'jacob-joseph-egypt');
+    if (josephRoute && josephRoute.stops.length >= 5) {
       if (chapter === 37) {
-        return { route: egyptRoute, stop: egyptRoute.stops[2], stopIndex: 2 }; // Dothan
-      }
-      if (chapter >= 39 && chapter <= 45) {
-        return { route: egyptRoute, stop: egyptRoute.stops[4], stopIndex: 4 }; // Goshen / Delta
-      }
-      if (chapter === 46) {
         const v = verse || 1;
-        if (v <= 7) return { route: egyptRoute, stop: egyptRoute.stops[3], stopIndex: 3 }; // Beersheba
-        return { route: egyptRoute, stop: egyptRoute.stops[4], stopIndex: 4 }; // Goshen / Delta
+        if (v <= 14) return { route: josephRoute, stop: josephRoute.stops[0], stopIndex: 0 }; // Hebron
+        return { route: josephRoute, stop: josephRoute.stops[1], stopIndex: 1 }; // Dothan
       }
-      if (chapter >= 47 && chapter <= 50) {
-        return { route: egyptRoute, stop: egyptRoute.stops[4], stopIndex: 4 }; // Land of Goshen / Avaris
+      if (chapter === 39 || chapter === 40) {
+        return { route: josephRoute, stop: josephRoute.stops[2], stopIndex: 2 }; // Memphis / Potiphar & Prison
+      }
+      if (chapter >= 41 && chapter <= 44) {
+        return { route: josephRoute, stop: josephRoute.stops[3], stopIndex: 3 }; // Royal Court of Pharaoh / All Egypt
+      }
+      if (chapter >= 45 && chapter <= 49) {
+        return { route: josephRoute, stop: josephRoute.stops[4], stopIndex: 4 }; // Land of Goshen / Avaris (Joseph Presents Jacob to Pharaoh)
+      }
+      if (chapter === 50) {
+        const lastIdx = Math.min(5, josephRoute.stops.length - 1);
+        return { route: josephRoute, stop: josephRoute.stops[lastIdx], stopIndex: lastIdx }; // Oath of Bones & Death
       }
     }
   }
@@ -7435,6 +7531,8 @@ export interface ResolvedBiblicalEntity {
   alliesAndContemporaries?: string;
   relatedEmpireId?: string;
   relatedRouteId?: string;
+  connectedNarrativePath?: string;
+  biblicalSettingAndNarrative?: string;
   stopIndex?: number;
   entityKind: 'ruler' | 'place' | 'person' | 'empire' | 'artifact' | 'route';
   geoEntity?: BiblicalGeographicEntity;
@@ -7483,13 +7581,15 @@ export function resolveBiblicalEntity(
       dateRange: 'c. 1876 – 1800 BC (Middle Kingdom · Dynasty 12)',
       approximateYear: 'c. 1876 – 1800 BC',
       scriptureRef: book.startsWith('gen') ? `GENESIS ${chapter}:${verse}` : 'GENESIS 47:1–11',
-      context: 'Pharaoh received Joseph’s father Jacob and his brethren into Egypt, inquiring of their occupation and granting them the fertile land of Goshen (the best of the land of Rameses) to dwell in with their flocks during the seven years of famine.',
+      context: 'Pharaoh recognized the Spirit of God in Joseph and exalted him as Grand Vizier over all Egypt. In Genesis 47, Pharaoh received Joseph’s father Jacob and his brethren, inquiring of their occupation and granting them the fertile land of Goshen (the best of the land of Rameses) to dwell in with their flocks during the seven years of famine.',
       regionOfPower: 'Kingdom of Egypt (Lower & Upper Egypt, Nile Delta, Goshen, Sinai trade border)',
-      alliesAndContemporaries: 'Middle Kingdom Egypt, Cush/Nubia, Old Babylonian Empire, Canaanite city-states',
+      alliesAndContemporaries: 'Joseph (Grand Vizier of Egypt · Zaphnath-paaneah), Patriarch Jacob, Brethren of Joseph, Middle Kingdom Egypt',
       relatedEmpireId: 'egypt',
-      relatedRouteId: 'jacob-joseph-egypt',
+      relatedRouteId: 'joseph-egypt',
       stopIndex: 4,
-      entityKind: 'ruler'
+      entityKind: 'ruler',
+      connectedNarrativePath: "Joseph: From Canaan's Pit to Ruler of Egypt (Goshen & Royal Court)",
+      biblicalSettingAndNarrative: 'Pharaoh exalted Joseph over all Egypt, and received Joseph’s father Jacob and his brethren into the fertile land of Goshen during the seven-year famine.'
     };
   }
 
@@ -7581,20 +7681,22 @@ export function resolveBiblicalEntity(
   // 2. Biblical Figures & Patriarchs
   if (clean === 'joseph') {
     return {
-      name: 'Joseph (Vizier of Egypt / Son of Jacob)',
+      name: 'Joseph (Zaphnath-paaneah · Grand Vizier of Egypt)',
       ancientRegion: 'Kingdom of Egypt / Eastern Nile Delta',
       coords: { lat: 30.787, lng: 31.821 },
       zoom: 8,
       dateRange: 'c. 1898 – 1805 BC',
       approximateYear: 'c. 1876 BC',
       scriptureRef: 'GENESIS 41:40, 47:11',
-      context: 'Sold into Egypt as a youth, interpreted Pharaoh’s dreams, and was exalted to second ruler over all Egypt, preserving Israel through the famine in Goshen.',
+      context: 'Beloved son of Jacob; sold into Egypt as a youth; interpreted Pharaoh’s dreams and was exalted to Grand Vizier over all Egypt, preserving Israel through the famine in Goshen.',
       regionOfPower: 'Royal Administration of Egypt under Pharaoh (Memphis, Avaris, Goshen)',
-      alliesAndContemporaries: 'Pharaoh of Egypt, Patriarch Jacob, Brothers of Joseph',
+      alliesAndContemporaries: 'Pharaoh of Egypt, Patriarch Jacob, Brothers of Joseph, Potiphar, Asenath',
       relatedEmpireId: 'egypt',
-      relatedRouteId: 'jacob-joseph-egypt',
+      relatedRouteId: 'joseph-egypt',
       stopIndex: 4,
-      entityKind: 'person'
+      entityKind: 'person',
+      connectedNarrativePath: "Joseph: From Canaan's Pit to Ruler of Egypt",
+      biblicalSettingAndNarrative: 'Joseph was elevated to Grand Vizier under Pharaoh after interpreting his dreams, preparing food reserves and settling his father Jacob and his brethren in Goshen.'
     };
   }
 
@@ -7602,21 +7704,25 @@ export function resolveBiblicalEntity(
     const isEgypt = (book.startsWith('gen') && chapter >= 46);
     return {
       name: 'Jacob (Israel / Patriarch)',
-      ancientRegion: isEgypt ? 'Land of Goshen / Nile Delta' : 'Canaan / Beersheba & Hebron',
-      coords: isEgypt ? { lat: 30.787, lng: 31.821 } : { lat: 31.532, lng: 35.099 },
-      zoom: 8,
+      ancientRegion: isEgypt ? 'Land of Goshen / Nile Delta' : 'Canaan / Tents of Isaac & Beersheba',
+      coords: isEgypt ? { lat: 30.787, lng: 31.821 } : { lat: 31.245, lng: 34.798 },
+      zoom: 7,
       dateRange: 'c. 2006 – 1859 BC',
       approximateYear: isEgypt ? 'c. 1876 BC' : 'c. 1929 BC',
-      scriptureRef: isEgypt ? 'GENESIS 46:1–5, 47:7–10' : 'GENESIS 28:10, 32:28',
+      scriptureRef: isEgypt ? 'GENESIS 46:1–5, 47:7–10' : 'GENESIS 25:26, 28:10, 32:28',
       context: isEgypt
         ? 'Jacob departed Beersheba for Egypt at God’s promise, was reunited with Joseph, blessed Pharaoh, and settled his household in fertile Goshen.'
-        : 'Son of Isaac and grandson of Abraham; wrestled with the Angel of the LORD at Peniel where his name became Israel.',
-      regionOfPower: 'Patriarchal Household of the 12 Tribes',
-      alliesAndContemporaries: 'Joseph Vizier of Egypt, Pharaoh of Egypt, Isaac, Laban in Padan-Aram',
+        : 'Son of Isaac born at the tents of Isaac by the well Lahai-roi; received the birthright and Isaac\'s blessing; wrestled with God at Peniel and was named Israel; father of the twelve tribes.',
+      regionOfPower: isEgypt ? 'Land of Goshen (Settlement under Joseph & Pharaoh)' : 'Patriarchal Encampment of Canaan (Beersheba, Bethel, Shechem, Hebron)',
+      alliesAndContemporaries: 'Joseph Vizier of Egypt, Pharaoh of Egypt, Isaac, Rebekah, Rachel, Leah, Esau',
       relatedEmpireId: isEgypt ? 'egypt' : undefined,
-      relatedRouteId: 'jacob-joseph-egypt',
-      stopIndex: isEgypt ? 4 : 3,
-      entityKind: 'person'
+      relatedRouteId: isEgypt ? 'joseph-egypt' : 'jacob-padan-aram',
+      stopIndex: isEgypt ? 4 : 0,
+      entityKind: 'person',
+      connectedNarrativePath: isEgypt ? "Joseph: From Canaan's Pit to Ruler of Egypt (Israel in Goshen)" : "Jacob's Journey: From Isaac's Tents to Padan-Aram & Return",
+      biblicalSettingAndNarrative: isEgypt
+        ? 'Jacob arrived in Goshen to embrace his lost son Joseph, was presented before Pharaoh and blessed him, dwelling in the land 17 years until his death.'
+        : 'Jacob was born at Isaac\'s tents, obtained Esau\'s birthright and Isaac\'s blessing, fled to Haran where he served Laban 20 years, and returned to Canaan.'
     };
   }
 
@@ -7629,7 +7735,7 @@ export function resolveBiblicalEntity(
 
     if (['goshen', 'rameses', 'raamses', 'memphis', 'noph', 'zoan', 'tanis', 'on', 'heliopolis', 'egypt', 'pharaoh'].includes(clean)) {
       relatedEmp = 'egypt';
-      relatedRt = 'jacob-joseph-egypt';
+      relatedRt = 'joseph-egypt';
       stopIdx = 4;
     } else if (['rome', 'corinth', 'athens', 'philippi', 'thessalonica', 'ephesus', 'colossae', 'galatia', 'caesarea'].includes(clean)) {
       relatedEmp = 'rome';
