@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.57] - 2026-10-20
+
+- Added an evidence receipt and source register for all 20 existing atlas artifacts, with corrected source IDs, bounded claims, date ranges, limitations, and `attested`/`inferred`/`proposed`/`disputed` connections. Corrected the Soloi map point to Cyprus and removed false figure links and object links.
+- Connected a sourced Gallio → Acts 18:12 reader/map route and separately sourced Seneca literary context; added two passage-specific chronology synchronies with an honest undated state elsewhere.
+- Kept the full attributed OpenBible cross-reference archive while showing three individually reviewed quotation links by default. Added one occurrence-specific Hebrew word alignment and explicit limits for unreviewed words and same-spelling people.
+- Recorded the owner's free, donation-supported study decision. No account, paid tier, corpus rewrite, third-party image import, commit, push, or deployment.
+- Data regressions 30/30, evidence browser checks 5/5, canonical KJV verifier and production build passed. Affected map/reader/word/Interact run passed 47/48 with one outdated Pilate assertion; after updating that assertion, the deep-link check passed 1/1.
+
+## [00.01.56] - 2026-10-18
+
+- Clarified Historical Bible's focus: Scripture alongside the people, kingdoms and events of world history. Updated public purpose/support copy and repeated study statements.
+- Linked Biblical Connections as a related project sharing the OpenBible dataset; retained accurate OpenBible.info / Treasury of Scripture Knowledge data attribution and licensing.
+- Verified 13 affected browser tests, build/canonical checks and desktop/mobile credit layout. Local release; not committed or deployed.
+
+## [00.01.55] - 2026-10-18
+
+- Local test/tooling revision: default npm test now runs all data regressions, portable Python importer units and browser tests; test:all includes historical PDF/DOCX and vault acceptance.
+- Removed duplicated/implementation-only assertions and success-only screenshots; consolidated repeated PDF extraction without dropping feature checks. Retired the obsolete static-menu diagnostic and moved manual geometry diagnostics out of tests.
+- Added atlas reachability and passage-link regressions, contact encoding assertions, and importer boundary/ownership/invalid-export cases. Preserved profile foreign-key checks for actual profile links.
+- Verified 26 data, 79 browser and 42 Python tests plus production build/canonical KJV verification. Documented and pinned the tested Python dependencies. Not committed or deployed.
+
 ## [00.01.54] - 2026-10-18
 
 - Added 106 Scripture story menu entries spanning Creation–Babel, major narratives, wisdom, late Judah, prophetic readings and Revelation alongside the 45 existing journeys.

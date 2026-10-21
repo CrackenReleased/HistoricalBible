@@ -13,6 +13,7 @@
 
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { getArtifactDisplay, isArtifactReviewed } from '../data/evidenceReceipts';
 
 import {
   ARCHAEOLOGICAL_SITES,
@@ -222,6 +223,7 @@ export class AncientMapCanvas {
   public activeRouteStopSelection: { routeId: string; stopIndex: number } | null = null;
   public focusedStopOnly = false;
   private routeStopMarkersMap: Map<string, L.Marker[]> = new Map();
+  private activeFocusMarker: L.Marker | null = null;
 
   // Layer Toggles
   public layers: Record<string, boolean> = {
@@ -1097,25 +1099,51 @@ export class AncientMapCanvas {
   }
 
   public highlightGeographicPlace(entity: BiblicalGeographicEntity): void {
-    this.map.flyTo([entity.coords.lat, entity.coords.lng], entity.zoom || 9, { duration: 1.0 });
+    this.map.flyTo([entity.coords.lat, entity.coords.lng], Math.max(entity.zoom || 9, 8), { duration: 0.8 });
 
-    const popupContent = `
-      <div class="map-tooltip-inner geo-callout-tooltip" style="min-width: 200px; max-width: 280px;">
-        <span class="tooltip-badge">BIBLICAL GEOGRAPHY · ${entity.ancientRegion.toUpperCase()}</span>
-        <div style="color: #d4af37; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin: 3px 0 2px;">${entity.name}</div>
-        <p style="font-size: 0.78rem; color: #f1f5f9; margin: 4px 0 6px; line-height: 1.45;">${entity.note}</p>
-        ${entity.scriptureRef ? `<div style="font-size: 0.72rem; color: #38bdf8; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px;"><strong>Scripture:</strong> ${entity.scriptureRef}</div>` : ''}
-      </div>
-    `;
+    if (this.activeFocusMarker) {
+      this.map.removeLayer(this.activeFocusMarker);
+      this.activeFocusMarker = null;
+    }
 
-    L.popup({
-      className: 'map-leaflet-popup',
-      closeButton: true,
-      autoClose: true
-    })
-      .setLatLng([entity.coords.lat, entity.coords.lng])
-      .setContent(popupContent)
-      .openOn(this.map);
+    const focusIcon = L.divIcon({
+      className: 'leaflet-geo-focus-marker',
+      html: `
+        <div class="geo-focus-ping"></div>
+        <div class="geo-focus-core"></div>
+        <div class="geo-focus-label">${entity.name}</div>
+      `,
+      iconSize: [24, 24],
+      iconAnchor: [12, 12]
+    });
+
+    this.activeFocusMarker = L.marker([entity.coords.lat, entity.coords.lng], {
+      icon: focusIcon,
+      zIndexOffset: 3000
+    }).addTo(this.map);
+
+    // In full-screen reading mode, an in-map popup is helpful.
+    // In compact companion mode (sidebar), a giant popup blocks the 300px map entirely.
+    // The luminous marker marks the spot while the companion drawer beneath displays full details.
+    if (!this.options.compact) {
+      const popupContent = `
+        <div class="map-tooltip-inner geo-callout-tooltip" style="min-width: 200px; max-width: 280px;">
+          <span class="tooltip-badge">BIBLICAL GEOGRAPHY · ${entity.ancientRegion.toUpperCase()}</span>
+          <div style="color: #d4af37; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.15rem; margin: 3px 0 2px;">${entity.name}</div>
+          <p style="font-size: 0.78rem; color: #f1f5f9; margin: 4px 0 6px; line-height: 1.45;">${entity.note}</p>
+          ${entity.scriptureRef ? `<div style="font-size: 0.72rem; color: #38bdf8; border-top: 1px solid rgba(212, 175, 55, 0.25); padding-top: 4px;"><strong>Scripture:</strong> ${entity.scriptureRef}</div>` : ''}
+        </div>
+      `;
+
+      L.popup({
+        className: 'map-leaflet-popup',
+        closeButton: true,
+        autoClose: true
+      })
+        .setLatLng([entity.coords.lat, entity.coords.lng])
+        .setContent(popupContent)
+        .openOn(this.map);
+    }
   }
 
   public resetView(): void {
@@ -1611,13 +1639,14 @@ export class AncientMapCanvas {
 
       for (const empire of sortedEmpires) {
         const latLngs = empire.approximateBounds.map(b => [b.lat, b.lng] as L.LatLngTuple);
+        const isCompact = !!this.options.compact;
         const defaultStyle: L.PathOptions = {
           pane: 'empirePane',
           color: empire.color,
           fillColor: empire.fillColor || empire.color,
-          fillOpacity: 0.12,
-          weight: 1.2,
-          opacity: 0.65,
+          fillOpacity: isCompact ? 0.07 : 0.12,
+          weight: isCompact ? 1.0 : 1.2,
+          opacity: isCompact ? 0.50 : 0.65,
           dashArray: undefined
         };
         const hoverStyle: L.PathOptions = {
@@ -1876,14 +1905,15 @@ export class AncientMapCanvas {
           zIndexOffset: 1600
         });
 
+        const display = getArtifactDisplay(site);
         const siteTooltipHtml = `
           <div class="map-tooltip-inner gold-tooltip" style="min-width: 220px; max-width: 300px;">
             <span class="tooltip-badge">SURVIVING ARTIFACT · ${site.ancientRegion.toUpperCase()}</span>
             <div class="tooltip-title" style="color: #ffd700; font-weight: 700; font-family: var(--font-serif, 'EB Garamond', serif); font-size: 1.05rem; margin-bottom: 2px;">${site.artifactName}</div>
-            <div style="color: #cbd5e1; font-size: 0.78rem; margin-bottom: 4px;">${site.name} · ${site.artifactDate}</div>
+            <div style="color: #cbd5e1; font-size: 0.78rem; margin-bottom: 4px;">${site.name} · ${display.date} · ${isArtifactReviewed(site.id) ? 'Reviewed source' : 'Review pending'}</div>
             <div class="tooltip-scripture-connection" style="margin-top: 5px; padding: 5px 8px; background: rgba(212, 175, 55, 0.12); border-left: 2px solid #d4af37; border-radius: 3px; font-size: 0.74rem; color: #fef08a; line-height: 1.35;">
               <strong>✦ Scripture Connection:</strong><br/>
-              ${site.scriptureConnection}
+              ${display.connection}
             </div>
             <span class="tooltip-cta" style="margin-top: 6px; display: block; color: #38bdf8; font-size: 0.74rem;">Click to view discovery card in companion panel &rarr;</span>
           </div>

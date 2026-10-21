@@ -4,6 +4,7 @@ import re
 import unittest
 
 import pymupdf
+from pdf_assertions import page_preservation_errors
 from pypdf import PdfReader
 from pypdf.generic import ContentStream
 
@@ -70,17 +71,7 @@ class ReadingNote(unittest.TestCase):
             new_roots = [row for row in new_toc if not row[1].startswith("Chapter ")]
             self.assertEqual([[level, title, page + 1 if page > 1 else page]
                               for level, title, page in old_toc], new_roots)
-        for old_index, old_page in enumerate(self.old):
-            new_page = self.new[old_index + (old_index >= 1)]
-            self.assertEqual(old_page.rect, new_page.rect)
-            self.assertEqual(old_page.get_text(), new_page.get_text(), old_index)
-            old_links, new_links = old_page.get_links(), new_page.get_links()
-            self.assertGreaterEqual(len(new_links), len(old_links), old_index)
-            for old_link, new_link in zip(old_links, new_links[:len(old_links)]):
-                self.assertEqual(old_link["from"], new_link["from"])
-                if "page" in old_link:
-                    self.assertEqual(new_link["page"], old_link["page"] +
-                                     (old_link["page"] >= 1), old_index)
+        self.assertEqual(page_preservation_errors(OLD, NEW), ())
 
     def test_note_has_real_structure_tags(self):
         page = self.reader.pages[1]

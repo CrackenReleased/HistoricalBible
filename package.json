@@ -1,18 +1,23 @@
 {
   "name": "historicalbible-cross-references",
-  "version": "00.01.54",
+  "version": "00.01.57",
   "type": "module",
-  "description": "Interactive KJV Bible Cross-Reference Visualizer (Arcs, Threads, and Entity Loom)",
+  "description": "Explore Scripture alongside the people, kingdoms and events of world history.",
   "scripts": {
     "dev": "vite",
     "build": "node scripts/verify-canonical-kjv.js && vite build",
     "preview": "vite preview",
-    "test": "playwright test",
-    "test:collection": "node --test tests/collection-regression.ts tests/name-audit-regression.ts tests/data-integrity-selfcheck.ts",
+    "test": "npm run test:data && npm run test:python:unit && npm run test:browser",
+    "test:collection": "npm run test:data",
     "test:selfcheck": "node --test tests/data-integrity-selfcheck.ts",
     "test:ui": "playwright test --ui",
     "verify-kjv": "node scripts/verify-canonical-kjv.js",
-    "compile-data": "node scripts/build-curated-kjv.js && node scripts/verify-canonical-kjv.js"
+    "compile-data": "node scripts/build-curated-kjv.js && node scripts/verify-canonical-kjv.js",
+    "test:data": "node --test tests/*-regression.ts tests/data-integrity-selfcheck.ts",
+    "test:browser": "playwright test",
+    "test:python:unit": "python -m unittest discover -s tests -p test_network_export.py -k Unit",
+    "test:python": "python -m unittest discover -s tests -p test_*.py",
+    "test:all": "npm test && npm run test:python"
   },
   "keywords": [
     "bible",

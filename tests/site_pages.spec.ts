@@ -41,13 +41,16 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
     await expect(page.locator('.entry-card[data-door="moses"]')).toHaveAttribute('href', '/interact?figure=moses');
 
     // Full Study Desk declaration quote
-    await expect(page.locator('.declaration-quote')).toContainText('This is not a Bible website. This is the study desk where the Word and the historical record finally sit in the same room.');
+    await expect(page.locator('.declaration-quote')).toContainText('Explore Scripture alongside the people, kingdoms and events of world history.');
 
-    // Mission & PayPal stewardship preserved verbatim with PURPOSE & CONVICTION gold headers (no numbers)
+    // Historical purpose and source credits; conviction and stewardship remain present
     await expect(page.locator('#mission-title')).toHaveText('Connecting the historicity of the Bible to world history: Historical Bible');
     await expect(page.locator('.mission-grid .mission-card .eyebrow').nth(0)).toHaveText('PURPOSE');
+    await expect(page.locator('#study-credits a', { hasText: 'Biblical Connections' })).toHaveAttribute('href', 'https://biblicalconnections.org/');
+    await expect(page.locator('#study-credits')).toContainText('Related project:');
+    await expect(page.locator('#study-credits a', { hasText: 'OpenBible.info' })).toHaveAttribute('href', 'https://www.openbible.info/labs/cross-references/');
     await expect(page.locator('.mission-grid .mission-card .eyebrow').nth(1)).toHaveText('CONVICTION');
-    await expect(page.locator('.mission-card').nth(0)).toContainText("Are you struggling to correlate the peoples and timelines of the Bible to your known world history?");
+    await expect(page.locator('.mission-card').nth(0)).toContainText("What else was happening in the world during the events of the Bible?");
     await expect(page.locator('.mission-card').nth(1)).toContainText('We at Historical Bible believe that the Bible is the inerrant word of God. We believe the Bible literally, and that it is not only historically accurate, but that it is also eschatologically accurate.');
 
     const donateBtn = page.locator('text=Donate Now');
@@ -73,11 +76,8 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
     await expect(popup.locator('.bible-popup-cta')).toHaveAttribute('href', '/bible');
     await expect(popup.locator('.bible-popup-cta')).toContainText('Take me there');
 
-    await page.screenshot({ path: 'test-results/live_home_popup.png' });
     await page.locator('#popup-widget6691-close-icon').click();
     await expect(popup).toBeHidden();
-
-    await page.screenshot({ path: 'test-results/live_home.png', fullPage: true });
   });
 
   test('Clicking a Curiosity Door on Home transitions directly to that figure on the Interact Study Desk', async ({ page }) => {
@@ -96,13 +96,18 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
     const contactHeading = page.locator('text=Contact Me');
     await expect(contactHeading.first()).toBeVisible();
 
-    await page.locator('#contact-name').fill('Test Reader');
+    await page.locator('#contact-name').fill('Reader & Ruth + Grace');
     await page.locator('#contact-email').fill('reader@example.com');
-    await page.locator('#contact-message').fill('Thank you for the historical study desk.');
+    await page.locator('#contact-message').fill('Question? A&B #1 + grace\nSecond line.');
     await page.getByRole('button', { name: 'Send' }).click();
     await expect(page.locator('#contact-status')).toBeVisible();
-
-    await page.screenshot({ path: 'test-results/live_contact.png', fullPage: true });
+    const mailto = new URL((await page.locator('#contact-mailto-link').getAttribute('href'))!);
+    expect(mailto.protocol).toBe('mailto:');
+    expect(mailto.pathname).toBe('BibleHistorical@gmail.com');
+    expect(mailto.searchParams.get('subject')).toBe('Historical Bible Inquiry from Reader & Ruth + Grace');
+    expect(mailto.searchParams.get('body')).toContain('Question? A&B #1 + grace\nSecond line.');
+    expect(mailto.searchParams.get('body')).toContain('reader@example.com');
+    expect([...mailto.searchParams.keys()]).toEqual(['subject', 'body']);
   });
 
   test('Bible download page renders dark-gold download portal with direct PDF link and KJV notation guide', async ({ page }) => {
@@ -125,8 +130,6 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
       };
     });
     expect(sizes.rest).toBeLessThan(sizes.full * 0.85);
-
-    await page.screenshot({ path: 'test-results/live_bible.png', fullPage: true });
   });
 
   test('Bible page renders live Scripture Reader with book/chapter navigation and printable PDF edition', async ({ page }) => {
@@ -137,7 +140,7 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
     // Study Desk Slogan Header (matches user vision)
     const sloganHeading = page.locator('.bible-desk-slogan');
     await expect(sloganHeading).toBeVisible();
-    await expect(sloganHeading).toHaveText('The study desk where the Word and the historical record finally sit in the same room.');
+    await expect(sloganHeading).toHaveText('Explore Scripture alongside the people, kingdoms and events of world history.');
 
     // 66 Books across Old and New Testaments
     const bookOptions = page.locator('#reader-book-select option');
@@ -182,7 +185,7 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
     await page.locator('.bible-verse-row[data-verse="3"]').click();
     await expect(page.locator('.bible-verse-row[data-verse="3"]')).toHaveClass(/active-verse/);
     await expect(page.locator('#companion-tab-xrefs-content .companion-verse-ref')).toContainText('GENESIS {2:3}');
-    await expect(page.locator('#companion-tab-xrefs-content .companion-xrefs-list')).toBeVisible();
+    await expect(page.locator('#companion-tab-xrefs-content > .companion-xrefs-list')).toBeVisible();
 
     // Word-for-word inspection: clicking any word activates Word Inspector in companion panel
     const firstWord = page.locator('.bible-verse-row[data-verse="3"] .kjv-word').first();
@@ -252,9 +255,6 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
     await expect(page.locator('#reader-prev-btn')).toBeVisible();
     await expect(page.locator('#reader-next-btn')).toBeVisible();
     await expect(page.locator('#companion-tab-word-btn')).toBeVisible();
-
-    await page.screenshot({ path: 'test-results/live_bible_reader_scrolled_sticky.png' });
-    await page.screenshot({ path: 'test-results/live_bible_reader_split.png', fullPage: true });
   });
 
 
@@ -265,9 +265,11 @@ test.describe('HistoricalBible Verified Routes & Clean Architectural Separation'
     await expect(page.locator('section.intro')).toHaveCount(0);
     await expect(page.locator('section.entry-section')).toHaveCount(0);
     await expect(page.locator('#collection-title')).toContainText('Every passage');
+    await expect(page.locator('.collection-purpose')).toContainText('What else was happening in the world?');
+    await expect(page.locator('.collection-provenance a', { hasText: 'Biblical Connections' })).toHaveAttribute('href', 'https://biblicalconnections.org/');
+    await expect(page.locator('.collection-provenance').first()).toContainText('OpenBible.info');
     // The original discovery reader remains available below the collection introduction.
     await expect(page.locator('#discovery')).toBeVisible();
-    await page.screenshot({ path: 'test-results/live_interact.png', fullPage: true });
   });
 
   test('No page contains any "hand-typed" or "hand typed" wording in HTML or visible text, and version stays on v00.01.xx beta sequence', async ({ page }) => {

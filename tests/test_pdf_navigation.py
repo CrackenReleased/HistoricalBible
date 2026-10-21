@@ -4,6 +4,7 @@ import sys
 import unittest
 import pymupdf as fitz
 from pypdf import PdfReader
+from pdf_assertions import page_preservation_errors
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'pdf-proof/v0.2.0/Bible-proof-v0.2.0.pdf'
@@ -23,6 +24,11 @@ class NavigationTests(unittest.TestCase):
         cls.verses = {v['key']:v for v in collect(cls.new)}
         cls.toc = cls.new.get_toc()
         cls.has_note = len(cls.new) == 1163
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.old.close()
+        cls.new.close()
 
     def test_labels_match_printed_folios(self):
         labels = self.reader.page_labels
@@ -92,23 +98,7 @@ class NavigationTests(unittest.TestCase):
     def test_page_content_geometry_links_and_tag_tree_are_unchanged(self):
         self.assertEqual(len(self.old) + (1 if self.has_note else 0), len(self.new))
         self.assertIn('/StructTreeRoot',self.reader.trailer['/Root'])
-        for i in range(len(self.old)):
-            before = self.old[i]
-            after = self.new[i + (1 if self.has_note and i >= 1 else 0)]
-            self.assertEqual(before.rect,after.rect)
-            self.assertEqual(before.get_text(),after.get_text(),f'page {i+1}')
-            before_links = normalized_links(before)
-            after_links = normalized_links(after)[:len(before_links)]
-            if self.has_note:
-                for lnk in before_links:
-                    if isinstance(lnk.get('page'), int) and lnk['page'] >= 1:
-                        lnk['page'] += 1
-            self.assertEqual(before_links, after_links, f'page {i+1}')
-
-def normalized_links(page):
-    keys=('kind','from','page','to','zoom','uri','nameddest','file','page_from')
-    return [{k:tuple(round(x,3) for x in v) if k in ('from','to') and v is not None else v
-             for k,v in link.items() if k in keys} for link in page.get_links()]
+        self.assertEqual(page_preservation_errors(SOURCE, PDF), ())
 
 if __name__ == '__main__':
     unittest.main()

@@ -17,6 +17,7 @@ import { readUrlState, writeUrlState, onUrlStateChange, restoreUrlState, type In
 import { StudySessionBar, getStudyMapTarget } from './studySession';
 import { findStudySubject } from './data/studySubjects';
 import { getIdentityRefs } from './data/nameIdentities';
+import { createEvidenceReceiptElement, getEvidenceReceipt } from './data/evidenceReceipts';
 
 class HistoricalInteractApp {
   private selectedEraId: string = 'all';
@@ -601,6 +602,15 @@ class HistoricalInteractApp {
         link.className = 'source-link';
         link.textContent = 'Explore the passages & historical context below ↓';
         evidence.appendChild(link);
+      }
+      const receipt = discovery.evidenceSiteId && getEvidenceReceipt(discovery.evidenceSiteId);
+      if (receipt) {
+        evidence.append(createEvidenceReceiptElement(receipt));
+        const mapLink = document.createElement('a');
+        mapLink.href = `/map?site=${encodeURIComponent(receipt.siteId)}`;
+        mapLink.className = 'source-link';
+        mapLink.textContent = 'View on map →';
+        evidence.append(mapLink);
       }
     }
     const note = document.getElementById('connection-note');

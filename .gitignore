@@ -12,3 +12,7 @@ TacticalCastle/
 pdf-proof/
 __pycache__/
 *.pyc
+
+.venv-tests/
+scratch/
+

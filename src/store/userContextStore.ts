@@ -8,7 +8,8 @@ import {
   BIBLICAL_ROUTES,
   CHRONOLOGICAL_ERAS,
   type BiblicalRoute
-} from '../data/ancientMapData';
+} from '../data/ancientMapData.ts';
+import { getDatedEvent } from '../data/datedEvents.ts';
 
 export const USER_CONTEXT_STORAGE_KEY = 'hb_user_context_v1';
 
@@ -135,7 +136,12 @@ export function resolvePassageUserContext(params: {
   }
 
   const resolvedEra = CHRONOLOGICAL_ERAS.find(e => e.id === resolvedEraId);
+  const datedEvent = getDatedEvent(bookOsis, chapter, verseNum);
+  const siteId = datedEvent?.siteId;
+  const figureId = matchedRoute?.figureId || (siteId === 'taylor-prism' ? 'hezekiah' : undefined);
+
   const subParts = [
+    datedEvent ? datedEvent.dateLabel : undefined,
     eraName || resolvedEra?.name,
     eventDateLabel || resolvedEra?.yearLabel,
     matchedRoute?.name
@@ -144,18 +150,22 @@ export function resolvePassageUserContext(params: {
   const osisRef = `${bookOsis.toUpperCase()}.${chapter}.${verseNum}`;
   const mapParams = new URLSearchParams();
   if (resolvedEraId) mapParams.set('era', resolvedEraId);
+  mapParams.set('ref', osisRef);
   if (matchedRoute) mapParams.set('journey', matchedRoute.id);
+  if (siteId) mapParams.set('site', siteId);
+  if (figureId) mapParams.set('figure', figureId);
 
   return {
     source: 'bible',
     updatedAt: new Date().toISOString(),
-    label: `${bookName} ${chapter}`,
+    label: verseNum && verseNum > 1 ? `${bookName} ${chapter}:${verseNum}` : `${bookName} ${chapter}`,
     sublabel: subParts.join(' · '),
     eraId: resolvedEraId,
     journeyId: matchedRoute?.id,
     stopIndex: matchedStopIndex,
-    figureId: matchedRoute?.figureId,
-    bibleHref: `/bible?book=${encodeURIComponent(bookName)}&chapter=${encodeURIComponent(String(chapter))}`,
+    siteId,
+    figureId,
+    bibleHref: `/bible?ref=${encodeURIComponent(osisRef)}&book=${encodeURIComponent(bookName)}&chapter=${encodeURIComponent(String(chapter))}&verse=${encodeURIComponent(String(verseNum))}`,
     interactHref: `/interact?ref=${encodeURIComponent(osisRef)}`,
     mapHref: mapParams.toString() ? `/map?${mapParams.toString()}` : '/map'
   };

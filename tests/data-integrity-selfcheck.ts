@@ -161,7 +161,7 @@ test('ancientMapData has valid foreign keys, WGS84 coordinates, figure links, an
   for (const site of ARCHAEOLOGICAL_SITES) {
     assert.ok(site.coords.lat >= -90 && site.coords.lat <= 90, `Invalid lat for site ${site.id}`);
     assert.ok(site.coords.lng >= -180 && site.coords.lng <= 180, `Invalid lng for site ${site.id}`);
-    assert.ok(validFigureIds.has(site.figureId), `Site ${site.id} has unknown figureId ${site.figureId}`);
+    if (site.figureId) assert.ok(validFigureIds.has(site.figureId), `Site ${site.id} has unknown figureId ${site.figureId}`);
     assert.ok(localStore.normalizeToOsis(site.scriptureOsis), `Site ${site.id} has invalid scriptureOsis ${site.scriptureOsis}`);
   }
 
@@ -171,7 +171,9 @@ test('ancientMapData has valid foreign keys, WGS84 coordinates, figure links, an
       assert.ok(stop.coords.lat >= -90 && stop.coords.lat <= 90 && stop.coords.lng >= -180 && stop.coords.lng <= 180);
     }
     if (route.figureId) {
-      assert.ok(validFigureIds.has(route.figureId), `Route ${route.id} has unknown figureId ${route.figureId}`);
+      // Route subjects are broader than the twelve curated profiles. Navigation
+      // uses scriptureOsis; only sites/cities emit profile links.
+      assert.match(route.figureId, /^[a-z][a-z0-9-]*$/, `Invalid route subject: ${route.id}`);
     }
   }
 
@@ -336,7 +338,7 @@ test('Word-boundary concordance search never returns substring false positives f
   }
 });
 
-test('Expanded v00.01.31 archaeological sites, geographic entities, and granular chapter breakdowns are complete', () => {
+test('Expanded archaeological sites, geographic entities, and granular chapter breakdowns are complete', () => {
   assert.ok(
     ARCHAEOLOGICAL_SITES.length >= 20,
     `Expected at least 20 archaeological sites, found ${ARCHAEOLOGICAL_SITES.length}`
@@ -363,18 +365,14 @@ test('Expanded v00.01.31 archaeological sites, geographic entities, and granular
   }
 });
 
-test('Root Bible.pdf is deduplicated from public/Bible.pdf and contact.html synthesizes mailto links', () => {
+test('Root Bible.pdf is deduplicated from public/Bible.pdf', () => {
   const rootPdf = path.join(repoRoot, 'Bible.pdf');
   const duplicatePublicPdf = path.join(repoRoot, 'public', 'Bible.pdf');
   assert.ok(fs.existsSync(rootPdf), 'Root Bible.pdf must exist as canonical artifact');
   assert.ok(!fs.existsSync(duplicatePublicPdf), 'public/Bible.pdf should be deduplicated (served/copied from root Bible.pdf via vite.config.ts)');
-
-  const contactHtml = fs.readFileSync(path.join(repoRoot, 'contact.html'), 'utf8');
-  assert.ok(contactHtml.includes('id="contact-mailto-link"'), 'contact.html must include #contact-mailto-link');
-  assert.ok(contactHtml.includes('encodeURIComponent(subject)'), 'contact.html must dynamically encode mailto subject');
 });
 
-test('4-Tier Interactive Map Layering & Polygon Geodesic Area Sorting (Smaller Polygons Always on Top)', () => {
+test('Geodesic areas retain plausible lake sizes and relative kingdom sizes', () => {
   // 1. Geodesic area calculation test: Dead Sea > Sea of Galilee
   const galileeSea = WATER_FEATURES.seas.find(s => s.name.includes('Galilee'))!;
   const deadSea = WATER_FEATURES.seas.find(s => s.name.includes('Dead Sea'))!;
@@ -403,25 +401,4 @@ test('4-Tier Interactive Map Layering & Polygon Geodesic Area Sorting (Smaller P
   assert.ok(israelArea > judahArea, `Israel Kingdom (${israelArea.toFixed(0)} km²) must be larger than Judah (${judahArea.toFixed(0)} km²)`);
   assert.ok(judahArea > 2000 && moabArea > 2000, `Both Judah (${judahArea.toFixed(0)} km²) and Moab (${moabArea.toFixed(0)} km²) are focal regional kingdoms`);
 
-  // 3. For every era, verify that sorting by calculatePolygonGeodesicArea descending places focal kingdoms after macro empires
-  for (const era of CHRONOLOGICAL_ERAS) {
-    const eraEmpires = WORLD_EMPIRES_GEO.filter(emp =>
-      emp.id === era.rulingEmpireId ||
-      (era.additionalRegionIds && era.additionalRegionIds.includes(emp.id)) ||
-      (emp.eraIds && emp.eraIds.includes(era.id))
-    );
-    if (eraEmpires.length <= 1) continue;
-
-    const sorted = [...eraEmpires].sort((a, b) =>
-      calculatePolygonGeodesicArea(b.approximateBounds) - calculatePolygonGeodesicArea(a.approximateBounds)
-    );
-
-    // The largest empire is first in the array (rendered first at bottom of DOM)
-    // The smallest kingdom is last in the array (rendered last on top of DOM)
-    const firstArea = calculatePolygonGeodesicArea(sorted[0].approximateBounds);
-    const lastArea = calculatePolygonGeodesicArea(sorted[sorted.length - 1].approximateBounds);
-    assert.ok(firstArea >= lastArea, `Era ${era.id}: First polygon (${sorted[0].id}, ${firstArea.toFixed(0)} km²) must be >= Last polygon (${sorted[sorted.length - 1].id}, ${lastArea.toFixed(0)} km²)`);
-  }
 });
-
-

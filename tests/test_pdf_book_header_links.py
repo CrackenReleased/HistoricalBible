@@ -5,6 +5,7 @@ from pathlib import Path
 import unittest
 
 import pymupdf
+from pdf_assertions import page_preservation_errors
 from pypdf import PdfReader
 
 
@@ -14,10 +15,6 @@ SOURCE = _V032 if _V032.exists() else (ROOT / "pdf-proof/v0.2.0/Bible-proof-v0.2
 OUTPUT = Path(os.environ.get("BIBLE_BOOK_LINK_PDF",
                           ROOT / "pdf-proof/v0.3.3/Bible-proof-v0.3.3.pdf"))
 EXCEPTIONS = {3, 882}  # Running header reads OLD/NEW TESTAMENT, not a book.
-
-
-def meaningful_link(link):
-    return {key: value for key, value in link.items() if key != "xref"}
 
 
 class BookHeaderLinks(unittest.TestCase):
@@ -102,18 +99,7 @@ class BookHeaderLinks(unittest.TestCase):
         if note_shift == 0:
             self.assertEqual(self.source.get_toc(), self.output.get_toc())
             self.assertEqual(self.source.get_page_labels(), self.output.get_page_labels())
-        for index in range(len(self.source)):
-            out_idx = index + (note_shift if index >= 1 else 0)
-            old, new = self.source[index], self.output[out_idx]
-            self.assertEqual(old.rect, new.rect, index)
-            self.assertEqual(old.get_text(), new.get_text(), index)
-            old_links = [meaningful_link(link) for link in old.get_links()]
-            new_links = [meaningful_link(link) for link in new.get_links()[:len(old_links)]]
-            if note_shift:
-                for lnk in old_links:
-                    if isinstance(lnk.get("page"), int) and lnk["page"] >= 1:
-                        lnk["page"] += 1
-            self.assertEqual(old_links, new_links, index)
+        self.assertEqual(page_preservation_errors(SOURCE, OUTPUT), ())
         for index in (4, 640, 1150):
             src_idx = index - note_shift
             self.assertEqual(self.source[src_idx].get_pixmap().samples,

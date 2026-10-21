@@ -52,10 +52,6 @@ test.describe('Bible Side-by-Side Companion Map Tab', () => {
     await expect(mapKeyCard.locator('.map-key-dot.dot-allied')).toBeVisible();
     await expect(mapKeyCard.locator('.map-key-dot.dot-archaeology')).toBeVisible();
     await expect(mapKeyCard.locator('.map-key-dot.dot-global')).toBeVisible();
-
-    // 8. Capture visual proof screenshot
-    await page.waitForTimeout(1000);
-    await page.screenshot({ path: 'test-results/bible-side-by-side-map-proof.png', fullPage: false });
   });
 
   test('2 Kings 1 correctly resolves to Divided Monarchy: Elijah & Elisha epoch (c. 853–841 BC) with Mesha Stele, NOT Sennacherib', async ({ page }) => {
@@ -88,13 +84,6 @@ test.describe('Bible Side-by-Side Companion Map Tab', () => {
     // Assert Taylor Prism is NOT an active site for 2 Kings 1
     const taylorLabel = page.locator('.gold-coin-label', { hasText: 'The Taylor Prism' });
     await expect(taylorLabel).toHaveCount(0);
-
-    // Scroll map key into view and capture visual proof of 2 Kings 1 side panel
-    const mapKeyCard = page.locator('#bible-map-key-card');
-    await mapKeyCard.scrollIntoViewIfNeeded();
-    await page.waitForTimeout(500);
-    const companionPane = page.locator('#bible-companion-pane');
-    await companionPane.screenshot({ path: 'test-results/bible-map-2kings1-epoch-proof.png' });
   });
 
   test('Bug 1: Clicking a word while on Map tab does NOT hijack to Word Inspector, and pans to geographic entity', async ({ page }) => {
@@ -156,7 +145,9 @@ test.describe('Bible Side-by-Side Companion Map Tab', () => {
     await expect(drawer).toBeVisible();
     await expect(drawer).toContainText('The Mesha Stele (Moabite Stone)');
     await expect(drawer).toContainText('✦ Scripture Connection:');
-    await expect(drawer).toContainText('King Mesha of Moab records his rebellion against the house of Omri and Israel');
+    await expect(drawer).toContainText('AO 5066 / KAI 181');
+    await expect(drawer).toContainText('competing readings');
+    await expect(drawer).not.toContainText('Independently confirms the events');
 
     // Close button dismisses the drawer
     const closeBtn = drawer.locator('.artifact-drawer-close');
@@ -198,10 +189,6 @@ test.describe('Bible Side-by-Side Companion Map Tab', () => {
     await expect(page.locator('.capital-marker-label', { hasText: 'Haojing & Luoyang' })).toBeVisible();
     await expect(page.locator('.capital-marker-label', { hasText: 'Napata & Meroë' })).toBeVisible();
     await expect(page.locator('.capital-marker-label', { hasText: 'Neapolis Scythica' })).toBeVisible();
-
-    // Capture visual proof of global macro-cartography
-    await page.waitForTimeout(500);
-    await page.screenshot({ path: 'test-results/global-macro-cartography-proof.png' });
   });
 
   test('Zero-Collision Tooltips & Kingdom of Israel Drawer in Bible Companion Map: Hovering and clicking Samaria renders dossier without multiple popups', async ({ page }) => {
@@ -213,7 +200,6 @@ test.describe('Bible Side-by-Side Companion Map Tab', () => {
 
     // Hover over Samaria to open tooltip
     await samariaMarker.hover();
-    await page.waitForTimeout(300);
     const tooltip = page.locator('.leaflet-tooltip');
     await expect(tooltip).toBeVisible();
 

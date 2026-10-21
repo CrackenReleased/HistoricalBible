@@ -39,7 +39,9 @@ test('site deep links open the requested artifact and working reading links', as
   await page.goto('/map?site=pilate-stone');
   await expect(page.locator('#drawer-title')).toHaveText('The Pilate Stone');
   await expect(page.locator('#drawer-meta')).toContainText('Caesarea Maritima');
-  await expect(page.locator('#drawer-desc')).toContainText('PILATUS');
+  await expect(page.locator('#drawer-desc')).toContainText('caes0043');
+  await expect(page.locator('#drawer-desc')).not.toContainText('PILATUS');
+  await expect(page.locator('#drawer-receipt')).toContainText('does not mention Jesus');
   await expect(page.locator('#drawer-desk-link')).toHaveAttribute('href', '/interact?figure=jesus-christ');
   await expect(page.locator('#drawer-scripture-link')).toHaveAttribute('href', /\/bible\?ref=/);
   await page.locator('#atlas-drawer-close').click();

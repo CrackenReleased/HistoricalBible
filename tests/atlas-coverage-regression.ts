@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { LocalFirstStore } from '../src/store/localFirstStore.ts';
-import { BIBLICAL_ROUTES, ARCHAEOLOGICAL_SITES, CHRONOLOGICAL_ERAS } from '../src/data/ancientMapData.ts';
+import { BIBLICAL_ROUTES, ARCHAEOLOGICAL_SITES, CHRONOLOGICAL_ERAS, GRANULAR_TIMELINE_FILTERS, WORLD_EMPIRES_GEO } from '../src/data/ancientMapData.ts';
 import { ATLAS_STORIES, ATLAS_STORY_PERIODS } from '../src/data/atlasStories.ts';
 
 test('atlas Scripture search reaches all books, minor names, references and every result page', async () => {
@@ -55,4 +55,27 @@ test('atlas does not promote invented Jonah travel or a Roman identification of 
   const rome = BIBLICAL_ROUTES.find(route => route.id === 'peter-philip-missions')!.stops.at(-1)!;
   assert.equal(rome.evidenceClass, 'EXTERNAL_HISTORICAL_ATTESTATION');
   assert.match(rome.note, /does not identify Babylon as Rome/);
+});
+
+
+test('all atlas routes, sites and timeline filters remain discoverable with resolvable IDs', () => {
+  const all = CHRONOLOGICAL_ERAS.find(era => era.id === 'all')!;
+  for (const [entries, key] of [[BIBLICAL_ROUTES, 'activeRouteIds'], [ARCHAEOLOGICAL_SITES, 'activeSiteIds']] as const) {
+    assert.equal(new Set(entries.map(entry => entry.id)).size, entries.length, `${key}: duplicate IDs`);
+    assert.deepEqual(new Set(all[key]), new Set(entries.map(entry => entry.id)), `${key}: all-era coverage`);
+    for (const entry of entries) {
+      assert.ok(CHRONOLOGICAL_ERAS.some(era => era.id !== 'all' && era[key].includes(entry.id)), `No period exposes ${entry.id}`);
+    }
+  }
+  const eraIds = new Set(CHRONOLOGICAL_ERAS.map(era => era.id));
+  const routeIds = new Set(BIBLICAL_ROUTES.map(route => route.id));
+  assert.equal(new Set(GRANULAR_TIMELINE_FILTERS.map(filter => filter.id)).size, GRANULAR_TIMELINE_FILTERS.length);
+  for (const filter of GRANULAR_TIMELINE_FILTERS) {
+    for (const id of filter.eraIds) assert.ok(eraIds.has(id), `${filter.id}: unknown era ${id}`);
+    for (const id of filter.routeIds) assert.ok(routeIds.has(id), `${filter.id}: unknown route ${id}`);
+  }
+  for (const empire of WORLD_EMPIRES_GEO) {
+    for (const id of empire.eraIds ?? []) assert.ok(eraIds.has(id), `${empire.id}: unknown era ${id}`);
+    assert.ok(CHRONOLOGICAL_ERAS.some(era => era.rulingEmpireId === empire.id || era.additionalRegionIds?.includes(empire.id) || empire.eraIds?.includes(era.id)), `No period exposes ${empire.id}`);
+  }
 });

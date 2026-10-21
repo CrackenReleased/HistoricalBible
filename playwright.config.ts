@@ -9,10 +9,11 @@ export default defineConfig({
   reporter: 'list',
   use: {
     baseURL: 'http://localhost:5173',
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
   },
   webServer: {
-    command: 'npx.cmd vite --port 5173',
+    command: 'node node_modules/vite/bin/vite.js --port 5173 --strictPort',
     port: 5173,
     reuseExistingServer: !process.env.CI,
     timeout: 30000,

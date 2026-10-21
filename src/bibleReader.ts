@@ -17,8 +17,27 @@ import {
 } from './data/bibleChronology';
 import { AncientMapCanvas } from './engine/ancientMap';
 import {
+  getEvidenceReceipt,
+  getArtifactDisplay,
+  createEvidenceReceiptElement
+} from './data/evidenceReceipts';
+import {
+  getReviewedCrossReferences
+} from './data/reviewedCrossReferences';
+import { getDatedEvent, type DatedEvent } from './data/datedEvents.ts';
+import { getRelationshipForPassage, type HistoricalRelationship } from './data/historicalRelationships.ts';
+import {
+  getWorldHorizonItem,
+  isWorldItemInDateInterval,
+  type WorldHorizonItem,
+  HISTORICAL_WORLD_ITEMS
+} from './data/historicalWorldItems.ts';
+import {
   ARCHAEOLOGICAL_SITES,
   BIBLICAL_GEOGRAPHIC_ENTITIES,
+  WORLD_EMPIRES_GEO,
+  getJourneyStopForPassage,
+  type PassageJourneyMatch,
   type ArchaeologicalSite,
   type BiblicalGeographicEntity,
   type BiblicalRoute,
@@ -299,6 +318,11 @@ class BibleReader {
         const ch = parseInt(chapterParam, 10);
         if (!isNaN(ch) && ch >= 1) this.currentChapter = ch;
       }
+      const verseParam = params.get('verse');
+      if (verseParam) {
+        const v = parseInt(verseParam, 10);
+        if (!isNaN(v) && v >= 1) this.selectedVerseNum = v;
+      }
     }
 
     if (wordParam) {
@@ -516,6 +540,12 @@ class BibleReader {
 
     if (verseObj) {
       this.renderCompanionXrefs(verseObj);
+      const chrono = getBookChronology(book.osis);
+      const chapterChrono = getChapterChronology(book.osis, this.currentChapter);
+      this.renderCompanionChrono(chrono, chapterChrono);
+      if (this.activeTab === 'map') {
+        this.renderCompanionMap();
+      }
       if (autoSwitchTab && this.activeTab !== 'map' && this.activeTab !== 'chrono') {
         this.switchTab('xrefs');
       }
@@ -544,7 +574,7 @@ class BibleReader {
     this.renderWordInspector(clean);
 
     // Subtle badge on Word Inspector tab indicating inspected word without hijacking
-    if (this.tabBtnWord) {
+    if (this.tabBtnWord && !isRightClick && this.activeTab !== 'word') {
       this.tabBtnWord.innerHTML = `Word Inspector <span class="tab-word-indicator" style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#ffd700; margin-left:4px; vertical-align:middle;" title="Word: ${clean}"></span>`;
     }
 
@@ -569,6 +599,19 @@ class BibleReader {
             this.companionMapCanvas.focusOnSite(site.id);
           }
           this.renderArtifactDrawer(site);
+        } else {
+          const empire = WORLD_EMPIRES_GEO.find(
+            (e) =>
+              e.id.toLowerCase() === clean ||
+              e.name.toLowerCase().includes(clean) ||
+              e.capital?.name.toLowerCase().includes(clean)
+          );
+          if (empire) {
+            if (this.companionMapCanvas && empire.capital?.coords) {
+              this.companionMapCanvas.map.flyTo([empire.capital.coords.lat, empire.capital.coords.lng], 6, { duration: 0.8 });
+            }
+            this.renderArtifactDrawer(null, undefined, empire);
+          }
         }
       }
 
@@ -606,6 +649,8 @@ class BibleReader {
 
     if (site) {
       drawerEl.hidden = false;
+      const receipt = getEvidenceReceipt(site.id);
+      const display = getArtifactDisplay(site);
       drawerEl.innerHTML = `
         <div class="artifact-drawer-header">
           <div>
@@ -615,21 +660,28 @@ class BibleReader {
           <button type="button" class="artifact-drawer-close" aria-label="Dismiss artifact card">&times;</button>
         </div>
         <div class="artifact-drawer-meta">
-          <span><strong>Discovery:</strong> ${site.name} (${site.artifactDate})</span>
+          <span><strong>Discovery:</strong> ${site.name} (${display.date})</span>
           <span><strong>Current:</strong> ${site.currentLocation}</span>
         </div>
         <div class="artifact-drawer-connection">
           <strong>✦ Scripture Connection:</strong><br/>
-          ${site.scriptureConnection}
+          ${display.connection}
         </div>
         <div class="artifact-drawer-desc">
-          ${site.description}
+          ${display.description}
         </div>
-        <div class="artifact-drawer-significance">
-          <strong>Historical Significance:</strong> ${site.significance}
-        </div>
-        ${site.externalUrl ? `<div style="margin-top: 0.6rem;"><a href="${site.externalUrl}" target="_blank" rel="noopener" class="secondary-link" style="font-size: 0.76rem; padding: 0.3rem 0.6rem;">View Museum Catalog Entry &nearr;</a></div>` : ''}
+        ${
+          receipt
+            ? ''
+            : `<div class="artifact-drawer-significance">
+                 <strong>Historical Significance:</strong> ${display.significance}
+               </div>`
+        }
+        ${site.externalUrl ? `<div style="margin-top: 0.6rem;"><a href="${site.externalUrl}" target="_blank" rel="noopener" class="secondary-link" style="font-size: 0.76rem; padding: 0.3rem 0.6rem;">${display.sourceLabel}</a></div>` : ''}
       `;
+      if (receipt) {
+        drawerEl.appendChild(createEvidenceReceiptElement(receipt));
+      }
     } else if (geoEntity) {
       drawerEl.hidden = false;
       drawerEl.innerHTML = `
@@ -738,20 +790,60 @@ class BibleReader {
       xrefsHtml = `<p style="font-size: 0.88rem; color: var(--text-muted); font-style: italic;">No direct cross-reference connections cataloged for this verse.</p>`;
     }
 
+    const reviewed = getReviewedCrossReferences(osis);
+    let reviewedHtml = '';
+    if (reviewed.length > 0) {
+      reviewedHtml = `
+        <div class="reviewed-xrefs-section" style="margin-bottom: 1.25rem;">
+          <div class="companion-section-title">
+            <span>Reviewed connections</span>
+            <span style="font-size: 0.72rem; color: var(--gold-bright); font-weight: 600;">${reviewed.length} verified</span>
+          </div>
+          <div class="xref-list">
+            ${reviewed
+              .map((r) => {
+                const targetRef = r.other;
+                const parts = targetRef.split('.');
+                const bookOsis = parts[0];
+                const chap = parts[1] || '1';
+                return `
+                  <div class="xref-card-mini reviewed-xref-card" style="border-left: 3px solid var(--gold-bright);">
+                    <div class="xref-mini-header">
+                      <a href="/bible?book=${encodeURIComponent(bookOsis)}&chapter=${encodeURIComponent(chap)}" class="xref-mini-target" title="Open ${targetRef} in Bible Reader">${targetRef}</a>
+                      <span class="xref-mini-kind" style="color: var(--gold-bright); font-size: 0.72rem; font-weight: 600;">${r.kind}</span>
+                    </div>
+                    <p style="font-size: 0.78rem; line-height: 1.4; color: var(--text-light); margin: 0.35rem 0 0 0;">${r.reason}</p>
+                  </div>
+                `;
+              })
+              .join('')}
+          </div>
+        </div>
+      `;
+    } else {
+      reviewedHtml = `
+        <div style="margin-bottom: 1rem; font-size: 0.8rem; color: var(--text-muted); font-style: italic;">
+          No individually reviewed connection has been established for this verse.
+        </div>
+      `;
+    }
+
     this.tabContentXrefs.innerHTML = `
       <div class="companion-verse-hero">
         <div class="companion-verse-ref">${displayRef}</div>
         <div class="companion-verse-body">${canonicalHtml}</div>
       </div>
 
-      <div class="companion-section-title">
-        <span>Connected Passages (TSK)</span>
-        <span style="font-size: 0.72rem; color: var(--gold-muted);">${xrefs.length} Connections</span>
-      </div>
+      ${reviewedHtml}
 
-      <div class="companion-xrefs-list">
-        ${xrefsHtml}
-      </div>
+      <details class="xref-archive" style="margin-top: 1rem;">
+        <summary style="cursor: pointer; font-size: 0.85rem; color: var(--gold-muted); font-weight: 600;">
+          OpenBible suggestions · not individually reviewed (${xrefs.length} Connections)
+        </summary>
+        <div class="companion-xrefs-list" style="margin-top: 0.65rem;">
+          ${xrefsHtml}
+        </div>
+      </details>
 
       <div style="margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.76rem; color: var(--text-muted);">Explore with contemporary world history:</span>
@@ -780,6 +872,134 @@ class BibleReader {
     const activeEventDate = chapterChrono ? chapterChrono.eventDateLabel : chrono.eventDateLabel;
     const activeEraName = chapterChrono ? chapterChrono.eraName : chrono.eventEraName;
     const activeSummary = chapterChrono ? chapterChrono.chapterSummary : chrono.eventSummary;
+
+    const verseNum = this.selectedVerseNum || 1;
+    const datedEvent = getDatedEvent(this.currentBookOsis, this.currentChapter, verseNum);
+    const relationship = getRelationshipForPassage(this.currentBookOsis, this.currentChapter, verseNum);
+    const journeyMatch = getJourneyStopForPassage(this.currentBookOsis, this.currentChapter, verseNum);
+
+    let worldItem: WorldHorizonItem | undefined = datedEvent?.worldItem;
+    if (!worldItem && relationship) {
+      if (relationship.preferredWorldItemId) {
+        worldItem = getWorldHorizonItem(relationship.preferredWorldItemId);
+      }
+      if (!worldItem) {
+        worldItem = HISTORICAL_WORLD_ITEMS.find((item) => isWorldItemInDateInterval(item, relationship.startYear));
+      }
+    }
+    if (!worldItem && journeyMatch) {
+      const routeYears: Record<string, number> = {
+        'abraham-call': -2090,
+        'jacob-padan-aram': -1900,
+        'exodus-route': -1446,
+        'joshua-conquest': -1400,
+        'ruth-boaz': -1150,
+        'solomon-glory': -960,
+        'elijah-prophet': -841,
+        'jeremiah-ministry': -605,
+        'daniel-exile': -586,
+        'esther-mordecai': -479,
+        'ezra-journey': -450,
+        'nehemiah-walls': -445,
+        'jesus-galilean-ministry': 28,
+        'jesus-passion-resurrection': 33,
+        'peter-philip-missions': 38,
+        'paul-second-journey': 60,
+        'paul-voyage-rome': 60,
+        'john-seven-churches-patmos': 95,
+      };
+      const year = routeYears[journeyMatch.route.id];
+      if (year !== undefined) {
+        worldItem = HISTORICAL_WORLD_ITEMS.find((item) => isWorldItemInDateInterval(item, year));
+      }
+    }
+
+    let datedEventHtml = '';
+    if (datedEvent) {
+      datedEventHtml = `
+        <div class="chrono-card-section dated-passage-section" style="border-left: 3px solid var(--gold-bright); margin-top: 1rem; padding: 0.85rem; background: rgba(212, 163, 89, 0.08); border-radius: 4px;">
+          <span class="eyebrow" style="color: var(--gold-bright); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; display: block; margin-bottom: 0.35rem;">🏛️ HOW THIS PASSAGE IS DATED · REVIEWED PASSAGE SYNCHRONY</span>
+          <h4 style="margin: 0 0 0.4rem 0; font-size: 0.95rem; color: #fff;">${this.escapeHtml(datedEvent.dateLabel)} (${this.escapeHtml(datedEvent.sourceTitle)})</h4>
+          <p style="margin: 0 0 0.5rem 0; font-size: 0.82rem; line-height: 1.4; color: var(--text-light);">${this.escapeHtml(datedEvent.event)}</p>
+          <div style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.35; margin-bottom: 0.5rem;">
+            <strong>Method:</strong> ${this.escapeHtml(datedEvent.method)} · <strong>Limitation:</strong> ${this.escapeHtml(datedEvent.limit)}
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.4rem;">
+            <a href="${this.escapeHtml(datedEvent.sourceUrl)}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--gold-muted); text-decoration: underline;">Source: ${this.escapeHtml(datedEvent.sourceTitle)} &rarr;</a>
+            <a href="/map?site=${encodeURIComponent(datedEvent.siteId)}" class="secondary-link chrono-map-jump" data-jump-type="site" data-site-id="${encodeURIComponent(datedEvent.siteId)}" style="font-size: 0.74rem; padding: 0.25rem 0.55rem;">View on map &rarr;</a>
+          </div>
+        </div>
+      `;
+    } else {
+      datedEventHtml = `
+        <div class="chrono-card-section undated-passage-section" style="margin-top: 1rem; padding: 0.85rem; background: rgba(255, 255, 255, 0.03); border-radius: 4px; font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+          No reviewed event date is established for this selected verse. Event dates are displayed only when anchored by reviewed passage synchrony; broad book and chapter settings are shown above.
+        </div>
+      `;
+    }
+
+    let journeyHtml = '';
+    if (journeyMatch) {
+      const stopRef = `${this.currentBookOsis}.${this.currentChapter}.${verseNum}`;
+      journeyHtml = `
+        <div class="chrono-card-section reviewed-journey-stop-card" style="border-left: 3px solid #64b5f6; margin-top: 1rem; padding: 0.85rem; background: rgba(100, 181, 246, 0.08); border-radius: 4px;">
+          <span class="eyebrow" style="color: #64b5f6; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; display: block; margin-bottom: 0.35rem;">🚶 ALONG THIS JOURNEY · NARRATIVE SEQUENCE</span>
+          <h4 style="margin: 0 0 0.3rem 0; font-size: 0.95rem; color: #fff;">${this.escapeHtml(journeyMatch.route.name)}</h4>
+          <div style="font-size: 0.82rem; color: #bbdefb; margin-bottom: 0.35rem;">
+            <strong>Stop ${journeyMatch.stopIndex + 1} of ${journeyMatch.route.stops.length}:</strong> ${this.escapeHtml(journeyMatch.stop.name)} (${this.escapeHtml(journeyMatch.stop.scriptureRef)}) · <em>${this.escapeHtml(journeyMatch.stop.dateLabel)}</em>
+          </div>
+          <p style="margin: 0 0 0.5rem 0; font-size: 0.8rem; line-height: 1.4; color: var(--text-light);">${this.escapeHtml(journeyMatch.stop.note)}</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.4rem;">
+            <span style="font-size: 0.72rem; color: var(--text-muted);">Sequential narrative order in Scripture</span>
+            <a href="/map?ref=${encodeURIComponent(stopRef)}&journey=${encodeURIComponent(journeyMatch.route.id)}&stop=${journeyMatch.stopIndex}" class="secondary-link chrono-map-jump" data-jump-type="journey" data-journey-id="${encodeURIComponent(journeyMatch.route.id)}" data-stop-index="${journeyMatch.stopIndex}" style="font-size: 0.74rem; padding: 0.25rem 0.55rem;">View Stop on Map &rarr;</a>
+          </div>
+        </div>
+      `;
+    }
+
+    let relationshipHtml = '';
+    if (relationship) {
+      relationshipHtml = `
+        <div class="chrono-card-section reviewed-relationship-card" style="border-left: 3px solid #ffb74d; margin-top: 1rem; padding: 0.85rem; background: rgba(255, 183, 77, 0.08); border-radius: 4px;">
+          <span class="eyebrow" style="color: #ffb74d; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; display: block; margin-bottom: 0.35rem;">⚖️ RELATIONSHIP AT THIS TIME</span>
+          <h4 style="margin: 0 0 0.25rem 0; font-size: 0.95rem; color: #fff;">${this.escapeHtml(relationship.actor1Name)} ↔ ${this.escapeHtml(relationship.actor2Name)}</h4>
+          <div style="font-size: 0.75rem; color: var(--gold-muted); margin-bottom: 0.45rem;">
+            <strong>Period:</strong> ${this.escapeHtml(relationship.periodLabel)} (${this.escapeHtml(relationship.actor1Leader || '')} &amp; ${this.escapeHtml(relationship.actor2Leader || '')}) · <strong>Status:</strong> ${this.escapeHtml(relationship.relationshipLabel)}
+          </div>
+          <p style="margin: 0 0 0.45rem 0; font-size: 0.8rem; line-height: 1.4; color: var(--text-light);">${this.escapeHtml(relationship.summary)}</p>
+          <div style="font-size: 0.8rem; line-height: 1.4; color: var(--text-light); margin-bottom: 0.45rem;">
+            <strong>${this.escapeHtml(relationship.actor1Name)} perspective:</strong> ${this.escapeHtml(relationship.perspectiveActor1)}
+          </div>
+          <div style="font-size: 0.8rem; line-height: 1.4; color: var(--text-light); margin-bottom: 0.45rem;">
+            <strong>${this.escapeHtml(relationship.actor2Name)} perspective:</strong> ${this.escapeHtml(relationship.perspectiveActor2)}
+          </div>
+          <div style="font-size: 0.75rem; line-height: 1.35; color: var(--text-muted); border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 0.4rem;">
+            <strong>Tension &amp; Limits:</strong> ${this.escapeHtml(relationship.tensionAndLimits)}
+          </div>
+          ${relationship.moralAssessmentBasis ? `<div style="font-size: 0.72rem; color: var(--gold-muted); margin-top: 0.35rem;"><strong>Biblical Evaluation:</strong> ${this.escapeHtml(relationship.moralAssessmentBasis)}</div>` : ''}
+        </div>
+      `;
+    }
+
+    let worldItemHtml = '';
+    if (worldItem) {
+      worldItemHtml = `
+        <div class="chrono-card-section reviewed-world-horizon-card" style="border-left: 3px solid #81c784; margin-top: 1rem; padding: 0.85rem; background: rgba(129, 199, 132, 0.08); border-radius: 4px;">
+          <span class="eyebrow" style="color: #81c784; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; display: block; margin-bottom: 0.35rem;">🌏 ELSEWHERE IN THE WORLD · CONTEMPORARY HORIZON</span>
+          <h4 style="margin: 0 0 0.25rem 0; font-size: 0.95rem; color: #fff;">${this.escapeHtml(worldItem.name)}</h4>
+          <div style="font-size: 0.75rem; color: #a5d6a7; margin-bottom: 0.45rem;">
+            <strong>Region:</strong> ${this.escapeHtml(worldItem.regionName)} · <strong>Date Range:</strong> ${this.escapeHtml(worldItem.dateRangeLabel)}
+          </div>
+          <p style="margin: 0 0 0.45rem 0; font-size: 0.8rem; line-height: 1.4; color: var(--text-light);">${this.escapeHtml(worldItem.summary)}</p>
+          <div style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.35; margin-bottom: 0.45rem;">
+            <strong>Contemporary Overlap:</strong> ${this.escapeHtml(worldItem.overlapExplanation)}
+          </div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">
+            <strong>Source:</strong> <a href="${this.escapeHtml(worldItem.sourceUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--gold-muted); text-decoration: underline;">${this.escapeHtml(worldItem.sourceTitle)}</a>
+          </div>
+        </div>
+      `;
+    }
 
     this.tabContentChrono.innerHTML = `
       <div class="word-inspect-card" style="margin-bottom: 1rem;">
@@ -822,12 +1042,50 @@ class BibleReader {
         <strong>Evidence Class:</strong> Chronological Reconstruction (correlating internal KJV genealogical/regnal spans with Ussher &amp; classical Near Eastern synchrony; distinct from direct KJV verse text).
       </div>
 
+      ${datedEventHtml}
+      ${journeyHtml}
+      ${relationshipHtml}
+      ${worldItemHtml}
+
       <!-- 5. Bridge to Study Desk Timeline -->
       <div style="margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.76rem; color: var(--text-muted);">Explore with contemporary empires:</span>
         <a href="/interact?era=${encodeURIComponent(chrono.eventEraId)}" class="secondary-link" style="font-size: 0.76rem; padding: 0.35rem 0.65rem;">View in Interact &rarr;</a>
       </div>
     `;
+
+    const jumpLinks = this.tabContentChrono.querySelectorAll<HTMLAnchorElement>('.chrono-map-jump');
+    jumpLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.button === 0) {
+          e.preventDefault();
+          this.switchTab('map');
+          const jumpType = link.getAttribute('data-jump-type');
+          if (jumpType === 'site') {
+            const siteId = decodeURIComponent(link.getAttribute('data-site-id') || '');
+            if (this.companionMapCanvas && siteId) {
+              this.companionMapCanvas.focusOnSite(siteId);
+            }
+          } else if (jumpType === 'journey') {
+            const journeyId = decodeURIComponent(link.getAttribute('data-journey-id') || '');
+            const stopIdx = parseInt(link.getAttribute('data-stop-index') || '0', 10);
+            const route = BIBLICAL_ROUTES.find((r) => r.id === journeyId);
+            if (route && this.companionMapCanvas) {
+              const stop = route.stops[stopIdx];
+              this.companionMapCanvas.activeRouteOverrideIds = [route.id];
+              this.companionMapCanvas.activeRouteStopSelection = { routeId: route.id, stopIndex: stopIdx };
+              this.companionMapCanvas.focusedStopOnly = true;
+              this.companionMapCanvas.layers.routes = true;
+              this.companionMapCanvas.renderActiveEra();
+              if (stop) {
+                this.companionMapCanvas.map.setView([stop.coords.lat, stop.coords.lng], Math.max(stop.zoom || 8, 7));
+                this.renderArtifactDrawer(null, undefined, undefined, route, stop, stopIdx);
+              }
+            }
+          }
+        }
+      });
+    });
   }
 
   private renderWordInspector(word: string): void {
@@ -986,6 +1244,13 @@ class BibleReader {
     if (this.tabContentChrono) this.tabContentChrono.hidden = tab !== 'chrono';
     if (this.tabContentMap) this.tabContentMap.hidden = tab !== 'map';
 
+    if (tab === 'chrono') {
+      const book = this.getActiveBook();
+      const chrono = getBookChronology(book.osis);
+      const chapterChrono = getChapterChronology(book.osis, this.currentChapter);
+      this.renderCompanionChrono(chrono, chapterChrono);
+    }
+
     if (tab === 'map') {
       this.renderCompanionMap();
     }
@@ -1055,7 +1320,17 @@ class BibleReader {
     const fullLink = document.getElementById('companion-map-full-link') as HTMLAnchorElement | null;
 
     if (fullLink) {
-      fullLink.href = `/map?era=${targetEraId}`;
+      const refStr = `${this.currentBookOsis}.${this.currentChapter}.${this.selectedVerseNum || 1}`;
+      let href = `/map?era=${targetEraId}&ref=${encodeURIComponent(refStr)}`;
+      const datedEvent = getDatedEvent(this.currentBookOsis, this.currentChapter, this.selectedVerseNum || 1);
+      if (datedEvent) {
+        href += `&site=${encodeURIComponent(datedEvent.siteId)}`;
+      }
+      const journeyMatch = getJourneyStopForPassage(this.currentBookOsis, this.currentChapter, this.selectedVerseNum || 1);
+      if (journeyMatch) {
+        href += `&journey=${encodeURIComponent(journeyMatch.route.id)}&stop=${journeyMatch.stopIndex}`;
+      }
+      fullLink.href = href;
     }
 
     if (!this.companionMapCanvas) {
@@ -1079,11 +1354,62 @@ class BibleReader {
       }, 100);
     }
 
+    // Curate overlay density: if current passage has a narrative journey, spotlight it!
+    // If not, mute route spaghetti to keep biblical geography clean and legible.
+    const journeyMatch = getJourneyStopForPassage(this.currentBookOsis, this.currentChapter, this.selectedVerseNum || 1);
+    if (journeyMatch) {
+      this.companionMapCanvas.activeRouteOverrideIds = [journeyMatch.route.id];
+      this.companionMapCanvas.activeRouteStopSelection = { routeId: journeyMatch.route.id, stopIndex: journeyMatch.stopIndex };
+      this.companionMapCanvas.focusedStopOnly = true;
+      this.companionMapCanvas.layers.routes = true;
+      this.companionMapCanvas.renderActiveEra();
+      this.companionMapCanvas.map.setView([journeyMatch.stop.coords.lat, journeyMatch.stop.coords.lng], Math.max(journeyMatch.stop.zoom || 8, 7));
+      this.renderArtifactDrawer(null, undefined, undefined, journeyMatch.route, journeyMatch.stop, journeyMatch.stopIndex);
+    } else {
+      this.companionMapCanvas.activeRouteOverrideIds = null;
+      this.companionMapCanvas.activeRouteStopSelection = null;
+      this.companionMapCanvas.focusedStopOnly = false;
+      this.companionMapCanvas.layers.routes = false;
+      this.companionMapCanvas.renderActiveEra();
+    }
+
+    this.syncLayerChips();
+
     if (titleEl && this.companionMapCanvas.activeEra) {
       titleEl.textContent = `${book.name} ${this.currentChapter} · ${this.companionMapCanvas.activeEra.name}`;
     }
     if (descEl && this.companionMapCanvas.activeEra) {
       descEl.textContent = `Historical Setting: ${this.companionMapCanvas.activeEra.yearLabel} — ${this.companionMapCanvas.activeEra.headline}`;
+    }
+  }
+
+  private syncLayerChips(): void {
+    const chipsContainer = document.getElementById('companion-map-layer-chips');
+    if (!chipsContainer || !this.companionMapCanvas) return;
+
+    const chips = chipsContainer.querySelectorAll<HTMLButtonElement>('.map-layer-chip');
+    chips.forEach((chip) => {
+      const layer = chip.getAttribute('data-layer') as 'cities' | 'empires' | 'archaeology' | 'routes';
+      if (layer && this.companionMapCanvas) {
+        const isActive = !!this.companionMapCanvas.layers[layer];
+        chip.classList.toggle('active', isActive);
+        chip.setAttribute('aria-pressed', String(isActive));
+      }
+    });
+
+    if (!(chipsContainer as any).__listenersAttached) {
+      (chipsContainer as any).__listenersAttached = true;
+      chips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          const layer = chip.getAttribute('data-layer') as 'cities' | 'empires' | 'archaeology' | 'routes';
+          if (!layer || !this.companionMapCanvas) return;
+          const nextState = !this.companionMapCanvas.layers[layer];
+          this.companionMapCanvas.layers[layer] = nextState;
+          chip.classList.toggle('active', nextState);
+          chip.setAttribute('aria-pressed', String(nextState));
+          this.companionMapCanvas.renderActiveEra();
+        });
+      });
     }
   }
 
@@ -1174,6 +1500,7 @@ class BibleReader {
 
     // Verse and Word Interaction Delegation (Left Click & Right Click)
     this.versesContainer.addEventListener('click', (e) => {
+      if (e.button !== 0) return;
       const target = e.target as HTMLElement;
       const wordEl = target.closest('.kjv-word') as HTMLElement;
       if (wordEl) {

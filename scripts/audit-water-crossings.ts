@@ -1,3 +1,4 @@
+// Manual geometry diagnostic only. Assertions live in tests/data-integrity-selfcheck.ts.
 import { BIBLICAL_ROUTES } from '../src/data/ancientMapData.ts';
 
 // Exact Sea of Galilee water polygon

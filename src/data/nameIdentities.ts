@@ -77,6 +77,19 @@ const identities: Readonly<Record<string, readonly NameIdentity[]>> = {
     identity('eli-priest', 'Eli the priest', 'person', ['1Sam.1.9'], 'The verse explicitly names Eli as the priest.'),
     identity('eli-expression', 'Eli in Jesus’s cry', 'term', ['Matt.27.46'], 'Matthew interprets the cry in the verse itself; it is not a reference to the priest Eli.'),
   ],
+  Nahor: [
+    identity('nahor-father-terah', 'Nahor, father of Terah', 'person', ['Gen.11.24'], 'Genesis 11:24 says this Nahor begat Terah; he is not Terah’s son of the same name.'),
+    identity('nahor-son-terah', 'Nahor, son of Terah and brother of Abram', 'person', ['Gen.11.26', 'Gen.22.20'], 'Genesis 11:26 lists Nahor among Terah’s sons; Genesis 22:20 calls him Abraham’s brother.'),
+    identity('nahor-city', 'City of Nahor', 'place', ['Gen.24.10'], 'This verse names a city of Nahor; the place reference is not silently assigned to either man.'),
+  ],
+  Jehoash: [
+    identity('jehoash-judah', 'Jehoash, king of Judah', 'person', ['2Kgs.12.1'], 'The verse says he reigned in Jerusalem; this is not the king of Israel in 2 Kings 13.'),
+    identity('jehoash-israel', 'Jehoash, king of Israel', 'person', ['2Kgs.13.10'], 'The verse calls him son of Jehoahaz and says he reigned in Samaria, distinct from Joash king of Judah named in the same verse.'),
+  ],
+  Joash: [
+    identity('joash-judah', 'Joash, king of Judah', 'person', ['2Kgs.12.19', '2Kgs.13.1'], 'The Judah king is named in 2 Kings 12:19 and identified as son of Ahaziah in 13:1.'),
+    identity('joash-israel', 'Joash, king of Israel', 'person', ['2Kgs.13.9', '2Kgs.13.14'], 'The son of Jehoahaz reigns in Samaria; 13:14 identifies him during Elisha’s illness.'),
+  ],
 };
 
 const aliasPairs = [

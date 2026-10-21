@@ -58,5 +58,20 @@ test('search recovers from corpus failure and preserves literal Scripture on mob
   await expect(results.locator('.kjv-divine-name').first()).toHaveText('LORD');
   await expect(results.locator('.atlas-search-item')).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
-  await page.screenshot({ path: 'test-results/atlas-coverage-search-mobile.png', fullPage: true });
 });
+
+
+for (const [journey, ref, passage] of [
+  ['job-land-of-uz', 'JOB.1.1', 'man in the land of Uz'],
+  ['jonah-prophet', '2Kgs.14.25', 'Jonah, the son of Amittai'],
+]) {
+  test(`${journey} opens its cited passage rather than an unrelated profile`, async ({ page }) => {
+    await page.goto(`/map?journey=${journey}`);
+    const link = page.locator('#drawer-desk-link');
+    await expect(link).toHaveAttribute('href', `/interact?ref=${ref}`);
+    await page.reload();
+    await expect(link).toHaveAttribute('href', `/interact?ref=${ref}`);
+    await link.click();
+    await expect(page.locator('#scripture-anchors-list')).toContainText(passage);
+  });
+}

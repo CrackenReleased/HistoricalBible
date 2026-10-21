@@ -8,7 +8,6 @@ test('fresh atlas introduces one story instead of rendering every route', async 
   await expect(page.locator('#atlas-canvas-container .route-badge-pill')).toHaveCount(0);
   await expect(page.getByLabel('Choose a period')).toHaveValue('');
   await expect(page.getByRole('slider', { name: 'Journey sequence' })).toBeHidden();
-  await page.screenshot({ path: 'test-results/atlas-reading-entry-desktop.png' });
 });
 
 test('a journey reveals one stop, reverses, and preserves layers through show all', async ({ page }) => {
@@ -22,7 +21,6 @@ test('a journey reveals one stop, reverses, and preserves layers through show al
   await expect(page.locator('#drawer-scripture-link')).toHaveAttribute('href', '/bible?ref=ACT.13.2');
   await page.locator('.atlas-source-note summary').click();
   await expect(page.locator('#drawer-significance')).toContainText('Acts 13–14');
-  await page.screenshot({ path: 'test-results/atlas-reading-apostolic-desktop.png' });
 
   await slider.focus();
   await slider.press('ArrowRight');
@@ -38,7 +36,6 @@ test('a journey reveals one stop, reverses, and preserves layers through show al
   await page.getByRole('button', { name: 'Show all stops', exact: true }).click();
   await expect(page.locator('#atlas-canvas-container .route-stop-core')).toHaveCount(8);
   await expect(artifacts).toHaveAttribute('aria-pressed', 'true');
-  await page.screenshot({ path: 'test-results/atlas-reading-show-all-desktop.png' });
 
   await page.getByRole('button', { name: 'Return to selected stop', exact: true }).click();
   await expect(page.locator('#atlas-canvas-container .route-stop-core')).toHaveCount(1);
@@ -119,7 +116,6 @@ test('mobile layout, touch targets, and contrast meet reading-first thresholds w
     expect(item.height, `touch target height for ${item.sel}`).toBeGreaterThanOrEqual(44);
   }
 
-  await page.screenshot({ path: 'test-results/atlas-reading-apostolic-mobile.png', fullPage: true });
 });
 
 test('turning on World Empires reveals the Map Key directly above the map canvas', async ({ page }) => {
@@ -261,7 +257,6 @@ test('what to show is on its own line, map fills screen generously, and leaflet 
   const attribText = await page.locator('.leaflet-control-attribution').innerText();
   expect(attribText).toContain('Leaflet');
   expect(attribText).toContain('Esri');
-  await page.locator('.leaflet-control-attribution').screenshot({ path: 'test-results/leaflet-attribution.png' });
 });
 
 test('judges era and instant journey search allow jumping between Gideon, Balaam donkey, Jacob Rachel, and Jonah Nineveh trek', async ({ page }) => {
@@ -298,7 +293,6 @@ test('judges era and instant journey search allow jumping between Gideon, Balaam
   const searchResults = page.locator('#atlas-search-results');
   await searchInput.fill('donkey');
   await expect(searchResults).toBeVisible();
-  await page.screenshot({ path: 'test-results/atlas-journey-search-popup.png' });
   const donkeyResult = searchResults.locator('.atlas-search-item').first();
   await expect(donkeyResult).toContainText("Balaam's Donkey");
   await expect(donkeyResult).toContainText('Donkey Speaks');
@@ -352,7 +346,6 @@ test('judges era and instant journey search allow jumping between Gideon, Balaam
   await expect(clearBtn).toBeHidden();
   await expect(searchResults).toBeHidden();
 
-  await page.screenshot({ path: 'test-results/atlas-journey-search-complete.png' });
 });
 
 test('unrestricted atlas: all eras, journeys, artifacts, and world empires are fully accessible without artificial restrictions', async ({ page }) => {
@@ -418,7 +411,21 @@ test('unrestricted atlas: all eras, journeys, artifacts, and world empires are f
   await empiresToggle.click();
   await expect(empiresToggle).toHaveAttribute('aria-pressed', 'true');
 
-  await page.screenshot({ path: 'test-results/atlas-unrestricted-entities.png' });
 });
 
 
+
+
+test('era choice, compass and reset agree without restoring all routes', async ({ page }) => {
+  await page.goto('/map');
+  await expect(page.locator('.ornate-compass-rose')).toBeVisible();
+  await expect(page.locator('#atlas-sequence')).toBeHidden();
+  await page.getByLabel('Choose a period').selectOption('roman_christ');
+  await expect(page.locator('#chrono-current-year')).toContainText('AD 33');
+  await expect(page.locator('.route-stop-core')).toHaveCount(1);
+  await page.getByRole('slider', { name: 'Journey sequence' }).press('ArrowRight');
+  await page.getByRole('button', { name: 'Reset view', exact: true }).click();
+  await expect(page.getByLabel('Choose a period')).toHaveValue('roman_christ');
+  await expect(page.getByRole('slider', { name: 'Journey sequence' })).toHaveValue('1');
+  await expect(page.locator('.route-stop-core')).toHaveCount(1);
+});

@@ -38,7 +38,7 @@
     <!-- 1. STUDY DESK SLOGAN HEADER -->
     <section class="bible-desk-header" aria-labelledby="bible-page-title">
       <h1 id="bible-page-title" class="bible-desk-slogan">
-        The study desk where the Word and the historical record finally sit in the same room.
+        Explore Scripture alongside the people, kingdoms and events of world history.
       </h1>
     </section>
 
@@ -114,6 +114,21 @@
               <p id="companion-map-desc" class="bible-map-desc">
                 Interactive cartography synchronized to the active scripture setting.
               </p>
+            </div>
+            <!-- Interactive Map Layer Filter Chips -->
+            <div class="companion-map-layer-chips" id="companion-map-layer-chips" role="toolbar" aria-label="Map Layer Toggles">
+              <button type="button" class="map-layer-chip active" data-layer="cities" title="Toggle Biblical Cities and Places">
+                <span class="chip-dot dot-city" aria-hidden="true"></span> Places
+              </button>
+              <button type="button" class="map-layer-chip active" data-layer="empires" title="Toggle Ancient Kingdoms and Empires">
+                <span class="chip-dot dot-empire" aria-hidden="true"></span> Kingdoms
+              </button>
+              <button type="button" class="map-layer-chip active" data-layer="archaeology" title="Toggle Surviving Archaeological Discoveries">
+                <span class="chip-dot dot-artifact" aria-hidden="true"></span> Artifacts
+              </button>
+              <button type="button" class="map-layer-chip active" data-layer="routes" title="Toggle Biblical Journey Routes">
+                <span class="chip-dot dot-route" aria-hidden="true"></span> Journeys
+              </button>
             </div>
             <div id="bible-companion-map-container" class="bible-companion-map-container"></div>
             <!-- Artifact Discovery Drawer (populated on marker click or geo sync) -->

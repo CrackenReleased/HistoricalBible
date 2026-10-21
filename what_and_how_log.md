@@ -1,3 +1,239 @@
+## 2026-10-21 14:10:00 — Antigravity / HistoricalBible — Sidebar Map UI/UX Overlay Decluttering & Interactive Layer Chips (app remains v00.01.57)
+
+- Solved overlay overcrowding and cognitive overload in the Bible Reader Companion Map tab according to user directive ("Too much information is no information. But too little information is frustrating"):
+  - Layer Filter Chips Toolbar (`#companion-map-layer-chips`):
+    - Added clean, accessible touch-target filter chips right above the sidebar map: `[ 📍 Places ] [ 🗺️ Kingdoms ] [ 🏛️ Artifacts ] [ 🚶 Journeys ]`.
+    - Allows instant one-click toggle of any layer (cities, empire polygons, archaeological coins, route lines) so the reader can dial down or dial up visual density in 1 click.
+  - Active Journey Spotlight (Narrative Route Isolation):
+    - When viewing a passage with a sequential narrative journey (e.g. 1 Kings 17:3 Elijah at Brook Cherith, Genesis 12 Abraham, Acts 17 Paul), the sidebar map spotlights that active route and highlights the stop, while muting non-relevant routes.
+    - When viewing a passage without an active journey, routes are muted by default to eliminate line spiderweb clutter across the Levant.
+  - Non-Blocking Luminous Focus Marker:
+    - In compact sidebar map mode, clicking a place or name in Scripture (e.g. "Tishbite") places a crisp luminous pulsing pin (`.leaflet-geo-focus-marker`) and centers smoothly, rather than opening a screen-blanketing 280px Leaflet popup that obscures the entire map canvas.
+    - Full biblical, geographic, and archaeological dossiers display cleanly in the companion drawer beneath the map (`#bible-companion-artifact-drawer`).
+  - Seamless Chronology-to-Map In-Page Flip:
+    - Clicking "View on map →" or "View Stop on Map →" in the Chronology tab now flips smoothly to the sidebar Map tab (`data-companion-target="map"`), keeping the reader anchored in their Scripture session without forcing a full-screen context break.
+  - Streamlined 2-Column Map Key:
+    - Reformatted `#bible-map-key-card` into an elegant responsive 2-column grid, reducing vertical scrolling height while preserving all semantic key elements, dots, and labels.
+- Automated Verification Suite:
+  - Added dedicated Playwright integration test suite: `tests/companion-map-declutter.spec.ts` (4/4 passed in 9.9s).
+  - `tests/bible-side-by-side-map.spec.ts`: 7/7 passing (16.2s).
+  - All Playwright test suites (36 tests total across 5 files): 36/36 passing (1.1m).
+  - Canonical KJV Corpus: 31,102 verses across 66 books and 1,189 chapters 100% verified intact (`scripts/verify-canonical-kjv.js`).
+  - Full Node Regression Suite: 65/65 passing.
+  - Production Build: `npm run build` passes in 915ms.
+
+## 2026-10-21 13:25:00 — Antigravity / HistoricalBible — Comprehensive Historical World Context Across Entire Body of the Bible: Epochs 7–10 Sweep & Full Verification (app remains v00.01.57)
+
+- Completed full biblical sweep across all 10 biblical epochs covering Genesis to Revelation under `HISTORICAL_WORLD_CONTEXT_BRIEF.md`, `principles.md`, and `AGENTS.md`:
+  - Epoch 7 (Divided Monarchy Advance & Omride Dynasty):
+    - Actor- and time-contingent relationships in `src/data/historicalRelationships.ts`:
+      - `israel-assyria-qarqar-853bc` (853 BC; King Ahab of Israel & Levantine Anti-Assyrian Coalition ↔ Shalmaneser III; Battle of Qarqar on Orontes, Ahab’s contingent of 2,000 chariots and 10,000 footmen; sharp contrast with Jehu’s submission 12 years later; cited 1 Kgs 20 & 22; Kurkh Monolith BM 118884).
+      - `israel-assyria-jehu-841bc` (841 BC; King Jehu ↔ Shalmaneser III; tributary submission "Jehu son of Omri" prostrating before Assyrian emperor; contrast with Ahab’s battle array; cited 2 Kgs 9 & 10; Black Obelisk BM 118885).
+    - Contemporary independent world horizon in `src/data/historicalWorldItems.ts`:
+      - `western-zhou-gonghe-regency` (c. 841–828 BC; 841 BC; Western Zhou Gonghe Regency, flight of King Li, joint regency of Duke of Zhou & Duke of Zhao; earliest continuous year-by-year Chinese chronology recorded in Sima Qian’s Shiji; explicit no-contact boundary).
+  - Epoch 8 (Restoration, Diaspora & Esther):
+    - Narrative route mappings in `src/data/ancientMapData.ts`:
+      - `ruth-boaz` (5 stops: Plains of Moab Ruth 1:1, Bethlehem Arrival Ruth 1:19-22, Fields of Boaz Ruth 2:2-3, Threshingfloor Ruth 3:2-7, Gate of Bethlehem / Elders Ruth 4:1-11).
+      - `esther-mordecai` (5 stops: Susa Royal Palace & Feast of Ahasuerus Esth 1:2-5, King’s Gate Esth 2:21, 4:1-2, Inner Court of the King’s House Esth 5:1-2, Banquet Hall of Wine Esth 5:6-8, 7:1-6, Shushan the Citadel / Deliverance Esth 8:15-17, 9:17-19).
+    - Actor- and time-contingent relationships in `src/data/historicalRelationships.ts`:
+      - `jews-persia-darius-516bc` (c. 520–516 BC; Jewish Restoration Community ↔ Darius I Hystaspes; royal decree reaffirming Cyrus cylinder, Persian treasury funding for Second Temple completion, strict warning against hindrance; cited Ezra 5 & 6, Haggai 1, Zech 4; Behistun Inscription).
+      - `esther-xerxes-susa-479bc` (c. 483–473 BC; c. 479 BC; Queen Esther & Mordecai ↔ Ahasuerus / Xerxes I; palace deliverance from Haman’s genocidal decree, Purim institution; cited Esth 4:14 "for such a time as this"; Persepolis treasury tablets and Susa palace excavations).
+    - Contemporary independent world horizons in `src/data/historicalWorldItems.ts`:
+      - `persian-achaemenid-persepolis` (c. 522–486 BC; c. 516 BC; Achaemenid Persian Empire, Darius the Great, foundation of Persepolis and Behistun Inscription; direct synchrony with Ezra 6:15 Temple completion; Behistun rock relief).
+      - `classical-rome-early-republic` (c. 509–450 BC; c. 509 BC; Roman Republic transition, expulsion of Tarquin kings, Consular Republic, Law of the Twelve Tables; Livy Ab Urbe Condita; explicit no-contact boundary).
+  - Epoch 9 (Intertestamental Era & Hellenistic World):
+    - Actor- and time-contingent relationship in `src/data/historicalRelationships.ts`:
+      - `hasmonean-seleucid-167bc` (167–164 BC; Hasmonaean Jewish Commonwealth ↔ Seleucid Empire under Antiochus IV Epiphanes; sanctuary cleansing and rededication following abomination of desolation; cited Dan 8 & 11, John 10:22 Feast of Dedication; 1 & 2 Maccabees).
+    - Contemporary independent world horizon in `src/data/historicalWorldItems.ts`:
+      - `hellenistic-alexandria-septuagint` (c. 332–250 BC; c. 280 BC; Ptolemaic Alexandria Library and royal commission of Septuagint / LXX Torah translation under Ptolemy II Philadelphus; historical linguistic vehicle for NT Scripture; Letter of Aristeas; British Museum).
+  - Epoch 10 (Apostolic Gentile Outreach & Patmos Apocalypse):
+    - Narrative route mappings in `src/data/ancientMapData.ts`:
+      - `peter-philip-missions` (7 stops: Jerusalem Pentecost Acts 2:1-4, Samaria Philip Acts 8:5, Gaza Desert Road Ethiopian Eunuch Acts 8:26, Lydda Aeneas Acts 9:32, Joppa Tabitha & Simon Tanner Acts 9:36, 10:9, Caesarea Cornelius Acts 10:24-48, Antioch of Syria Gentile Church Acts 11:19-26).
+      - `john-seven-churches-patmos` (8 stops: Isle of Patmos Rev 1:9, Ephesus Rev 2:1, Smyrna Rev 2:8, Pergamos Rev 2:12, Thyatira Rev 2:18, Sardis Rev 3:1, Philadelphia Rev 3:7, Laodicea Rev 3:14).
+    - Actor- and time-contingent relationships in `src/data/historicalRelationships.ts`:
+      - `peter-cornelius-ad38` (c. AD 38; Apostle Peter & Early Church ↔ Roman Centurion Household of Caesarea; breaking of Jewish-Gentile ceremonial barrier, outpouring of Holy Ghost on Gentiles; cited Acts 10:34-35; Caesarea Maritima excavations).
+      - `john-domitian-patmos-ad95` (c. AD 95; Apostle John & Seven Churches of Asia ↔ Imperial Roman State under Domitian; enforced ruler cult Dominus et Deus, exile to Patmos for the testimony of Jesus; cited Rev 1:9; Irenaeus Against Heresies 5.30.3).
+    - Contemporary independent world horizon in `src/data/historicalWorldItems.ts`:
+      - `rome-domitian-empire` (c. AD 81–96; c. AD 95; Flavian Dynasty, Emperor Domitian, enforced imperial ruler cult Dominus et Deus; direct synchrony with Revelation 1:9; Roman imperial coinage and Suetonius Life of Domitian).
+  - Cross-Epoch Summary Across the Entire Body of the Bible:
+    - 10 Major Biblical Epochs covered from Genesis through Revelation.
+    - 14 Canonical Narrative Routes with 94 sequential journey stops wired into `getJourneyStopForPassage`.
+    - 24 Actor- and time-contingent relationships with full source citations, counterexamples, tension, and change over time.
+    - 18 Independently sourced world horizons with explicit "no known contact is claimed" boundaries and primary artifacts.
+    - Reader companion drawer seamlessly surfaces journey stops, relationships, and contemporary world context.
+    - Atlas map carries passage, time, and stop context, centers camera, and displays dynamic regional panning.
+- Automated Test Suite & Invariants:
+  - `tests/world-context-epochs.spec.ts`: 19/19 browser integration tests passing (37.1s).
+  - `tests/world-context-first-slice.spec.ts` & `tests/world-context-second-slice.spec.ts`: 6/6 tests passing (12.2s).
+  - `tests/world-context-epochs-regression.ts`: 27/27 unit/regression tests passing.
+  - Node Regression Suite: 65/65 tests passing across all test files.
+  - Canonical KJV Corpus: 31,102 verses across 66 books and 1,189 chapters 100% verified intact.
+  - Production Build: `npm run build` succeeds cleanly in 1.04s.
+
+## 2026-10-21 03:30:00 — Antigravity / HistoricalBible — Comprehensive Historical World Context Across Patriarchs, Conquest, United Monarchy, Prophets, Gospels & Apostolic Church (app remains v00.01.57)
+
+- Completed comprehensive, Scripture-wide historical world context expansion across all primary Biblical epochs under `HISTORICAL_WORLD_CONTEXT_BRIEF.md`, `principles.md`, and `AGENTS.md`:
+  - Epoch 4 (Patriarchs & Conquest):
+    - Narrative route mappings in `src/data/ancientMapData.ts`:
+      - `abraham-call` (8 stops: Ur of the Chaldees Gen 11:31, Babylon Euphrates corridor Gen 11:31, Mari Gen 11:31, Haran Gen 12:1-4, Damascus Gen 15:2, Shechem Oak of Moreh Gen 12:6, Bethel & Ai Gen 12:8, Hebron / Mamre & Machpelah Gen 13:18, 23:19).
+      - `joshua-conquest` (7 stops: Plains of Moab / Shittim Josh 1:1, Jordan River Crossing Josh 3:17, Jericho Josh 6:20, Ai Josh 8:28, Gibeon & Valley of Ajalon Josh 10:12, Hazor Josh 11:10, Shiloh Tabernacle Josh 18:1).
+    - Actor- and time-contingent relationships in `src/data/historicalRelationships.ts`:
+      - `abraham-abimelech-2060bc` (c. 2060 BC; Abram ↔ Abimelech King of Gerar; pastoral water well non-aggression covenant at Beersheba; sharp contrast with later Iron Age Philistine military pentapolis hostility under Saul and David; cited Gen 20:6 moral evaluation; attested by Tel Beer Sheva water shaft excavations).
+      - `israel-gibeonites-1405bc` (c. 1405 BC; Congregation of Israel under Joshua & Elders ↔ Hivite League of Gibeon; treaty obtained by deception, sworn oath inviolably kept in the name of the LORD God of Israel, military rescue at Ajalon; severe tension with King Saul's later covenant breach and famine in 2 Sam 21:1-2; cited Josh 9:14 failure to seek counsel; attested by El-Jib inscribed jar handles and rock-cut pool).
+    - Contemporary independent world horizons in `src/data/historicalWorldItems.ts`:
+      - `ur-iii-law-code` (c. 2112–2004 BC; c. 2090 BC; Third Dynasty of Ur, Sumerian renaissance, Code of Ur-Nammu & Great Ziggurat of Ur; British Museum W_1928-1010-1; explicit no-contact boundary).
+      - `mycenaean-greece-bronze` (c. 1400–1200 BC; c. 1400 BC; Late Bronze Age Mycenaean Greece, cyclopean citadels, Lion Gate, Linear B syllabic archives; Athens National Archaeological Museum; explicit no-contact boundary).
+  - Epoch 5 (United Monarchy & Pre-Exilic Reforms):
+    - Narrative route mappings in `src/data/ancientMapData.ts`:
+      - `solomon-glory` (6 stops: Gibeon Great High Place 1 Kgs 3:4, Solomon's Temple Dedicated in Jerusalem 1 Kgs 8:1, Ezion-geber Red Sea Fleet 1 Kgs 9:26, Fortified Chariot Cities Megiddo/Hazor/Gezer 1 Kgs 9:15, Tadmor in the Wilderness 1 Kgs 9:18, Visit of the Queen of Sheba 1 Kgs 10:1).
+    - Actor- and time-contingent relationships in `src/data/historicalRelationships.ts`:
+      - `solomon-hiram-tyre-960bc` (c. 965–945 BC; King Solomon ↔ King Hiram I of Phoenician Tyre; mutual treaty felling Lebanese cedar and fir floated to Joppa in exchange for 20,000 measures of wheat and pure olive oil, joint merchant fleet to Ophir; brotherly alliance; attested by Josephus citing Menander of Ephesus Against Apion 1.116).
+      - `solomon-queen-sheba-935bc` (c. 935 BC; King Solomon ↔ Queen of Sheba; 1,400-mile diplomatic state visit, hard questions, royal spices and gold, confession that the half was not told, praise to the LORD; cited by Christ in Matt 12:42 as enduring benchmark; attested by Sabaean monumental inscriptions and Marib trade network).
+      - `josiah-necho-609bc` (609 BC; King Josiah ↔ Pharaoh Necho II of Egypt Saite 26th Dynasty; military interception at Megiddo pass, refusal of divine warning from mouth of God, mortal wounding of Josiah; immediate imperial vassalage and heavy tribute; cited 2 Chron 35:22; attested by Babylonian Chronicle BM 21901 and Herodotus 2.159).
+    - Contemporary independent world horizons in `src/data/historicalWorldItems.ts`:
+      - `egypt-tanite-psusennes` (c. 1047–943 BC; c. 960 BC; 21st Dynasty Egypt, unplundered royal tombs of Tanis, silver sarcophagus and pristine gold mask of Pharaoh Psusennes I; Egyptian Museum Cairo; explicit no-contact boundary).
+      - `neo-elamite-median-coalition` (c. 625–585 BC; 612 BC; Median Empire under Cyaxares allied with Nabopolassar of Babylon overthrowing Nineveh; direct synchrony fulfilling Nahum 2:6; British Museum Fall of Nineveh Chronicle BM 21901).
+  - Epoch 6 (Prophets in Exile & Life of Christ):
+    - Narrative route mappings in `src/data/ancientMapData.ts`:
+      - `jeremiah-ministry` (6 stops: Anathoth Jer 1:1, Temple Gate Jer 7:2, Valley of Hinnom / Tophet Jer 19:1, Malchiah's Miry Cistern Jer 38:6, Mizpah Jer 40:6, Tahpanhes in Egypt Jer 43:7).
+      - `daniel-exile` (7 stops: Jerusalem Deportation Dan 1:1, Babylon Royal Court Dan 1:6, Plain of Dura Golden Image & Fiery Furnace Dan 3:1, Babylon Hanging Gardens & Palace Dan 4:29, Belshazzar's Feast & Wall Inscription Dan 5:1, Den of Lions under Darius the Mede Dan 6:16, Shushan / Susa Palace River Ulai & Hiddekel Dan 8:2, 10:4).
+      - `jesus-galilean-ministry` (8 stops: Nazareth Synagogue Luke 4:16, Capernaum by the Sea Matt 4:13, Mount of Beatitudes Matt 5:1, Nain Luke 7:11, Gadarenes Mark 5:1, Bethsaida Feeding 5000 Matt 14:19, Tyre & Sidon Matt 15:21, Caesarea Philippi & Mount of Transfiguration Matt 16:13, 17:1).
+      - `jesus-passion-resurrection` (7 stops: Perea John 10:40, Bethany John 11:1, Jericho Luke 19:1, Jerusalem Passion Upper Room Gethsemane Praetorium & Empty Tomb Matt 21-28, Emmaus Luke 24:13, Sea of Galilee John 21:1, Mount of Olives Ascension Acts 1:9).
+    - Actor- and time-contingent relationships in `src/data/historicalRelationships.ts`:
+      - `jesus-centurion-ad28` (c. AD 28; The Lord Jesus Christ ↔ Roman Garrison Centurion at Capernaum; Roman military commander submitting to Christ's divine spoken authority, "speak the word only"; commended as greater faith than all Israel; foreshadowing Gentile inclusion; attested by 1st-century Capernaum synagogue basalt foundations).
+    - Contemporary independent world horizons in `src/data/historicalWorldItems.ts`:
+      - `rome-augustus-principate` (27 BC – AD 14; c. 4 BC; Roman Principate of Caesar Augustus, Pax Romana, universal provincial census and taxation decree; direct synchrony with Luke 2:1 and Nativity; Monumentum Ancyranum Res Gestae Divi Augusti).
+  - Route Figure Identity Corrections:
+    - Updated `joshua-conquest` (`figureId: 'joshua'`), `jacob-joseph-egypt` (`figureId: 'joseph'`), and `john-baptist-ministry` (`figureId: 'john-baptist'`) in `src/data/ancientMapData.ts`.
+    - Pinned via `tests/route-figure-identity-regression.ts` (2/2 passing).
+  - Reader Integration:
+    - Expanded `routeYears` in `src/bibleReader.ts` across all active narrative routes to automatically bridge journey stops into verified world horizon cards.
+- Comprehensive Verification Suite:
+  - `tests/world-context-epochs-regression.ts`: 19/19 tests passing.
+  - `tests/world-context-epochs.spec.ts`: 13/13 browser integration tests passing.
+  - `tests/world-context-first-slice.spec.ts` & `tests/world-context-second-slice.spec.ts`: 6/6 tests passing.
+  - Full Node regression suite: 57/57 tests passing (`node --test tests/*-regression.ts tests/data-integrity-selfcheck.ts`).
+  - Canonical KJV Corpus: 31,102 verses across 66 books and 1,189 chapters 100% verified intact (`scripts/verify-canonical-kjv.js`).
+  - Production Build: `npm run build` passing in 758ms with zero errors.
+- Rules & Invariants: Direct host execution; preserved all existing uncommitted work and canonical Scripture corpus; no commits or pushes executed.
+
+## 2026-10-21 02:56:00 — Antigravity / HistoricalBible — World-context expansion across major epochs: Pentateuch/Exodus, Exile/Return, and Apostolic Church (app remains v00.01.57)
+
+- Delivered full biblical epoch world-context expansion according to `HISTORICAL_WORLD_CONTEXT_BRIEF.md` (§ "Then expand"):
+  - Epoch 1 (Pentateuch & Exodus):
+    - Sequential narrative journey wiring in `src/data/ancientMapData.ts`:
+      - `jacob-padan-aram` (9 stops: Beersheba Gen 28:10, Bethel / Luz Gen 28:12, Haran Gen 29:10, Mount Gilead / Galeed Gen 31:48, Mahanaim Gen 32:2, Peniel / Jabbok Gen 32:28, Succoth & Shechem Gen 33:4, Ephrath / Bethlehem Gen 35:19, Hebron / Mamre Gen 35:27).
+      - `exodus-route` (8 stops: Rameses Exod 12:37, Succoth Exod 13:17, Etham Exod 13:20, Pi-hahiroth / Red Sea Crossing Exod 14:21, Marah Exod 15:23, Elim Exod 15:27, Rephidim Exod 17:1, Mount Sinai Exod 19:1).
+    - Actor- and time-contingent relationships in `src/data/historicalRelationships.ts`:
+      - `israel-egypt-exodus` (c. 1446 BC; Children of Israel under Moses & Aaron ↔ Kingdom of Egypt New Kingdom under Exodus Pharaoh; generational forced slavery, plagues, and miraculous deliverance; contrasted with Genesis 47 Goshen favor; cited biblical moral basis Exod 1:13, 12:12; attested by Papyrus Anastasi VI & Leiden Papyrus 348).
+      - `abraham-melchizedek` (c. 2080 BC; Abram the Hebrew ↔ Melchizedek king of Salem; sacred communion, bread and wine, and tithes; sharp contrast with refusal of Bera king of Sodom's goods; cited Hebrews 7:1-3 moral evaluation; attested by Middle Bronze Execration Texts and Amarna EA 287).
+    - Contemporary independent world horizons in `src/data/historicalWorldItems.ts`:
+      - `egypt-middle-kingdom-12th` (c. 1991–1786 BC; c. 1890 BC; 12th Dynasty / Senusret II; Tomb of Khnumhotep II at Beni Hasan depicting 37 West Semitic caravan travelers in multi-colored garments; British Museum x120300; explicit no-contact boundary).
+      - `shang-dynasty-bronze` (c. 1600–1046 BC; c. 1446 BC; Late Bronze Age China at Yinxu/Anyang; piece-mold bronze metallurgy, oracle bones, Fu Hao royal tomb hoards; UNESCO 1114; explicit no-contact boundary).
+  - Epoch 2 (The Exile & Return):
+    - Sequential narrative journey wiring in `src/data/ancientMapData.ts`:
+      - `ezra-journey` (4 stops: Babylon royal decree Ezra 7:10, River Ahava fasting Ezra 8:21, Euphrates overland arc Ezra 8:31, Jerusalem Temple courts weighing vessels and repentance Ezra 9:5).
+      - `nehemiah-walls` (5 stops: Shushan palace cupbearer Neh 1:1, Euphrates river crossing Neh 2:9, Jerusalem secret night inspection Neh 2:13, 10 Gates 52-day wall rebuilding circuit Neh 6:15, Water Gate law reading and dedication Neh 8:1).
+    - Actor- and time-contingent relationships in `src/data/historicalRelationships.ts`:
+      - `judah-babylon-586bc` (588–586 BC; Kingdom of Judah under King Zedekiah ↔ Neo-Babylonian Empire under Nebuchadnezzar II; rebellion breaking sworn vassal oath, 18-month famine siege, fall of Jerusalem, blinding of Zedekiah, burning of Temple; internal tension with Jeremiah's counsel to surrender Jer 27:12, 29:7; attested by Babylonian Chronicle BM 21946 / ABC 5 and Lachish Ostraca).
+      - `jews-persia-cyrus-538bc` (539–538 BC; Exiles of Judah & Benjamin under Zerubbabel & Jeshua ↔ Achaemenid Persian Empire under Cyrus the Great; royal restoration decree, repatriation of 5,400 temple vessels; provincial Yehud status and regional friction; attested by Cyrus Cylinder BM 90920).
+    - Contemporary independent world horizons in `src/data/historicalWorldItems.ts`:
+      - `solon-athens-reforms` (c. 594–580 BC; c. 586 BC; Archaic Greece; Solon's archonship and Seisachtheia debt relief constitutional reforms in Athens; Aristotle Athenaion Politeia via Perseus; explicit no-contact boundary).
+      - `classical-athens-golden-age` (c. 450–430 BC; c. 445 BC; Classical Greece; Age of Pericles, building of the Parthenon on the Acropolis; Thucydides and IG I³ 436–451 via Perseus; explicit no-contact boundary).
+  - Epoch 3 (Gospels & Apostolic Church):
+    - Sequential narrative journey wiring in `src/data/ancientMapData.ts`:
+      - `paul-second-journey` (11 stops: Syrian Antioch Acts 15:36, Tarsus Acts 15:41, Derbe & Lystra Acts 16:1, Troas Acts 16:8, Philippi Acts 16:12, Thessalonica Acts 17:1, Berea Acts 17:10, Athens Mars' Hill Acts 17:15, Corinth Acts 18:1, Ephesus Acts 18:19, Caesarea & Jerusalem Acts 18:22).
+      - `paul-voyage-rome` (6 stops: Caesarea Maritima Acts 27:1, Sidon & Myra Acts 27:5, Fair Havens Crete Acts 27:8, Melita / Malta shipwreck and miracles Acts 28:1, Syracuse & Puteoli Appian Way Acts 28:13, Rome two-year house custody Acts 28:30).
+    - Actor- and time-contingent relationships in `src/data/historicalRelationships.ts`:
+      - `jesus-pilate-sanhedrin-ad33` (AD 33; The Lord Jesus Christ ↔ Roman Prefect Pontius Pilate & Sanhedrin; civil trial, three declarations of total judicial innocence, mob coercion and political blackmail, crucifixion under titulus King of the Jews; Roman sole jus gladii authority; attested by Pilate Stone AE 1963, 104 and Tacitus Annals 15.44).
+      - `paul-rome-nero-ad62` (AD 60–62; Apostle Paul & The Church in Rome ↔ Imperial Rome under Nero; light military custody, Praetorian guard evangelization, and unhindered preaching; sharp contrast with Nero's later vicious persecution after AD 64 fire; attested by Tacitus Annals 13-15 and Pliny Epistles 10.96).
+    - Contemporary independent world horizons in `src/data/historicalWorldItems.ts`:
+      - `han-dynasty-eastern-ming` (c. AD 58–75; c. AD 60–62; Eastern Han Dynasty under Emperor Ming in Luoyang; royal Western envoys, arrival of Buddhism, founding of White Horse Temple AD 68; Book of the Later Han Hou Hanshu via Chinese Text Project; explicit no-contact boundary).
+      - `rome-flavian-colosseum` (c. AD 70–80; c. AD 70; Imperial Rome under Vespasian and Titus; construction of Flavian Amphitheatre funded by Judaean spoils following destruction of Jerusalem and Second Temple; direct synchrony with Jesus' prophecy in Matt 24:2; CIL VI 40454a and Arch of Titus).
+  - Reader & Atlas Integration:
+    - Updated `src/bibleReader.ts` `renderCompanionChrono` to seamlessly resolve `preferredWorldItemId` from relationships and fall back to journey timeline intervals, ensuring rich world horizon cards across all journey stops.
+    - Updated `src/atlasApp.ts` URL parameter handling to support all journeys and stops with full camera focus and reading continuity return links.
+- Verification & Test Results:
+  - Added `tests/world-context-epochs-regression.ts` with 10 comprehensive regression tests (10/10 passed).
+  - Added `tests/world-context-epochs.spec.ts` with 7 Playwright browser integration tests (7/7 passed).
+  - Total test suite: 48/48 Node regression tests passing (`tests/*-regression.ts tests/data-integrity-selfcheck.ts`), 25/25 Playwright tests passing across all suites (`world-context-first-slice.spec.ts`, `world-context-second-slice.spec.ts`, `world-context-epochs.spec.ts`, `evidence-receipt.spec.ts`, `bible-side-by-side-map.spec.ts`).
+  - Canonical KJV corpus verified intact: 31,102 verses across 66 books and 1,189 chapters (`scripts/verify-canonical-kjv.js`).
+  - Production Vite build verified passing in 758ms (`npm run build`).
+- Sibling scan: Audited all 45 routes for figure identity and narrative stop resolution; verified that all 9 relationships have dual actor perspectives, concrete tensions, and biblical citations; verified that all 8 world horizon items cite external sources with explicit no-contact boundaries.
+- Preserved all existing uncommitted work and canonical KJV text. No commits, branch creations, pushes, or deployments executed.
+
+## 2026-10-21 02:35:00 — Antigravity / HistoricalBible — World-context second slice: Elijah pilot journey, David/Achish refuge vs. Saul/Philistines counterexample, Western Zhou horizon (app remains v00.01.57)
+
+- Delivered the brief's second slice (`HISTORICAL_WORLD_CONTEXT_BRIEF.md`):
+  - Work Package B (Contextual Journeys):
+    - Conducted sibling scan on `BIBLICAL_ROUTES` in `src/data/ancientMapData.ts`, auditing all 45 routes and correcting 19 mismatched figure placeholders (`elijah-prophet` -> `'elijah'`, `elisha-ministry` -> `'elisha'`, `amos-prophet` -> `'amos'`, `hosea-prophet` -> `'hosea'`, `gideon-judges` -> `'gideon'`, `samson-judges` -> `'samson'`, `ruth-boaz` -> `'ruth'`, `samuel-circuit` -> `'samuel'`, `saul-reign` -> `'saul'`, `balaam-journey` -> `'balaam'`, `jacob-padan-aram` -> `'jacob'`, `ezekiel-exile` -> `'ezekiel'`, `esther-mordecai` -> `'esther'`, `thomas-parthia-india` -> `'thomas'`, `andrew-mark-missions` -> `'andrew'`, `john-seven-churches-patmos` -> `'john'`, `stephen-philip-deacons` -> `'stephen'`, `barnabas-mark` -> `'barnabas'`).
+    - Audited the two Elijah routes (`elijah-prophet` vs `elijah-elisha-ministry`) and designated `elijah-prophet` as the canonical 7-stop prophetic journey.
+    - Implemented `getJourneyStopForPassage` in `src/data/ancientMapData.ts`, wiring sequential narrative stops (Tishbe 1 Kgs 17:1, Cherith 1 Kgs 17:2-7, Zarephath 1 Kgs 17:8-24, Carmel 1 Kgs 18, Horeb 1 Kgs 19, Jezreel 1 Kgs 21, Jordan Whirlwind 2 Kgs 2).
+    - Extended Bible companion Chronology tab (`renderCompanionChrono`) with `.reviewed-journey-stop-card` ("ALONG THIS JOURNEY · NARRATIVE SEQUENCE") and deep link to `/map?ref=...&journey=elijah-prophet&stop=...`.
+    - Enhanced `src/atlasApp.ts` to parse initial `journey` and `stop` URL params, animate the camera to stop coordinates, and render reading continuity bar returning to the exact passage.
+  - Work Package C (Counterexample Relationships):
+    - Added `david-achish-1012bc` (David at Ziklag under King Achish of Gath; 1 Samuel 27) and `saul-philistines-1010bc` (Saul against Philistines at Mount Gilboa; 1 Samuel 31) into `src/data/historicalRelationships.ts`.
+    - Documented actor perspectives, concrete tensions, and biblical evaluations, proving that relationships are actor- and time-contingent (David's refuge does NOT make Saul or Israel an ally of the Philistines).
+    - Extended Chronology tab with `.reviewed-relationship-card` ("RELATIONSHIP AT THIS TIME").
+  - Work Package D (Contemporary World Horizon):
+    - Added early Western Zhou Dynasty (`western-zhou-early`, c. 1046–950 BC; c. 1010 BC) under Kings Cheng & Kang into `src/data/historicalWorldItems.ts`.
+    - Sourced from *Records of the Grand Historian (Shiji, Zhou Annals)* via Chinese Text Project; explicitly states no contact with Israel is claimed.
+    - Extended Chronology tab with `.reviewed-world-horizon-card` ("ELSEWHERE IN THE WORLD · CONTEMPORARY HORIZON").
+- Regression Testing & Verification:
+  - Added Node unit regression tests in `tests/route-figure-identity-regression.ts` (2/2 passed) and `tests/world-context-second-slice-regression.ts` (3/3 passed).
+  - Added Playwright integration tests in `tests/world-context-second-slice.spec.ts` (4/4 passed).
+  - Full suite verified: 38/38 Node regression tests pass (`tests/*-regression.ts tests/data-integrity-selfcheck.ts`), 17/17 Playwright tests pass across `world-context-first-slice.spec.ts`, `world-context-second-slice.spec.ts`, `evidence-receipt.spec.ts`, and `bible-side-by-side-map.spec.ts`. Canonical KJV verifier confirms all 31,102 verses / 66 books / 1,189 chapters remain intact. Production Vite build passed in 751ms.
+- Sibling scan: Grepped all 45 routes for `figureId` placeholder integrity; verified `getJourneyStopForPassage` and `getRelationshipForPassage` fallbacks for unreviewed verses; verified undated passages preserve honest broad-era fallback.
+- Preserved all existing uncommitted work and canonical KJV text. No commits, branch creations, pushes, or deployments executed.
+
+## 2026-10-21 02:01:00 — Antigravity / HistoricalBible — World-context first slice: 2 Kings 18:13, Judah ↔ Assyria 701 BC, Eastern Zhou (app remains v00.01.57)
+
+- Delivered the brief's first slice (`HISTORICAL_WORLD_CONTEXT_BRIEF.md`) around 2 Kings 18:13:
+  - Work Package A (Passage ↔ Map context carrying): `resolvePassageUserContext` in `src/store/userContextStore.ts` now preserves `ref`, `siteId`, and `figureId`. On `/map`, `checkInitialUrlParams` parses `ref`, auto-resolves chronological era (`assyrian_siege`), activates archaeology and empire layers, focuses coordinates on Levant/Assyria campaign setting `{ lat: 33.5, lng: 38 }`, opens the Taylor Prism discovery drawer, and renders the reading continuity context bar (`#atlas-context-bar`) with return link `#atlas-context-bible` pointing back to `/bible?ref=2Kgs.18.13`.
+  - Work Package C (Time-specific kingdom relationship): Added `src/data/historicalRelationships.ts` with typed `HistoricalRelationship` structure and Judah ↔ Assyria during 701 BC (`judah-assyria-701bc`). Documents dual actor perspectives (Hezekiah withholding tribute / temple stripping vs. Sennacherib's Taylor Prism siege boasting "like a bird in a cage"), concrete tension and limits across eras (contrasting Ahaz's voluntary vassalage in 732 BC with Hezekiah's rebellion and Manasseh's later captivity), and explicit biblical moral grounds (2 Kings 18:3,7,14–16; Isaiah 36–37) separated from external imperial annals.
+  - Work Package D (Contemporary world horizon): Added `src/data/historicalWorldItems.ts` with typed `WorldHorizonItem` structure and Eastern Zhou Dynasty during the Spring and Autumn period (`eastern-zhou-spring-autumn`). Independently sourced from the *Spring and Autumn Annals (Chunqiu) & Zuo Zhuan* via the Chinese Text Project (`https://ctext.org/chun-qiu-zuo-zhuan`). Situates King Huan of Zhou ruling Eastern Zhou from Luoyang amidst the rise of regional feudal hegemonies (701 BC death of Duke Zhuang of Zheng following battle of Xuge). Explicitly notes that no direct contact with Judah is claimed, and clarifies that connection to biblical "Sinim" is a debated proposal.
+  - Integration & UI: Extended existing Bible companion Chronology tab (`renderCompanionChrono`) and Atlas archaeological detail drawer (`showSiteDetail`) with dedicated relationship and world horizon cards without redesigning existing components or disrupting Greek/Hebrew lexicon, concordance, or artifact receipts.
+- Tests & Validation:
+  - Added Node unit regression tests in `tests/world-context-first-slice-regression.ts` (3/3 passed: date boundaries, actor perspectives, source separation, passage-to-map context passing).
+  - Added Playwright browser integration tests in `tests/world-context-first-slice.spec.ts` (2/2 passed: reader chronology cards, map deep-linking, detail drawer relationship card, world horizon card, and map return link).
+  - Full suite verified: 33/33 Node regression tests pass (`tests/*-regression.ts tests/data-integrity-selfcheck.ts`), 18/18 Playwright map/reader integration tests pass (`tests/bible-side-by-side-map.spec.ts tests/map.spec.ts tests/world-context-first-slice.spec.ts`), and canonical KJV verifier confirms all 31,102 verses / 66 books / 1,189 chapters remain intact. Production Vite build passed in 723ms.
+- Sibling scan: Verified call sites for `getRelationshipForPassage` and `getWorldHorizonItem` in `src/bibleReader.ts` and `src/atlasApp.ts`. Both handle undefined returns cleanly with zero layout shift or console errors. Checked undated passages (Genesis 1:1) in `resolvePassageUserContext` to ensure fallback to editorial era labels.
+- Preserved all existing uncommitted work and canonical KJV text. No commits, branch creations, pushes, or deployments executed.
+
+## 2026-10-21 01:35:30 — Codex / HistoricalBible — World-context product brief, revision 1 (app remains v00.01.57)
+
+- Owner clarified the mission: put biblical events in the same timeline as wider world history, not merely assemble external corroboration; carry passage/person/time/journey context between Bible sidebar and map; show time- and actor-specific alliances, opposition, neutrality and tension. The app should evolve through small, familiar changes and remain free.
+- Added `HISTORICAL_WORLD_CONTEXT_BRIEF.md` with owner-voiced purpose, verified current-state inventory, shared context and source contracts, five scoped work packages, two representative slices, acceptance checks and agent handoff requirements. Linked it from `HISTORICAL_EVIDENCE_IMPLEMENTATION.md` so the prior evidence guide cannot be read as an archaeology-only product direction.
+- Read-only inspection found the Bible-to-map link currently passes only an era; the map handles journey/site links but not selected stop restoration. Both Elijah routes and inspected Elisha/Amos/Hosea routes currently point `figureId` at Hezekiah. The brief assigns a scoped identity regression/sibling scan before an Elijah pilot; no application code was changed.
+- Verified the new brief and cross-reference against existing paths. Documentation only: no build/browser suite, app version bump, commit, push, deployment, Scripture change, or governance edit.
+
+## 2026-10-20 23:28:18 — Codex / HistoricalBible — Evidence receipts and truthful discovery paths (v00.01.57)
+
+- User requested a comprehensive, unambiguous documented gap guide and execution against the two supplied research documents. Owner chose to keep all interactive study free and donation supported. Started from the real v00.01.56 checkout, existing 20 artifact records, 344,799 OpenBible suggestions, 66-book chronology, protected KJV corpus, and pre-existing uncommitted work.
+- Added `HISTORICAL_EVIDENCE_IMPLEMENTATION.md` for authority, acceptance, sequence and remaining source-dependent boundaries, and `HISTORICAL_SOURCE_REGISTER.md` for all 20 object identifiers, claim limits, media rights and editorial states. Built one Gallio representative path from Interact through map to Acts 18:12, with a visible receipt and a separately sourced Seneca literary pivot. Reviewed all 20 artifact cards against object-specific catalogs, excavation publications or scholarly inscription editions; corrected unsupported facts instead of treating a source URL as proof. Several personal identifications and interpretations remain proposed or disputed.
+- Specific corrections: wrong Louvre Mesha URL; Black Obelisk falsely linked to Hezekiah; Sargon palace wall record mislabeled as a prism and linked to Hezekiah; Merneptah stele falsely routed to Moses; Lachish Letter 4 wrongly linked to a British Museum object; Soloi proconsul inscription plotted in Turkey; unsupported exact siege-week, Siloam/Hezekiah, Erastus/Paul, Caiaphas identity and Jehoiachin release claims. Kept these distinctions visible in public cards and receipts. No external image or full inscription copied.
+- Preserved the attributed OpenBible archive in full, exposing three manually reviewed explicit quotation links separately from traditional suggestions. Added one verified Genesis 1:2 `Spirit` → רוּחַ / H7307 occurrence and a safe unavailable state elsewhere; separated Nahor, Joash and Jehoash occurrences. Added only two dated passage synchronies (Acts 18:12 and 2 Kings 18:13), with an undated state for other selections. Canonical Scripture text and project governing files unchanged.
+- Verification: `npm run test:data` 30/30; `npx playwright test tests/evidence-receipt.spec.ts` 5/5; `npm run build` passed with canonical verifier confirming 31,102 verses/66 books/1,189 chapters. Earlier desktop and 390px mobile Gallio render inspected and contrast corrected. Affected map, word and Interact browser run passed 47/48 with one obsolete expectation that the now-reviewed Pilate card was still pending; after correcting that expectation, the deep-link test passed 1/1. A checked IIP per-record URL returned HTTP 405, so the public source link now points to the working IIP account while retaining exact record ID `caes0043`; five other key source URLs returned HTTP 200.
+- Sibling scan: checked all 20 artifact IDs and their source, figure, location and verse links; searched public map/reader consumers of artifact prose. Reviewed 20 receipts plus false identity links and all current map/reader card paths. No source archive deletion or global chronology/lexicon inference. Local only, uncommitted and unpublished.
+
+## 2026-10-18 17:01:18 — Codex / HistoricalBible — Historical purpose and accurate credits (v00.01.56)
+
+- User requested proper acknowledgement of Biblical Connections and a clearer focus on the wider world during biblical events. Verified scripts/build-crossref-data.py and shipped metadata identify OpenBible.info as the cross-reference source. Biblical Connections https://biblicalconnections.org/about/ independently credits OpenBible and Treasury of Scripture Knowledge; OpenBible's source page confirms that provenance. No evidence was found that Biblical Connections supplied this repository's dataset.
+- Updated public Home/Interact/Bible statements to: “Explore Scripture alongside the people, kingdoms and events of world history.” Home purpose/support copy and Interact introduction now emphasize contemporary world history, timelines and maps, with cross-references supporting study. Added linked Biblical Connections acknowledgements as a related project on Home, Interact and Tapestry while retaining OpenBible/TSK licensing and existing lexical-source credits. README title/introduction and package description now match that purpose. No unsupported exclusivity or endorsement claim.
+- Validation: all 13 affected browser tests (site_pages and bibleviz) pass, including existing tests extended with source/related-project link assertions. Canonical verifier and production build pass. Reviewed desktop purpose section and mobile Interact credits; no horizontal overflow at 390px. Existing regression expectations updated for the three changed slogans; no new standalone test file for prose edits.
+- Sibling scan: checked the three repeated public slogans and existing attribution in Home, Interact, Bible and Tapestry. No Scripture, source datasets, doctrine/governance files or application logic changed. Previous local v00.01.55 test cleanup preserved. Local, uncommitted and unpublished.
+
+## 2026-10-18 16:24:30 — Codex / HistoricalBible — Test suite cleanup (v00.01.55)
+
+- Scope: test suite, runners, dependencies and testing documentation only. No application/source-corpus edits, commits, push or deployment. Public map release footer remains v00.01.54; package v00.01.55 identifies this local tooling revision.
+- Baseline: 78/78 browser, 24/25 Node and 36/36 Python after supplying an isolated Python 3.12 environment. Default npm test previously omitted every Node and Python check. The failing Node assertion incorrectly required route subjects Job/Jonah to be curated historical profiles; actual journey navigation uses Scripture references. Site/city profile foreign-key checks remain intact. Two first-draft browser expectations were corrected to actual initial citations (JOB.1.1 and 2Kgs.14.25); no product change was needed.
+- Cleanup: removed duplicated companion-tab ordering test, copied-sort tautology and contact source-string assertions; merged the compass regression into the atlas interaction suite. Removed 27 success-only screenshot calls and their screenshot-only delays; Playwright now retains screenshots and traces on failure (verified during test development). Replaced Windows-only npx.cmd startup with portable Node invocation and strict port handling. Moved console-only water diagnostic to scripts; retired obsolete static-dropdown audit after transferring reachability checks into executable tests.
+- PDF/DOCX: retained all proof-specific assertions. Four suites now share cached read-only text/geometry/link comparisons for identical source/output pairs; cache identity includes path/size/mtime. Kept pixel, glyph, tag-tree, bookmark and insertion-specific assertions. Baseline ~61s; final expanded Python run ~34s. Added requirements-test.txt with versions actually installed and verified in ignored .venv-tests.
+- Added coverage: atlas all-era/reverse membership and filter foreign keys; Job/Jonah passage navigation through refresh; actual contact subject/body encoding for reserved characters/newlines; importer threshold/empty/truncated inputs, ownership rejection, reciprocal edges, duplicate/unknown references and counts. Invalid exports must fail before directory creation or writing. Pure Python units are independent of local vault/proof assets.
+- Validation: 26/26 Node data tests, 79/79 Chromium browser tests, 42/42 Python tests; canonical KJV verifier and Vite production build pass. npm test now covers data + portable Python + browsers; npm run test:all adds artifact-dependent Python acceptance (activate the documented environment). No skipped tests. Two in-memory mutation checks confirm hidden atlas routes and bypassed note ownership cause failures; original product behavior already passes the other new tests, so no claim they fail on old product code.
+- Sibling scan: reviewed all 7 Node test files, 11 original browser specs, 7 Python suites and 2 console diagnostics. Consolidated repeated comparisons across 4 PDF suites; retained separate historical-stage/feature checks and distinct Hebrew word cases. No canonical material or governance files changed.
+- Delegation: python_suite_review supplied a bounded read-only audit; its later implementation turn was unavailable, so all edits and validation were completed by the parent. No external project code changed. Existing legacy route fallback IDs in userContextStore were observed but not diagnosed or changed in this test-only scope.
+
 ## 2026-10-18 08:49:47 — Codex / HistoricalBible — Authorized publication of v00.01.54
 
 - User explicitly requested push following local acceptance. Committing the previously verified atlas coverage/search changes to master and pushing origin, which triggers the existing GitHub Pages workflow.

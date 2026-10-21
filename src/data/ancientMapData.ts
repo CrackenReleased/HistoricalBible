@@ -913,10 +913,10 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'rome',
     scriptureRef: 'LUKE {3:1}, {23:1}–{23:25}',
     scriptureOsis: 'Luke.3.1',
-    scriptureConnection: 'Direct Synchrony: Luke 3:1 & Matthew 27:2 — Monumental Latin inscription confirming Pontius Pilate as Roman Prefect of Judea.',
-    description: 'A limestone dedicatory block discovered in the Roman theatre at Caesarea bearing the Latin inscription: "[DIS AUGUSTI]S TIBERIEUM ... [PON]TIUS PILATUS ... [PRAEF]ECTUS IUDA[EAE]".',
-    significance: 'Confirms Pontius Pilate\'s exact historical office as Roman Prefect of Judea, corroborating Luke\'s precise political synchrony in Luke 3:1.',
-    externalUrl: 'https://www.imj.org.il/en/exhibitions/cradle-christianity'
+    scriptureConnection: 'Historical name and office synchrony: Luke 3:1 names Pontius Pilate governing Judea; a fragmentary Latin dedication from Caesarea names Pilate as prefect of Judea.',
+    description: 'A reused Latin dedicatory slab found in the Caesarea theater excavations in 1961 names Pontius Pilate and preserves his prefect title. Inscriptions of Israel/Palestine catalogs it as caes0043.',
+    significance: 'The inscription independently attests Pilate’s name and office. It does not describe Jesus, his trial, or the events in Luke 23; parts of the dedication require reconstruction.',
+    externalUrl: 'https://www.inscriptionsisraelpalestine.org/story/the-portrayals-of-pilate/'
   },
   {
     id: 'caiaphas-ossuary',
@@ -925,17 +925,17 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     modernCountry: 'Israel',
     coords: { lat: 31.765, lng: 35.230 },
     artifactName: 'The Caiaphas Ossuary',
-    artifactDate: '1st Century AD (c. AD 18–36)',
+    artifactDate: '1st century AD (tomb in use after AD 42–43)',
     discoveryYear: '1990',
     currentLocation: 'Israel Museum, Jerusalem',
     figureId: 'jesus-christ',
     empireId: 'rome',
     scriptureRef: 'MATTHEW {26:57}, JOHN {11:49}, {18:14}',
     scriptureOsis: 'Matt.26.57',
-    scriptureConnection: 'Direct Synchrony: Matthew 26:57 & John 18:14 — Burial bone-box inscribed with Joseph son of Caiaphas, the High Priest.',
-    description: 'An intricately carved limestone burial bone-box inscribed twice with the Aramaic name "Yehosef bar Qayafa" (Joseph son of Caiaphas), found in a family burial cave.',
-    significance: 'Material attestation of the Jewish High Priest who presided over the Sanhedrin trial and condemned Jesus Christ.',
-    externalUrl: 'https://www.imj.org.il/en/collections/371587-0'
+    scriptureConnection: 'Proposed identity: Matthew 26:57 names Caiaphas the high priest. A Jerusalem ossuary is inscribed with a form read “Yehosef bar Qayafa”; whether it held that specific man is not established.',
+    description: 'An ornate limestone ossuary from a documented 1990 rescue excavation of a family burial cave in southern Jerusalem bears two forms of the name “Joseph son of Caiaphas.”',
+    significance: 'The inscription attests a Caiaphas family name in the period. Assignment of the remains to the Gospel high priest is a proposal, not an inscriptional statement.',
+    externalUrl: 'https://www.imj.org.il/en/exhibitions/ossuary-caiaphas-high-priest-18-36-ce'
   },
   {
     id: 'taylor-prism',
@@ -951,9 +951,9 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'assyria',
     scriptureRef: '2 KINGS {18:13}–{19:37}, ISAIAH {36:1}–{37:38}',
     scriptureOsis: '2Kgs.18.13',
-    scriptureConnection: 'Direct Synchrony: 2 Kings 18:13–19:37 — Sennacherib records his siege of "Hezekiah the Judahite" in Jerusalem.',
+    scriptureConnection: 'Historical synchrony: Sennacherib names Hezekiah of Judah in his account of the 701 BC campaign; 2 Kings 18:13 describes the Assyrian attack on Judah.',
     description: 'A six-sided hexagonal baked clay prism recording Sennacherib\'s eight military campaigns. It specifically boasts of besieging "Hezekiah the Judahite like a caged bird in Jerusalem his royal city".',
-    significance: 'Direct imperial corroboration of the Assyrian invasion of Judah in 701 BC. Crucially, the prism boasts of tribute and capturing fortresses, but never claims to have taken Jerusalem—precisely matching Scripture\'s record of miraculous deliverance.',
+    significance: 'The imperial record independently attests Hezekiah and the Assyrian campaign. Its claims about tribute and fortified towns require comparison with 2 Kings 18; it does not establish every detail of either account.',
     externalUrl: 'https://www.britishmuseum.org/collection/object/W_1855-1028-1'
   },
   {
@@ -963,17 +963,16 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     modernCountry: 'Israel',
     coords: { lat: 31.772, lng: 35.235 },
     artifactName: 'The Siloam Tunnel Inscription',
-    artifactDate: 'c. 701 BC (Reign of Hezekiah)',
+    artifactDate: 'Iron Age; exact construction date disputed',
     discoveryYear: '1880',
     currentLocation: 'Istanbul Archaeology Museum, Turkey',
-    figureId: 'hezekiah',
     empireId: 'assyria',
     scriptureRef: '2 KINGS {20:20}, 2 CHRONICLES {32:30}',
     scriptureOsis: '2Kgs.20.20',
-    scriptureConnection: 'Direct Synchrony: 2 Kings 20:20 — Memorializes the cutting of Hezekiah\'s subterranean aqueduct into Jerusalem.',
-    description: 'An ancient Paleo-Hebrew inscription carved into the bedrock wall inside Hezekiah\'s 1,750-foot subterranean water tunnel, recording the dramatic moment the two mining teams met face-to-face.',
-    significance: 'Verifies the colossal engineering feat described in 2 Kings 20:20 ("he made a pool, and a conduit, and brought water into the city") to prepare Jerusalem for the Assyrian siege.',
-    externalUrl: 'https://en.wikipedia.org/wiki/Siloam_inscription'
+    scriptureConnection: 'Possible waterwork connection: 2 Kings 20:20 credits Hezekiah with a conduit. The Siloam tunnel inscription commemorates the cutting of a Jerusalem water tunnel but names no king.',
+    description: 'The six-line Hebrew Siloam inscription, published as KAI 189, was found in the tunnel wall in 1880. It describes the tunnel workers’ breakthrough, without naming a royal patron.',
+    significance: 'The inscription is direct evidence for ancient Jerusalem water engineering. Its assignment to Hezekiah and precise construction date are debated; it cannot alone identify the conduit in 2 Kings.',
+    externalUrl: 'https://jewishstudies.rutgers.edu/images/documents/faculty/Rendsburg/IEJ_Siloam.pdf'
   },
   {
     id: 'cyrus-cylinder',
@@ -982,17 +981,17 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     modernCountry: 'Iraq',
     coords: { lat: 32.542, lng: 44.421 },
     artifactName: 'The Cyrus Cylinder',
-    artifactDate: '539 BC',
+    artifactDate: '539–538 BC',
     discoveryYear: '1879',
     currentLocation: 'British Museum, London (Room 55)',
     figureId: 'daniel',
     empireId: 'persia',
     scriptureRef: '2 CHRONICLES {36:22}–{36:23}, EZRA {1:1}–{1:4}, ISAIAH {44:28}–{45:1}',
     scriptureOsis: 'Ezra.1.1',
-    scriptureConnection: 'Direct Synchrony: 2 Chronicles 36:22–23 & Ezra 1:1–4 — Cyrus the Great decrees return of exiled peoples and rebuilding of sanctuaries.',
-    description: 'A barrel-shaped clay cylinder inscribed in Akkadian cuneiform by order of Cyrus the Great after his conquest of Babylon in 539 BC, proclaiming the return of displaced peoples and the restoration of their sanctuaries.',
-    significance: 'Corroborates the imperial policy of Cyrus that enabled the Jewish remnant to return to Jerusalem and rebuild the Temple, fulfilling prophecies made 150 years earlier in Isaiah 44:28.',
-    externalUrl: 'https://www.britishmuseum.org/collection/object/W_1880-0617-1941'
+    scriptureConnection: 'Historical context: Ezra 1:1 describes Cyrus’s decree concerning Jerusalem. This Babylonian royal inscription describes Cyrus’s conquest and restoration of shrines but does not name Jerusalem.',
+    description: 'A Babylonian cuneiform cylinder ordered by Cyrus after his capture of Babylon, cataloged as British Museum 90920 / 1880,0617.1941. It recounts the conquest and restoration of shrines.',
+    significance: 'The cylinder is an independent witness to Cyrus’s rule and restoration policy. It does not reproduce Ezra’s Jerusalem decree or establish the composition date of Isaiah.',
+    externalUrl: 'https://www.britishmuseum.org/collection/image/262895001'
   },
   {
     id: 'nabonidus-cylinder',
@@ -1001,16 +1000,16 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     modernCountry: 'Iraq',
     coords: { lat: 30.962, lng: 46.103 },
     artifactName: 'The Nabonidus Cylinder of Ur',
-    artifactDate: 'c. 550 BC',
+    artifactDate: '556–539 BC (museum range)',
     discoveryYear: '1854',
     currentLocation: 'British Museum, London (Room 55)',
     figureId: 'daniel',
     empireId: 'babylon',
     scriptureRef: 'DANIEL {5:1}–{5:30}',
     scriptureOsis: 'Dan.5.1',
-    scriptureConnection: 'Direct Synchrony: Daniel 5:1–30 — Inscription naming Belshazzar as co-regent of Babylon, confirming the Daniel 5 narrative.',
-    description: 'A clay foundation cylinder of King Nabonidus recording repairs to the temple of Sin at Ur. In its prayer, Nabonidus explicitly names "Bel-sarra-usur [Belshazzar], my eldest son, offspring of my heart".',
-    significance: 'Vindicated Daniel 5 against 19th-century critics who claimed Belshazzar was fictional because classical Greek historians only mentioned Nabonidus. It confirmed Belshazzar as co-regent ruler in Babylon.',
+    scriptureConnection: 'Historical name synchrony: Daniel 5 names Belshazzar; this Ur cylinder of Nabonidus also names Belshazzar. The object alone does not verify the Daniel 5 events.',
+    description: 'A clay cylinder excavated at Ur with a Nabonidus inscription. The British Museum catalogs Belshazzar among the people named on it as object K.1689 / 91125.',
+    significance: 'The cylinder is an independent inscriptional attestation of Belshazzar’s name. Claims about his office and the events of Daniel 5 require separate evidence.',
     externalUrl: 'https://www.britishmuseum.org/collection/object/W_K-1689'
   },
   {
@@ -1020,17 +1019,17 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     modernCountry: 'Israel',
     coords: { lat: 33.249, lng: 35.652 },
     artifactName: 'The Tel Dan Stele ("House of David" Inscription)',
-    artifactDate: 'c. 840 BC (9th Century BC)',
+    artifactDate: '9th century BC',
     discoveryYear: '1993',
     currentLocation: 'Israel Museum, Jerusalem',
     figureId: 'david',
     empireId: 'assyria',
     scriptureRef: '2 SAMUEL {7:16}, 1 KINGS {12:16}, LUKE {1:32}',
     scriptureOsis: '2Sam.7.16',
-    scriptureConnection: 'Direct Synchrony: 2 Kings 8:28–29 & 9:24 — Hazael of Aram records conflict with the House of David and Israel.',
-    description: 'A monumental basalt victory stele erected by Hazael of Aram-Damascus at the city gate of Tel Dan. Line 9 explicitly boasts of defeating "[...mlk.] Bytdwd" ("King of the House of David") and "[...mlk] Ysr\'l" ("King of Israel").',
-    significance: 'The first direct extra-biblical historical attestation of King David and the Davidic Dynasty outside the Bible, refuting claims that David was a legendary figure.',
-    externalUrl: 'https://www.imj.org.il/en/collections/374567-0'
+    scriptureConnection: 'Dynastic context: 2 Samuel 7:16 speaks of David’s house; a ninth-century Aramaic stele from Tel Dan refers to a king of the “House of David.”',
+    description: 'Fragments of a ninth-century BC basalt victory stele excavated at Tel Dan in 1993–94. The Israel Antiquities Authority lists fragments 1996-125 and 1993-3162.',
+    significance: 'The inscription independently attests a royal “House of David.” It does not directly describe David’s life. Attribution to Hazael is scholarly inference; his name is not preserved on the stele.',
+    externalUrl: 'https://thejewishmuseum.org/exhibitions/tel-dan-stele/'
   },
   {
     id: 'merneptah-stele',
@@ -1039,17 +1038,16 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     modernCountry: 'Egypt',
     coords: { lat: 25.718, lng: 32.657 },
     artifactName: 'The Merneptah Stele (The "Israel Stele")',
-    artifactDate: 'c. 1208 BC (Year 5 of Pharaoh Merneptah)',
+    artifactDate: 'Late thirteenth century BC (Merneptah’s reign)',
     discoveryYear: '1896',
     currentLocation: 'Egyptian Museum, Cairo',
-    figureId: 'moses',
     empireId: 'egypt',
-    scriptureRef: 'EXODUS {1:11}, JOSHUA {1:1}',
-    scriptureOsis: 'Exod.1.11',
-    scriptureConnection: 'Direct Synchrony: Exodus 1 & Joshua — Earliest non-biblical mention of Israel as an established people group in Canaan.',
-    description: 'A 10-foot granite victory monument recording campaigns in the Levant. Line 27 states: "Israel is laid waste, its seed is not; Hurru has become a widow for Egypt." Israel is written with the hieroglyphic determinative for a distinct people group.',
-    significance: 'The earliest known mention of "Israel" in any non-biblical archaeological record. Proves that Israel was an established nation in Canaan by at least the late 13th century BC.',
-    externalUrl: 'https://en.wikipedia.org/wiki/Merneptah_Stele'
+    scriptureRef: 'EXODUS {1:1}',
+    scriptureOsis: 'Exod.1.1',
+    scriptureConnection: 'Name comparison: Exodus 1:1 uses Israel as the ancestor’s name; Merneptah’s later Egyptian victory stele names an Israel group in Canaan.',
+    description: 'An Egyptian royal victory stele from Merneptah’s reign, Cairo JE 31408, includes a hieroglyphic reference commonly read as Israel among groups in Canaan.',
+    significance: 'The stele is an early external mention of an Israel group. It does not establish the date of the Exodus, the size or statehood of the group, or a specific event in Exodus 1.',
+    externalUrl: 'https://www.ucl.ac.uk/museums-static/digitalegypt/thebes/merenptah/stela.html'
   },
   {
     id: 'gallio-inscription',
@@ -1065,10 +1063,10 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'rome',
     scriptureRef: 'ACTS {18:12}–{18:17}',
     scriptureOsis: 'Acts.18.12',
-    scriptureConnection: 'Direct Synchrony: Acts 18:12–17 — Inscription at Delphi dating Proconsul Gallio in Achaia to AD 51–52 during Paul\'s ministry.',
-    description: 'Nine stone fragments preserving a Greek letter from Emperor Claudius to Delphi. It explicitly names "Lucius Junius Gallio, my friend and proconsul of Achaia".',
-    significance: 'Provides the absolute chronological anchor for the entire New Testament apostolic chronology, dating Paul\'s 18-month ministry and courtroom trial in Corinth to AD 51–52.',
-    externalUrl: 'https://en.wikipedia.org/wiki/Gallio_inscription'
+    scriptureConnection: 'Historical synchrony: Acts 18:12 names Gallio as proconsul of Achaia; a fragmentary letter of Claudius independently names Gallio in that office.',
+    description: 'Fragments of a Greek letter from Emperor Claudius to Delphi name Gallio as proconsul of Achaia. Published as Fouilles de Delphes III 4:286.',
+    significance: 'The inscription helps date Gallio’s office to approximately AD 51–52. Relating that tenure to Paul’s hearing and stay in Corinth is a further chronological inference from Acts; the inscription does not describe Paul.',
+    externalUrl: 'https://epigraphy.packhum.org/text/240470'
   },
   {
     id: 'erastus-inscription',
@@ -1084,10 +1082,10 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'rome',
     scriptureRef: 'ROMANS {16:23}, 2 TIMOTHY {4:20}',
     scriptureOsis: 'Rom.16.23',
-    scriptureConnection: 'Direct Synchrony: Romans 16:23 & 2 Timothy 4:20 — Pavement in Corinth dedicated by Erastus, city chamberlain / treasurer.',
-    description: 'A limestone plaza pavement near the Corinth theater inscribed in Latin: "ERASTVS PRO AEDILITATE S P STRAVIT" ("Erastus in return for his aedileship laid this pavement at his own expense").',
-    significance: 'Matches Paul\'s salutation in Romans 16:23 written from Corinth: "Erastus the chamberlain [oikonomos / city treasurer] of the city saluteth you."',
-    externalUrl: 'https://en.wikipedia.org/wiki/Erastus_of_Corinth'
+    scriptureConnection: 'Possible name connection: Romans 16:23 names an Erastus, city steward; a Corinthian pavement names an Erastus who paid for paving in connection with an aedileship.',
+    description: 'Pavement slabs found near the Corinth theater carry a Latin dedication by an Erastus. The excavation edition catalogs the inscription as Corinth VIII.3 no. 232, inventory 2436.',
+    significance: 'The pavement attests an Erastus in Roman Corinth. The inscription and Romans use different office terms, and identification as the same person remains proposed.',
+    externalUrl: 'https://www.ascsa.edu.gr/publications/book/?i=9780876610831'
   },
   {
     id: 'ketef-hinnom-scrolls',
@@ -1096,17 +1094,17 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     modernCountry: 'Israel',
     coords: { lat: 31.769, lng: 35.225 },
     artifactName: 'The Ketef Hinnom Silver Amulet Scrolls',
-    artifactDate: 'c. 650 – 600 BC (Late First Temple Period)',
+    artifactDate: 'Late pre-exilic period (edition dating)',
     discoveryYear: '1979',
     currentLocation: 'Israel Museum, Jerusalem',
     figureId: 'jeremiah',
     empireId: 'babylon',
     scriptureRef: 'NUMBERS {6:24}–{6:26}',
     scriptureOsis: 'Num.6.24',
-    scriptureConnection: 'Direct Synchrony: Numbers 6:24–26 & 2 Kings 22–23 — Pre-exilic priestly benediction in Paleo-Hebrew found in Jerusalem.',
-    description: 'Two tiny rolled silver scrolls found in a burial chamber inscribed in Paleo-Hebrew with the priestly benediction: "The LORD bless thee, and keep thee: The LORD make his face shine upon thee...".',
-    significance: 'The oldest surviving biblical texts ever discovered—predating the Dead Sea Scrolls by more than 300 years and proving the Torah\'s Priestly Blessing was in liturgical use before the Babylonian exile.',
-    externalUrl: 'https://www.imj.org.il/en/collections/374568-0'
+    scriptureConnection: 'Textual parallel: two silver amulets found at Ketef Hinnom preserve wording also found in the priestly blessing in Numbers 6:24–26.',
+    description: 'Barkay and colleagues re-edited two silver plaques discovered at Ketef Hinnom in 1979 using improved imaging. Their edition dates the inscriptions to the late pre-exilic period.',
+    significance: 'The amulets are early witnesses to blessing language also preserved in Numbers. They do not date the composition of the whole Torah or reproduce the KJV wording.',
+    externalUrl: 'https://doi.org/10.2307/4150106'
   },
   {
     id: 'mesha-stele',
@@ -1115,17 +1113,17 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     modernCountry: 'Jordan',
     coords: { lat: 31.500, lng: 35.776 },
     artifactName: 'The Mesha Stele (Moabite Stone)',
-    artifactDate: 'c. 840 BC',
+    artifactDate: 'c. 830–805 BC (Louvre catalog range)',
     discoveryYear: '1868',
     currentLocation: 'Louvre Museum, Paris (Department of Near Eastern Antiquities)',
     figureId: 'david',
     empireId: 'assyria',
     scriptureRef: '2 KINGS {1:1}, {3:4}–{3:27}',
     scriptureOsis: '2Kgs.1.1',
-    scriptureConnection: 'Direct Synchrony: 2 Kings 1:1 & 3:4 — King Mesha of Moab records his rebellion against the house of Omri and Israel.',
-    description: 'A black basalt stele erected by King Mesha of Moab. The inscription records his rebellion against Israel and mentions "Omri, king of Israel", the "House of David", and the sacred divine name YHWH.',
-    significance: 'Independently confirms the events of 2 Kings 1:1 and 2 Kings 3, attests the God of Israel (YHWH) by name, and provides a second 9th-century BC mention of the "House of David".',
-    externalUrl: 'https://collections.louvre.fr/en/ark:/53355/cl010120567'
+    scriptureConnection: 'Historical synchrony: 2 Kings 1:1 describes Moab’s rebellion; the Moabite stele recounts Mesha’s recovery of territories from Israel from his own royal viewpoint.',
+    description: 'The Louvre catalogs this fragmented basalt monument as Mesha’s Moabite stele, AO 5066 / KAI 181, discovered at Diban and dated approximately 830–805 BC.',
+    significance: 'The inscription is an independent Moabite witness to Mesha’s conflict with Israel. Its restoration of a possible “House of David” phrase is disputed and is not used as an established claim here.',
+    externalUrl: 'https://collections.louvre.fr/en/ark:/53355/cl010120339'
   },
   {
     id: 'black-obelisk',
@@ -1137,13 +1135,12 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     artifactDate: 'c. 825 BC (Campaign of 841 BC)',
     discoveryYear: '1846',
     currentLocation: 'British Museum, London (Room 6)',
-    figureId: 'hezekiah',
     empireId: 'assyria',
     scriptureRef: '2 KINGS {9:1}–{10:36}',
     scriptureOsis: '2Kgs.9.1',
-    scriptureConnection: 'Direct Synchrony: 2 Kings 9–10 — Depicts Jehu, King of Israel, paying tribute to Shalmaneser III of Assyria.',
-    description: 'A four-sided black limestone obelisk depicting five defeated kings paying tribute. Panel 2 shows "Yaua mar Humri" (Jehu, son/successor of Omri), king of Israel, prostrating before Shalmaneser III.',
-    significance: 'The only surviving ancient depiction of an Israelite king, providing precise non-biblical chronological synchrony for Jehu\'s accession recorded in 2 Kings 9–10.',
+    scriptureConnection: 'Historical synchrony: 2 Kings 9–10 describes Jehu’s rise in Israel. Shalmaneser III’s Black Obelisk records tribute associated with Jehu; the tribute is not narrated in those chapters.',
+    description: 'A Neo-Assyrian obelisk from Nimrud, made about 825 BC, with reliefs and inscriptions naming tribute associated with Jehu of Israel. British Museum 118885 / 1848,1104.1.',
+    significance: 'The Assyrian monument supplies a separate royal record from Jehu’s period. A relief may show Jehu or a representative; it does not depict the events of 2 Kings 9–10.',
     externalUrl: 'https://www.britishmuseum.org/collection/object/W_1848-1104-1'
   },
   {
@@ -1152,18 +1149,17 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     ancientRegion: 'Neo-Assyrian Empire',
     modernCountry: 'Iraq',
     coords: { lat: 36.508, lng: 43.227 },
-    artifactName: 'The Khorsabad Annals of Sargon II',
-    artifactDate: 'c. 720 BC',
+    artifactName: 'Sargon II Khorsabad palace inscription',
+    artifactDate: 'Late eighth century BC',
     discoveryYear: '1847',
     currentLocation: 'Louvre Museum, Paris',
-    figureId: 'hezekiah',
     empireId: 'assyria',
     scriptureRef: '2 KINGS {17:1}–{17:6}',
     scriptureOsis: '2Kgs.17.6',
-    scriptureConnection: 'Direct Synchrony: 2 Kings 17:6 — Sargon II records the conquest of Samaria and deportation of 27,290 Israelites.',
-    description: 'Wall reliefs and prism fragments of Sargon II recording: "At the beginning of my royal rule, I besieged and conquered the city of the Samarians... 27,290 people who lived therein I carried away".',
-    significance: 'Verifies the historical fall of Samaria and the Assyrian deportation of the Northern Ten Tribes in 722 BC recorded in 2 Kings 17.',
-    externalUrl: 'https://en.wikipedia.org/wiki/Sargon_II'
+    scriptureConnection: 'Historical synchrony: 2 Kings 17:6 describes Assyria taking Samaria; a Khorsabad royal inscription of Sargon II also claims its conquest.',
+    description: 'A palace wall inscription of Sargon II from Khorsabad, edited in RINAP 2 as Sargon II 007, claims conquest of Samaria and the land of Israel.',
+    significance: 'This Assyrian royal claim supplies a separate witness to the fall of Samaria. The sequence and year of the conquest are debated, and the record does not identify each deportee by tribe.',
+    externalUrl: 'https://oracc.museum.upenn.edu/rinap/rinap2/Q006488'
   },
   {
     id: 'lachish-ostraca',
@@ -1172,17 +1168,17 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     modernCountry: 'Israel',
     coords: { lat: 31.565, lng: 34.849 },
     artifactName: 'The Lachish Letters (Ostraca)',
-    artifactDate: '588 – 586 BC (Babylonian Siege)',
+    artifactDate: 'Late seventh to early sixth century BC',
     discoveryYear: '1935',
     currentLocation: 'British Museum, London & Israel Museum, Jerusalem',
     figureId: 'jeremiah',
     empireId: 'babylon',
     scriptureRef: 'JEREMIAH {34:7}, 2 KINGS {18:14}',
     scriptureOsis: 'Jer.34.7',
-    scriptureConnection: 'Direct Synchrony: Jeremiah 34:7 — Military dispatches watching for the fire-signals of Lachish and Azekah as Nebuchadnezzar closed in on Judah.',
-    description: 'Pottery shards (ostraca) written in carbon ink in Paleo-Hebrew by a Judean officer named Hoshaiah during the final days before Babylon conquered Judah. Ostracon IV states: "We are watching for the fire-signals of Lachish... for we cannot see Azekah."',
-    significance: 'Matches Jeremiah 34:7 ("when the king of Babylon\'s army fought against Jerusalem, and against all the cities of Judah that were left, against Lachish, and against Azekah: for these defenced cities remained of the cities of Judah") from the exact week of the siege.',
-    externalUrl: 'https://www.britishmuseum.org/collection/object/W_1938-1010-2'
+    scriptureConnection: 'Place-name context: Jeremiah 34:7 names Lachish and Azekah; Lachish Letter 4 also mentions signals associated with those sites.',
+    description: 'Lachish Letter 4, Israel Antiquities Authority 1938–128 / KAI 194, is an inked pottery sherd found in the Lachish gate area in 1935. Its interpretation of the signaling report is debated.',
+    significance: 'The letter is a late Judahite administrative witness involving Lachish and Azekah. It cannot date Jeremiah 34:7 to an exact week or by itself prove Azekah had already fallen.',
+    externalUrl: 'https://ora.ox.ac.uk/objects/uuid:db71cf81-ba6c-4a91-8e51-3c694993ebfe'
   },
   {
     id: 'jehoiachin-ration-tablets',
@@ -1190,18 +1186,18 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     ancientRegion: 'Neo-Babylonian Empire',
     modernCountry: 'Iraq',
     coords: { lat: 32.545, lng: 44.423 },
-    artifactName: 'The Jehoiachin Ration Tablets',
-    artifactDate: 'c. 592 BC (Reign of Nebuchadnezzar II)',
+    artifactName: 'Jehoiachin ration tablet VAT 16378',
+    artifactDate: 'Sixth century BC (museum range)',
     discoveryYear: '1899',
     currentLocation: 'Vorderasiatisches Museum (Pergamon Museum), Berlin',
     figureId: 'jeremiah',
     empireId: 'babylon',
     scriptureRef: '2 KINGS {25:27}–{25:30}, JEREMIAH {52:31}–{52:34}',
     scriptureOsis: '2Kgs.25.27',
-    scriptureConnection: 'Direct Synchrony: 2 Kings 25:29–30 — Babylonian palace cuneiform ledgers recording royal oil and barley rations issued to "Jehoiachin, king of the land of Judah" and his five sons.',
-    description: 'Akkadian cuneiform administrative tablets excavated near the Ishtar Gate of Babylon listing rations of oil and grain distributed from Nebuchadnezzar\'s royal storehouse to "Ya\'ukin, king of the land of Yahudu [Judah]" and five royal princes.',
-    significance: 'Provides administrative eyewitness proof from Babylon\'s own palace archives confirming the exile, survival, and royal stipends of King Jehoiachin described at the close of 2 Kings 25 and Jeremiah 52.',
-    externalUrl: 'https://en.wikipedia.org/wiki/Jehoiachin%27s_Rations_Tablets'
+    scriptureConnection: 'Historical name context: 2 Kings 25:27–30 describes Jehoiachin in Babylon; a Babylonian ration list also names the king of Judah among palace dependents.',
+    description: 'Berlin Vorderasiatisches Museum tablet VAT 16378 is a sixth-century BC ration list for oil issued at Nebuchadnezzar II’s court and naming Judah’s king with an entourage.',
+    significance: 'The administrative tablet independently attests Jehoiachin in a Babylonian court context. It does not document his later release or establish the precise timing of 2 Kings 25:27–30.',
+    externalUrl: 'https://search.smb.museum/en/object/obj-1743721'
   },
   {
     id: 'dead-sea-scrolls-qumran',
@@ -1210,16 +1206,16 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     modernCountry: 'Israel',
     coords: { lat: 31.741, lng: 35.459 },
     artifactName: 'The Great Isaiah Scroll (1QIsaᵃ & Dead Sea Scrolls)',
-    artifactDate: 'c. 250 BC – AD 68 (1QIsaᵃ dated c. 125 BC)',
+    artifactDate: 'Great Isaiah Scroll: c. 125 BC',
     discoveryYear: '1947',
     currentLocation: 'Shrine of the Book, Israel Museum, Jerusalem',
     figureId: 'isaiah',
     empireId: 'rome',
     scriptureRef: 'ISAIAH {40:8}, {53:1}–{53:12}',
     scriptureOsis: 'Isa.40.8',
-    scriptureConnection: 'Direct Synchrony: Isaiah 40:8 & 53:1–12 — Complete 24-foot Hebrew parchment scroll of all 66 chapters of Isaiah predating Christ\'s earthly ministry by over a century.',
-    description: 'Seventeen sewn sheepskin parchment sheets (7.34 meters long) found in Cave 1 at Qumran preserving the entire book of Isaiah in Hebrew, alongside fragments of every Old Testament book except Esther.',
-    significance: 'Shifted surviving Hebrew manuscript testimony back more than 1,000 years earlier than the medieval Masoretic codices, proving the extraordinary textual preservation of Messianic prophecies such as Isaiah 53.',
+    scriptureConnection: 'Textual witness: the Great Isaiah Scroll preserves all 66 chapters of the Hebrew book of Isaiah, including the passages at Isaiah 40 and 53. It is a manuscript witness, not an event synchrony.',
+    description: 'The Israel Museum dates 1QIsaᵃ to approximately 125 BC and describes its 54 columns, 7.34-meter length, and coverage of all 66 chapters of Isaiah.',
+    significance: 'An early Hebrew witness for comparing Isaiah’s textual transmission. It does not by itself decide interpretation of a prophecy or guarantee identical wording with the KJV.',
     externalUrl: 'https://dss.collections.imj.org.il/isaiah'
   },
   {
@@ -1236,29 +1232,29 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     empireId: 'rome',
     scriptureRef: 'JOHN {9:7}, {9:11}',
     scriptureOsis: 'John.9.7',
-    scriptureConnection: 'Direct Synchrony: John 9:7 — Monumental stepped stone immersion pool fed by the Gihon Spring where Jesus sent the man born blind to wash and receive sight.',
-    description: 'A monumental 225-foot-wide trapezoidal stepped limestone pool discovered during infrastructure work in 2004, featuring three tiers of cut stone steps descending into the waters fed by Hezekiah\'s Tunnel.',
-    significance: 'Confirms the exact Second Temple topography described in the Gospel of John prior to the Roman destruction of Jerusalem in AD 70.',
-    externalUrl: 'https://en.wikipedia.org/wiki/Pool_of_Siloam'
+    scriptureConnection: 'Place identification: John 9:7 names Siloam. Excavators identify a stepped late Second Temple pool at the southern City of David as the Pool of Siloam.',
+    description: 'Reich and Shukron’s excavation, begun after sewer work exposed stone steps in 2004, uncovered part of a large stepped pool south of the City of David. The site is recorded under Israel Antiquities Authority permit A-4192/2004 and later permits.',
+    significance: 'The excavated pool supplies historical topographic context for John 9. Its identification and dating do not independently document the healing described in that chapter.',
+    externalUrl: 'https://doi.org/10.5325/j.ctv1bxgwc2.17'
   },
   {
     id: 'sergius-paulus-inscription',
-    name: 'Pisidian Antioch & Soli (Cyprus)',
-    ancientRegion: 'Cyprus & Galatia / Roman Empire',
-    modernCountry: 'Turkey / Cyprus',
-    coords: { lat: 38.304, lng: 31.189 },
-    artifactName: 'The Sergius Paulus Inscriptions',
-    artifactDate: 'Mid-1st Century AD (Reign of Claudius)',
-    discoveryYear: '1877',
-    currentLocation: 'Yalvaç Museum, Turkey & Cyprus Museum, Nicosia',
+    name: 'Soloi (Cyprus)',
+    ancientRegion: 'Roman Cyprus',
+    modernCountry: 'Cyprus',
+    coords: { lat: 35.140, lng: 32.811 },
+    artifactName: 'Soloi proconsul Paulus inscription',
+    artifactDate: 'Roman period; exact year under review',
+    discoveryYear: '19th century',
+    currentLocation: 'Cyprus Museum, Nicosia (published Soloi inscription)',
     figureId: 'paul',
     empireId: 'rome',
     scriptureRef: 'ACTS {13:7}, {13:12}',
     scriptureOsis: 'Acts.13.7',
-    scriptureConnection: 'Direct Synchrony: Acts 13:7, 12 — Epigraphic attestations of the Roman senatorial family of Lucius Sergius Paulus, Proconsul of Cyprus during Paul\'s first missionary journey.',
-    description: 'Greek and Latin stone inscriptions from Cyprus (naming "Paulus the proconsul") and from the family estates at Pisidian Antioch naming Lucius Sergius Paullus the Younger and Sergia Paulla.',
-    significance: 'Corroborates Luke\'s exact Roman provincial title ("deputy / anthupatos [proconsul] of the country, Sergius Paulus, a prudent man") in Acts 13:7 and explains why Paul immediately traveled from Cyprus to Pisidian Antioch (Acts 13:14).',
-    externalUrl: 'https://en.wikipedia.org/wiki/Sergius_Paulus'
+    scriptureConnection: 'Possible office and name comparison: Acts 13:7 names Sergius Paulus as proconsul on Cyprus; a Soloi inscription names a proconsul Paulus, without preserving Sergius.',
+    description: 'A Greek inscription from Soloi, published as IGRR III 930, mentions a Cypriot proconsul Paulus. The surviving name does not identify him securely as the man in Acts.',
+    significance: 'The inscription attests a proconsul named Paulus in Cyprus. It cannot by itself establish his full identity, the date of Paul’s visit, or a reason for the later journey to Pisidian Antioch.',
+    externalUrl: 'https://www.cambridge.org/core/journals/annual-of-the-british-school-at-athens/article/abs/notes-on-some-published-inscriptions-of-roman-cyprus1/25FFC6A3A9F921ACDD23A971646A1795'
   },
   {
     id: 'arch-of-titus-spoils',
@@ -1267,17 +1263,16 @@ export const ARCHAEOLOGICAL_SITES: ArchaeologicalSite[] = [
     modernCountry: 'Italy',
     coords: { lat: 41.891, lng: 12.489 },
     artifactName: 'The Arch of Titus (Jerusalem Temple Spoils Relief)',
-    artifactDate: 'AD 81 (Commemorating Siege of AD 70)',
-    discoveryYear: '81',
+    artifactDate: 'After AD 81 (commemorating AD 70–71)',
     currentLocation: 'Roman Forum, Rome, Italy',
     figureId: 'jesus-christ',
     empireId: 'rome',
     scriptureRef: 'LUKE {19:43}–{19:44}, {21:20}–{21:24}, MATTHEW {24:2}',
     scriptureOsis: 'Luke.21.20',
-    scriptureConnection: 'Direct Synchrony: Luke 21:20–24 & Matthew 24:2 — Roman triumphal monument depicting soldiers carrying the golden Menorah, Table of Showbread, and silver trumpets from the destroyed Jerusalem Temple.',
-    description: 'A Pentelic marble triumphal arch erected by Emperor Domitian on the Via Sacra in Rome commemorating Titus\'s AD 70 capture of Jerusalem. Its inner south panel relief vividly depicts the sacred vessels of Herod\'s Temple carried in Roman triumph.',
-    significance: 'Monumental Roman testimony to the literal historical fulfillment of Jesus Christ\'s Olivet prophecy (Luke 19:43–44, 21:20–24) delivered forty years before the siege.',
-    externalUrl: 'https://en.wikipedia.org/wiki/Arch_of_Titus'
+    scriptureConnection: 'Historical comparison: Luke 21:20–24 speaks of Jerusalem’s calamity; the later Roman monument commemorates Titus’s Jewish War and depicts Temple spoils.',
+    description: 'A marble arch in the Roman Forum built after Titus’s death in AD 81. Its inner relief depicts a Roman procession carrying the Jerusalem Temple’s menorah, table, and trumpets.',
+    significance: 'The monument is Roman testimony to the conquest and triumph, not a record of when Luke’s words were spoken or an independent proof of every prophetic detail.',
+    externalUrl: 'https://colosseo.it/en/marvels/arch-of-titus/'
   }
 ];
 
@@ -1646,7 +1641,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Jacob's Travels: To & From Rachel in Padan-Aram",
     shortBanner: "🌾 JACOB'S JOURNEY: RACHEL & PADAN-ARAM (c. 1929 BC)",
     travelerName: "Patriarch Jacob (Israel)",
-    figureId: 'abraham',
+    figureId: 'jacob',
     color: '#f59e0b',
     dateRange: 'c. 1929 – 1899 BC (Genesis Era)',
     scriptureRef: 'GENESIS {28:10}–{35:29}',
@@ -1733,7 +1728,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Jacob's Sojourn & Joseph in Egypt",
     shortBanner: "🌾 JACOB & JOSEPH TO EGYPT (c. 1915–1876 BC)",
     travelerName: 'Patriarchs Jacob (Israel) & Joseph',
-    figureId: 'abraham',
+    figureId: 'joseph',
     color: '#fb923c',
     dateRange: 'c. 1915 – 1876 BC',
     scriptureRef: 'GENESIS {31:17}–{50:26}',
@@ -1788,7 +1783,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Joshua's Jordan Crossing & Conquest of Canaan",
     shortBanner: "⚔️ JOSHUA'S CONQUEST OF CANAAN (1406–1399 BC)",
     travelerName: 'Joshua Son of Nun & Israel',
-    figureId: 'moses',
+    figureId: 'joshua',
     color: '#60a5fa',
     dateRange: 'c. 1406 – 1399 BC',
     scriptureRef: 'JOSHUA {1:1}–{11:23}',
@@ -1876,7 +1871,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Balaam's Donkey & the Oracles of Moab",
     shortBanner: "🐴 BALAAM'S DONKEY & ORACLES (c. 1407 BC)",
     travelerName: "Balaam Son of Beor & King Balak",
-    figureId: 'moses',
+    figureId: 'balaam',
     color: '#ec4899',
     dateRange: 'c. 1407 BC (Wilderness Encampment in Moab)',
     scriptureRef: 'NUMBERS {22:1}–{24:25}, {31:8}, 2 PETER {2:15}–{2:16}',
@@ -2006,7 +2001,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Elijah & Elisha's Prophetic Ministry",
     shortBanner: "🔥 ELIJAH & ELISHA PROPHETIC CIRCUIT (c. 865–841 BC)",
     travelerName: 'Prophets Elijah the Tishbite & Elisha',
-    figureId: 'hezekiah',
+    figureId: 'elijah',
     color: '#f97316',
     dateRange: 'c. 865 – 841 BC',
     scriptureRef: '1 KINGS {17:1}–2 KINGS {13:21}',
@@ -2231,9 +2226,9 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
   {
     id: 'john-baptist-ministry',
     name: "John the Baptist: Wilderness, Jordan & Machaerus (In Relation to Jesus)",
-    shortBanner: "🌊 JOHN THE BAPTIST MINISTRY (AD 26–29)",
+    shortBanner: "⚡ JOHN THE BAPTIST MINISTRY (AD 26–29)",
     travelerName: 'John the Baptist (Forerunner of Christ)',
-    figureId: 'jesus-christ',
+    figureId: 'john-baptist',
     color: '#22d3ee', // Bright Cyan
     dateRange: 'c. AD 26 – 29',
     scriptureRef: 'MATTHEW {3:1}–{3:17}, {11:2}–{11:14}, JOHN {1:19}–{1:36}, {3:22}–{3:36}, MARK {6:17}–{6:29}',
@@ -3010,7 +3005,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Apostle Thomas (Didymus): Jerusalem, Parthia & India",
     shortBanner: "🌏 THOMAS: PARTHIA & INDIA [SCRIPTURE + PATRISTIC] (AD 33–72)",
     travelerName: 'Apostle Thomas (Called Didymus)',
-    figureId: 'peter',
+    figureId: 'thomas',
     color: '#2dd4bf', // Vibrant Teal-Turquoise
     dateRange: 'AD 30 – c. AD 72',
     scriptureRef: 'JOHN {11:16}, {14:5}–{14:6}, {20:24}–{20:29}, {21:2}, ACTS {1:13}, {2:9}',
@@ -3085,7 +3080,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Apostle Andrew (Scythia) & John Mark (Alexandria)",
     shortBanner: "🌍 ANDREW (SCYTHIA) & MARK (ALEXANDRIA) [PATRISTIC] (AD 33–68)",
     travelerName: 'Apostle Andrew & Evangelist John Mark',
-    figureId: 'peter',
+    figureId: 'andrew',
     color: '#818cf8', // Periwinkle Indigo
     dateRange: 'AD 33 – c. AD 68',
     scriptureRef: 'JOHN {1:40}–{1:42}, {12:20}–{12:22}, ACTS {12:12}, {15:39}, COLOSSIANS {3:11}, 1 PETER {5:13}',
@@ -3140,7 +3135,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Apostle John: Seven Churches of Asia & Isle of Patmos",
     shortBanner: "📜 JOHN: 7 CHURCHES & PATMOS (AD 68–96)",
     travelerName: 'Apostle John (The Beloved Disciple)',
-    figureId: 'peter',
+    figureId: 'john',
     color: '#facc15', // Revelation Gold
     dateRange: 'c. AD 68 – 96',
     scriptureRef: 'JOHN {19:26}–{19:27}, GALATIANS {2:9}, REVELATION {1:9}–{3:22}',
@@ -3267,7 +3262,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Gideon: Ophrah, the Harod Spring & Route of the 300",
     shortBanner: "⚔️ GIDEON: HAROD SPRING & MIDIAN ROUT (c. 1191 BC)",
     travelerName: "Gideon (Jerubbaal)",
-    figureId: 'moses',
+    figureId: 'gideon',
     color: '#38bdf8',
     dateRange: 'c. 1191 – 1151 BC (Judges Era)',
     scriptureRef: 'JUDGES {6:1}–{8:35}, HEBREWS {11:32}',
@@ -3338,7 +3333,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Samson: Zorah, Timnath, Lehi & the Overthrow at Gaza",
     shortBanner: "🦁 SAMSON: TIMNATH, LEHI & GAZA GATES (c. 1085 BC)",
     travelerName: "Samson the Danite Judge",
-    figureId: 'moses',
+    figureId: 'samson',
     color: '#ea580c',
     dateRange: 'c. 1095 – 1075 BC',
     scriptureRef: 'JUDGES {13:1}–{16:31}, HEBREWS {11:32}',
@@ -3409,7 +3404,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Ruth: Plains of Moab to Bethlehem's Threshing Floor",
     shortBanner: "🌾 RUTH: MOAB TO BETHLEHEM (c. 1100 BC)",
     travelerName: "Ruth the Moabitess & Naomi",
-    figureId: 'moses',
+    figureId: 'ruth',
     color: '#ec4899',
     dateRange: 'c. 1120 – 1100 BC',
     scriptureRef: 'RUTH {1:1}–{4:22}, MATTHEW {1:5}',
@@ -3476,7 +3471,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Samuel: Shiloh, Ebenezer & the Circuit of Israel",
     shortBanner: "📜 SAMUEL: SHILOH & CIRCUIT OF ISRAEL (c. 1050 BC)",
     travelerName: "Prophet Samuel",
-    figureId: 'david',
+    figureId: 'samuel',
     color: '#8b5cf6',
     dateRange: 'c. 1090 – 1015 BC',
     scriptureRef: '1 SAMUEL {1:1}–{25:1}, ACTS {3:24}, {13:20}',
@@ -3539,7 +3534,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "King Saul: Gibeah Fortress, Michmash & Mount Gilboa",
     shortBanner: "👑 SAUL: GIBEAH, MICHMASH & GILBOA (c. 1050–1010 BC)",
     travelerName: "King Saul",
-    figureId: 'david',
+    figureId: 'saul',
     color: '#9333ea',
     dateRange: 'c. 1050 – 1010 BC',
     scriptureRef: '1 SAMUEL {9:1}–{31:13}, 1 CHRONICLES {10:1}–{10:14}',
@@ -3716,7 +3711,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Prophet Elijah: Tishbe, Cherith, Carmel & Jordan Whirlwind",
     shortBanner: "🔥 ELIJAH: TISHBE, CARMEL & JORDAN WHIRLWIND (c. 865–851 BC)",
     travelerName: "Prophet Elijah the Tishbite",
-    figureId: 'hezekiah',
+    figureId: 'elijah',
     color: '#f97316',
     dateRange: 'c. 865 – 851 BC',
     scriptureRef: '1 KINGS {17:1}–2 KINGS {2:12}',
@@ -3806,7 +3801,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Prophet Elisha: Double Portion, Shunem & Chariots of Fire",
     shortBanner: "💧 ELISHA: DOUBLE PORTION & DOTHAN CHARIOTS (c. 851–798 BC)",
     travelerName: "Prophet Elisha",
-    figureId: 'hezekiah',
+    figureId: 'elisha',
     color: '#22c55e',
     dateRange: 'c. 851 – 798 BC',
     scriptureRef: '1 KINGS {19:19}–2 KINGS {13:21}',
@@ -3883,7 +3878,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Prophet Amos: Tekoa Herdsman to Bethel's Royal Altar",
     shortBanner: "🐑 AMOS: TEKOA HERDSMAN TO BETHEL ALTAR (c. 760 BC)",
     travelerName: "Prophet Amos of Tekoa",
-    figureId: 'hezekiah',
+    figureId: 'amos',
     color: '#84cc16',
     dateRange: 'c. 760 – 755 BC (Reign of Jeroboam II)',
     scriptureRef: 'AMOS {1:1}–{9:15}, ACTS {7:42}–{7:43}, {15:16}–{15:17}',
@@ -3922,7 +3917,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Prophet Hosea: Unfailing Covenant Love in Samaria",
     shortBanner: "❤️ HOSEA: UNFAILING LOVE IN SAMARIA (c. 755–715 BC)",
     travelerName: "Prophet Hosea",
-    figureId: 'hezekiah',
+    figureId: 'hosea',
     color: '#e11d48',
     dateRange: 'c. 755 – 715 BC',
     scriptureRef: 'HOSEA {1:1}–{14:9}, MATTHEW {2:15}, ROMANS {9:25}–{9:26}',
@@ -4177,7 +4172,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Prophet Ezekiel: Chebar Chariot Throne & Valley of Dry Bones",
     shortBanner: "⚡ EZEKIEL: CHEBAR CHARIOT & DRY BONES (593–571 BC)",
     travelerName: "Prophet Ezekiel Son of Buzi",
-    figureId: 'daniel',
+    figureId: 'ezekiel',
     color: '#06b6d4',
     dateRange: '593 – 571 BC',
     scriptureRef: 'EZEKIEL {1:1}–{48:35}',
@@ -4224,7 +4219,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Esther & Mordecai: Susa Citadel, King's Gate & Purim",
     shortBanner: "👑 ESTHER & MORDECAI: SUSA CITADEL & PURIM (483–473 BC)",
     travelerName: "Queen Esther & Mordecai the Jew",
-    figureId: 'ezra-nehemiah',
+    figureId: 'esther',
     color: '#e879f9',
     dateRange: 'c. 483 – 473 BC (Reign of Ahasuerus / Xerxes I)',
     scriptureRef: 'ESTHER {1:1}–{10:3}',
@@ -4381,7 +4376,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Stephen & Philip: Jerusalem Deacons, Samaria & Gaza Road",
     shortBanner: "⚡ STEPHEN & PHILIP: JERUSALEM, SAMARIA & GAZA (AD 34–37)",
     travelerName: "Stephen the Protomartyr & Philip the Evangelist",
-    figureId: 'peter',
+    figureId: 'stephen',
     color: '#f59e0b',
     dateRange: 'c. AD 34 – 37',
     scriptureRef: 'ACTS {6:1}–{8:40}, {21:8}',
@@ -4507,7 +4502,7 @@ export const BIBLICAL_ROUTES: BiblicalRoute[] = [
     name: "Barnabas & Mark: Jerusalem, Syrian Antioch & Cyprus Mission",
     shortBanner: "⛵ BARNABAS & MARK: CYPRUS & ANTIOCH (AD 45–52)",
     travelerName: "Barnabas & John Mark",
-    figureId: 'paul',
+    figureId: 'barnabas',
     color: '#14b8a6',
     dateRange: 'c. AD 45 – 52',
     scriptureRef: 'ACTS {4:36}–{4:37}, {11:22}–{11:26}, {13:1}–{13:13}, {15:36}–{15:39}, 2 TIMOTHY {4:11}',
@@ -5105,7 +5100,7 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
       { lat: 35.50, lng: 120.00 }, { lat: 30.50, lng: 121.50 }, { lat: 28.00, lng: 113.00 },
       { lat: 29.50, lng: 104.00 }, { lat: 34.50, lng: 104.50 }, { lat: 40.50, lng: 106.00 }
     ],
-    biblicalIntersection: 'Contemporary eastern superpower during Israel\'s monarchy and exile; roots of the silk trade network known biblically as the Land of Sinim (Isaiah 49:12).',
+    biblicalIntersection: 'Major eastern civilization contemporary with Israel\'s monarchy and exile. Some commentators propose a link with the \'land of Sinim\' (Isaiah 49:12), though linguistic and geographic identification remains debated. Chinese dynastic annals provide independent contemporary world context without claiming direct contact with Judah.',
     factionCategory: 'global_power',
     populationEstimate: '~35,000,000 – 40,000,000',
     approximateArea: '~3,400,000 km²'
@@ -6685,4 +6680,451 @@ export function calculatePolygonGeodesicArea(coords: Array<{ lat: number; lng: n
   return (Math.abs(sum) / 2) * 111.32 * 110.574;
 }
 
+export interface PassageJourneyMatch {
+  route: BiblicalRoute;
+  stop: BiblicalRouteStop;
+  stopIndex: number;
+}
 
+/**
+ * Resolves a Scripture passage (OSIS book, chapter, and optional verse)
+ * to an established narrative journey stop along a reviewed biblical route.
+ */
+export function getJourneyStopForPassage(bookOsis: string, chapter: number, verse?: number): PassageJourneyMatch | undefined {
+  const normBook = bookOsis.toLowerCase().replace(/[\s_]+/g, '');
+
+  // 1. Genesis: Abraham's journey of faith (abraham-call, 8 stops)
+  if (normBook === 'gen' || normBook === 'genesis') {
+    if (chapter <= 25) {
+      const abrRoute = BIBLICAL_ROUTES.find(r => r.id === 'abraham-call');
+      if (abrRoute && abrRoute.stops.length >= 8) {
+        if (chapter === 11) {
+          return { route: abrRoute, stop: abrRoute.stops[0], stopIndex: 0 }; // Ur of the Chaldees
+        }
+        if (chapter === 12) {
+          const v = verse || 1;
+          if (v <= 5) return { route: abrRoute, stop: abrRoute.stops[3], stopIndex: 3 }; // Haran
+          if (v <= 7) return { route: abrRoute, stop: abrRoute.stops[5], stopIndex: 5 }; // Shechem
+          return { route: abrRoute, stop: abrRoute.stops[6], stopIndex: 6 }; // Bethel & Ai
+        }
+        if (chapter === 13) {
+          const v = verse || 1;
+          if (v <= 17) return { route: abrRoute, stop: abrRoute.stops[6], stopIndex: 6 }; // Bethel & Ai
+          return { route: abrRoute, stop: abrRoute.stops[7], stopIndex: 7 }; // Hebron
+        }
+        if (chapter === 15 || chapter === 23) {
+          return { route: abrRoute, stop: abrRoute.stops[7], stopIndex: 7 }; // Hebron / Machpelah
+        }
+      }
+    }
+
+    // Jacob's travels to and from Padan-Aram (jacob-padan-aram, 9 stops)
+    const jacobRoute = BIBLICAL_ROUTES.find(r => r.id === 'jacob-padan-aram');
+    if (jacobRoute && jacobRoute.stops.length >= 9) {
+      if (chapter === 28) {
+        const v = verse || 10;
+        if (v === 10) return { route: jacobRoute, stop: jacobRoute.stops[0], stopIndex: 0 }; // Beersheba
+        return { route: jacobRoute, stop: jacobRoute.stops[1], stopIndex: 1 }; // Bethel / Luz
+      }
+      if (chapter === 29 || chapter === 30) {
+        return { route: jacobRoute, stop: jacobRoute.stops[2], stopIndex: 2 }; // Haran
+      }
+      if (chapter === 31) {
+        return { route: jacobRoute, stop: jacobRoute.stops[3], stopIndex: 3 }; // Mount Gilead / Galeed
+      }
+      if (chapter === 32) {
+        const v = verse || 1;
+        if (v <= 2) return { route: jacobRoute, stop: jacobRoute.stops[4], stopIndex: 4 }; // Mahanaim
+        return { route: jacobRoute, stop: jacobRoute.stops[5], stopIndex: 5 }; // Peniel / Jabbok
+      }
+      if (chapter === 33) {
+        return { route: jacobRoute, stop: jacobRoute.stops[6], stopIndex: 6 }; // Succoth & Shechem
+      }
+      if (chapter === 35) {
+        const v = verse || 1;
+        if (v <= 20) return { route: jacobRoute, stop: jacobRoute.stops[7], stopIndex: 7 }; // Bethlehem / Rachel's Grave
+        return { route: jacobRoute, stop: jacobRoute.stops[8], stopIndex: 8 }; // Hebron / Mamre
+      }
+    }
+  }
+
+  // 2. Exodus: The Exodus and Wilderness Route (exodus-route, 8 stops)
+  if (normBook === 'exod' || normBook === 'exo' || normBook === 'exodus') {
+    const exodusRoute = BIBLICAL_ROUTES.find(r => r.id === 'exodus-route');
+    if (exodusRoute && exodusRoute.stops.length >= 8) {
+      if (chapter === 12) {
+        const v = verse || 37;
+        if (v >= 37) return { route: exodusRoute, stop: exodusRoute.stops[0], stopIndex: 0 }; // Rameses
+      }
+      if (chapter === 13) {
+        const v = verse || 1;
+        if (v < 20) return { route: exodusRoute, stop: exodusRoute.stops[1], stopIndex: 1 }; // Succoth
+        return { route: exodusRoute, stop: exodusRoute.stops[2], stopIndex: 2 }; // Etham
+      }
+      if (chapter === 14) {
+        return { route: exodusRoute, stop: exodusRoute.stops[3], stopIndex: 3 }; // Red Sea Crossing
+      }
+      if (chapter === 15) {
+        const v = verse || 22;
+        if (v >= 22 && v <= 26) return { route: exodusRoute, stop: exodusRoute.stops[4], stopIndex: 4 }; // Marah
+        if (v >= 27) return { route: exodusRoute, stop: exodusRoute.stops[5], stopIndex: 5 }; // Elim
+      }
+      if (chapter === 17) {
+        return { route: exodusRoute, stop: exodusRoute.stops[6], stopIndex: 6 }; // Rephidim
+      }
+      if (chapter === 19 || chapter === 20) {
+        return { route: exodusRoute, stop: exodusRoute.stops[7], stopIndex: 7 }; // Mount Sinai
+      }
+    }
+  }
+
+  // 3. Joshua: Crossing Jordan and Conquest of Canaan (joshua-conquest, 7 stops)
+  if (normBook === 'josh' || normBook === 'joshua') {
+    const joshRoute = BIBLICAL_ROUTES.find(r => r.id === 'joshua-conquest');
+    if (joshRoute && joshRoute.stops.length >= 7) {
+      if (chapter === 1) return { route: joshRoute, stop: joshRoute.stops[0], stopIndex: 0 }; // Plains of Moab
+      if (chapter === 3 || chapter === 4) return { route: joshRoute, stop: joshRoute.stops[1], stopIndex: 1 }; // Jordan Crossing & Gilgal
+      if (chapter === 6) return { route: joshRoute, stop: joshRoute.stops[2], stopIndex: 2 }; // Jericho
+      if (chapter === 8) return { route: joshRoute, stop: joshRoute.stops[3], stopIndex: 3 }; // Ai & Mount Ebal
+      if (chapter === 10) return { route: joshRoute, stop: joshRoute.stops[4], stopIndex: 4 }; // Gibeon & Valley of Ajalon
+      if (chapter === 11) return { route: joshRoute, stop: joshRoute.stops[5], stopIndex: 5 }; // Hazor
+      if (chapter === 18) return { route: joshRoute, stop: joshRoute.stops[6], stopIndex: 6 }; // Shiloh
+    }
+  }
+
+  // 4. Solomon: Temple, Red Sea Fleet & Golden Age (solomon-glory, 6 stops)
+  if (normBook === '1kgs' || normBook === '1kings') {
+    if (chapter >= 3 && chapter <= 10) {
+      const solRoute = BIBLICAL_ROUTES.find(r => r.id === 'solomon-glory');
+      if (solRoute && solRoute.stops.length >= 6) {
+        if (chapter === 3) return { route: solRoute, stop: solRoute.stops[0], stopIndex: 0 }; // Gibeon
+        if (chapter === 6 || chapter === 7 || chapter === 8) return { route: solRoute, stop: solRoute.stops[1], stopIndex: 1 }; // Temple Dedicated
+        if (chapter === 9) {
+          const v = verse || 1;
+          if (v >= 26) return { route: solRoute, stop: solRoute.stops[2], stopIndex: 2 }; // Ezion-geber
+          if (v === 18) return { route: solRoute, stop: solRoute.stops[4], stopIndex: 4 }; // Tadmor
+          return { route: solRoute, stop: solRoute.stops[3], stopIndex: 3 }; // Megiddo, Hazor, Gezer
+        }
+        if (chapter === 10) return { route: solRoute, stop: solRoute.stops[5], stopIndex: 5 }; // Visit of Queen of Sheba
+      }
+    }
+
+    // Elijah prophetic route (1 & 2 Kings)
+    const elijahRoute = BIBLICAL_ROUTES.find(r => r.id === 'elijah-prophet');
+    if (elijahRoute && elijahRoute.stops.length >= 7) {
+      if (chapter === 17) {
+        const v = verse || 1;
+        if (v === 1) return { route: elijahRoute, stop: elijahRoute.stops[0], stopIndex: 0 }; // Tishbe
+        if (v >= 2 && v <= 7) return { route: elijahRoute, stop: elijahRoute.stops[1], stopIndex: 1 }; // Cherith
+        return { route: elijahRoute, stop: elijahRoute.stops[2], stopIndex: 2 }; // Zarephath
+      }
+      if (chapter === 18) {
+        return { route: elijahRoute, stop: elijahRoute.stops[3], stopIndex: 3 }; // Carmel
+      }
+      if (chapter === 19) {
+        return { route: elijahRoute, stop: elijahRoute.stops[4], stopIndex: 4 }; // Horeb
+      }
+      if (chapter === 21) {
+        return { route: elijahRoute, stop: elijahRoute.stops[5], stopIndex: 5 }; // Jezreel / Naboth
+      }
+    }
+  } else if (normBook === '2kgs' || normBook === '2kings') {
+    if (chapter === 2) {
+      const elijahRoute = BIBLICAL_ROUTES.find(r => r.id === 'elijah-prophet');
+      if (elijahRoute && elijahRoute.stops.length >= 7) {
+        return { route: elijahRoute, stop: elijahRoute.stops[6], stopIndex: 6 }; // Jordan Whirlwind
+      }
+    }
+  }
+
+  // 5. Jeremiah: Anathoth, Temple Gate, Cistern & Egypt (jeremiah-ministry, 6 stops)
+  if (normBook === 'jer' || normBook === 'jeremiah') {
+    const jerRoute = BIBLICAL_ROUTES.find(r => r.id === 'jeremiah-ministry');
+    if (jerRoute && jerRoute.stops.length >= 6) {
+      if (chapter === 1) return { route: jerRoute, stop: jerRoute.stops[0], stopIndex: 0 }; // Anathoth
+      if (chapter === 7 || chapter === 26) return { route: jerRoute, stop: jerRoute.stops[1], stopIndex: 1 }; // Temple Gate
+      if (chapter === 19) return { route: jerRoute, stop: jerRoute.stops[2], stopIndex: 2 }; // Hinnom
+      if (chapter === 38) return { route: jerRoute, stop: jerRoute.stops[3], stopIndex: 3 }; // Cistern
+      if (chapter === 40) return { route: jerRoute, stop: jerRoute.stops[4], stopIndex: 4 }; // Mizpah
+      if (chapter === 43) return { route: jerRoute, stop: jerRoute.stops[5], stopIndex: 5 }; // Tahpanhes
+    }
+  }
+
+  // 6. Daniel: Babylon, Furnace, Lions & Susa (daniel-exile, 7 stops)
+  if (normBook === 'dan' || normBook === 'daniel') {
+    const danRoute = BIBLICAL_ROUTES.find(r => r.id === 'daniel-exile');
+    if (danRoute && danRoute.stops.length >= 7) {
+      if (chapter === 1) return { route: danRoute, stop: danRoute.stops[0], stopIndex: 0 }; // Jerusalem
+      if (chapter === 2) return { route: danRoute, stop: danRoute.stops[1], stopIndex: 1 }; // Colossal Statue
+      if (chapter === 3) return { route: danRoute, stop: danRoute.stops[2], stopIndex: 2 }; // Plain of Dura
+      if (chapter === 5) return { route: danRoute, stop: danRoute.stops[3], stopIndex: 3 }; // Belshazzar's Feast
+      if (chapter === 6) return { route: danRoute, stop: danRoute.stops[4], stopIndex: 4 }; // Den of Lions
+      if (chapter === 8) return { route: danRoute, stop: danRoute.stops[5], stopIndex: 5 }; // Susa
+      if (chapter >= 10) return { route: danRoute, stop: danRoute.stops[6], stopIndex: 6 }; // River Hiddekel
+    }
+  }
+
+  // 7. Ezra the Scribe: Babylon to Jerusalem Temple Assembly (ezra-journey, 4 stops)
+  if (normBook === 'ezra' || normBook === 'ezr') {
+    const ezraRoute = BIBLICAL_ROUTES.find(r => r.id === 'ezra-journey');
+    if (ezraRoute && ezraRoute.stops.length >= 4) {
+      if (chapter === 7) {
+        return { route: ezraRoute, stop: ezraRoute.stops[0], stopIndex: 0 }; // Babylon
+      }
+      if (chapter === 8) {
+        const v = verse || 1;
+        if (v <= 30) return { route: ezraRoute, stop: ezraRoute.stops[1], stopIndex: 1 }; // River Ahava
+        if (v >= 31 && v <= 32) return { route: ezraRoute, stop: ezraRoute.stops[2], stopIndex: 2 }; // Overland Arc
+        return { route: ezraRoute, stop: ezraRoute.stops[3], stopIndex: 3 }; // Jerusalem Temple Courts
+      }
+      if (chapter === 9 || chapter === 10) {
+        return { route: ezraRoute, stop: ezraRoute.stops[3], stopIndex: 3 }; // Jerusalem Temple Courts
+      }
+    }
+  }
+
+  // 8. Nehemiah: Susa to Jerusalem Wall Circuit (nehemiah-walls, 5 stops)
+  if (normBook === 'neh' || normBook === 'nehemiah') {
+    const nehRoute = BIBLICAL_ROUTES.find(r => r.id === 'nehemiah-walls');
+    if (nehRoute && nehRoute.stops.length >= 5) {
+      if (chapter === 1) {
+        return { route: nehRoute, stop: nehRoute.stops[0], stopIndex: 0 }; // Shushan Palace
+      }
+      if (chapter === 2) {
+        const v = verse || 1;
+        if (v <= 8) return { route: nehRoute, stop: nehRoute.stops[0], stopIndex: 0 }; // Shushan Palace
+        if (v <= 10) return { route: nehRoute, stop: nehRoute.stops[1], stopIndex: 1 }; // Euphrates River Crossing
+        return { route: nehRoute, stop: nehRoute.stops[2], stopIndex: 2 }; // Secret Night Inspection
+      }
+      if (chapter === 3 || chapter === 4 || chapter === 5 || chapter === 6) {
+        return { route: nehRoute, stop: nehRoute.stops[3], stopIndex: 3 }; // 10 Gates Rebuilding Circuit
+      }
+      if (chapter === 8 || chapter === 12) {
+        return { route: nehRoute, stop: nehRoute.stops[4], stopIndex: 4 }; // Water Gate & Wall Dedication
+      }
+    }
+  }
+
+  // 9. Gospels: Jesus' Galilean Ministry & Passion/Resurrection
+  if (normBook === 'matt' || normBook === 'matthew' || normBook === 'mrk' || normBook === 'mark' || normBook === 'luk' || normBook === 'luke' || normBook === 'jhn' || normBook === 'john') {
+    const galRoute = BIBLICAL_ROUTES.find(r => r.id === 'jesus-galilean-ministry');
+    const pasRoute = BIBLICAL_ROUTES.find(r => r.id === 'jesus-passion-resurrection');
+
+    // Galilean Ministry mappings
+    if (galRoute && galRoute.stops.length >= 8) {
+      if ((normBook === 'luk' || normBook === 'luke') && chapter === 4 && (!verse || verse >= 16)) {
+        return { route: galRoute, stop: galRoute.stops[0], stopIndex: 0 }; // Nazareth Synagogue
+      }
+      if ((normBook === 'mat' || normBook === 'matt' || normBook === 'matthew') && (chapter === 5 || chapter === 6 || chapter === 7)) {
+        return { route: galRoute, stop: galRoute.stops[2], stopIndex: 2 }; // Sermon on the Mount
+      }
+      if ((normBook === 'luk' || normBook === 'luke') && chapter === 7 && (!verse || verse <= 17)) {
+        return { route: galRoute, stop: galRoute.stops[3], stopIndex: 3 }; // Nain
+      }
+      if (((normBook === 'mrk' || normBook === 'mark') && chapter === 5) || ((normBook === 'luk' || normBook === 'luke') && chapter === 8 && verse && verse >= 26)) {
+        return { route: galRoute, stop: galRoute.stops[4], stopIndex: 4 }; // Gadarenes
+      }
+      if (((normBook === 'mat' || normBook === 'matt' || normBook === 'matthew') && chapter === 14) || ((normBook === 'jhn' || normBook === 'john') && chapter === 6 && (!verse || verse <= 21))) {
+        return { route: galRoute, stop: galRoute.stops[5], stopIndex: 5 }; // Bethsaida (Feeding 5000)
+      }
+      if ((normBook === 'mat' || normBook === 'matt' || normBook === 'matthew') && chapter === 15 && (!verse || verse >= 21)) {
+        return { route: galRoute, stop: galRoute.stops[6], stopIndex: 6 }; // Tyre & Sidon
+      }
+      if ((normBook === 'mat' || normBook === 'matt' || normBook === 'matthew') && (chapter === 16 || chapter === 17)) {
+        return { route: galRoute, stop: galRoute.stops[7], stopIndex: 7 }; // Caesarea Philippi & Transfiguration
+      }
+      if ((normBook === 'mat' || normBook === 'matt' || normBook === 'matthew') && (chapter === 4 || chapter === 8 || chapter === 9)) {
+        return { route: galRoute, stop: galRoute.stops[1], stopIndex: 1 }; // Capernaum
+      }
+    }
+
+    // Passion and Resurrection mappings
+    if (pasRoute && pasRoute.stops.length >= 7) {
+      if ((normBook === 'jhn' || normBook === 'john') && chapter === 10 && (!verse || verse >= 40)) {
+        return { route: pasRoute, stop: pasRoute.stops[0], stopIndex: 0 }; // Perea
+      }
+      if ((normBook === 'jhn' || normBook === 'john') && (chapter === 11 || (chapter === 12 && (!verse || verse <= 11)))) {
+        return { route: pasRoute, stop: pasRoute.stops[1], stopIndex: 1 }; // Bethany
+      }
+      if ((normBook === 'luk' || normBook === 'luke') && (chapter === 18 && verse && verse >= 35 || (chapter === 19 && (!verse || verse <= 28)))) {
+        return { route: pasRoute, stop: pasRoute.stops[2], stopIndex: 2 }; // Jericho
+      }
+      if ((normBook === 'luk' || normBook === 'luke') && chapter === 24 && verse && verse >= 13 && verse <= 35) {
+        return { route: pasRoute, stop: pasRoute.stops[4], stopIndex: 4 }; // Emmaus
+      }
+      if ((normBook === 'jhn' || normBook === 'john') && chapter === 21) {
+        return { route: pasRoute, stop: pasRoute.stops[5], stopIndex: 5 }; // Galilee Sea
+      }
+      if ((normBook === 'luk' || normBook === 'luke') && chapter === 24 && verse && verse >= 50) {
+        return { route: pasRoute, stop: pasRoute.stops[6], stopIndex: 6 }; // Olivet Ascension
+      }
+      if (chapter >= 20 || ((normBook === 'mat' || normBook === 'matt' || normBook === 'matthew') && chapter >= 21)) {
+        return { route: pasRoute, stop: pasRoute.stops[3], stopIndex: 3 }; // Jerusalem Passion & Empty Tomb
+      }
+    }
+  }
+
+  // 10. Apostolic Journeys: Paul's Second Journey & Voyage to Rome (Acts)
+  if (normBook === 'acts' || normBook === 'act') {
+    // Ascension in Acts 1
+    if (chapter === 1 && (!verse || verse <= 12)) {
+      const pasRoute = BIBLICAL_ROUTES.find(r => r.id === 'jesus-passion-resurrection');
+      if (pasRoute && pasRoute.stops.length >= 7) {
+        return { route: pasRoute, stop: pasRoute.stops[6], stopIndex: 6 }; // Mount of Olives Ascension
+      }
+    }
+
+    // Paul's Second Missionary Journey (paul-second-journey, 11 stops)
+    if (chapter >= 15 && chapter <= 18) {
+      const p2Route = BIBLICAL_ROUTES.find(r => r.id === 'paul-second-journey');
+      if (p2Route && p2Route.stops.length >= 10) {
+        if (chapter === 15) {
+          const v = verse || 36;
+          if (v >= 35 && v <= 40) return { route: p2Route, stop: p2Route.stops[0], stopIndex: 0 }; // Syrian Antioch
+          if (v >= 41) return { route: p2Route, stop: p2Route.stops[1], stopIndex: 1 }; // Tarsus
+        }
+        if (chapter === 16) {
+          const v = verse || 1;
+          if (v <= 5) return { route: p2Route, stop: p2Route.stops[2], stopIndex: 2 }; // Derbe & Lystra
+          if (v <= 11) return { route: p2Route, stop: p2Route.stops[3], stopIndex: 3 }; // Troas
+          return { route: p2Route, stop: p2Route.stops[4], stopIndex: 4 }; // Philippi
+        }
+        if (chapter === 17) {
+          const v = verse || 1;
+          if (v <= 9) return { route: p2Route, stop: p2Route.stops[5], stopIndex: 5 }; // Thessalonica
+          if (v <= 14) return { route: p2Route, stop: p2Route.stops[6], stopIndex: 6 }; // Berea
+          return { route: p2Route, stop: p2Route.stops[7], stopIndex: 7 }; // Athens Mars' Hill
+        }
+        if (chapter === 18) {
+          const v = verse || 1;
+          if (v <= 18) return { route: p2Route, stop: p2Route.stops[8], stopIndex: 8 }; // Corinth
+          if (v <= 21) return { route: p2Route, stop: p2Route.stops[9], stopIndex: 9 }; // Ephesus
+          return { route: p2Route, stop: p2Route.stops[10], stopIndex: 10 }; // Caesarea & Jerusalem
+        }
+      }
+    }
+
+    // Paul's Voyage to Rome (paul-voyage-rome, 6 stops)
+    if (chapter === 27 || chapter === 28) {
+      const romeRoute = BIBLICAL_ROUTES.find(r => r.id === 'paul-voyage-rome');
+      if (romeRoute && romeRoute.stops.length >= 6) {
+        if (chapter === 27) {
+          const v = verse || 1;
+          if (v <= 2) return { route: romeRoute, stop: romeRoute.stops[0], stopIndex: 0 }; // Caesarea Maritima
+          if (v <= 6) return { route: romeRoute, stop: romeRoute.stops[1], stopIndex: 1 }; // Sidon & Myra
+          if (v <= 20) return { route: romeRoute, stop: romeRoute.stops[2], stopIndex: 2 }; // Fair Havens
+          return { route: romeRoute, stop: romeRoute.stops[3], stopIndex: 3 }; // Malta Shipwreck
+        }
+        if (chapter === 28) {
+          const v = verse || 1;
+          if (v <= 10) return { route: romeRoute, stop: romeRoute.stops[3], stopIndex: 3 }; // Malta Miracles
+          if (v <= 15) return { route: romeRoute, stop: romeRoute.stops[4], stopIndex: 4 }; // Syracuse & Puteoli
+          return { route: romeRoute, stop: romeRoute.stops[5], stopIndex: 5 }; // Rome Two-Year House Custody
+        }
+      }
+    }
+  }
+
+  // 11. Ruth: Moab to Bethlehem (ruth-boaz, 5 stops)
+  if (normBook === 'ruth' || normBook === 'rut') {
+    const ruthRoute = BIBLICAL_ROUTES.find(r => r.id === 'ruth-boaz');
+    if (ruthRoute && ruthRoute.stops.length >= 5) {
+      if (chapter === 1) {
+        const v = verse || 1;
+        if (v <= 18) return { route: ruthRoute, stop: ruthRoute.stops[0], stopIndex: 0 }; // Country of Moab
+        return { route: ruthRoute, stop: ruthRoute.stops[1], stopIndex: 1 }; // Bethlehem-judah Arrival
+      }
+      if (chapter === 2) {
+        return { route: ruthRoute, stop: ruthRoute.stops[2], stopIndex: 2 }; // Fields of Boaz
+      }
+      if (chapter === 3) {
+        return { route: ruthRoute, stop: ruthRoute.stops[3], stopIndex: 3 }; // Threshingfloor of Boaz
+      }
+      if (chapter === 4) {
+        return { route: ruthRoute, stop: ruthRoute.stops[4], stopIndex: 4 }; // Gate of Bethlehem
+      }
+    }
+  }
+
+  // 12. Esther: Susa Citadel & Royal Decrees (esther-mordecai, 5 stops)
+  if (normBook === 'esth' || normBook === 'est' || normBook === 'esther') {
+    const esthRoute = BIBLICAL_ROUTES.find(r => r.id === 'esther-mordecai');
+    if (esthRoute && esthRoute.stops.length >= 5) {
+      if (chapter <= 2) {
+        const v = verse || 1;
+        if (chapter === 2 && v >= 19) return { route: esthRoute, stop: esthRoute.stops[1], stopIndex: 1 }; // King's Gate
+        return { route: esthRoute, stop: esthRoute.stops[0], stopIndex: 0 }; // Susa Palace / House of Women
+      }
+      if (chapter === 3 || chapter === 4) {
+        return { route: esthRoute, stop: esthRoute.stops[1], stopIndex: 1 }; // King's Gate
+      }
+      if (chapter === 5 || chapter === 6) {
+        return { route: esthRoute, stop: esthRoute.stops[2], stopIndex: 2 }; // Inner Court of Royal Palace
+      }
+      if (chapter === 7) {
+        return { route: esthRoute, stop: esthRoute.stops[3], stopIndex: 3 }; // Royal Banquet Hall
+      }
+      if (chapter >= 8) {
+        return { route: esthRoute, stop: esthRoute.stops[4], stopIndex: 4 }; // The Citadel of Shushan (Purim Decree)
+      }
+    }
+  }
+
+  // 13. Peter & Philip Apostolic Missions (peter-philip-missions, 7 stops)
+  if (normBook === 'acts' || normBook === 'act') {
+    const petRoute = BIBLICAL_ROUTES.find(r => r.id === 'peter-philip-missions');
+    if (petRoute && petRoute.stops.length >= 7) {
+      if (chapter >= 2 && chapter <= 5) {
+        return { route: petRoute, stop: petRoute.stops[0], stopIndex: 0 }; // Jerusalem Pentecost & Temple
+      }
+      if (chapter === 8) {
+        const v = verse || 1;
+        if (v <= 25) return { route: petRoute, stop: petRoute.stops[1], stopIndex: 1 }; // Samaria
+        return { route: petRoute, stop: petRoute.stops[2], stopIndex: 2 }; // Gaza Desert Road & Azotus
+      }
+      if (chapter === 9) {
+        const v = verse || 1;
+        if (v >= 32) return { route: petRoute, stop: petRoute.stops[3], stopIndex: 3 }; // Lydda & Joppa
+      }
+      if (chapter === 10) {
+        return { route: petRoute, stop: petRoute.stops[4], stopIndex: 4 }; // Caesarea Maritima (Cornelius)
+      }
+    }
+  }
+
+  // 14. John: Seven Churches of Asia & Patmos (john-seven-churches-patmos, 6 stops)
+  if (normBook === 'rev' || normBook === 'revelation') {
+    const johnRoute = BIBLICAL_ROUTES.find(r => r.id === 'john-seven-churches-patmos');
+    if (johnRoute && johnRoute.stops.length >= 6) {
+      if (chapter === 1) {
+        return { route: johnRoute, stop: johnRoute.stops[5], stopIndex: 5 }; // Isle of Patmos
+      }
+      if (chapter === 2) {
+        const v = verse || 1;
+        if (v <= 7) return { route: johnRoute, stop: johnRoute.stops[1], stopIndex: 1 }; // Ephesus
+        if (v <= 11) return { route: johnRoute, stop: johnRoute.stops[2], stopIndex: 2 }; // Smyrna
+        if (v <= 17) return { route: johnRoute, stop: johnRoute.stops[2], stopIndex: 2 }; // Pergamos
+        return { route: johnRoute, stop: johnRoute.stops[3], stopIndex: 3 }; // Thyatira
+      }
+      if (chapter === 3) {
+        const v = verse || 1;
+        if (v <= 6) return { route: johnRoute, stop: johnRoute.stops[3], stopIndex: 3 }; // Sardis
+        if (v <= 13) return { route: johnRoute, stop: johnRoute.stops[3], stopIndex: 3 }; // Philadelphia
+        return { route: johnRoute, stop: johnRoute.stops[4], stopIndex: 4 }; // Laodicea
+      }
+    }
+  }
+
+  // 15. Exact match against route stop scriptureOsis across all routes
+  const targetOsis = `${bookOsis}.${chapter}${typeof verse === 'number' && verse > 0 ? `.${verse}` : ''}`.toLowerCase();
+  for (const route of BIBLICAL_ROUTES) {
+    for (let i = 0; i < route.stops.length; i++) {
+      const s = route.stops[i];
+      if (s.scriptureOsis.toLowerCase() === targetOsis) {
+        return { route, stop: s, stopIndex: i };
+      }
+    }
+  }
+
+  return undefined;
+}

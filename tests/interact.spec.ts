@@ -21,7 +21,7 @@ test('INT-23: every wider-study card follows a name and survives refresh and his
   await expect(page.locator('#secular-contemporaries-list')).toBeEmpty();
 });
 
-test('INT-24: Balaam donkey aliases select an animal passage study without inherited human metadata', async ({ page }, testInfo) => {
+test('INT-24: Balaam donkey aliases select an animal passage study without inherited human metadata', async ({ page }) => {
   await page.goto('/interact?figure=hezekiah&view=graph');
   for (const query of ["Balam's donkey", 'Balaam’s donkey', "Balaam's ass"]) {
     await page.locator('#search-input').fill(query);
@@ -43,12 +43,10 @@ test('INT-24: Balaam donkey aliases select an animal passage study without inher
   await page.getByRole('button', { name: 'Save study', exact: true }).click();
   await expect(page.locator('#study-session-bar')).toContainText('Study saved in this browser.');
   await page.locator('#research-title').scrollIntoViewIfNeeded();
-  await page.screenshot({ path: testInfo.outputPath('donkey-wider-study-desktop.png') });
   await page.setViewportSize({ width: 375, height: 812 });
   await expect(page.locator('.figure-hero-name')).toHaveText('Balaam’s donkey');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
   await page.locator('#research-title').scrollIntoViewIfNeeded();
-  await page.screenshot({ path: testInfo.outputPath('donkey-wider-study-mobile.png') });
 });
 
 test('INT-26: legacy mixed links and exact names keep a single subject throughout the page', async ({ page }) => {
@@ -326,13 +324,10 @@ test('INT-11: Small and large screens stay readable without page overflow across
     await page.goto('/');
     await expect(page.getByRole('heading', { name: 'The Bible happened in the real world.' })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-    await page.screenshot({ path: `test-results/home-${width}.png` });
 
     await page.goto('/interact.html');
     await expect(page.locator('#discovery-scripture .kjv-verse-text')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
-    await page.screenshot({ path: `test-results/interact-${width}.png` });
-    await page.screenshot({ path: `test-results/discovery-${width}.png` });
   }
 });
 

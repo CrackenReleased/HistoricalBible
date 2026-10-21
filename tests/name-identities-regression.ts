@@ -9,6 +9,10 @@ test('identity selections keep reviewed referents separate and retain unreviewed
   assert.equal(getNameKind('Abel'), 'mixed');
   assert.equal(getNameKind('Mary'), 'person');
   assert.equal(getNameKind('Eli'), 'mixed');
+  assert.equal(getNameKind('Nahor'), 'mixed');
+  assert.deepEqual(getNameIdentities('Jehoash').map(entry => entry.id), ['jehoash-judah', 'jehoash-israel']);
+  assert.deepEqual(getNameIdentities('Joash').map(entry => entry.id), ['joash-judah', 'joash-israel']);
+  assert.deepEqual(getIdentityRefs('Jehoash', 'jehoash-israel', ['2Kgs.12.1', '2Kgs.13.10']), ['2Kgs.13.10']);
   assert.equal(getNameKind('unlisted'), 'unclassified');
   for (const name of ['constructor', '__proto__', 'toString']) {
     assert.deepEqual(getNameIdentities(name), [], 'unknown spellings cannot resolve inherited object properties');

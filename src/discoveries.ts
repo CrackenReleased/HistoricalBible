@@ -9,6 +9,7 @@ export interface Discovery {
   lead: string;
   record?: { title: string; text: string; label: string; url?: string; source?: string };
   distinction: string;
+  evidenceSiteId?: string;
 }
 
 export const discoveries: Record<string, Discovery> = {
@@ -63,6 +64,8 @@ export const discoveries: Record<string, Discovery> = {
   paul: {
     title: 'The Gospel enters a Roman courtroom.', question: 'How can a Roman official help place Paul in history?', verse: 'Acts.18.12',
     lead: 'Acts places Paul before Gallio in Achaia. Start with the courtroom scene, then explore the collection’s discussion of Gallio and the Delphi inscription.',
+    record: { title: 'Gallio named at Delphi', label: 'External historical attestation · Roman Achaia', text: 'A fragmentary letter of Claudius names Gallio as proconsul of Achaia. The inscription and Acts name the same officeholder, but the inscription does not narrate Paul’s hearing.' },
+    evidenceSiteId: 'gallio-inscription',
     distinction: 'An attested officeholder can help establish a chronological setting. That is a narrower claim than independently establishing every event in the surrounding narrative.'
   },
   peter: {

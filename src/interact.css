@@ -846,6 +846,32 @@ h3 {
   color: var(--gold-bright);
 }
 
+.evidence-receipt {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 6px;
+  background: rgba(212, 175, 55, 0.055);
+  color: var(--text-body);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.evidence-receipt p { margin: 0.35rem 0; }
+.evidence-receipt h4 { margin: 1rem 0 0.35rem; padding-top: 0.65rem; border-top: 1px solid currentColor; font: 600 0.9rem/1.35 var(--font-serif, Georgia, serif); }
+.evidence-receipt strong { color: var(--gold-warm); }
+.evidence-receipt a { color: var(--gold-bright); text-decoration: underline; }
+.atlas-reading .evidence-receipt { background: #f2ead9; border-color: #cbbd9f; color: #2d3029; }
+.atlas-reading .evidence-receipt strong { color: #5c421e; }
+.atlas-reading .evidence-receipt a { color: #574019; }
+.reviewed-dated-event { border-color: rgba(212, 175, 55, 0.5); }
+.reviewed-dated-event p { margin: 0.45rem 0; line-height: 1.5; }
+.reviewed-dated-event a { display: block; margin-top: 0.5rem; color: var(--gold-bright); }
+.chrono-no-verse-date { padding: 0.75rem; border: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 0.82rem; line-height: 1.5; }
+.xref-archive { margin-top: 1rem; border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; }
+.xref-archive summary { cursor: pointer; color: var(--gold-warm); font-size: 0.82rem; line-height: 1.45; padding: 0.6rem 0; }
+.xref-archive summary:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+
 .connection-note {
   background: var(--bg-card);
   border-left: 3px solid var(--gold-primary);
@@ -4709,4 +4735,149 @@ svg path:focus-visible,
 }
 @media (prefers-reduced-motion: reduce) {
  .atlas-reading *, .atlas-reading *::before, .atlas-reading *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+
+/* Companion Map Quick Layer Filter Chips (Preventing Overlay Overload) */
+.companion-map-layer-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.4rem 0 0.5rem;
+  align-items: center;
+}
+
+.map-layer-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem 0.55rem;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted, #94a3b8);
+  background: rgba(14, 18, 24, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.map-layer-chip:hover {
+  border-color: var(--gold-muted, #d4af37);
+  color: #f1f5f9;
+}
+
+.map-layer-chip.active {
+  background: rgba(212, 175, 55, 0.14);
+  border-color: var(--border-gold, #d4af37);
+  color: #ffffff;
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.2);
+}
+
+.map-layer-chip .chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.map-layer-chip .chip-dot.dot-city {
+  background: #38bdf8;
+  box-shadow: 0 0 4px #38bdf8;
+}
+
+.map-layer-chip .chip-dot.dot-empire {
+  background: #eab308;
+  box-shadow: 0 0 4px #eab308;
+}
+
+.map-layer-chip .chip-dot.dot-artifact {
+  background: #ffd700;
+  box-shadow: 0 0 4px #ffd700;
+}
+
+.map-layer-chip .chip-dot.dot-route {
+  background: #22c55e;
+  box-shadow: 0 0 4px #22c55e;
+}
+
+/* Luminous Pulsing Geographic Focus Marker in Companion Map */
+.leaflet-geo-focus-marker {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
+
+.geo-focus-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  transform: translate(-50%, -50%);
+  background: #ffd700;
+  border: 1.5px solid #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #ffd700;
+  z-index: 2;
+}
+
+.geo-focus-ping {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  transform: translate(-50%, -50%);
+  border: 2px solid #ffd700;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.2);
+  animation: geoPulseRing 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  z-index: 1;
+}
+
+@keyframes geoPulseRing {
+  0% {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0;
+  }
+}
+
+.geo-focus-label {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: var(--font-serif, 'EB Garamond', serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffd700;
+  text-shadow: 0 0 4px #000, 0 1px 3px #000, 0 0 8px rgba(0,0,0,0.8);
+  background: rgba(8, 12, 17, 0.82);
+  padding: 1px 6px;
+  border-radius: 3px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  pointer-events: auto;
+}
+
+/* Subtle water labels in compact companion map */
+.leaflet-water-label.water-label-compact {
+  opacity: 0.65;
+  transform: scale(0.85);
+}
+
+/* Responsive 2-column map key grid to prevent sidebar scrolling */
+.bible-map-key-card .map-key-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.45rem 0.6rem;
 }

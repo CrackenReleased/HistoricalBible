@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import unittest
 
-import pymupdf
+from pdf_assertions import page_preservation_errors
 from pypdf import PdfReader
 
 
@@ -14,14 +14,6 @@ SOURCE = _V030 if _V030.exists() else (ROOT / "pdf-proof/v0.2.0/Bible-proof-v0.2
 OUTPUT = Path(os.environ.get("BIBLE_ACCESSIBLE_PDF",
               _V031 if _V031.exists() else (ROOT / "pdf-proof/v0.3.3/Bible-proof-v0.3.3.pdf")))
 LINK_LABEL = "Return to table of contents"
-
-
-def link_destinations(page):
-    keys = ("kind", "from", "page", "to", "zoom", "uri", "nameddest", "file", "page_from")
-    return [{key: tuple(round(x, 3) for x in value)
-             if key in ("from", "to") and value is not None else value
-             for key, value in link.items() if key in keys}
-            for link in page.get_links()]
 
 
 class AccessibilityTests(unittest.TestCase):
@@ -91,25 +83,7 @@ class AccessibilityTests(unittest.TestCase):
             else ["Cover", "Contents"] + [str(n) for n in range(1, 1161)]
         )
         self.assertEqual(self.pdf.page_labels, expected_labels)
-        before, after = pymupdf.open(SOURCE), pymupdf.open(OUTPUT)
-        try:
-            note_shift = 1 if self.has_note and len(before) == 1162 else 0
-            self.assertEqual(len(before) + note_shift, len(after))
-            for i in range(len(before)):
-                after_idx = i + (note_shift if i >= 1 else 0)
-                self.assertEqual(before[i].rect, after[after_idx].rect, i + 1)
-                self.assertEqual(before[i].get_text(), after[after_idx].get_text(), i + 1)
-                before_links = link_destinations(before[i])
-                after_links = link_destinations(after[after_idx])[:len(before_links)]
-                if note_shift:
-                    for lnk in before_links:
-                        if isinstance(lnk.get("page"), int) and lnk["page"] >= 1:
-                            lnk["page"] += 1
-                self.assertEqual(before_links, after_links, i + 1)
-        finally:
-            before.close()
-            after.close()
-
+        self.assertEqual(page_preservation_errors(SOURCE, OUTPUT), ())
 
 if __name__ == "__main__":
     unittest.main()

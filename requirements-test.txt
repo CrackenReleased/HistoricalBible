@@ -1,0 +1,4 @@
+# Verified local PDF/DOCX regression environment; Python 3.12.
+PyMuPDF==1.28.2
+pypdf==6.21.1
+lxml==6.1.3

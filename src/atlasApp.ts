@@ -13,6 +13,7 @@ import {
   BIBLICAL_ROUTES,
   CHRONOLOGICAL_ERAS,
   GRANULAR_TIMELINE_FILTERS,
+  getJourneyStopForPassage,
   type ArchaeologicalSite,
   type BiblicalCity,
   type BiblicalRoute,
@@ -27,6 +28,10 @@ import {
 } from './store/userContextStore';
 import { localStore } from './store/localFirstStore';
 import { ATLAS_STORIES, ATLAS_STORY_PERIODS, type AtlasStory } from './data/atlasStories';
+import { getDatedEvent, type DatedEvent } from './data/datedEvents.ts';
+import { getRelationshipForPassage, type HistoricalRelationship } from './data/historicalRelationships.ts';
+import { getWorldHorizonItem, isWorldItemInDateInterval, HISTORICAL_WORLD_ITEMS, type WorldHorizonItem } from './data/historicalWorldItems.ts';
+import { createEvidenceReceiptElement, getArtifactDisplay, getEvidenceReceipt } from './data/evidenceReceipts';
 
 class HistoricalAtlasApp {
   private mapCanvas: AncientMapCanvas | null = null;
@@ -738,7 +743,18 @@ class HistoricalAtlasApp {
       const routeEra = CHRONOLOGICAL_ERAS.find(e => e.id !== 'all' && e.activeRouteIds.includes(route.id));
       if (routeEra) this.mapCanvas?.setEra(routeEra.id);
     }
-    if (route) this.chooseJourney(route.id);
+    if (route) {
+      this.chooseJourney(route.id);
+      const stopParam = params.get('stop');
+      if (stopParam !== null) {
+        const stopIdx = parseInt(stopParam, 10);
+        if (!isNaN(stopIdx) && stopIdx >= 0 && stopIdx < route.stops.length) {
+          this.activeStepperStopIndex = stopIdx;
+          this.updateSequence();
+          this.mapCanvas?.animateToCoords(route.stops[stopIdx].coords, 7);
+        }
+      }
+    }
     const story = ATLAS_STORIES.find(item => item.id === params.get('story'));
     if (story) this.chooseStory(story);
     const region = REGION_PRESETS.find(r => r.id === params.get('region'));
@@ -752,9 +768,95 @@ class HistoricalAtlasApp {
       this.showSiteDetail(site);
       this.mapCanvas.animateToCoords(site.coords, 7);
     }
+
+    // Passage context integration (HISTORICAL_WORLD_CONTEXT_BRIEF Work Package A, B & C)
+    const refParam = params.get('ref');
+    const entityParam = params.get('entity') || params.get('figure');
+    if (refParam && this.mapCanvas) {
+      const targetOsis = localStore.normalizeToOsis(refParam) || refParam;
+      const parts = targetOsis.split('.');
+      const bookOsis = parts[0] || 'Gen';
+      const ch = parseInt(parts[1] || '1', 10);
+      const v = parseInt(parts[2] || '1', 10);
+
+      const datedEvent = getDatedEvent(bookOsis, ch, v);
+      const relationship = getRelationshipForPassage(bookOsis, ch, v);
+      const journeyMatch = getJourneyStopForPassage(bookOsis, ch, v);
+
+      // Auto-resolve era if not explicitly provided in URL
+      if (!era) {
+        let passageEraId = 'all';
+        const osisLower = bookOsis.toLowerCase();
+        if (['gen', 'job'].includes(osisLower)) passageEraId = 'patriarchs';
+        else if (['exod', 'lev', 'num', 'deut', 'josh'].includes(osisLower)) passageEraId = 'exodus';
+        else if (['judg', 'ruth'].includes(osisLower)) passageEraId = 'judges';
+        else if (['1sam', '2sam', '1chr'].includes(osisLower)) passageEraId = 'united_monarchy';
+        else if (osisLower === '1kgs') {
+          if (ch <= 11) passageEraId = 'united_monarchy';
+          else passageEraId = 'divided_monarchy_prophets';
+        } else if (osisLower === '2kgs') {
+          if (ch <= 8) passageEraId = 'divided_monarchy_prophets';
+          else if (ch <= 16) passageEraId = '2kings_jehu';
+          else if (ch === 17) passageEraId = '2kings_fall_samaria';
+          else if (ch <= 20) passageEraId = 'assyrian_siege';
+          else passageEraId = 'babylonian_exile';
+        } else if (['acts', 'rom', '1cor', '2cor', 'gal', 'eph', 'phil', 'col', '1thess', '2thess', '1tim', '2tim', 'titus', 'phlm', 'heb', 'jas', '1pet', '2pet', '1john', '2john', '3john', 'jude', 'rev'].includes(osisLower)) {
+          passageEraId = 'apostolic_church';
+        }
+        if (CHRONOLOGICAL_ERAS.some(e => e.id === passageEraId)) {
+          this.mapCanvas.setEra(passageEraId);
+        }
+      }
+
+      const context: HistoricalBibleUserContext = {
+        source: 'bible',
+        updatedAt: new Date().toISOString(),
+        label: v > 1 ? String(targetOsis) : (bookOsis + ' ' + ch),
+        sublabel: datedEvent ? ('Biblical Setting · ' + datedEvent.dateLabel) : ('Biblical Setting · ' + this.mapCanvas.activeEra.name),
+        eraId: this.mapCanvas.activeEra.id,
+        siteId: (params.get('site') || datedEvent?.siteId || site?.id),
+        figureId: entityParam || journeyMatch?.route.figureId,
+        journeyId: params.get('journey') || journeyMatch?.route.id,
+        stopIndex: params.get('stop') !== null ? parseInt(params.get('stop')!, 10) : journeyMatch?.stopIndex,
+        bibleHref: '/bible?ref=' + encodeURIComponent(refParam),
+        interactHref: '/interact?ref=' + encodeURIComponent(refParam),
+        mapHref: window.location.search ? ('/map' + window.location.search) : '/map'
+      };
+      writeUserContext(context);
+      this.renderContextBar(context, false);
+
+      if (journeyMatch && !params.get('site')) {
+        const stopIdx = params.get('stop') !== null ? parseInt(params.get('stop')!, 10) : journeyMatch.stopIndex;
+        this.chooseJourney(journeyMatch.route.id);
+        if (!isNaN(stopIdx) && stopIdx >= 0 && stopIdx < journeyMatch.route.stops.length) {
+          this.activeStepperStopIndex = stopIdx;
+          this.updateSequence();
+          this.mapCanvas.animateToCoords(journeyMatch.route.stops[stopIdx].coords, 7);
+          this.showRouteDetail(journeyMatch.route, journeyMatch.route.stops[stopIdx], stopIdx);
+        }
+      } else if (datedEvent) {
+        this.mapCanvas.layers.archaeology = true;
+        this.mapCanvas.layers.empires = true;
+        this.mapCanvas.showAllSites = true;
+        this.mapCanvas.render();
+        this.syncLayers();
+
+        // Focus map on biblical campaign setting without forcing globe-wide zoom
+        this.mapCanvas.animateToCoords({ lat: 33.5, lng: 38 }, 6);
+
+        const targetSite = ARCHAEOLOGICAL_SITES.find(s => s.id === (params.get('site') || datedEvent.siteId));
+        if (targetSite) {
+          this.showSiteDetail(targetSite, datedEvent, relationship);
+        }
+      } else if (relationship) {
+        this.mapCanvas.layers.empires = true;
+        this.mapCanvas.render();
+        this.syncLayers();
+      }
+    }
   }
 
-  private showSiteDetail(site: ArchaeologicalSite): void {
+  private showSiteDetail(site: ArchaeologicalSite, datedEvent?: DatedEvent, relationship?: HistoricalRelationship): void {
     this.selectedSite = site;
     const drawer = document.getElementById('atlas-detail-drawer');
     if (!drawer) return;
@@ -766,11 +868,24 @@ class HistoricalAtlasApp {
     const scriptureLink = document.getElementById('drawer-scripture-link') as HTMLAnchorElement | null;
     const studyDeskLink = document.getElementById('drawer-desk-link') as HTMLAnchorElement | null;
     const museumLink = document.getElementById('drawer-museum-link') as HTMLAnchorElement | null;
+    const display = getArtifactDisplay(site);
 
     if (titleEl) titleEl.textContent = site.artifactName;
-    if (metaEl) metaEl.textContent = `${site.name} (${site.ancientRegion}) · Discovered ${site.discoveryYear || 'Antiquity'} · Now in ${site.currentLocation}`;
-    if (descEl) descEl.textContent = site.description;
-    if (sigEl) sigEl.textContent = site.significance;
+    if (metaEl) metaEl.textContent = `${site.name} (${site.ancientRegion}) · ${display.date}${getEvidenceReceipt(site.id) ? ` · Now in ${site.currentLocation}` : ''}`;
+    if (descEl) descEl.textContent = display.description;
+    if (sigEl) {
+      const receipt = getEvidenceReceipt(site.id);
+      sigEl.textContent = receipt ? '' : display.significance;
+      const disclosure = sigEl.closest('details');
+      const summary = disclosure?.querySelector('summary');
+      if (summary) summary.textContent = receipt ? 'Reviewed evidence & limits' : 'Sources & dating · review pending';
+      if (disclosure) disclosure.open = Boolean(receipt);
+      if (receipt) {
+        const receiptElement = createEvidenceReceiptElement(receipt);
+        receiptElement.id = 'drawer-receipt';
+        sigEl.append(receiptElement);
+      }
+    }
 
     if (scriptureLink) {
       scriptureLink.textContent = `Read Scripture (${site.scriptureRef}) →`;
@@ -789,10 +904,88 @@ class HistoricalAtlasApp {
     if (museumLink) {
       if (site.externalUrl) {
         museumLink.hidden = false;
+        museumLink.textContent = display.sourceLabel;
         museumLink.href = site.externalUrl;
       } else {
         museumLink.hidden = true;
       }
+    }
+
+    // Look up dated event and relationship if not passed
+    if (!datedEvent && site.scriptureOsis) {
+      const parts = site.scriptureOsis.split(".");
+      if (parts.length >= 2) {
+        datedEvent = getDatedEvent(parts[0], parseInt(parts[1], 10), parseInt(parts[2] || "1", 10));
+      }
+    }
+    if (!relationship && site.scriptureOsis) {
+      const parts = site.scriptureOsis.split(".");
+      if (parts.length >= 2) {
+        relationship = getRelationshipForPassage(parts[0], parseInt(parts[1], 10), parseInt(parts[2] || "1", 10));
+      }
+    }
+
+    // Render time-specific relationship card
+    let relEl = document.getElementById("drawer-relationship");
+    if (!relEl) {
+      relEl = document.createElement("div");
+      relEl.id = "drawer-relationship";
+      relEl.className = "atlas-drawer-context-section";
+      sigEl?.closest("details")?.after(relEl);
+    }
+    if (relationship) {
+      relEl.hidden = false;
+      relEl.innerHTML = `
+        <div class="drawer-relationship-box" style="margin-top: 0.75rem; padding: 0.75rem; background: rgba(255, 255, 255, 0.04); border-radius: 4px; border: 1px solid var(--border-subtle, rgba(255,255,255,0.1));">
+          <span class="eyebrow" style="color: var(--gold-warm); font-size: 0.7rem;">RELATIONSHIP AT THIS TIME · ${relationship.periodLabel}</span>
+          <h4 style="margin: 0.25rem 0; font-size: 0.95rem; color: #fff;">${relationship.actor1Name} ↔ ${relationship.actor2Name}</h4>
+          <p style="font-size: 0.8rem; margin: 0.25rem 0;"><strong>Status:</strong> ${relationship.relationshipLabel}</p>
+          <p style="font-size: 0.78rem; color: var(--text-muted);">${relationship.summary}</p>
+          <div style="font-size: 0.76rem; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed rgba(255,255,255,0.1); color: var(--text-muted);">
+            <div><strong>${relationship.actor1Name}:</strong> ${relationship.perspectiveActor1}</div>
+            <div style="margin-top: 0.2rem;"><strong>${relationship.actor2Name}:</strong> ${relationship.perspectiveActor2}</div>
+            <div style="margin-top: 0.3rem;"><strong>Tension &amp; Limits:</strong> ${relationship.tensionAndLimits}</div>
+          </div>
+        </div>
+      `;
+    } else {
+      relEl.hidden = true;
+      relEl.innerHTML = "";
+    }
+
+    // Render independent world horizon item
+    let worldEl = document.getElementById("drawer-world-item");
+    if (!worldEl) {
+      worldEl = document.createElement("div");
+      worldEl.id = "drawer-world-item";
+      worldEl.className = "atlas-drawer-context-section";
+      (relEl || sigEl?.closest("details"))?.after(worldEl);
+    }
+    const worldItem = datedEvent?.worldItem;
+    if (worldItem) {
+      worldEl.hidden = false;
+      worldEl.innerHTML = `
+        <div class="drawer-world-item-box" style="margin-top: 0.75rem; padding: 0.75rem; background: rgba(255, 255, 255, 0.04); border-radius: 4px; border: 1px solid var(--border-subtle, rgba(255,255,255,0.1));">
+          <span class="eyebrow" style="color: #c084fc; font-size: 0.7rem;">ELSEWHERE IN THE WORLD · CONTEMPORARY HORIZON</span>
+          <h4 style="margin: 0.25rem 0; font-size: 0.95rem; color: #fff;">${worldItem.name}</h4>
+          <p style="font-size: 0.78rem; color: var(--gold-warm); margin: 0.2rem 0;">${worldItem.regionName} · ${worldItem.dateRangeLabel}</p>
+          <p style="font-size: 0.78rem; color: var(--text-muted);">${worldItem.summary}</p>
+          <p style="font-size: 0.75rem; font-style: italic; color: var(--gold-muted); margin-top: 0.35rem;">${worldItem.overlapExplanation}</p>
+          <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <a href="${worldItem.sourceUrl}" target="_blank" rel="noopener noreferrer" class="atlas-drawer-btn" style="padding: 0.25rem 0.5rem; font-size: 0.74rem;">${worldItem.sourceTitle} ↗</a>
+            <button type="button" id="drawer-pan-world-btn" class="atlas-drawer-btn" style="padding: 0.25rem 0.5rem; font-size: 0.74rem;">Pan to ${(worldItem.name.includes('China') || worldItem.regionName.includes('China') || worldItem.id.includes('zhou') || worldItem.id.includes('shang') || worldItem.id.includes('han')) ? 'China' : (worldItem.regionName.split('/')[0].split(',')[0].trim())} on map &rarr;</button>
+          </div>
+        </div>
+      `;
+      const panBtn = document.getElementById("drawer-pan-world-btn");
+      if (panBtn && worldItem.coords) {
+        panBtn.onclick = () => {
+          this.mapCanvas?.animateToCoords(worldItem.coords!, 5);
+        };
+      }
+    } else {
+      worldEl.hidden = true;
+      worldEl.innerHTML = "";
     }
 
     drawer.hidden = false;
@@ -931,6 +1124,114 @@ class HistoricalAtlasApp {
     }
 
     const osisTarget = targetStop.scriptureOsis || route.scriptureOsis;
+
+    // Resolve time-specific relationship and independent world horizon for this stop
+    let stopRel: HistoricalRelationship | undefined;
+    let stopWorld: WorldHorizonItem | undefined;
+    if (osisTarget) {
+      const parts = osisTarget.split('.');
+      if (parts.length >= 2) {
+        const b = parts[0];
+        const ch = parseInt(parts[1], 10);
+        const vs = parts[2] ? parseInt(parts[2], 10) : 1;
+        stopRel = getRelationshipForPassage(b, ch, vs);
+      }
+    }
+    if (stopRel?.preferredWorldItemId) {
+      stopWorld = getWorldHorizonItem(stopRel.preferredWorldItemId);
+    }
+    if (!stopWorld && stopRel) {
+      stopWorld = HISTORICAL_WORLD_ITEMS.find(item => isWorldItemInDateInterval(item, stopRel!.startYear));
+    }
+    if (!stopWorld) {
+      const routeYears: Record<string, number> = {
+        'abraham-call': -2090,
+        'jacob-padan-aram': -1900,
+        'exodus-route': -1446,
+        'joshua-conquest': -1400,
+        'ruth-boaz': -1150,
+        'solomon-glory': -960,
+        'elijah-prophet': -841,
+        'jeremiah-ministry': -605,
+        'daniel-exile': -586,
+        'esther-mordecai': -479,
+        'ezra-journey': -450,
+        'nehemiah-walls': -445,
+        'jesus-galilean-ministry': 28,
+        'jesus-passion-resurrection': 33,
+        'peter-philip-missions': 38,
+        'paul-second-journey': 60,
+        'paul-voyage-rome': 60,
+        'john-seven-churches-patmos': 95,
+      };
+      const yr = routeYears[route.id];
+      if (yr !== undefined) {
+        stopWorld = HISTORICAL_WORLD_ITEMS.find(item => isWorldItemInDateInterval(item, yr));
+      }
+    }
+
+    // Render relationship into drawer
+    let relEl = document.getElementById("drawer-relationship");
+    if (!relEl) {
+      relEl = document.createElement("div");
+      relEl.id = "drawer-relationship";
+      relEl.className = "atlas-drawer-context-section";
+      sigEl?.closest("details")?.after(relEl);
+    }
+    if (stopRel) {
+      relEl.hidden = false;
+      relEl.innerHTML = `
+        <div class="drawer-relationship-box" style="margin-top: 0.75rem; padding: 0.75rem; background: rgba(212, 163, 89, 0.08); border-radius: 4px; border: 1px solid var(--border-subtle, rgba(255,255,255,0.1));">
+          <span class="eyebrow" style="color: var(--gold-bright); font-size: 0.7rem;">RELATIONSHIP AT THIS TIME</span>
+          <h4 style="margin: 0.25rem 0; font-size: 0.95rem; color: #fff;">${stopRel.actor1Name} ↔ ${stopRel.actor2Name}</h4>
+          <p style="font-size: 0.78rem; color: var(--gold-warm); margin: 0.2rem 0;">${stopRel.periodLabel} · ${stopRel.relationshipLabel}</p>
+          <p style="font-size: 0.78rem; color: var(--text-light); line-height: 1.4;">${stopRel.summary}</p>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem; line-height: 1.35;">
+            <div><strong>${stopRel.actor1Name}:</strong> ${stopRel.perspectiveActor1}</div>
+            <div style="margin-top: 0.2rem;"><strong>${stopRel.actor2Name}:</strong> ${stopRel.perspectiveActor2}</div>
+            <div style="margin-top: 0.3rem;"><strong>Tension &amp; Limits:</strong> ${stopRel.tensionAndLimits}</div>
+          </div>
+        </div>
+      `;
+    } else {
+      relEl.hidden = true;
+      relEl.innerHTML = "";
+    }
+
+    // Render world horizon into drawer
+    let worldEl = document.getElementById("drawer-world-item");
+    if (!worldEl) {
+      worldEl = document.createElement("div");
+      worldEl.id = "drawer-world-item";
+      worldEl.className = "atlas-drawer-context-section";
+      (relEl || sigEl?.closest("details"))?.after(worldEl);
+    }
+    if (stopWorld) {
+      const regLabel = (stopWorld.name.includes('China') || stopWorld.regionName.includes('China') || stopWorld.id.includes('zhou') || stopWorld.id.includes('shang') || stopWorld.id.includes('han')) ? 'China' : (stopWorld.regionName.split('/')[0].split(',')[0].trim());
+      worldEl.hidden = false;
+      worldEl.innerHTML = `
+        <div class="drawer-world-item-box" style="margin-top: 0.75rem; padding: 0.75rem; background: rgba(255, 255, 255, 0.04); border-radius: 4px; border: 1px solid var(--border-subtle, rgba(255,255,255,0.1));">
+          <span class="eyebrow" style="color: #c084fc; font-size: 0.7rem;">ELSEWHERE IN THE WORLD · CONTEMPORARY HORIZON</span>
+          <h4 style="margin: 0.25rem 0; font-size: 0.95rem; color: #fff;">${stopWorld.name}</h4>
+          <p style="font-size: 0.78rem; color: var(--gold-warm); margin: 0.2rem 0;">${stopWorld.regionName} · ${stopWorld.dateRangeLabel}</p>
+          <p style="font-size: 0.78rem; color: var(--text-muted);">${stopWorld.summary}</p>
+          <p style="font-size: 0.75rem; font-style: italic; color: var(--gold-muted); margin-top: 0.35rem;">${stopWorld.overlapExplanation}</p>
+          <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <a href="${stopWorld.sourceUrl}" target="_blank" rel="noopener noreferrer" class="atlas-drawer-btn" style="padding: 0.25rem 0.5rem; font-size: 0.74rem;">${stopWorld.sourceTitle} ↗</a>
+            <button type="button" id="drawer-pan-world-btn" class="atlas-drawer-btn" style="padding: 0.25rem 0.5rem; font-size: 0.74rem;">Pan to ${regLabel} on map &rarr;</button>
+          </div>
+        </div>
+      `;
+      const panBtn = document.getElementById("drawer-pan-world-btn");
+      if (panBtn && stopWorld.coords) {
+        panBtn.onclick = () => {
+          this.mapCanvas?.animateToCoords(stopWorld!.coords!, 5);
+        };
+      }
+    } else {
+      worldEl.hidden = true;
+      worldEl.innerHTML = "";
+    }
     if (scriptureLink) {
       scriptureLink.textContent = `Read Scripture (${targetStop.scriptureRef}) →`;
       scriptureLink.href = `/bible?ref=${encodeURIComponent(osisTarget)}`;
@@ -966,6 +1267,10 @@ class HistoricalAtlasApp {
   private hideDetailDrawer(): void {
     const drawer = document.getElementById('atlas-detail-drawer');
     if (drawer) drawer.hidden = true;
+    const relEl = document.getElementById('drawer-relationship');
+    if (relEl) relEl.hidden = true;
+    const worldEl = document.getElementById('drawer-world-item');
+    if (worldEl) worldEl.hidden = true;
     this.selectedSite = null;
   }
 

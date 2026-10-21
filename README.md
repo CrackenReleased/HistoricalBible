@@ -1,4 +1,8 @@
-# HistoricalBible — The Interactive Scripture Tapestry
+# HistoricalBible — Scripture in World History
+
+Historical Bible helps readers ask: **What else was happening in the world during the events of the Bible?** Our focus is connecting biblical people, places and events with the kingdoms, cultures and historical records of their time. Cross-references support that study alongside timelines and maps.
+
+Our cross-reference records come from [OpenBible.info](https://www.openbible.info/labs/cross-references/) by Stephen Smith, drawing primarily from the *Treasury of Scripture Knowledge* (CC BY 4.0 for the OpenBible dataset). [Biblical Connections](https://biblicalconnections.org/) is a related project exploring links within Scripture; its [source statement](https://biblicalconnections.org/about/) credits the same OpenBible dataset. The repository’s importer and snapshot metadata identify OpenBible as our data source. This acknowledgement recognizes shared work without claiming Biblical Connections supplied our dataset or endorses this project.
 
 ## Project governance — v1.0 adopted 2026-10-15
 
@@ -94,22 +98,51 @@ Because the King James Bible contains internal scriptural parentheses `(...)` (e
 
 ## 🛡️ Data Integrity & Automated Self-Checks
 
+The default suite includes all Node data regressions, portable Python importer units,
+and browser tests. Use Node 24 (verified here with 24.20.0);
+Python 3.10+ and Google Chrome are required. Browser runs start Vite on port 5173.
+Use a free port before CI runs; local runs can reuse an existing development server.
+
 ```bash
-# Verify canonical KJV corpus invariants (31,102 verses, 66 books, 1,189 chapters, balanced [...] brackets, LORD counts)
-node scripts/verify-canonical-kjv.js
-
-# Run cross-dataset referential & chronological self-checks (BIBLE_CHRONOLOGY, ancientMapData, historical_synchrony, whole-word concordance)
-npm run test:selfcheck
-
-# Run full collection, name-audit, and data-integrity regression suite
-npm run test:collection
-
-# Run Playwright end-to-end browser verification
-npx playwright test
-
-# Build production bundle
-npm run build
+npm ci
+npm test                     # Data + Python units + all browser tests
+npm run test:data            # All *-regression.ts files and data-integrity-selfcheck.ts
+npm run test:browser         # Playwright only; accepts file names / --grep
+npm run test:python:unit     # Importer tests without PDF dependencies or local vault
+npm run test:selfcheck       # Focused cross-dataset checks
+npm run test:collection      # Compatibility alias for the complete data suite
+npm run build               # Canonical KJV verification + production bundle
 ```
+
+The complete local acceptance suite also checks historical PDF/DOCX proofs and the
+original Obsidian export. These are retained regression fixtures, not obsolete tests.
+They require `TacticalCastle/HistoricalBible/Bible.docx`, `pdf-proof/v0.2.0/`
+(the DOCX and PDF), `pdf-proof/v0.3.3/Bible-proof-v0.3.3.pdf`, and the existing
+`E:/AI_Hub/Vault/Bible` and `E:/AI_Hub/Tools/bible-network/sources/cross-references.zip`.
+Missing fixtures or dependencies fail explicitly; they are never silently skipped.
+Intermediate v0.3.0–v0.3.2 proofs are checked when present, otherwise the tests use
+the retained v0.3.3 proof. Canonical `Bible.pdf` remains read-only.
+
+```powershell
+python -m venv .venv-tests
+.\.venv-tests\Scripts\python.exe -m pip install -r requirements-test.txt
+# Activate the environment so npm's Python commands use the same interpreter.
+.\.venv-tests\Scripts\Activate.ps1
+npm run test:all              # Default suite + every Python acceptance test
+npm run test:python           # Python acceptance tests alone
+```
+
+On macOS/Linux, activate with `source .venv-tests/bin/activate`. The dependency pins
+were verified on Python 3.12. Proof comparisons share a read-only cache keyed by file
+path, size and modification time, avoiding repeated full-document extraction when
+historical stages resolve to the same fixtures. Feature-specific typography,
+accessibility, bookmarks, navigation and pixel checks remain separate.
+
+Playwright saves screenshots and traces **on failure** in `test-results/`; routine
+success screenshots were not visual assertions. Existing layout/overflow assertions
+remain active. `scripts/audit-water-crossings.ts` is an optional manual geometry
+diagnostic, not an automated test. Atlas reachability is asserted by
+`tests/atlas-coverage-regression.ts` and the live menu browser tests.
 
 ---
 

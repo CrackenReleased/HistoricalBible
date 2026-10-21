@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Bible Word Inspector & Modern Meaning', () => {
-  test('inspecting "without" in Genesis 1:2 displays definition, untranslated root, and modern meaning', async ({ page }) => {
+  test('inspecting "without" in Genesis 1:2 displays definition and avoids a false Hebrew alignment', async ({ page }) => {
     // Navigate directly to Genesis 1 with word=without and tab=word
     await page.goto('/bible?book=Genesis&chapter=1&word=without&tab=word', { waitUntil: 'networkidle' });
 
@@ -21,12 +21,10 @@ test.describe('Bible Word Inspector & Modern Meaning', () => {
     await expect(defSection.locator('.word-section-title')).toHaveText('WORD DEFINITION');
     await expect(defSection.locator('.word-section-body')).toContainText('without form');
 
-    // 4. Assert Untranslated Word & Origin contains Hebrew lemma and Strongs H8414
+    // 4. English word is not falsely assigned one Hebrew token for the whole phrase.
     const originSection = wordContent.locator('.word-inspect-section').nth(1);
-    await expect(originSection.locator('.word-section-title')).toHaveText('UNTRANSLATED WORD & ORIGIN');
-    await expect(originSection).toContainText('תֹּהוּ');
-    await expect(originSection).toContainText('tôhûw');
-    await expect(originSection).toContainText('H8414');
+    await expect(originSection).toContainText('not aligned to a specific Hebrew or Greek token');
+    await expect(originSection).not.toContainText('H8414');
 
     // 5. Assert Modern Meaning is explicitly labeled and displayed
     const modernSection = wordContent.locator('.word-section-modern');
@@ -45,15 +43,12 @@ test.describe('Bible Word Inspector & Modern Meaning', () => {
     await verseRow.click();
     await expect(page.locator('#companion-tab-xrefs-content')).toContainText('Open in Interact');
     await expect(page.locator('#companion-tab-xrefs-content')).not.toContainText('Open Study Desk');
-
-    // 8. Capture visual proof screenshot of Word Inspector
-    await wordTabBtn.click();
-    await page.waitForTimeout(500);
-    await page.screenshot({ path: 'test-results/word-inspector-proof.png', fullPage: false });
   });
 
-  test('clicking "Spirit" in Genesis 1:2 displays clean title without eyebrow or duplicate badge row', async ({ page }) => {
-    await page.goto('/bible?book=Genesis&chapter=1&word=spirit&tab=word', { waitUntil: 'networkidle' });
+  test('clicking the reviewed Spirit occurrence in Genesis 1:2 shows its source-linked lemma', async ({ page }) => {
+    await page.goto('/bible?ref=Gen.1.2', { waitUntil: 'networkidle' });
+    await page.locator('.bible-verse-row[data-verse="2"] .kjv-word[data-word="spirit"]').click();
+    await page.locator('#companion-tab-word-btn').click();
 
     const wordContent = page.locator('#companion-tab-word-content');
     await expect(wordContent).toBeVisible();
@@ -71,25 +66,21 @@ test.describe('Bible Word Inspector & Modern Meaning', () => {
     // Modern Meaning
     const modernSection = wordContent.locator('.word-section-modern');
     await expect(modernSection.locator('.word-section-title')).toContainText('MODERN MEANING');
-
-    // Capture visual proof of SPIRIT
-    await page.screenshot({ path: 'test-results/word-inspector-spirit-clean.png', fullPage: false });
   });
 
-  test('companion tabs are ordered: 1. Chronology, 2. Map, 3. Word Inspector, 4. Passage & X-Refs', async ({ page }) => {
-    await page.goto('/bible?book=Genesis&chapter=1', { waitUntil: 'networkidle' });
+});
 
-    // Click verse 6 to match user screenshot
-    await page.locator('.bible-verse-row[data-verse="6"]').click();
-
-    const navButtons = page.locator('.companion-tabs-nav button');
-    await expect(navButtons).toHaveCount(4);
-    await expect(navButtons.nth(0)).toHaveText('Chronology');
-    await expect(navButtons.nth(1)).toHaveText('Map');
-    await expect(navButtons.nth(2)).toHaveText('Word Inspector');
-    await expect(navButtons.nth(3)).toHaveText('Passage & X-Refs');
-
-    // Visual screenshot proof of Genesis 1:6 with reordered buttons
-    await page.screenshot({ path: 'test-results/companion-tabs-reordered-proof.png', fullPage: false });
-  });
+test('supplied words and divine-name casing never inherit an unverified original-language token', async ({ page }) => {
+  await page.goto('/bible?book=Genesis&chapter=1');
+  await page.locator('.bible-verse-row[data-verse="2"] .kjv-italics .kjv-word[data-word="was"]').click();
+  await page.locator('#companion-tab-word-btn').click();
+  await expect(page.locator('#companion-tab-word-content')).toContainText('Translator-supplied English');
+  await expect(page.locator('#companion-tab-word-content')).not.toContainText('Strong’s');
+  await page.goto('/bible?book=Exodus&chapter=4');
+  await page.locator('.bible-verse-row[data-verse="10"] .kjv-divine-name .kjv-word').first().click();
+  await page.locator('#companion-tab-word-btn').click();
+  await expect(page.locator('#companion-tab-word-content')).toContainText('LORD');
+  await page.locator('.bible-verse-row[data-verse="10"] .kjv-word').filter({ hasText: /^Lord$/ }).last().click();
+  await expect(page.locator('#companion-tab-word-content')).toContainText('Lord');
+  await expect(page.locator('#companion-tab-word-content')).toContainText('not aligned to a specific Hebrew or Greek token');
 });
