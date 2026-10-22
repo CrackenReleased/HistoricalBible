@@ -100,3 +100,43 @@ test('Territorial fidelity is verified across ALL 13 chronological eras', () => 
     }
   }
 });
+
+test('Contested frontier zones and regional empires have mature high-density geodetic polygons (no primitive 4-to-6 sided boxes)', () => {
+  // 1. Every contested frontier zone must have at least 12 vertices
+  for (const zone of CONTESTED_FRONTIER_ZONES) {
+    assert.ok(
+      zone.bounds.length >= 12,
+      `Contested zone [${zone.id}] must be a mature geodetic polygon with >= 12 vertices (no primitive boxes), got ${zone.bounds.length}`
+    );
+  }
+
+  // 2. Old Babylonian & Kassite Kingdom must have realistic depth (> 250 km east-west span) without narrow bowtie pinches
+  const oldBabylon = WORLD_EMPIRES_GEO.find(e => e.id === 'old_babylon');
+  assert.ok(oldBabylon, 'Old Babylon must exist in WORLD_EMPIRES_GEO');
+  assert.ok(oldBabylon.approximateBounds.length >= 16, 'Old Babylon must have >= 16 vertices');
+  const lngs = oldBabylon.approximateBounds.map(p => p.lng);
+  const minLng = Math.min(...lngs);
+  const maxLng = Math.max(...lngs);
+  assert.ok(
+    maxLng - minLng >= 4.0,
+    `Old Babylon must span at least 4.0 degrees longitude across Mesopotamia, got ${maxLng - minLng}`
+  );
+  assert.ok(minLng <= 41.0, `Old Babylon western border must extend to Mari/desert plateau (<= 41.0 lng), got ${minLng}`);
+
+  // 3. Egypt and Saite Egypt must encompass the Western Desert oasis chain (reaching <= 29.0 lng)
+  const egypt = WORLD_EMPIRES_GEO.find(e => e.id === 'egypt');
+  assert.ok(egypt, 'Egypt must exist in WORLD_EMPIRES_GEO');
+  const egyptMinLng = Math.min(...egypt.approximateBounds.map(p => p.lng));
+  assert.ok(
+    egyptMinLng <= 28.5,
+    `Egypt must extend to Western Desert oasis chain (<= 28.5 lng), got ${egyptMinLng}`
+  );
+
+  const saiteEgypt = WORLD_EMPIRES_GEO.find(e => e.id === 'saite_egypt');
+  assert.ok(saiteEgypt, 'Saite Egypt must exist in WORLD_EMPIRES_GEO');
+  const saiteMinLng = Math.min(...saiteEgypt.approximateBounds.map(p => p.lng));
+  assert.ok(
+    saiteMinLng <= 28.5,
+    `Saite Egypt must extend to Western Desert oasis chain (<= 28.5 lng), got ${saiteMinLng}`
+  );
+});

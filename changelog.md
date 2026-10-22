@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [00.01.63] - 2026-10-22
+
+- **Elimination of Map Pulsing & Coin Marker Resizing**:
+  - Permanently eradicated all pulsing animations across the cartographic engine (`goldHaloPulse` on `.gold-coin-core` and `geoPulseRing` on `.geo-focus-ping`).
+  - Resized archaeological site coins down from $28\times 28\text{px}$ to subtle, muted $12\times 12\text{px}$ antique gold/bronze markers (`iconSize: [12, 12]`, `iconAnchor: [6, 6]`), removing visual clutter while preserving clarity and hover responsiveness.
+  - Resized geographic place focus pin to $14\times 14\text{px}$ (`iconSize: [14, 14]`, `iconAnchor: [7, 7]`) and removed `.geo-focus-ping`.
+- **Passage-Pertinent Archaeology Filtering in Scripture Companion Map (`/bible`)**:
+  - Defaulted archaeology layer to `false` when `compact: true` in `AncientMapCanvas`.
+  - Added `activeSiteOverrideIds: string[] | null` filtering to `AncientMapCanvas.renderActiveEra()`.
+  - In `renderCompanionMap()`, archaeological discovery coins are suppressed by default unless the specific chapter/verse has a direct dated event receipt (e.g. 2 Kings 18 for the Taylor Prism).
+  - In `handleWordClick()`, clicking a biblical city or geographic entity (such as Nineveh in Jonah 1) suppresses unrelated imperial archaeological coins from rendering over the city.
+  - Implemented `AncientMapCanvas.clearFocusMarker()` and wired it to map canvas clicks, zoom/move events, and the artifact drawer close button (`.artifact-drawer-close`) so users can easily dismiss active pins and highlights.
+- **Topographic Curvature & Elimination of Primitive Polygonal Boundaries**:
+  - Re-coordinated `old_babylon` (`Old Babylonian & Kassite Kingdom`) along the western desert plateau escarpment (`lng: 40.8` to `44.2`), placing Babylon, Kish, Nippur, Uruk, Larsa, and Ur deep within the interior of the realm, eliminating the pinched bowtie/hourglass anomaly.
+  - Expanded `egypt` and `saite_egypt` western bounds to encompass the Western Desert oasis chain (Kharga, Dakhla, Farafra, Bahariya, Fayum) reaching `lng: 27.95`, eliminating the riverbank-clipped ribbon effect.
+  - Replaced all primitive 4-to-6-sided boxes in `CONTESTED_FRONTIER_ZONES` with organic 14-to-18-vertex topographic curves along wadis, cataracts, mountain passes, and escarpments across all 8 canonical contested frontiers.
+  - Added `smoothPolylineCoordinates()` with endpoint anchoring for `WATER_FEATURES.rivers` and softened river styling to mature aquatic slate `rgba(84, 138, 168, 0.55)` (weight: 1.25).
+  - Enhanced `smoothPolygonCoordinates()` with edge pre-densification for segments $> 0.60^\circ$ so long straight chords curve naturally.
+  - Purged remaining neon cyan `#38bdf8` styles in favor of antique gold `#d4af37` and muted aquatic tones.
+- **Comprehensive Verification & Regression Suite**:
+  - Added automated browser regression tests in [`tests/companion-map-callout-regression.spec.ts`](file:///E:/HistoricalBible/tests/companion-map-callout-regression.spec.ts) asserting:
+    1. Sidebar companion map suppresses artifact coins on non-pertinent passages.
+    2. Zero pulsing animations on coins or geographic focus pins.
+    3. Small muted $12\times 12\text{px}$ coin core dimensions in full `/map`.
+    4. Dismissing artifact drawer or clicking map clears active geographic focus pin.
+  - Expanded [`tests/all-eras-territorial-fidelity-regression.ts`](file:///E:/HistoricalBible/tests/all-eras-territorial-fidelity-regression.ts) with assertions ensuring all contested frontier zones have $\ge 12$ vertices, Old Babylon spans $> 4^\circ$ longitude without pinches, and Egypt encompasses the Western Desert oases.
+  - All 73 Node.js regression tests passing (73/73).
+  - All 7 Playwright browser tests passing (7/7).
+  - 100% canonical KJV corpus verified (31,102 verses across 66 books).
+  - Clean production build verified.
+
 ## [00.01.62] - 2026-10-21
 
 - **Cross-Atlas & Multi-Timeline Territorial Fidelity Verification**:

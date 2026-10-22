@@ -203,12 +203,62 @@ function getEmpireRelevanceNote(empireId: string, eraId: string, empire: WorldEm
 }
 
 /**
- * Smooths polygon coordinates using Chaikin's corner-cutting algorithm.
- * Converts angular, low-vertex borders into organic, curvilinear historical frontiers.
+ * Smooths polyline coordinates (such as open river courses) using Chaikin's corner-cutting algorithm.
+ * Anchors the start and end points so river mouths and sources do not wander.
+ */
+export function smoothPolylineCoordinates(coords: GeoCoordinate[], iterations: number = 2): GeoCoordinate[] {
+  if (!coords || coords.length < 3) return coords || [];
+  let current = coords;
+  for (let iter = 0; iter < iterations; iter++) {
+    const next: GeoCoordinate[] = [];
+    next.push(current[0]);
+    for (let i = 0; i < current.length - 1; i++) {
+      const p0 = current[i];
+      const p1 = current[i + 1];
+      next.push({
+        lat: 0.75 * p0.lat + 0.25 * p1.lat,
+        lng: 0.75 * p0.lng + 0.25 * p1.lng
+      });
+      next.push({
+        lat: 0.25 * p0.lat + 0.75 * p1.lat,
+        lng: 0.25 * p0.lng + 0.75 * p1.lng
+      });
+    }
+    next.push(current[current.length - 1]);
+    current = next;
+  }
+  return current;
+}
+
+/**
+ * Smooths polygon coordinates using Chaikin's corner-cutting algorithm with edge pre-densification.
+ * Converts angular borders into organic, curvilinear historical frontiers without flattening long spans.
  */
 export function smoothPolygonCoordinates(coords: GeoCoordinate[], iterations: number = 2): GeoCoordinate[] {
   if (!coords || coords.length < 3) return coords || [];
-  let current = coords;
+  // Step 1: Pre-densify edges longer than ~0.60 degrees (~60 km) so long straight chords curve naturally
+  const densified: GeoCoordinate[] = [];
+  const initialLen = coords.length;
+  for (let i = 0; i < initialLen; i++) {
+    const p0 = coords[i];
+    const p1 = coords[(i + 1) % initialLen];
+    densified.push(p0);
+    const dLat = p1.lat - p0.lat;
+    const dLng = p1.lng - p0.lng;
+    const dist = Math.sqrt(dLat * dLat + dLng * dLng);
+    if (dist > 0.60) {
+      const steps = Math.min(4, Math.floor(dist / 0.40));
+      for (let s = 1; s <= steps; s++) {
+        const t = s / (steps + 1);
+        densified.push({
+          lat: p0.lat + dLat * t,
+          lng: p0.lng + dLng * t
+        });
+      }
+    }
+  }
+
+  let current = densified;
   for (let iter = 0; iter < iterations; iter++) {
     const next: GeoCoordinate[] = [];
     const len = current.length;
@@ -251,6 +301,7 @@ export class AncientMapCanvas {
   public activeGranularFilterId: string | null = null;
   public activeRouteOverrideIds: string[] | null = null;
   public activeRouteStopSelection: { routeId: string; stopIndex: number } | null = null;
+  public activeSiteOverrideIds: string[] | null = null;
   public focusedStopOnly = false;
   private routeStopMarkersMap: Map<string, L.Marker[]> = new Map();
   private activeFocusMarker: L.Marker | null = null;
@@ -266,6 +317,7 @@ export class AncientMapCanvas {
 
   constructor(options: AncientMapOptions) {
     this.options = options;
+    this.layers.archaeology = options.compact ? false : true;
     Object.assign(this.layers, options.initialLayers);
     this.container = options.container;
 
@@ -348,12 +400,17 @@ export class AncientMapCanvas {
     // 5. Custom On-Map UI: Ornate Compass Rose + Controls + Year HUD
     this.buildCompassRose();
     this.buildControls();
-    this.buildYearHud();
+    if (!options.compact) {
+      this.buildYearHud();
+    }
 
     // 6. Zero-Collision Event Handlers
     this.map.on('movestart', () => this.closeActiveTooltip());
     this.map.on('zoomstart', () => this.closeActiveTooltip());
-    this.map.on('click', () => this.closeActiveTooltip());
+    this.map.on('click', () => {
+      this.closeActiveTooltip();
+      this.clearFocusMarker();
+    });
     this.map.on('zoomend moveend viewreset', () => {
       this.syncZoomClasses();
       this.scheduleLabelDeconfliction();
@@ -1332,6 +1389,15 @@ export class AncientMapCanvas {
     this.map.fitBounds(route.stops.map(s => [s.coords.lat, s.coords.lng] as L.LatLngTuple), { padding: [60, 60], maxZoom: 7, animate: false });
   }
 
+  public clearFocusMarker(): void {
+    if (this.activeFocusMarker) {
+      this.map.removeLayer(this.activeFocusMarker);
+      this.activeFocusMarker = null;
+    }
+    this.closeActiveTooltip();
+    this.map.closePopup();
+  }
+
   public highlightGeographicPlace(entity: BiblicalGeographicEntity): void {
     this.map.flyTo([entity.coords.lat, entity.coords.lng], Math.max(entity.zoom || 9, 8), { duration: 0.8 });
 
@@ -1343,12 +1409,11 @@ export class AncientMapCanvas {
     const focusIcon = L.divIcon({
       className: 'leaflet-geo-focus-marker',
       html: `
-        <div class="geo-focus-ping"></div>
         <div class="geo-focus-core"></div>
         <div class="geo-focus-label">${entity.name}</div>
       `,
-      iconSize: [24, 24],
-      iconAnchor: [12, 12]
+      iconSize: [14, 14],
+      iconAnchor: [7, 7]
     });
 
     this.activeFocusMarker = L.marker([entity.coords.lat, entity.coords.lng], {
@@ -1748,18 +1813,18 @@ export class AncientMapCanvas {
         const latLngs = sea.polygon.map(pt => [pt.lat, pt.lng] as L.LatLngTuple);
         const defaultStyle: L.PathOptions = {
           pane: 'lakePane',
-          color: 'rgba(56, 189, 248, 0.40)',
-          fillColor: 'rgba(14, 116, 144, 0.14)',
-          fillOpacity: 0.14,
+          color: 'rgba(74, 144, 184, 0.45)',
+          fillColor: 'rgba(38, 98, 130, 0.16)',
+          fillOpacity: 0.16,
           weight: 1.0,
           dashArray: undefined
         };
         const hoverStyle: L.PathOptions = {
           pane: 'lakePane',
-          color: 'rgba(56, 189, 248, 0.90)',
-          fillColor: 'rgba(14, 116, 144, 0.28)',
-          fillOpacity: 0.28,
-          weight: 1.8,
+          color: 'rgba(94, 168, 208, 0.85)',
+          fillColor: 'rgba(38, 98, 130, 0.30)',
+          fillOpacity: 0.30,
+          weight: 1.6,
           dashArray: undefined
         };
         const seaPoly = L.polygon(latLngs, defaultStyle);
@@ -1780,17 +1845,18 @@ export class AncientMapCanvas {
       }
 
       for (const river of WATER_FEATURES.rivers) {
-        const path = river.path.map(pt => [pt.lat, pt.lng] as L.LatLngTuple);
+        const smoothedCoords = smoothPolylineCoordinates(river.path, 2);
+        const path = smoothedCoords.map(pt => [pt.lat, pt.lng] as L.LatLngTuple);
         const defaultStyle: L.PathOptions = {
           pane: 'riverPane',
-          color: '#38bdf8',
-          weight: 1.3,
-          opacity: 0.50
+          color: 'rgba(84, 138, 168, 0.55)',
+          weight: 1.25,
+          opacity: 0.85
         };
         const hoverStyle: L.PathOptions = {
           pane: 'riverPane',
-          color: '#7dd3fc',
-          weight: 2.2,
+          color: '#8ec5e2',
+          weight: 2.0,
           opacity: 0.95
         };
         const riverLine = L.polyline(path, defaultStyle);
@@ -2201,9 +2267,13 @@ export class AncientMapCanvas {
 
     // 4. Archaeological Discovery Sites (Filtered by active chapter era + radial micro-jitter offset)
     if (this.layers.archaeology) {
-      const sitesToRender = (isAll || this.showAllSites)
+      let sitesToRender = (isAll || this.showAllSites)
         ? ARCHAEOLOGICAL_SITES
         : ARCHAEOLOGICAL_SITES.filter(s => this.activeEra.activeSiteIds.includes(s.id));
+
+      if (this.activeSiteOverrideIds !== null) {
+        sitesToRender = ARCHAEOLOGICAL_SITES.filter(s => this.activeSiteOverrideIds!.includes(s.id));
+      }
 
       // Group nearby markers within < 0.12 deg distance to avoid overlapping stacks in Jerusalem
       const clusters: Array<ArchaeologicalSite[]> = [];
@@ -2244,23 +2314,19 @@ export class AncientMapCanvas {
 
       for (const item of sitesWithOffset) {
         const site = item.site;
-        const isEraHighlight = this.activeEra.activeSiteIds.includes(site.id);
         const shortArtifactLabel = site.artifactName
           .replace(/\s*\([^)]*\)/g, '')
           .replace(/\s+of\s+(?:Sennacherib|Shalmaneser\s+III|Ur|Sargon\s+II)$/i, '')
           .trim();
 
         const goldIcon = L.divIcon({
-          className: `leaflet-gold-marker ${isEraHighlight ? 'pulse' : ''}`,
+          className: 'leaflet-gold-marker',
           html: `
-            <div class="gold-coin-core">
-              <span class="core-inner">&#10022;</span>
-            </div>
-            ${isEraHighlight ? '<div class="gold-coin-halo"></div>' : ''}
+            <div class="gold-coin-core"></div>
             <div class="gold-coin-label">${shortArtifactLabel}</div>
           `,
-          iconSize: [28, 28],
-          iconAnchor: [14, 14]
+          iconSize: [12, 12],
+          iconAnchor: [6, 6]
         });
 
         const marker = L.marker([item.displayCoords.lat, item.displayCoords.lng], {
@@ -2282,7 +2348,7 @@ export class AncientMapCanvas {
             <span class="tooltip-cta" style="margin-top: 6px; display: block; color: #c99738; font-size: 0.74rem; font-weight: 500;">Click to view discovery card in companion panel &rarr;</span>
           </div>
         `;
-        this.bindManagedTooltip(marker, siteTooltipHtml, { direction: 'top', offset: [0, -14] });
+        this.bindManagedTooltip(marker, siteTooltipHtml, { direction: 'top', offset: [0, -8] });
 
         marker.on('click', () => {
           if (this.options.onSelectSite) {

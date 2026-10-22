@@ -615,7 +615,7 @@ class BibleReader {
         // Fly/zoom to entity location
         this.companionMapCanvas.map.flyTo([entity.coords.lat, entity.coords.lng], entity.zoom || 7, { duration: 0.8 });
 
-        // Highlight with luminous pulsing pin
+        // Highlight with subtle, non-pulsing geographic pin
         this.companionMapCanvas.highlightGeographicPlace({
           name: entity.name,
           ancientRegion: entity.ancientRegion,
@@ -624,6 +624,10 @@ class BibleReader {
           note: entity.context,
           scriptureRef: entity.scriptureRef
         });
+
+        // Ensure companion map does NOT dump unrelated archaeological site coins over the city
+        this.companionMapCanvas.layers.archaeology = false;
+        this.companionMapCanvas.activeSiteOverrideIds = [];
 
         // Ensure empire layer is active if entity is linked to a realm
         if (entity.relatedEmpireId) {
@@ -640,8 +644,8 @@ class BibleReader {
             };
           }
           this.companionMapCanvas.layers.routes = true;
-          this.companionMapCanvas.renderActiveEra();
         }
+        this.companionMapCanvas.renderActiveEra();
 
         this.syncLayerChips();
       }
@@ -722,7 +726,7 @@ class BibleReader {
       drawerEl.innerHTML = `
         <div class="artifact-drawer-header">
           <div>
-            <span class="eyebrow" style="font-size: 0.68rem; color: #38bdf8;">BIBLICAL GEOGRAPHY · ${geoEntity.ancientRegion.toUpperCase()}</span>
+            <span class="eyebrow" style="font-size: 0.68rem; color: #d4af37;">BIBLICAL GEOGRAPHY · ${geoEntity.ancientRegion.toUpperCase()}</span>
             <h4 class="artifact-drawer-title">${geoEntity.name}</h4>
           </div>
           <button type="button" class="artifact-drawer-close" aria-label="Dismiss geographic card">&times;</button>
@@ -731,7 +735,7 @@ class BibleReader {
           <strong>✦ Biblical Setting:</strong><br/>
           ${geoEntity.note}
         </div>
-        ${geoEntity.scriptureRef ? `<div class="artifact-drawer-meta" style="color: #38bdf8;"><strong>Passage Anchor:</strong> ${geoEntity.scriptureRef}</div>` : ''}
+        ${geoEntity.scriptureRef ? `<div class="artifact-drawer-meta" style="color: #d4af37;"><strong>Passage Anchor:</strong> ${geoEntity.scriptureRef}</div>` : ''}
       `;
     } else if (empire) {
       drawerEl.hidden = false;
@@ -811,7 +815,7 @@ class BibleReader {
         }
         ${
           resolvedEntity.alliesAndContemporaries
-            ? `<div class="artifact-drawer-meta" style="color: #38bdf8; margin-top: 0.25rem;">
+            ? `<div class="artifact-drawer-meta" style="color: #d4af37; margin-top: 0.25rem;">
                  <span><strong>🤝 Allies & Contemporaries:</strong> ${resolvedEntity.alliesAndContemporaries}</span>
                </div>`
             : ''
@@ -837,6 +841,7 @@ class BibleReader {
     drawerEl.querySelector('.artifact-drawer-close')?.addEventListener('click', () => {
       drawerEl.hidden = true;
       drawerEl.innerHTML = '';
+      this.companionMapCanvas?.clearFocusMarker();
     });
 
     drawerEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1448,6 +1453,18 @@ class BibleReader {
     // Curate overlay density: if current passage has a narrative journey, spotlight it!
     // If not, mute route spaghetti to keep biblical geography clean and legible.
     const journeyMatch = getJourneyStopForPassage(this.currentBookOsis, this.currentChapter, this.selectedVerseNum || 1);
+
+    // Archaeology in companion sidebar: ONLY render an archaeological receipt if this exact passage has a dated event!
+    // Never clutter the compact sidebar map with non-pertinent regional coins.
+    const datedEvent = getDatedEvent(this.currentBookOsis, this.currentChapter, this.selectedVerseNum || 1);
+    if (datedEvent) {
+      this.companionMapCanvas.layers.archaeology = true;
+      this.companionMapCanvas.activeSiteOverrideIds = [datedEvent.siteId];
+    } else {
+      this.companionMapCanvas.layers.archaeology = false;
+      this.companionMapCanvas.activeSiteOverrideIds = [];
+    }
+
     if (journeyMatch) {
       this.companionMapCanvas.activeRouteOverrideIds = [journeyMatch.route.id];
       this.companionMapCanvas.activeRouteStopSelection = { routeId: journeyMatch.route.id, stopIndex: journeyMatch.stopIndex };

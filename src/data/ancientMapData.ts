@@ -4981,29 +4981,24 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
     dateRange: 'c. 1894 – 1155 BC',
     capital: { name: 'Babylon & Ur', coords: { lat: 32.542, lng: 44.421 } },
     approximateBounds: [
-      { lat: 34.45, lng: 40.90 }, // Mari on the Euphrates
-      { lat: 34.80, lng: 42.10 }, // Hit / middle Euphrates
-      { lat: 34.60, lng: 43.68 }, // Tikrit / Tigris valley
-      { lat: 34.00, lng: 44.35 }, // Samarra / lower Tigris
-      { lat: 33.55, lng: 44.75 }, // Diyala river confluence
-      { lat: 33.15, lng: 45.85 }, // Der / Zagros foothills (Elam border)
-      { lat: 32.20, lng: 47.50 }, // Tigris marshlands north of Susa
-      { lat: 31.00, lng: 47.80 }, // Euphrates-Tigris confluence (Qurna)
-      { lat: 30.00, lng: 48.50 }, // Head of Persian Gulf marshlands
-      { lat: 30.40, lng: 47.20 }, // Southern desert frontier
-      { lat: 30.82, lng: 45.98 }, // Eridu (most ancient sanctuary of Enki)
-      { lat: 30.96, lng: 46.10 }, // Ur of the Chaldees (Birthplace of Abraham)
-      { lat: 31.25, lng: 45.85 }, // Larsa
-      { lat: 31.32, lng: 45.64 }, // Uruk (Biblical Erech)
-      { lat: 31.70, lng: 45.20 }, // Isin
-      { lat: 32.12, lng: 45.23 }, // Nippur (religious heart of Sumer & Akkad)
-      { lat: 32.38, lng: 44.35 }, // Borsippa (Tower of Babel tradition)
-      { lat: 32.54, lng: 44.42 }, // Royal City of Babylon
-      { lat: 32.55, lng: 44.60 }, // Kish
-      { lat: 33.05, lng: 44.25 }, // Sippar (Tell Abu Habbah)
-      { lat: 33.40, lng: 43.30 }, // Ramadi / Lake Habbaniyah
-      { lat: 34.10, lng: 42.40 }, // Anah on the Euphrates
-      { lat: 34.45, lng: 40.90 }  // Back to Mari
+      { lat: 34.60, lng: 40.80 }, // Northwest of Mari (Syrian Euphrates bend)
+      { lat: 35.10, lng: 41.80 }, // Jazirah plateau between Euphrates and Khabur
+      { lat: 35.20, lng: 43.10 }, // Ashur frontier / northern Mesopotamian alluvium
+      { lat: 34.70, lng: 44.20 }, // Tikrit / upper Tigris valley
+      { lat: 34.10, lng: 45.10 }, // Jebel Hamrin foothills
+      { lat: 33.60, lng: 46.00 }, // Diyala river basin / Mandali frontier
+      { lat: 32.80, lng: 46.80 }, // Zagros piedmont (Der / border of Elam)
+      { lat: 31.90, lng: 47.90 }, // Lower Tigris alluvium north of Susa
+      { lat: 30.90, lng: 48.40 }, // Shatt al-Arab marshlands
+      { lat: 30.00, lng: 48.60 }, // Persian Gulf coastline at mouth of alluvium
+      { lat: 29.80, lng: 47.70 }, // Kuwaiti / Arabian desert steppe
+      { lat: 30.30, lng: 46.20 }, // Western desert plateau south of Eridu
+      { lat: 30.90, lng: 45.00 }, // Bahr an-Najaf western escarpment
+      { lat: 31.70, lng: 43.80 }, // Western desert plateau west of Uruk & Nippur
+      { lat: 32.50, lng: 43.20 }, // Karbala / desert steppe west of Babylon
+      { lat: 33.30, lng: 42.60 }, // Lake Habbaniyah / Ramadi plateau
+      { lat: 34.00, lng: 41.70 }, // Hit & Anah desert cliffs
+      { lat: 34.60, lng: 40.80 }  // Back to Mari
     ],
     biblicalIntersection: 'Land of Shinar (Genesis 10–11); Tower of Babel; origin of Abram called out of Ur of the Chaldees.',
     factionCategory: 'hostile',
@@ -5145,26 +5140,18 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
       { lat: 22.340, lng: 31.620 }, // Abu Simbel temples (Ramesses II southern seat)
       { lat: 21.900, lng: 31.300 }, // Second Cataract at Buhen (fortress of Senusret III)
       { lat: 21.450, lng: 30.950 }, // Semna / Kumma southern border fortress
-      { lat: 22.400, lng: 30.600 }, // Toshka western depression
-      { lat: 23.200, lng: 31.200 }, // Western desert plateau
-      { lat: 24.090, lng: 32.860 }, // West bank of First Cataract
-      { lat: 24.500, lng: 32.880 }, // Kom Ombo west bank
-      { lat: 24.980, lng: 32.820 }, // Edfu (Apollinopolis Magna) west bank
-      { lat: 25.290, lng: 32.520 }, // Esna (Latopolis)
-      { lat: 25.740, lng: 32.580 }, // Thebes (Valley of the Kings / Luxor west bank)
-      { lat: 26.050, lng: 32.200 }, // Nag Hammadi bend
-      { lat: 26.190, lng: 31.900 }, // Abydos / western desert approach
-      { lat: 26.560, lng: 31.700 }, // Akhmim / Sohag west bank
-      { lat: 27.190, lng: 31.150 }, // Asyut (Lycopolis) west bank
-      { lat: 27.650, lng: 30.880 }, // Hermopolis Magna / Amarna
-      { lat: 28.110, lng: 30.740 }, // Minya
-      { lat: 29.070, lng: 31.080 }, // Beni Suef (Herakleopolis)
-      { lat: 29.300, lng: 30.600 }, // Fayum Oasis depression (Lake Moeris)
-      { lat: 29.500, lng: 30.400 }, // Crocodilopolis / Karanis
-      { lat: 29.850, lng: 31.180 }, // Memphis / Dahshur / Saqqara plateau
-      { lat: 29.980, lng: 31.120 }, // Giza pyramid plateau
-      { lat: 30.350, lng: 30.400 }, // Wadi Natrun western desert margin
-      { lat: 30.700, lng: 30.000 }, // Western Delta ridge
+      { lat: 22.400, lng: 30.200 }, // Toshka western depression
+      { lat: 23.500, lng: 30.400 }, // Lower Nubia western plateau
+      { lat: 24.500, lng: 30.500 }, // Dunqul Oasis & Baris approach
+      { lat: 25.450, lng: 30.550 }, // Great Kharga Oasis (Hibis temple)
+      { lat: 25.500, lng: 28.950 }, // Dakhla Oasis (Amheida / Mut)
+      { lat: 27.050, lng: 27.950 }, // Farafra Oasis depression
+      { lat: 28.350, lng: 28.850 }, // Bahariya Oasis depression
+      { lat: 29.200, lng: 28.500 }, // Qattara Depression southern escarpment
+      { lat: 29.350, lng: 30.400 }, // Fayum Oasis depression (Lake Moeris)
+      { lat: 29.850, lng: 30.800 }, // Western desert ridge west of Memphis
+      { lat: 30.350, lng: 30.200 }, // Wadi Natrun western desert margin
+      { lat: 30.700, lng: 29.900 }, // Western Delta ridge
       { lat: 31.050, lng: 29.750 }, // Lake Mareotis southern shore
       { lat: 31.200, lng: 29.900 }  // Back to Alexandria
     ],
@@ -5198,13 +5185,14 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
       { lat: 27.250, lng: 33.820 },
       { lat: 26.100, lng: 34.280 },
       { lat: 24.080, lng: 32.900 },
-      { lat: 24.090, lng: 32.860 },
-      { lat: 25.740, lng: 32.580 },
-      { lat: 27.190, lng: 31.150 },
-      { lat: 28.110, lng: 30.740 },
-      { lat: 29.300, lng: 30.600 },
-      { lat: 29.850, lng: 31.180 },
-      { lat: 30.700, lng: 30.000 },
+      { lat: 24.500, lng: 30.500 }, // Dunqul / Baris
+      { lat: 25.450, lng: 30.550 }, // Kharga Oasis
+      { lat: 25.500, lng: 28.950 }, // Dakhla Oasis
+      { lat: 27.050, lng: 27.950 }, // Farafra Oasis
+      { lat: 28.350, lng: 28.850 }, // Bahariya Oasis
+      { lat: 29.350, lng: 30.400 }, // Fayum Oasis
+      { lat: 30.350, lng: 30.200 }, // Wadi Natrun
+      { lat: 30.700, lng: 29.900 },
       { lat: 31.200, lng: 29.900 }
     ],
     biblicalIntersection: 'Pharaoh Necho slew King Josiah at Megiddo (2 Kings 23:29); Jeremiah taken to Tahpanhes in Egypt.',
@@ -5215,8 +5203,8 @@ export const WORLD_EMPIRES_GEO: WorldEmpireRegion[] = [
   {
     id: 'ptolemaic_egypt',
     name: 'Ptolemaic Kingdom of Egypt',
-    color: '#38bdf8',
-    fillColor: 'rgba(56, 189, 248, 0.16)',
+    color: '#4a90b8',
+    fillColor: 'rgba(74, 144, 184, 0.16)',
     dateRange: '305 – 30 BC',
     capital: { name: 'Alexandria', coords: { lat: 31.20, lng: 29.91 } },
     approximateBounds: [
@@ -5488,15 +5476,20 @@ export const CONTESTED_FRONTIER_ZONES: ContestedFrontierZone[] = [
     historicalContext: 'Argued buffer between Egypt and the Kingdom of Kush from the 1st Cataract (Aswan) to the 2nd Cataract (Buhen/Semna). Contested across two millennia between Egyptian Middle/New Kingdom expansion and Kushite resurgence (Kerma culture and 25th Nubian Dynasty).',
     bounds: [
       { lat: 24.08, lng: 32.90 }, // First Cataract (Aswan east bank)
-      { lat: 23.50, lng: 33.30 }, // Beit el-Wali
+      { lat: 23.75, lng: 33.15 }, // Kalabsha gorge
+      { lat: 23.30, lng: 33.30 }, // Wadi Allaqi mouth
+      { lat: 22.80, lng: 32.80 }, // Korosko bend
       { lat: 22.34, lng: 32.20 }, // Abu Simbel eastern approach
       { lat: 21.90, lng: 31.40 }, // Second Cataract (Buhen fortress)
-      { lat: 21.45, lng: 30.95 }, // Semna / Kumma southern border fortress of Senusret III
-      { lat: 21.75, lng: 30.60 }, // Mirgissa west plateau
-      { lat: 22.50, lng: 30.90 }, // Toshka depression west bank
-      { lat: 23.50, lng: 31.60 }, // Lower Nubia west bank
+      { lat: 21.45, lng: 30.95 }, // Semna & Kumma southern frontier fortresses
+      { lat: 21.55, lng: 30.75 }, // Mirgissa western plateau
+      { lat: 21.95, lng: 30.90 }, // Batn el-Hajar western cliffs
+      { lat: 22.40, lng: 31.30 }, // Toshka depression approach
+      { lat: 22.85, lng: 31.90 }, // Western desert cliffs opposite Korosko
+      { lat: 23.40, lng: 32.40 }, // Lower Nubia west bank
+      { lat: 23.85, lng: 32.75 }, // Dabod west bank
       { lat: 24.08, lng: 32.86 }, // Aswan west bank
-      { lat: 24.08, lng: 32.90 }
+      { lat: 24.08, lng: 32.90 }  // Closed
     ]
   },
   {
@@ -5507,13 +5500,20 @@ export const CONTESTED_FRONTIER_ZONES: ContestedFrontierZone[] = [
     biblicalRecord: 'King Baasha of Israel went up against Judah, and built Ramah, that he might not suffer any to go out or come in to Asa king of Judah; Asa used the stones of Ramah to fortify Geba and Mizpah (1 Kings 15:16–22).',
     historicalContext: 'Hotly contested 10-mile frontier north of Jerusalem where the northern ten tribes met Judah, with sovereignty shifting repeatedly back and forth between Samaria and Zion.',
     bounds: [
-      { lat: 31.95, lng: 35.10 }, // Beth-horon pass
-      { lat: 31.95, lng: 35.25 }, // Bethel sanctuary
-      { lat: 31.92, lng: 35.45 }, // Jericho northern plain
-      { lat: 31.82, lng: 35.45 }, // Jordan crossing
-      { lat: 31.81, lng: 35.24 }, // Geba / Mizpah / Anathoth
-      { lat: 31.84, lng: 34.98 }, // Valley of Aijalon
-      { lat: 31.95, lng: 35.10 }
+      { lat: 31.98, lng: 35.08 }, // Upper Beth-horon pass
+      { lat: 32.00, lng: 35.18 }, // Gophna hills
+      { lat: 31.97, lng: 35.25 }, // Bethel high sanctuary
+      { lat: 31.95, lng: 35.32 }, // Ai & Rock of Rimmon
+      { lat: 31.90, lng: 35.44 }, // Jericho northern steppe / Wadi Qelt descent
+      { lat: 31.83, lng: 35.46 }, // Jordan River crossing ford
+      { lat: 31.80, lng: 35.35 }, // Anathoth ridge
+      { lat: 31.81, lng: 35.24 }, // Geba of Benjamin
+      { lat: 31.84, lng: 35.18 }, // Mizpah / Tell en-Nasbeh
+      { lat: 31.86, lng: 35.14 }, // Gibeon plateau
+      { lat: 31.85, lng: 35.05 }, // Chephirah
+      { lat: 31.83, lng: 34.98 }, // Valley of Aijalon
+      { lat: 31.90, lng: 35.00 }, // Lower Beth-horon
+      { lat: 31.98, lng: 35.08 }  // Closed
     ]
   },
   {
@@ -5524,12 +5524,18 @@ export const CONTESTED_FRONTIER_ZONES: ContestedFrontierZone[] = [
     biblicalRecord: 'King Ahab of Israel and King Jehoshaphat of Judah went to Ramoth-gilead to battle against the king of Syria; Ahab struck by an arrow drawn at a venture (1 Kings 22:1–37, 2 Kings 8:28).',
     historicalContext: 'Transjordan fortress corridor and fertile heights of Gilead repeatedly disputed between Israel and the Arameans of Damascus under Ben-hadad and Hazael.',
     bounds: [
-      { lat: 32.95, lng: 35.75 }, // Yarmouk River canyon
-      { lat: 32.95, lng: 36.15 }, // Bashan steppe
-      { lat: 32.45, lng: 36.15 }, // Ramoth-gilead eastern approach
-      { lat: 32.35, lng: 35.70 }, // Jabbok River gorge
-      { lat: 32.65, lng: 35.65 }, // Sea of Galilee southeast heights
-      { lat: 32.95, lng: 35.75 }
+      { lat: 32.95, lng: 35.75 }, // Yarmouk River canyon / Gadara heights
+      { lat: 32.98, lng: 35.95 }, // Southern Bashan plateau
+      { lat: 32.92, lng: 36.18 }, // Golan-Gilead steppe interface
+      { lat: 32.65, lng: 36.15 }, // Ramoth-gilead eastern approach (Tell er-Rumeith)
+      { lat: 32.48, lng: 36.10 }, // Jerash / Gilead eastern forest margin
+      { lat: 32.35, lng: 35.85 }, // Jabbok River (Wadi Zarqa) canyon
+      { lat: 32.28, lng: 35.70 }, // Succoth / Jordan valley interface
+      { lat: 32.35, lng: 35.58 }, // Jordan River eastern terrace
+      { lat: 32.55, lng: 35.60 }, // Pella foothills
+      { lat: 32.72, lng: 35.62 }, // Sea of Galilee southeastern heights
+      { lat: 32.88, lng: 35.68 }, // Hippos / Susita escarpment
+      { lat: 32.95, lng: 35.75 }  // Closed
     ]
   },
   {
@@ -5540,12 +5546,19 @@ export const CONTESTED_FRONTIER_ZONES: ContestedFrontierZone[] = [
     biblicalRecord: 'Mesha king of Moab rebelled against the king of Israel after the death of Ahab (2 Kings 1:1, 3:4–27). Mesha Stele: "Omri king of Israel humbled Moab many days... but I have triumphed over his house."',
     historicalContext: 'Fertile agricultural tableland north of the Arnon River disputed between the Israelite tribe of Reuben/Gad and the kings of Moab.',
     bounds: [
-      { lat: 31.85, lng: 35.60 }, // Plains of Moab opposite Jericho
-      { lat: 31.85, lng: 35.95 }, // Medeba / Nebo plateau
-      { lat: 31.46, lng: 35.95 }, // Upper Arnon canyon
-      { lat: 31.46, lng: 35.58 }, // Mouth of River Arnon at Dead Sea
-      { lat: 31.70, lng: 35.58 }, // Dead Sea northeast coast
-      { lat: 31.85, lng: 35.60 }
+      { lat: 31.88, lng: 35.58 }, // Jordan River mouth at north end of Dead Sea
+      { lat: 31.88, lng: 35.72 }, // Plains of Moab (Abel-shittim)
+      { lat: 31.85, lng: 35.88 }, // Mount Nebo ridge / Pisgah
+      { lat: 31.80, lng: 35.98 }, // Medeba agricultural plateau
+      { lat: 31.68, lng: 36.00 }, // Baal-meon plateau
+      { lat: 31.52, lng: 35.95 }, // Dibon (capital of King Mesha)
+      { lat: 31.46, lng: 35.92 }, // Aroer rim fortress overlooking Arnon gorge
+      { lat: 31.45, lng: 35.78 }, // Deep central canyon of River Arnon (Wadi Mujib)
+      { lat: 31.46, lng: 35.58 }, // Mouth of River Arnon at Dead Sea shore
+      { lat: 31.58, lng: 35.56 }, // Dead Sea eastern sandstone cliffs
+      { lat: 31.70, lng: 35.56 }, // Callirrhoe thermal springs
+      { lat: 31.82, lng: 35.56 }, // Northeast corner of Dead Sea
+      { lat: 31.88, lng: 35.58 }  // Closed
     ]
   },
   {
@@ -5556,12 +5569,19 @@ export const CONTESTED_FRONTIER_ZONES: ContestedFrontierZone[] = [
     biblicalRecord: 'David defeated Goliath of Gath between Shochoh and Azekah in the Valley of Elah (1 Samuel 17). Border contested throughout Judges and Monarchy.',
     historicalContext: 'Lowland limestone foothills between the coastal Philistine Pentapolis and the Judean hill country, serving as an active military frontier.',
     bounds: [
-      { lat: 31.85, lng: 34.82 }, // Timnah
-      { lat: 31.85, lng: 34.98 }, // Beth-shemesh
-      { lat: 31.48, lng: 34.90 }, // Lachish western hills
-      { lat: 31.48, lng: 34.70 }, // Eglon lowland border
-      { lat: 31.70, lng: 34.78 }, // Gath approach
-      { lat: 31.85, lng: 34.82 }
+      { lat: 31.85, lng: 34.82 }, // Timnah (Samson's borderland)
+      { lat: 31.84, lng: 34.98 }, // Beth-shemesh (Ark of the Covenant return)
+      { lat: 31.75, lng: 35.00 }, // Jarmuth & Yarmut ridge
+      { lat: 31.70, lng: 34.98 }, // Valley of Elah (Azekah & Shochoh / David vs Goliath)
+      { lat: 31.62, lng: 34.95 }, // Mareshah / Beit Guvrin chalk heights
+      { lat: 31.48, lng: 34.90 }, // Lachish western sentinel hills
+      { lat: 31.42, lng: 34.82 }, // Debir southern foothill approaches
+      { lat: 31.42, lng: 34.72 }, // Eglon lowland border
+      { lat: 31.52, lng: 34.70 }, // Coastal plain transition
+      { lat: 31.62, lng: 34.72 }, // Libnah
+      { lat: 31.70, lng: 34.78 }, // Royal Philistine city of Gath (Tell es-Safi)
+      { lat: 31.78, lng: 34.80 }, // Ekron eastern agricultural valley
+      { lat: 31.85, lng: 34.82 }  // Closed
     ]
   },
   {
@@ -5572,11 +5592,21 @@ export const CONTESTED_FRONTIER_ZONES: ContestedFrontierZone[] = [
     biblicalRecord: 'The Brook of Egypt (Wadi el-Arish) marks the south-western biblical boundary of the Promised Land (Numbers 34:5, Joshua 15:4, 1 Kings 8:65).',
     historicalContext: 'Desert transit corridor between Egypt and Canaan, claimed and contested by Pharaohs, Judean kings, Edomites, and Nabataean trade caravans.',
     bounds: [
-      { lat: 31.35, lng: 34.15 }, // Mediterranean coast at Raphia / Brook of Egypt
-      { lat: 31.35, lng: 34.85 }, // Gerar / Beersheba western approach
-      { lat: 30.60, lng: 34.85 }, // Kadesh-barnea / Wilderness of Zin
-      { lat: 30.60, lng: 34.15 }, // Central Sinai plateau / Wadi el-Arish
-      { lat: 31.35, lng: 34.15 }
+      { lat: 31.35, lng: 34.15 }, // Mediterranean coast at Raphia
+      { lat: 31.30, lng: 34.40 }, // Gerar / Nahal Besor western approach
+      { lat: 31.28, lng: 34.70 }, // Beersheba basin western steppe
+      { lat: 31.10, lng: 34.82 }, // Aroer of the Negev
+      { lat: 30.85, lng: 34.85 }, // Wilderness of Zin northern escarpment
+      { lat: 30.60, lng: 34.80 }, // Makhtesh Ramon southern rim
+      { lat: 30.50, lng: 34.55 }, // Kadesh-barnea (Ein el-Qudeirat & Ein Qadis)
+      { lat: 30.40, lng: 34.35 }, // Jebel Halal southern foothills
+      { lat: 30.45, lng: 34.15 }, // Upper Wadi el-Arish (Brook of Egypt)
+      { lat: 30.70, lng: 33.95 }, // Central Sinai limestone plateau
+      { lat: 30.95, lng: 33.85 }, // Jebel Maghara northern piedmont
+      { lat: 31.15, lng: 33.80 }, // Coastal dune belt of el-Arish
+      { lat: 31.25, lng: 33.82 }, // Mouth of Brook of Egypt at Mediterranean shore
+      { lat: 31.32, lng: 34.00 }, // Sheikh Zuweid coastal sands
+      { lat: 31.35, lng: 34.15 }  // Closed
     ]
   },
   {
@@ -5587,12 +5617,19 @@ export const CONTESTED_FRONTIER_ZONES: ContestedFrontierZone[] = [
     biblicalRecord: 'Daniel 11 prophesied the six Syrian Wars between the King of the North (Seleucids) and King of the South (Ptolemies) over control of Judea and Jerusalem.',
     historicalContext: 'The disputed corridor of Judea, Samaria, Phoenicia, and the Bekaa Valley, fought over in six major Syrian Wars (274–168 BC) until Antiochus IV Epiphanes seized the Temple.',
     bounds: [
-      { lat: 34.50, lng: 35.80 }, // Tripolis / Lebanon coast
-      { lat: 34.50, lng: 36.60 }, // Orontes valley
-      { lat: 31.50, lng: 35.50 }, // Judean frontier
-      { lat: 31.50, lng: 34.50 }, // Gaza coast
-      { lat: 33.00, lng: 35.00 }, // Acre coast
-      { lat: 34.50, lng: 35.80 }
+      { lat: 34.50, lng: 35.82 }, // Tripolis / Phoenician northern coast
+      { lat: 34.55, lng: 36.35 }, // Homs Gap (Eleutherus Valley gateway)
+      { lat: 34.40, lng: 36.65 }, // Upper Orontes river valley
+      { lat: 33.98, lng: 36.20 }, // Baalbek / Northern Bekaa Valley
+      { lat: 33.60, lng: 36.00 }, // Anti-Lebanon mountain pass towards Damascus
+      { lat: 33.30, lng: 35.80 }, // Mount Hermon western slopes
+      { lat: 33.15, lng: 35.60 }, // Dan / Caesarea Philippi basin
+      { lat: 33.00, lng: 35.10 }, // Ladder of Tyre (Rosh HaNikra coast)
+      { lat: 33.27, lng: 35.20 }, // Royal City of Tyre
+      { lat: 33.56, lng: 35.37 }, // Royal City of Sidon
+      { lat: 33.88, lng: 35.49 }, // Berytus (Beirut)
+      { lat: 34.12, lng: 35.64 }, // Byblos (Gebal)
+      { lat: 34.50, lng: 35.82 }  // Closed
     ]
   },
   {
@@ -5604,10 +5641,21 @@ export const CONTESTED_FRONTIER_ZONES: ContestedFrontierZone[] = [
     historicalContext: 'Contested alluvial borderland in central Mesopotamia between the northern militaristic Assyrian empire and southern Babylonia.',
     bounds: [
       { lat: 34.50, lng: 43.50 }, // Samarra / central Tigris
-      { lat: 34.80, lng: 45.20 }, // Diyala River gorge
-      { lat: 33.20, lng: 45.50 }, // Tigris-Diyala confluence
-      { lat: 33.20, lng: 44.00 }, // Northern Babylonia / Sippar
-      { lat: 34.50, lng: 43.50 }
+      { lat: 34.65, lng: 44.20 }, // Tikrit southern alluvial approach
+      { lat: 34.78, lng: 44.80 }, // Adhaim river confluence
+      { lat: 34.80, lng: 45.20 }, // Diyala River gorge at Jebel Hamrin
+      { lat: 34.50, lng: 45.45 }, // Kizil Robat / Jalawla gateway
+      { lat: 34.20, lng: 45.60 }, // Mandali steppe / Zagros piedmont
+      { lat: 33.85, lng: 45.40 }, // Badra / lower piedmont borderland
+      { lat: 33.60, lng: 45.20 }, // Diyala-Tigris confluence
+      { lat: 33.30, lng: 44.80 }, // Opis / Seleucia site
+      { lat: 33.15, lng: 44.30 }, // Northern Babylonia / Sippar (Tell Abu Habbah)
+      { lat: 33.05, lng: 44.00 }, // Nahr Malkha ancient royal canal corridor
+      { lat: 33.20, lng: 43.80 }, // Ramadi plateau east edge
+      { lat: 33.40, lng: 43.60 }, // Fallujah river neck
+      { lat: 33.60, lng: 43.50 }, // Lake Habbaniyah northern dunes
+      { lat: 34.10, lng: 43.20 }, // Tharthar canal depression
+      { lat: 34.50, lng: 43.50 }  // Closed
     ]
   }
 ];

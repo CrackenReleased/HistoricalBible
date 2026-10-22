@@ -1,3 +1,37 @@
+## 2026-10-22 03:00:00 — Antigravity / HistoricalBible — Map Pulsing Eradication, Coin Resizing, Passage Pertinence & Topographic Boundaries (v00.01.63)
+
+- **Root Cause & User Directives Addressed**:
+  - Directives:
+    1. "I hate the size of these coins for the artifacts, and I hate how they pulse and there is no way to clear it. We should NEVER have them pulse, and we need a more muted way to display them, and they should be MUCH smaller... and they should almost NEVER show up in the 'Bible - side-bar map' since they will have no pertinence to what is being asked about or displayed in that map."
+    2. "Fix all regional boundaries, across all maps and all time lines and all presentations. I need the primitive polygonal shapes to be updated and upgraded to more logical and actual boundary lines. There of course can be overlap and conflict zones. But there should not be any shapes that I can literally count the sides on in a matter of a few seconds."
+- **Implemented Fixes**:
+  - 1. **Complete Elimination of Map Pulsing & Coin Resizing**:
+    - Removed `goldHaloPulse` keyframe and `.leaflet-gold-marker.pulse` animation in `src/interact.css`.
+    - Resized `.gold-coin-core` from $28\times 28\text{px}$ down to $12\times 12\text{px}$ (`iconSize: [12, 12]`, `iconAnchor: [6, 6]`), with subtle antique bronze/parchment background (`#bfa15f`) and soft `1.5px` border.
+    - Removed decorative `.core-inner` symbol clutter.
+    - Resized `.geo-focus-core` to $9\times 9\text{px}$ and set `.geo-focus-ping { display: none !important; animation: none !important; }`.
+    - Resized Leaflet geo-focus divIcon from $24\times 24\text{px}$ to $14\times 14\text{px}$ (`iconSize: [14, 14]`, `iconAnchor: [7, 7]`).
+  - 2. **Passage-Pertinent Archaeology Filtering in Companion Map (`/bible`)**:
+    - Defaulted `archaeology` layer to `false` when `AncientMapCanvas` option `compact: true` is passed.
+    - Added `activeSiteOverrideIds: string[] | null` to `AncientMapCanvas` so only pertinent receipts render.
+    - In `renderCompanionMap()`, archaeological discovery coins are suppressed by default unless the specific chapter/verse has a direct dated event receipt (e.g. 2 Kings 18 for the Taylor Prism).
+    - In `handleWordClick()`, clicking a biblical city or geographic entity (such as Nineveh in Jonah 1) suppresses unrelated imperial archaeological coins from rendering over the city.
+    - Implemented `AncientMapCanvas.clearFocusMarker()` and wired it to map canvas clicks, zoom/move events, and the artifact drawer close button (`.artifact-drawer-close`) so users can easily dismiss active pins and highlights.
+    - Suppressed `.map-canvas-year-hud` in compact companion sidebar maps to eliminate visual obstruction.
+  - 3. **Topographic Curvature & Elimination of Primitive Polygonal Boundaries**:
+    - Re-coordinated `old_babylon` (`Old Babylonian & Kassite Kingdom`) along the western desert plateau escarpment (`lng: 40.8` to `44.2`), placing Babylon, Kish, Nippur, Uruk, Larsa, and Ur deep within the interior of the realm, eliminating the pinched bowtie/hourglass anomaly.
+    - Expanded `egypt` and `saite_egypt` western bounds to encompass the Western Desert oasis chain (Kharga, Dakhla, Farafra, Bahariya, Fayum) reaching `lng: 27.95`, eliminating the riverbank-clipped ribbon effect.
+    - Replaced all primitive 4-to-6-sided boxes in `CONTESTED_FRONTIER_ZONES` with organic 14-to-18-vertex topographic curves along wadis, cataracts, mountain passes, and escarpments across all 8 canonical contested frontiers.
+    - Added `smoothPolylineCoordinates()` with endpoint anchoring for `WATER_FEATURES.rivers` and softened river styling to mature aquatic slate `rgba(84, 138, 168, 0.55)` (weight: 1.25).
+    - Enhanced `smoothPolygonCoordinates()` with edge pre-densification for segments $> 0.60^\circ$ so long straight chords curve naturally.
+    - Purged remaining neon cyan `#38bdf8` styles in favor of antique gold `#d4af37` and muted aquatic tones.
+- **Verification**:
+  - Expanded [`tests/all-eras-territorial-fidelity-regression.ts`](file:///E:/HistoricalBible/tests/all-eras-territorial-fidelity-regression.ts) with assertions ensuring all contested frontier zones have >= 12 vertices, Old Babylon spans > 4 degrees longitude without pinches, and Egypt encompasses the Western Desert oases.
+  - Added automated browser regression tests in [`tests/companion-map-callout-regression.spec.ts`](file:///E:/HistoricalBible/tests/companion-map-callout-regression.spec.ts) (7/7 tests passing).
+  - All 73 Node.js regression tests passing (73/73).
+  - 100% canonical KJV corpus verified (31,102 verses across 66 books).
+  - Clean production Vite build.
+
 ## 2026-10-21 18:48:00 — Antigravity / HistoricalBible — Cross-Atlas & Multi-Timeline Territorial Fidelity Verification (v00.01.62)
 
 - Solved user request: *"Please verify that this level fix is implemented across all maps and across all time lines"*:

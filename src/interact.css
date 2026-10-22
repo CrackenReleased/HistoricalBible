@@ -3363,7 +3363,7 @@ footer {
 .map-canvas-year-hud .hud-label {
   font-family: var(--font-mono, monospace);
   font-size: 0.68rem;
-  color: #38bdf8;
+  color: #c99738;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -3384,55 +3384,51 @@ footer {
 }
 
 .gold-coin-core {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #ffe685 0%, #d4af37 55%, #8c6d1f 100%);
-  border: 2px solid #ffd700;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.8), 0 2px 6px rgba(0, 0, 0, 0.9);
+  background: #bfa15f;
+  border: 1.5px solid #fbf4dd;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.15s ease-out;
 }
 
 .leaflet-gold-marker:hover .gold-coin-core {
-  transform: scale(1.22);
-  box-shadow: 0 0 18px rgba(255, 215, 0, 1);
+  transform: scale(1.25);
+  background: #d4af37;
+  box-shadow: 0 1px 6px rgba(212, 175, 55, 0.6);
 }
 
 .gold-coin-core .core-inner {
-  font-size: 13px;
-  color: #080c11;
-  font-weight: 900;
-  line-height: 1;
+  display: none;
 }
 
 .gold-coin-label {
   position: absolute;
-  left: 34px;
+  left: 16px;
   right: auto;
   top: 50%;
   transform: translateY(-50%);
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 0.72rem;
+  font-family: var(--font-serif, 'EB Garamond', serif);
+  font-size: 0.68rem;
   font-weight: 600;
-  color: #f1f5f9;
-  background: rgba(8, 12, 17, 0.94);
-  border: 1px solid rgba(212, 175, 55, 0.55);
-  padding: 2px 7px;
-  border-radius: 4px;
+  color: #e2d8c3;
+  background: rgba(14, 18, 24, 0.88);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  padding: 1px 5px;
+  border-radius: 3px;
   white-space: nowrap;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(6px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
   pointer-events: none;
 }
 
 .gold-coin-label.label-west {
   left: auto;
-  right: 34px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
   text-align: right;
@@ -3452,9 +3448,10 @@ footer {
   transform: translateX(-50%);
 }
 
-/* Pulsing halo when active era */
-.leaflet-gold-marker.pulse .gold-coin-core {
-  animation: goldHaloPulse 2s infinite;
+/* Pulsing halo removed per design mandate: NEVER pulse markers on map */
+.leaflet-gold-marker.pulse .gold-coin-core,
+.leaflet-gold-marker .gold-coin-core {
+  animation: none !important;
 }
 
 @keyframes goldHaloPulse {
@@ -4845,11 +4842,11 @@ svg path:focus-visible,
   box-shadow: 0 0 4px #22c55e;
 }
 
-/* Luminous Pulsing Geographic Focus Marker in Companion Map */
+/* Refined Geographic Focus Marker in Companion Map (Zero pulsing) */
 .leaflet-geo-focus-marker {
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: 14px;
+  height: 14px;
   pointer-events: none;
 }
 
@@ -4857,39 +4854,19 @@ svg path:focus-visible,
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   transform: translate(-50%, -50%);
-  background: #ffd700;
-  border: 1.5px solid #ffffff;
+  background: #d4af37;
+  border: 1.5px solid #fdfbf7;
   border-radius: 50%;
-  box-shadow: 0 0 8px #ffd700;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
   z-index: 2;
 }
 
 .geo-focus-ping {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 22px;
-  height: 22px;
-  transform: translate(-50%, -50%);
-  border: 2px solid #ffd700;
-  border-radius: 50%;
-  background: rgba(255, 215, 0, 0.2);
-  animation: geoPulseRing 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
-  z-index: 1;
-}
-
-@keyframes geoPulseRing {
-  0% {
-    transform: translate(-50%, -50%) scale(0.6);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(2.2);
-    opacity: 0;
-  }
+  display: none !important;
+  animation: none !important;
 }
 
 .geo-focus-label {
@@ -4899,7 +4876,7 @@ svg path:focus-visible,
   transform: translateX(-50%);
   white-space: nowrap;
   font-family: var(--font-serif, 'EB Garamond', serif);
-  font-size: 0.82rem;
+  font-size: 0.80rem;
   font-weight: 700;
   color: #ffd700;
   text-shadow: 0 0 4px #000, 0 1px 3px #000, 0 0 8px rgba(0,0,0,0.8);
@@ -4908,6 +4885,16 @@ svg path:focus-visible,
   border-radius: 3px;
   border: 1px solid rgba(212, 175, 55, 0.4);
   pointer-events: auto;
+}
+
+/* Compact map hygiene: hide on-canvas year HUD and unhovered artifact labels */
+.ancient-map-compact .map-canvas-year-hud,
+#bible-companion-map-container .map-canvas-year-hud {
+  display: none !important;
+}
+
+#bible-companion-map-container .gold-coin-label {
+  display: none !important;
 }
 
 /* Subtle water labels in compact companion map */

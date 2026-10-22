@@ -139,4 +139,78 @@ test.describe('Bible Companion Map - Organic Polygons & External Leader Line Cal
     await expect(paths.first()).toBeVisible({ timeout: 7000 });
     expect(await paths.count()).toBeGreaterThan(0);
   });
+
+  test('Bible companion sidebar map suppresses unrelated artifact coins and removes pulsing animations', async ({ page }) => {
+    // 1. In Genesis 47 (no dated event), archaeology coins must NOT render in sidebar companion map
+    await page.goto('/bible?book=Genesis&chapter=47&tab=map', { waitUntil: 'networkidle' });
+    const mapContainer = page.locator('#bible-companion-map-container');
+    await expect(mapContainer).toBeVisible({ timeout: 10000 });
+
+    const goldMarkers = mapContainer.locator('.leaflet-gold-marker');
+    expect(await goldMarkers.count()).toBe(0);
+
+    // Bottom-left year HUD must be hidden in compact sidebar map
+    const yearHud = mapContainer.locator('.map-canvas-year-hud');
+    expect(await yearHud.count()).toBe(0);
+
+    // 2. In full /map view, coins exist, are small (12x12), and NEVER have .pulse class or .geo-focus-ping
+    await page.goto('/map?era=assyrian_siege', { waitUntil: 'networkidle' });
+    const fullMapContainer = page.locator('#atlas-canvas-container');
+    await expect(fullMapContainer).toBeVisible({ timeout: 10000 });
+
+    // Enable Archaeological Finds layer via disclosure
+    const disclosure = page.locator('#atlas-visibility');
+    if (!(await disclosure.getAttribute('open'))) {
+      await page.locator('#atlas-visibility summary').click();
+    }
+    const archBtn = page.locator('button.atlas-toggle-btn[data-layer="archaeology"]');
+    await expect(archBtn).toBeVisible({ timeout: 5000 });
+    if ((await archBtn.getAttribute('aria-pressed')) !== 'true') {
+      await archBtn.click();
+    }
+
+    const fullCoins = fullMapContainer.locator('.leaflet-gold-marker');
+    await expect(fullCoins.first()).toBeVisible({ timeout: 10000 });
+
+    // Assert no pulsing class
+    const pulsingCoins = fullMapContainer.locator('.leaflet-gold-marker.pulse');
+    expect(await pulsingCoins.count()).toBe(0);
+
+    // Assert coin core size is muted (<= 14px)
+    const firstCoinCore = fullCoins.first().locator('.gold-coin-core');
+    const coinBox = await firstCoinCore.boundingBox();
+    expect(coinBox).not.toBeNull();
+    expect(coinBox!.width).toBeLessThanOrEqual(14);
+    expect(coinBox!.height).toBeLessThanOrEqual(14);
+  });
+
+  test('dismissing artifact drawer or clicking map clears active geographic focus pin', async ({ page }) => {
+    await page.goto('/bible?book=Jonah&chapter=1&tab=map', { waitUntil: 'networkidle' });
+    const mapContainer = page.locator('#bible-companion-map-container');
+    await expect(mapContainer).toBeVisible({ timeout: 10000 });
+
+    // Click entity 'Nineveh' in Scripture text to activate geographic focus
+    const entityLink = page.locator('.kjv-word[data-word="nineveh"]').first();
+    await expect(entityLink).toBeVisible({ timeout: 7000 });
+    await entityLink.click();
+
+    // Verify geographic focus marker is added and has NO pulsing ping element
+    const focusMarker = mapContainer.locator('.leaflet-geo-focus-marker');
+    await expect(focusMarker).toBeVisible({ timeout: 5000 });
+    const pingRing = focusMarker.locator('.geo-focus-ping');
+    expect(await pingRing.count()).toBe(0);
+
+    // Verify artifact drawer is displayed
+    const drawer = page.locator('#bible-companion-artifact-drawer');
+    await expect(drawer).toBeVisible({ timeout: 5000 });
+
+    // Click drawer close button
+    const closeBtn = drawer.locator('.artifact-drawer-close');
+    await expect(closeBtn).toBeVisible();
+    await closeBtn.click();
+
+    // Verify drawer is dismissed and focus marker on map is cleared
+    await expect(drawer).toBeHidden();
+    expect(await mapContainer.locator('.leaflet-geo-focus-marker').count()).toBe(0);
+  });
 });
